@@ -4,74 +4,96 @@ A 2D Survival Crafting Action Game built with Godot 4.x
 
 ## Project Structure
 
+Organized by **feature** — every folder owns all the scenes, scripts, sprites, and resources that belong to it.
+
 ```
 dianthus-pixie-game/
-├── assets/                    # Game assets (not tracked by Godot VCS)
-│   ├── aseprite/source/      # Aseprite source files
-│   ├── music/                # Background music
-│   ├── sfx/                  # Sound effects
-│   └── sprites/              # All game sprites
-│       ├── player/           # Player character
-│       ├── enemies/          # Enemy characters
-│       ├── plants/           # Defense plants
-│       ├── weapons/          # Weapons/items
-│       ├── items/            # Inventory items
-│       ├── environment/      # World tiles/objects
-│       └── ui/               # UI elements
-├── autoloads/               # Godot autoload/singleton scripts
-│   ├── managers/            # Game managers (GameManager, AudioManager)
-│   ├── services/            # Service scripts (SaveService, QuestService)
-│   └── state/               # Global state (PlayerState, WorldState)
-├── docs/                    # Documentation (ignored by Godot)
-│   ├── design/              # Design docs
-│   └── references/           # Reference materials
-├── entities/                # Scene files for game entities
-│   ├── dianthus_core/       # The core plant entity
-│   ├── enemies/             # Enemy scenes
-│   ├── plants/              # Placeable plant scenes
-│   ├── player/              # Player scene
-│   ├── projectiles/         # Projectile scenes
-│   └── world_objects/       # Interactive objects
-├── minigames/               # Minigame scenes (breeding, crafting, harvesting)
-├── resources/               # Godot resource files
-│   ├── textures/            # Texture resources
-│   ├── animations/          # Animation resources
-│   ├── audio/               # Audio bus/layouts
-│   ├── fonts/               # Custom fonts
-│   ├── tilesets/            # Tileset resources
-│   ├── shaders/             # Shader materials
-│   ├── particles/           # Particle effects
-│   └── export_presets/      # Export configuration
-├── scenes/                  # Main game scenes
-│   ├── zones/               # World zones (Meadow Edge, Dusk Forest, etc.)
-│   ├── garden/              # Garden/home base scenes
-│   ├── transitions/         # Scene transition effects
-│   └── ui/                  # UI scene files
-├── scripts/                 # Script files
-│   ├── utils/               # Utility functions
-│   ├── globals/             # Global constants/helpers
-│   ├── data/                # Data structures (resources, JSON)
-│   ├── components/          # Reusable components
-│   └── constants/           # Game constants
-├── systems/                 # Core game systems
-│   ├── day_night/           # Day-night cycle system
-│   ├── crafting/            # Crafting system
-│   ├── combat/              # Combat system
-│   ├── fsm/                 # Finite State Machine for AI
-│   ├── quest/               # Quest system
-│   ├── inventory/           # Inventory system
-│   ├── save/                # Save/load system
-│   ├── breeding/            # Plant breeding system
-│   └── planting/            # Plant placement system
-├── tests/                   # Test files
-│   ├── unit/                # Unit tests
-│   └── integration/         # Integration tests
-├── ui/                      # UI scripts and scenes
-│   ├── hud/                 # HUD elements (HP bars, hotbar, minimap)
-│   ├── menus/               # Menus (pause, main menu, settings)
-│   ├── components/          # Reusable UI components
-│   └── minigames/           # Minigame UI
-└── .godot/                  # Godot engine files (auto-generated)
+├── assets/                          # Raw source assets (not Godot-imported)
+│   ├── aseprite/                    # Aseprite source files
+│   ├── music/                       # Music source files
+│   └── sfx/                         # SFX source files
+├── docs/                            # Documentation (ignored by Godot)
+│   ├── design/                      # Design docs & task breakdown
+│   └── references/                  # Reference materials
+├── shared/                          # Cross-feature code and resources
+│   ├── autoloads/                   # Godot singletons (GameManager, AudioManager, SaveService, QuestService)
+│   ├── components/                  # Reusable scene components (HealthComponent, HitboxComponent)
+│   ├── constants/                   # Game-wide constants
+│   ├── fonts/                       # Custom fonts
+│   └── utils/                       # Utility scripts & helpers
+├── core/                            # Game foundation: flow, phases, and the Dianthus Core entity
+│   ├── day_night/                   # Day-night cycle timer & phase signals
+│   ├── dianthus_core/               # Core plant entity (HP, aura, destruction)
+│   ├── endings/                     # Win/lose conditions & ending sequences
+│   └── transitions/                 # Scene transitions (fade in/out)
+├── player/                          # Player entity and all player mechanics
+│   ├── scenes/                      # player.tscn
+│   ├── scripts/                     # player_controller.gd, player_state.gd
+│   ├── sprites/                     # Player sprite sheets
+│   └── animations/                  # Player animation resources
+├── combat/                          # Combat mechanics, weapons, and projectiles
+│   ├── weapons/
+│   │   ├── thorn_sword/             # Thorn Sword + Blazeblade upgrade
+│   │   ├── spore_bomb/              # Spore Bomb + Void Grenade upgrade
+│   │   ├── vine_whip/               # Vine Whip + Crystal Lash upgrade
+│   │   └── petal_shield/            # Petal Shield + Iron Bloom Shield upgrade
+│   └── projectiles/                 # Shared projectile scenes
+├── enemies/                         # All enemy entities and AI systems
+│   ├── shadowling/                  # Shadowling: 40 HP, 8 DMG
+│   ├── voidrunner/                  # Voidrunner: 25 HP, 5 DMG
+│   ├── stonehusk/                   # Stonehusk: 120 HP, 20 DMG
+│   ├── phantom_weaver/              # Phantom Weaver: 60 HP, 12 DMG
+│   ├── swarm_larva/                 # Swarm Larva: 15 HP, 3 DMG
+│   ├── devourer/                    # The Devourer boss: 1200 HP
+│   ├── fsm/                         # Base FSM classes for enemy AI
+│   └── spawner/                     # Wave spawner
+├── plants/                          # Placeable plant entities and placement system
+│   ├── entities/                    # One sub-folder per plant type
+│   ├── placement/                   # Grid placement logic & effect radius visualization
+│   └── sprites/                     # Plant sprite sheets
+├── crafting/                        # Crafting system and cross-breeding
+│   ├── bench/                       # Breeding bench entity
+│   ├── breeding/                    # Cross-breeding UI & algorithm
+│   └── data/                        # Recipe & combo .tres resource files
+├── inventory/                       # Inventory system and item data
+│   ├── scripts/                     # Inventory manager, pickup logic
+│   └── data/                        # Item definitions (.tres resource files)
+├── world/                           # World zones, garden, and map structures
+│   ├── garden/                      # Garden base scenes & expansion
+│   ├── zones/
+│   │   ├── meadow_edge/             # Warm/vibrant daytime zone (Day 1)
+│   │   ├── dusk_forest/             # Dim-light biome (unlocks Day 3)
+│   │   ├── ruins_of_veld/           # Ruined-city biome (unlocks Day 7)
+│   │   ├── obsidian_bog/            # Black-swamp biome (unlocks Day 14)
+│   │   └── core_sanctum/           # Sacred biome (story-gated)
+│   └── tilesets/                    # TileSet resources
+├── quests/                          # Quest system architecture and quest data
+│   ├── scripts/                     # QuestManager, quest logic
+│   └── data/                        # Quest .tres resource files
+├── save/                            # Save/load system
+│   └── scripts/                     # SaveService, schema migration
+├── minigames/                       # Standalone minigame scenes and scripts
+│   ├── plant_experimentation/       # Rhythm/puzzle breeding minigame
+│   ├── crafting_assembly/           # Drag-and-drop crafting minigame
+│   └── harvest_qte/                 # Harvest QTE
+├── ui/                              # All UI scenes and scripts
+│   ├── hud/                         # HP bars, energy meter, hotbar, minimap, wave counter
+│   ├── menus/                       # Main menu, pause menu, settings
+│   ├── screens/                     # Inventory screen, Quest log, Plant codex
+│   └── components/                  # Reusable UI components
+├── audio/                           # Audio resources and management
+│   ├── music/                       # Music stream resources
+│   └── sfx/                         # SFX stream resources
+├── vfx/                             # Visual effects, shaders, and animations
+│   ├── animations/                  # Shared AnimationLibrary resources
+│   ├── particles/                   # Particle effect scenes
+│   └── shaders/                     # Shader materials & GLSL files
+├── accessibility/                   # Difficulty scaling, colorblind mode, tutorial
+│   ├── difficulty/                  # Difficulty system (Normal / Easy / Hard)
+│   └── tutorial/                    # Interactive tutorial (Days 1–3)
+└── tests/                           # Automated tests
+    ├── unit/                        # Unit tests
+    └── integration/                 # Integration tests
 ```
 
 ## Core Systems

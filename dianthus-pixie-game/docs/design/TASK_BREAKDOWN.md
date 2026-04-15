@@ -16,12 +16,12 @@
 
 | Task ID | Title | Category | Priority | Status | Dependencies | Assignee | Effort | Acceptance Criteria |
 |---------|-------|----------|----------|--------|--------------|----------|--------|---------------------|
-| FOUND-01 | Godot 4.x Project Scaffold | Core Mechanics | Critical | Not Started | — | [Unassigned] | S | • Godot 4.x project opens error-free; `autoloads/`, `entities/`, `assets/` folder structure in place per repo layout; • `.gitignore` and `.editorconfig` committed |
-| FOUND-02 | Tilemap & Tileset Setup | World & Map | Critical | Not Started | FOUND-01 | [Unassigned] | M | • TileSet resource with 32×32 px tiles per GDD §18; • at least one ground and one wall tile render correctly; • physics collision layers defined (walkable vs. blocked) |
-| FOUND-03 | Player Controller (Move + Collide) | Player | Critical | Not Started | FOUND-01 | [Unassigned] | M | • Player moves at 5 tiles/sec on 8-directional input per GDD §9.1; • `CollisionShape2D` prevents wall penetration; • idle and walk animation states transition correctly |
-| FOUND-04 | Camera System | Core Mechanics | High | Not Started | FOUND-03 | [Unassigned] | S | • `Camera2D` follows player with smooth lerp; • configurable limits prevent scrolling outside zone bounds; • no dead-zone bleed on zone edges |
-| FOUND-05 | Day-Night Cycle Timer | Core Mechanics | Critical | Not Started | FOUND-01 | [Unassigned] | M | • Timer emits `phase_changed` signals for Morning, Afternoon, and Night per GDD §2; • world-color tint transitions smoothly between phases; • debug overlay shows current phase label |
-| FOUND-06 | Scene Transition System | Core Mechanics | High | Not Started | FOUND-01 | [Unassigned] | S | • Fade-in/fade-out loads target scene without flicker; • player position and inventory persist across zone transitions; • transition is non-interruptible at night |
+| FOUND-01 | Godot 4.x Project Scaffold | Core Mechanics | Critical | Done | — | [Unassigned] | S | • Godot 4.x project opens error-free; folder structure in place per repo layout; • `.gitignore` and `.editorconfig` committed |
+| FOUND-02 | Tilemap & Tileset Setup | World & Map | Critical | Done | FOUND-01 | [Unassigned] | M | • TileSet resource with 32×32 px tiles per GDD §18; • at least one ground and one wall tile render correctly; • physics collision layers defined (walkable vs. blocked) |
+| FOUND-03 | Player Controller (Move + Collide) | Player | Critical | Done | FOUND-01 | [Unassigned] | M | • Player moves at 5 tiles/sec on 8-directional input per GDD §9.1; • `CollisionShape2D` prevents wall penetration; • idle and walk animation states transition correctly |
+| FOUND-04 | Camera System | Core Mechanics | High | Done | FOUND-03 | [Unassigned] | S | • `Camera2D` follows player with smooth lerp; • configurable limits prevent scrolling outside zone bounds; • no dead-zone bleed on zone edges |
+| FOUND-05 | Day-Night Cycle Timer | Core Mechanics | Critical | Done | FOUND-01 | [Unassigned] | M | • Timer emits `phase_changed` signals for Morning, Afternoon, and Night per GDD §2; • world-color tint transitions smoothly between phases; • debug overlay shows current phase label |
+| FOUND-06 | Scene Transition System | Core Mechanics | High | Done | FOUND-01 | [Unassigned] | S | • Fade-in/fade-out loads target scene without flicker; • player position and inventory persist across zone transitions; • transition is non-interruptible at night |
 
 ---
 
