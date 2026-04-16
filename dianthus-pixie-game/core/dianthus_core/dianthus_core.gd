@@ -20,6 +20,7 @@ func _ready() -> void:
 	_base_aura_energy = _aura_light.energy
 	$DamageArea.body_entered.connect(_on_enemy_entered)
 	DayNightCycle.phase_changed.connect(_on_phase_changed)
+	call_deferred("_emit_initial_hp")
 
 
 func _process(delta: float) -> void:
@@ -62,6 +63,10 @@ func _on_enemy_entered(body: Node2D) -> void:
 
 func get_hp_ratio() -> float:
 	return float(current_hp) / float(MAX_HP)
+
+
+func _emit_initial_hp() -> void:
+	hp_changed.emit(current_hp, MAX_HP)
 
 
 func _on_phase_changed(_phase: String) -> void:

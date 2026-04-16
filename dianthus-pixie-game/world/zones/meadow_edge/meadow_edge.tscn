@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" path="res://core/dianthus_core/dianthus_core.tscn" id="4_core"]
 [ext_resource type="PackedScene" path="res://ui/hud/core_hp_bar.tscn" id="5_hpbar"]
 [ext_resource type="PackedScene" path="res://ui/screens/game_over_screen.tscn" id="6_gameover"]
+[ext_resource type="PackedScene" path="res://ui/hud/player_hp_bar.tscn" id="7_playerhpbar"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_dhprj"]
 texture = ExtResource("2_quyxi")
@@ -927,3 +928,5 @@ position = Vector2(320, 240)
 [node name="CoreHPBar" parent="." instance=ExtResource("5_hpbar")]
 
 [node name="GameOverScreen" parent="." instance=ExtResource("6_gameover")]
+
+[node name="PlayerHPBar" parent="." instance=ExtResource("7_playerhpbar")]

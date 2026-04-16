@@ -19,6 +19,8 @@ func _ready() -> void:
 	var core: Node = $DianthusCore
 	if is_instance_valid(core) and core.has_method("get_hp_ratio"):
 		GameManager.register_core(core)
+	if is_instance_valid(_player):
+		GameManager.register_player(_player)
 
 func _process(_delta: float) -> void:
 	if is_instance_valid(_timer_label):
