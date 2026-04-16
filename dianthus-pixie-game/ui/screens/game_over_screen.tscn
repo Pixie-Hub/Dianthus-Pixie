@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://dqumyb2g7vdb"]
+
+[ext_resource type="Script" uid="uid://4dslo1ansj4e" path="res://ui/screens/game_over_screen.gd" id="1_script"]
+
+[node name="GameOverScreen" type="CanvasLayer" unique_id=1596070776]
+process_mode = 3
+layer = 100
+visible = false
+script = ExtResource("1_script")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=2079455856]
+process_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.75)
+
+[node name="CenterContainer" type="CenterContainer" parent="ColorRect" unique_id=320038425]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect/CenterContainer" unique_id=429976628]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="ColorRect/CenterContainer/VBoxContainer" unique_id=1636952585]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.2, 0.2, 1)
+theme_override_font_sizes/font_size = 24
+text = "GAME OVER"
+horizontal_alignment = 1
+
+[node name="DaysLabel" type="Label" parent="ColorRect/CenterContainer/VBoxContainer" unique_id=1731563249]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "You survived 1 day"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="ColorRect/CenterContainer/VBoxContainer" unique_id=1722107277]
+layout_mode = 2
+
+[node name="RestartButton" type="Button" parent="ColorRect/CenterContainer/VBoxContainer" unique_id=955362588]
+unique_name_in_owner = true
+process_mode = 3
+custom_minimum_size = Vector2(120, 30)
+layout_mode = 2
+text = "Restart"
+
+[node name="MainMenuButton" type="Button" parent="ColorRect/CenterContainer/VBoxContainer" unique_id=1523931250]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 30)
+layout_mode = 2
+text = "Main Menu"
+
+[connection signal="pressed" from="ColorRect/CenterContainer/VBoxContainer/RestartButton" to="." method="_on_restart"]
+[connection signal="pressed" from="ColorRect/CenterContainer/VBoxContainer/MainMenuButton" to="." method="_on_main_menu"]

@@ -28,14 +28,6 @@ window/size/viewport_height=360
 window/stretch/mode="canvas_items"
 window/stretch/scale_mode="integer"
 
-[layer_names]
-
-2d_physics/layer_1="walkable"
-2d_physics/layer_2="blocked"
-2d_physics/layer_3="player"
-2d_physics/layer_4="enemy"
-2d_physics/layer_5="projectile"
-
 [input]
 
 move_up={
@@ -63,6 +55,14 @@ move_right={
 ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="interactable"
+2d_physics/layer_2="terrain"
+2d_physics/layer_3="player"
+2d_physics/layer_4="enemy"
+2d_physics/layer_5="projectile"
+
 [physics]
 
 3d/physics_engine="Jolt Physics"
@@ -70,3 +70,5 @@ move_right={
 [rendering]
 
 rendering_device/driver.windows="d3d12"
+2d/snap/snap_2d_transforms_to_pixel=true
+2d/snap/snap_2d_vertices_to_pixel=true

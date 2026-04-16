@@ -16,6 +16,9 @@ func _ready() -> void:
 	_update_debug_labels()
 	_setup_camera()
 	_restore_player_position()
+	var core: Node = $DianthusCore
+	if is_instance_valid(core) and core.has_method("get_hp_ratio"):
+		GameManager.register_core(core)
 
 func _process(_delta: float) -> void:
 	if is_instance_valid(_timer_label):
