@@ -5,9 +5,9 @@
 [ext_resource type="Texture2D" uid="uid://cqmamvoj22kto" path="res://world/tilesets/Sprout Lands - Sprites - Basic pack/Grass.png" id="2_quyxi"]
 [ext_resource type="Texture2D" uid="uid://cd2082fyq12n3" path="res://world/tilesets/Sprout Lands - Sprites - Basic pack/Hills.png" id="3_l4oks"]
 [ext_resource type="PackedScene" path="res://core/dianthus_core/dianthus_core.tscn" id="4_core"]
-[ext_resource type="PackedScene" path="res://ui/hud/core_hp_bar.tscn" id="5_hpbar"]
+[ext_resource type="PackedScene" path="res://ui/hud/hud.tscn" id="5_hud"]
 [ext_resource type="PackedScene" uid="uid://dqumyb2g7vdb" path="res://ui/screens/game_over_screen.tscn" id="6_gameover"]
-[ext_resource type="PackedScene" path="res://ui/hud/player_hp_bar.tscn" id="7_playerhpbar"]
+[ext_resource type="PackedScene" path="res://ui/screens/night_survived_screen.tscn" id="7_nightsurvived"]
 [ext_resource type="PackedScene" uid="uid://bwavespawntsc" path="res://enemies/spawner/wave_spawner.tscn" id="8_wavespawner"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_dhprj"]
@@ -926,11 +926,11 @@ text = "Time: 120.0s"
 [node name="DianthusCore" parent="." unique_id=426663777 instance=ExtResource("4_core")]
 position = Vector2(320, 240)
 
-[node name="CoreHPBar" parent="." unique_id=1714872887 instance=ExtResource("5_hpbar")]
+[node name="HUD" parent="." instance=ExtResource("5_hud")]
 
 [node name="GameOverScreen" parent="." unique_id=819190476 instance=ExtResource("6_gameover")]
 
-[node name="PlayerHPBar" parent="." unique_id=1949036449 instance=ExtResource("7_playerhpbar")]
+[node name="NightSurvivedScreen" parent="." instance=ExtResource("7_nightsurvived")]
 
 [node name="WaveSpawner" parent="." unique_id=1111111111 instance=ExtResource("8_wavespawner")]
 enemy_container_path = NodePath("../EnemyContainer")

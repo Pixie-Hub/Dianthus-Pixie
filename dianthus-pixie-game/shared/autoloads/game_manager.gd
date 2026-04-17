@@ -7,6 +7,7 @@ signal game_over_triggered
 signal player_hp_changed(current_hp: int, max_hp: int)
 signal player_died
 signal player_respawned
+signal night_survived(day: int)
 
 enum GameState {
 	EXPLORATION,
@@ -44,6 +45,10 @@ func register_core(core: Node) -> void:
 func _on_core_destroyed() -> void:
 	set_state(GameState.GAME_OVER)
 	game_over_triggered.emit()
+
+
+func trigger_night_survived() -> void:
+	night_survived.emit(DayNightCycle.day_count)
 
 
 func register_player(p: Node) -> void:

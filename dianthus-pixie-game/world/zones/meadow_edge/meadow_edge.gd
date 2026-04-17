@@ -53,10 +53,9 @@ func _update_debug_labels() -> void:
 
 
 func _on_wave_started() -> void:
-	# TODO (CORE-09): Notify win condition manager that defense phase has begun.
 	print("[MeadowEdge] Wave started.")
 
 
 func _on_wave_cleared() -> void:
-	# TODO (CORE-09): Trigger night-survived result screen here.
+	GameManager.trigger_night_survived()
 	print("[MeadowEdge] Wave cleared — night survived!")
