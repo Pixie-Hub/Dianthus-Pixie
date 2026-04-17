@@ -51,6 +51,14 @@ const ANIM_DEFS: Array[Dictionary] = [
 		"loop": false,
 		"duration": 0.7,
 	},
+	{
+		"prefix": "attack",
+		"sheet": "res://player/sprites/PNG/Sword_attack/Sword_attack_full.png",
+		"columns": 8,
+		"frames": [8, 8, 8, 8],
+		"loop": false,
+		"duration": 0.4,
+	},
 ]
 
 const BLEND_POSITIONS: Dictionary = {
@@ -152,6 +160,13 @@ static func build_tree(anim_tree: AnimationTree) -> void:
 		sm.add_transition(src, "death", AnimationNodeStateMachineTransition.new())
 
 	sm.add_transition("death", "idle", AnimationNodeStateMachineTransition.new())
+
+	for src: String in ["idle", "walk", "run"]:
+		sm.add_transition(src, "attack", AnimationNodeStateMachineTransition.new())
+
+	var attack_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
+	attack_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
+	sm.add_transition("attack", "idle", attack_to_idle)
 
 	sm.set_graph_offset(Vector2(0, 0))
 	anim_tree.tree_root = sm

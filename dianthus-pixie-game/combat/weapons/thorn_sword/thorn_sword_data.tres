@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="WeaponData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://combat/weapons/weapon_data.gd" id="1_wdata"]
+
+[resource]
+script = ExtResource("1_wdata")
+weapon_name = "Thorn Sword"
+damage = 15
+cooldown = 0.5
+attack_range = 24.0
+arc_degrees = 90.0
