@@ -77,3 +77,6 @@ func get_phase_progress() -> float:
 
 func is_night() -> bool:
 	return current_phase == Phase.NIGHT
+
+func debug_skip_phase() -> void:
+	_phase_timer = 0.0

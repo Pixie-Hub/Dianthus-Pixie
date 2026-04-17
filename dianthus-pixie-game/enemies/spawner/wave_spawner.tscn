@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://bwavespawntsc"]
+
+[ext_resource type="Script" uid="uid://cwavespawner1" path="res://enemies/spawner/wave_spawner.gd" id="1_wvsp"]
+
+[node name="WaveSpawner" type="Node"]
+script = ExtResource("1_wvsp")
+
+[node name="SpawnNorth" type="Marker2D" parent="."]
+position = Vector2(320, -16)
+
+[node name="SpawnSouth" type="Marker2D" parent="."]
+position = Vector2(320, 496)
+
+[node name="SpawnEast" type="Marker2D" parent="."]
+position = Vector2(656, 240)
+
+[node name="SpawnWest" type="Marker2D" parent="."]
+position = Vector2(-16, 240)

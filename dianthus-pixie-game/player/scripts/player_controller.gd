@@ -111,6 +111,29 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_F4:
 			heal(25)
 			print("DEBUG: Player healed 25. HP: %d/%d" % [current_hp, MAX_HP])
+		elif event.keycode == KEY_F5:
+			_debug_spawn_shadowling()
+		elif event.keycode == KEY_F6:
+			get_tree().call_group(&"enemies", "die")
+			print("DEBUG: Killed all enemies.")
+		elif event.keycode == KEY_F7:
+			var phase_before: String = DayNightCycle.get_phase_name()
+			DayNightCycle.debug_skip_phase()
+			print("DEBUG: Skipped phase %s." % phase_before)
+		elif event.keycode == KEY_F8:
+			var spawner: Node = get_tree().current_scene.find_child("WaveSpawner", true, false)
+			if spawner != null and spawner.has_method("start_wave"):
+				spawner.start_wave()
+				print("DEBUG: Force-started wave.")
+			else:
+				push_warning("DEBUG: WaveSpawner not found in scene.")
+		elif event.keycode == KEY_F9:
+			var spawner: Node = get_tree().current_scene.find_child("WaveSpawner", true, false)
+			if spawner != null and spawner.has_method("cleanup_wave"):
+				spawner.cleanup_wave()
+				print("DEBUG: Force-cleared wave.")
+			else:
+				push_warning("DEBUG: WaveSpawner not found in scene.")
 
 func take_damage(amount: int) -> void:
 	if is_dead or is_invincible:
@@ -197,6 +220,23 @@ func _end_attack() -> void:
 	var hitbox_shape: CollisionShape2D = _sword_hitbox.get_child(0)
 	hitbox_shape.disabled = true
 	_state_machine.travel("idle")
+
+func _debug_spawn_shadowling() -> void:
+	var scene: PackedScene = load("res://enemies/shadowling/shadowling.tscn")
+	if scene == null:
+		push_warning("DEBUG: Could not load Shadowling scene.")
+		return
+	var shadowling: Node2D = scene.instantiate() as Node2D
+	var spawn_pos: Vector2 = global_position + Vector2(100, 0)
+	if get_viewport() != null:
+		var mouse_world: Vector2 = get_canvas_transform().affine_inverse() * get_viewport().get_mouse_position()
+		spawn_pos = mouse_world
+	shadowling.global_position = spawn_pos
+	get_tree().current_scene.add_child(shadowling)
+	if shadowling.has_method("activate"):
+		shadowling.activate()
+	print("DEBUG: Spawned Shadowling at %s" % spawn_pos)
+
 
 func _on_sword_hitbox_body_entered(body: Node2D) -> void:
 	if body in _hit_bodies:

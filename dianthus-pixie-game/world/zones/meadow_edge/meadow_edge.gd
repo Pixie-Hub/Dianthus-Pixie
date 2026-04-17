@@ -10,6 +10,8 @@ const TILE_SIZE: int = 16
 @onready var _timer_label: Label = $DebugOverlay/TimerLabel
 @onready var _player: CharacterBody2D = $Player
 
+var _wave_spawner: WaveSpawner = null
+
 func _ready() -> void:
 	DayNightCycle.register_canvas_modulate(_canvas_modulate)
 	DayNightCycle.phase_changed.connect(_on_phase_changed)
@@ -21,6 +23,10 @@ func _ready() -> void:
 		GameManager.register_core(core)
 	if is_instance_valid(_player):
 		GameManager.register_player(_player)
+	_wave_spawner = get_node_or_null("WaveSpawner") as WaveSpawner
+	if is_instance_valid(_wave_spawner):
+		_wave_spawner.wave_started.connect(_on_wave_started)
+		_wave_spawner.wave_cleared.connect(_on_wave_cleared)
 
 func _process(_delta: float) -> void:
 	if is_instance_valid(_timer_label):
@@ -44,3 +50,13 @@ func _update_debug_labels() -> void:
 		_phase_label.text = "Phase: %s" % DayNightCycle.get_phase_name()
 	if is_instance_valid(_day_label):
 		_day_label.text = "Day: %d" % DayNightCycle.day_count
+
+
+func _on_wave_started() -> void:
+	# TODO (CORE-09): Notify win condition manager that defense phase has begun.
+	print("[MeadowEdge] Wave started.")
+
+
+func _on_wave_cleared() -> void:
+	# TODO (CORE-09): Trigger night-survived result screen here.
+	print("[MeadowEdge] Wave cleared — night survived!")
