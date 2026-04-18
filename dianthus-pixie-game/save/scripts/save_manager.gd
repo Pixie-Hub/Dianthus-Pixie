@@ -299,6 +299,8 @@ func _apply_state(state: Dictionary) -> void:
 
 
 func _on_scene_loaded() -> void:
+	# Wait an extra frame so the new scene is fully set as current_scene.
+	await get_tree().process_frame
 	_apply_state(_pending_load_state)
 	_pending_load_state = {}
 
