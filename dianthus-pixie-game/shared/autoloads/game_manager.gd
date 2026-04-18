@@ -8,6 +8,7 @@ signal player_hp_changed(current_hp: int, max_hp: int)
 signal player_died
 signal player_respawned
 signal night_survived(day: int)
+signal colorblind_mode_changed(enabled: bool)
 
 enum GameState {
 	EXPLORATION,
@@ -19,6 +20,7 @@ enum GameState {
 var current_state: GameState = GameState.EXPLORATION
 var dianthus_core: Node = null
 var player: Node = null
+var colorblind_mode: bool = false
 
 var player_data: Dictionary = {
 	"position": Vector2.ZERO,
@@ -31,6 +33,14 @@ func set_state(new_state: GameState) -> void:
 		return
 	current_state = new_state
 	game_state_changed.emit(GameState.keys()[new_state])
+
+
+func set_colorblind_mode(enabled: bool) -> void:
+	if colorblind_mode == enabled:
+		return
+	colorblind_mode = enabled
+	colorblind_mode_changed.emit(enabled)
+	print("[GameManager] Colorblind mode: %s" % ("ON" if enabled else "OFF"))
 
 
 func register_core(core: Node) -> void:

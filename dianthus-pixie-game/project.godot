@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Dianthus Pixie Game"
-run/main_scene="res://world/zones/meadow_edge/meadow_edge.tscn"
+run/main_scene="res://ui/menus/main_menu.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -21,6 +21,7 @@ GameManager="*res://shared/autoloads/game_manager.gd"
 DayNightCycle="*res://core/day_night/day_night_cycle.gd"
 SceneTransition="*res://core/transitions/scene_transition.gd"
 SaveManager="*res://save/scripts/save_manager.gd"
+DifficultyManager="*res://accessibility/difficulty/difficulty_manager.gd"
 
 [display]
 

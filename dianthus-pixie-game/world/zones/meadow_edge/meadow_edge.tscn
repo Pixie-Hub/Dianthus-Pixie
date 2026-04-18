@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dqumyb2g7vdb" path="res://ui/screens/game_over_screen.tscn" id="6_gameover"]
 [ext_resource type="PackedScene" path="res://ui/screens/night_survived_screen.tscn" id="7_nightsurvived"]
 [ext_resource type="PackedScene" uid="uid://bwavespawntsc" path="res://enemies/spawner/wave_spawner.tscn" id="8_wavespawner"]
+[ext_resource type="PackedScene" uid="uid://cpausetscn01" path="res://ui/menus/pause_menu.tscn" id="9_pausemenu"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_dhprj"]
 texture = ExtResource("2_quyxi")
@@ -934,5 +935,7 @@ position = Vector2(320, 240)
 
 [node name="WaveSpawner" parent="." unique_id=1111111111 instance=ExtResource("8_wavespawner")]
 enemy_container_path = NodePath("../EnemyContainer")
+
+[node name="PauseMenu" parent="." instance=ExtResource("9_pausemenu")]
 
 [node name="EnemyContainer" type="Node2D" parent="." unique_id=2222222222]

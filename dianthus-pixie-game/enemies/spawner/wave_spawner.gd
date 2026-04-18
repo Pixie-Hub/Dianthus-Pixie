@@ -78,8 +78,8 @@ func start_wave() -> void:
 	for i: int in range(count):
 		_active_spawn_points.append(shuffled[i].global_position)
 	wave_started.emit()
-	print("[WaveSpawner] Wave started. Day: %d, Entry points: %d, Enemies: %d, HP x%.2f" \
-		% [day, count, _current_wave_total, _current_hp_multiplier])
+	print("[WaveSpawner] Wave started. Day: %d, Difficulty: %s, Entry points: %d, Enemies: %d, HP x%.2f" \
+		% [day, DifficultyManager.get_tier_label(), count, _current_wave_total, _current_hp_multiplier])
 
 
 func _process(delta: float) -> void:
@@ -106,9 +106,23 @@ func _spawn_enemy() -> void:
 		push_warning("[WaveSpawner] Failed to instantiate enemy scene as EnemyBase.")
 		return
 	enemy.global_position = spawn_pos
-	if _current_hp_multiplier > 1.0:
-		enemy.max_hp = int(round(enemy.max_hp * _current_hp_multiplier))
+	# DIFF-01: Per-day HP scaling.
+	var effective_hp_mult: float = _current_hp_multiplier
+	# ACCESS-01: Difficulty tier HP modifier (stacks multiplicatively).
+	effective_hp_mult *= DifficultyManager.get_hp_multiplier()
+	if effective_hp_mult != 1.0:
+		enemy.max_hp = int(round(enemy.max_hp * effective_hp_mult))
 		enemy.current_hp = enemy.max_hp
+
+	# ACCESS-01: Difficulty tier damage modifier.
+	var dmg_mult: float = DifficultyManager.get_dmg_multiplier()
+	if dmg_mult != 1.0:
+		enemy.damage = int(round(enemy.damage * dmg_mult))
+
+	# ACCESS-01: Difficulty tier speed modifier.
+	var spd_mult: float = DifficultyManager.get_speed_multiplier()
+	if spd_mult != 1.0:
+		enemy.move_speed *= spd_mult
 	_enemy_container.add_child(enemy)
 	if enemy.has_method("activate"):
 		enemy.activate()

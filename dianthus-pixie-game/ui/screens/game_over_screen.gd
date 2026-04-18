@@ -27,5 +27,4 @@ func _on_restart() -> void:
 func _on_main_menu() -> void:
 	get_tree().paused = false
 	visible = false
-	# TODO: Replace with SceneTransition.transition_to("res://ui/menus/main_menu.tscn") when main menu exists.
-	get_tree().reload_current_scene()
+	get_tree().change_scene_to_file("res://ui/menus/main_menu.tscn")

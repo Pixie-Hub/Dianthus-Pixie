@@ -1,0 +1,161 @@
+[gd_scene format=3 uid="uid://do43bmhqxi163"]
+
+[ext_resource type="Script" path="res://ui/menus/pause_menu.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://csettgscrn01" path="res://ui/menus/settings_screen.tscn" id="2_settings"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.165, 0.122, 0.078, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.545, 0.42, 0.239, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_n"]
+bg_color = Color(0.227, 0.165, 0.094, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_p"]
+bg_color = Color(0.137, 0.102, 0.055, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_h"]
+bg_color = Color(0.29, 0.227, 0.157, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[node name="PauseMenu" type="CanvasLayer" unique_id=1754209912]
+process_mode = 3
+layer = 100
+visible = false
+script = ExtResource("1_script")
+
+[node name="Overlay" type="ColorRect" parent="." unique_id=150825420]
+process_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.5)
+
+[node name="CenterContainer" type="CenterContainer" parent="Overlay" unique_id=1459613820]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Overlay/CenterContainer" unique_id=1158294507]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="MarginContainer" type="MarginContainer" parent="Overlay/CenterContainer/PanelContainer" unique_id=978456272]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Overlay/CenterContainer/PanelContainer/MarginContainer" unique_id=2137610690]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TitleLabel" type="Label" parent="Overlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=966618957]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.941, 0.902, 0.824, 1)
+theme_override_font_sizes/font_size = 16
+text = "Paused"
+horizontal_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="Overlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=522848245]
+process_mode = 3
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.941, 0.902, 0.824, 1)
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_n")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_p")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_h")
+text = "Resume"
+
+[node name="SaveButton" type="Button" parent="Overlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1232176988]
+unique_name_in_owner = true
+process_mode = 3
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.941, 0.902, 0.824, 1)
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_n")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_p")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_h")
+text = "Save Game"
+
+[node name="SettingsButton" type="Button" parent="Overlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=923739348]
+process_mode = 3
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.941, 0.902, 0.824, 1)
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_n")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_p")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_h")
+text = "Settings"
+
+[node name="MainMenuButton" type="Button" parent="Overlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1270498127]
+process_mode = 3
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.941, 0.902, 0.824, 1)
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_n")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_p")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_h")
+text = "Main Menu"
+
+[node name="SettingsScreen" parent="." unique_id=56530314 instance=ExtResource("2_settings")]
+unique_name_in_owner = true
+layout_mode = 3
+
+[node name="SaveFeedbackLabel" type="Label" parent="." unique_id=144507091]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -50.0
+offset_right = 100.0
+offset_bottom = -25.0
+theme_override_colors/font_color = Color(0.6, 0.9, 0.6, 1)
+theme_override_font_sizes/font_size = 10
+text = "Saved!"
+horizontal_alignment = 1
+
+[node name="MainMenuConfirmDialog" type="ConfirmationDialog" parent="." unique_id=272688629]
+unique_name_in_owner = true
+title = "Return to Main Menu?"
+dialog_text = "Return to Main Menu? Unsaved progress will be lost."
+
+[connection signal="pressed" from="Overlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ResumeButton" to="." method="_on_resume_pressed"]
+[connection signal="pressed" from="Overlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/SaveButton" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="Overlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/SettingsButton" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="Overlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/MainMenuButton" to="." method="_on_main_menu_pressed"]

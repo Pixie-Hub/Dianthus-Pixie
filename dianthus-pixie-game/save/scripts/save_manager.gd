@@ -195,7 +195,7 @@ func _gather_state(manual: bool) -> Dictionary:
 	# Reserved stubs — populated by their owning tasks.
 	state["quests"] = {}        # TODO (QUEST-01)
 	state["unlocks"] = []       # TODO (END-01, END-04)
-	state["difficulty"] = {"tier": "normal"}  # TODO (ACCESS-01)
+	state["difficulty"] = {"tier": DifficultyManager.get_tier_label().to_lower()}
 
 	return state
 
@@ -253,6 +253,16 @@ func _apply_state(state: Dictionary) -> void:
 	# 5. Inventory.
 	GameManager.player_data["inventory"] = state.get("inventory", {}).duplicate()
 	# TODO (QUEST-01): Emit inventory_changed signal here when pickup UI exists.
+
+	# 5.5 Difficulty tier.
+	var diff_tier: String = state.get("difficulty", {}).get("tier", "normal")
+	match diff_tier:
+		"easy":
+			DifficultyManager.set_tier(DifficultyManager.Tier.EASY)
+		"hard":
+			DifficultyManager.set_tier(DifficultyManager.Tier.HARD)
+		_:
+			DifficultyManager.set_tier(DifficultyManager.Tier.NORMAL)
 
 	# 6. Garden plants — instantiate each saved entry into the current scene.
 	var scene_root: Node = get_tree().current_scene
