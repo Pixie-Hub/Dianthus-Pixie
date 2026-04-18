@@ -11,7 +11,6 @@ signal night_survived(day: int)
 
 enum GameState {
 	EXPLORATION,
-	PREPARATION,
 	DEFENSE,
 	GAME_OVER,
 	TRANSITIONING,

@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 GameManager="*res://shared/autoloads/game_manager.gd"
 DayNightCycle="*res://core/day_night/day_night_cycle.gd"
 SceneTransition="*res://core/transitions/scene_transition.gd"
+SaveManager="*res://save/scripts/save_manager.gd"
 
 [display]
 

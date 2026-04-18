@@ -15,6 +15,7 @@ signal damage_dealt(target: Node, amount: int)
 
 var current_hp: int = 0
 var is_dead: bool = false
+var speed_modifier: float = 1.0
 
 @onready var _sprite: Sprite2D = %Sprite2D
 @onready var _anim_player: AnimationPlayer = %AnimationPlayer
@@ -80,6 +81,10 @@ func count_nearby_allies(radius: float) -> int:
 		if node is EnemyBase and global_position.distance_to(node.global_position) <= radius:
 			count += 1
 	return count
+
+
+func get_effective_speed() -> float:
+	return move_speed * speed_modifier
 
 
 func should_retreat() -> bool:

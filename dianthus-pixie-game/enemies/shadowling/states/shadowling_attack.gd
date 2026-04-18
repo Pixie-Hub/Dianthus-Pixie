@@ -69,5 +69,5 @@ func _move(e: EnemyBase) -> void:
 		direction = (_nav_agent.get_next_path_position() - e.global_position).normalized()
 	else:
 		direction = (e.get_player_position() - e.global_position).normalized()
-	e.velocity = direction * e.move_speed * 1.2
+	e.velocity = direction * e.get_effective_speed() * 1.2
 	e.move_and_slide()

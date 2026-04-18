@@ -14,10 +14,18 @@ signal enemy_spawned(enemy: EnemyBase)
 @export var spawn_offset_radius: float = 24.0
 @export var enemy_container_path: NodePath = NodePath("")
 
+@export_group("Difficulty Scaling")
+@export var hp_growth_per_day: float = 0.10
+@export var spawn_growth_per_day: int = 1
+@export var max_hp_multiplier: float = 3.0
+@export var max_spawn_count: int = 20
+
 var _spawn_point_markers: Array[Marker2D] = []
 var _active_spawn_points: Array[Vector2] = []
 var _enemies_alive: int = 0
 var _enemies_spawned: int = 0
+var _current_wave_total: int = 0
+var _current_hp_multiplier: float = 1.0
 var _spawn_timer: float = 0.0
 var _wave_active: bool = false
 var _spawned_enemies: Array[EnemyBase] = []
@@ -43,7 +51,7 @@ func _ready() -> void:
 func _on_phase_changed(phase: String) -> void:
 	if phase == "NIGHT":
 		start_wave()
-	elif phase == "MORNING":
+	elif phase == "DAY":
 		_cleanup_wave()
 
 
@@ -59,6 +67,10 @@ func start_wave() -> void:
 	_spawn_timer = 0.0
 	_spawned_enemies.clear()
 	_counted_dead.clear()
+	var day: int = max(1, DayNightCycle.day_count)
+	var days_passed: int = day - 1
+	_current_hp_multiplier = min(1.0 + hp_growth_per_day * days_passed, max_hp_multiplier)
+	_current_wave_total = min(total_enemies + spawn_growth_per_day * days_passed, max_spawn_count)
 	var count: int = randi_range(min_entry_points, min(max_entry_points, _spawn_point_markers.size()))
 	var shuffled: Array[Marker2D] = _spawn_point_markers.duplicate()
 	shuffled.shuffle()
@@ -66,16 +78,17 @@ func start_wave() -> void:
 	for i: int in range(count):
 		_active_spawn_points.append(shuffled[i].global_position)
 	wave_started.emit()
-	print("[WaveSpawner] Wave started. Entry points: %d, Enemies: %d" % [count, total_enemies])
+	print("[WaveSpawner] Wave started. Day: %d, Entry points: %d, Enemies: %d, HP x%.2f" \
+		% [day, count, _current_wave_total, _current_hp_multiplier])
 
 
 func _process(delta: float) -> void:
-	if not _wave_active or _enemies_spawned >= total_enemies:
+	if not _wave_active or _enemies_spawned >= _current_wave_total:
 		return
 	_spawn_timer -= delta
 	if _spawn_timer <= 0.0:
 		for _i: int in range(spawn_batch_size):
-			if _enemies_spawned < total_enemies:
+			if _enemies_spawned < _current_wave_total:
 				_spawn_enemy()
 		_spawn_timer = spawn_interval
 
@@ -93,6 +106,9 @@ func _spawn_enemy() -> void:
 		push_warning("[WaveSpawner] Failed to instantiate enemy scene as EnemyBase.")
 		return
 	enemy.global_position = spawn_pos
+	if _current_hp_multiplier > 1.0:
+		enemy.max_hp = int(round(enemy.max_hp * _current_hp_multiplier))
+		enemy.current_hp = enemy.max_hp
 	_enemy_container.add_child(enemy)
 	if enemy.has_method("activate"):
 		enemy.activate()
@@ -103,7 +119,7 @@ func _spawn_enemy() -> void:
 	_spawned_enemies.append(enemy)
 	_counted_dead[enemy] = false
 	enemy_spawned.emit(enemy)
-	print("[WaveSpawner] Spawned enemy %d/%d at %s" % [_enemies_spawned, total_enemies, spawn_pos])
+	print("[WaveSpawner] Spawned enemy %d/%d at %s" % [_enemies_spawned, _current_wave_total, spawn_pos])
 
 
 func _on_enemy_died(enemy: EnemyBase) -> void:
@@ -125,7 +141,7 @@ func _on_enemy_removed(enemy: EnemyBase) -> void:
 
 
 func _check_wave_cleared() -> void:
-	if _enemies_alive <= 0 and _enemies_spawned >= total_enemies:
+	if _enemies_alive <= 0 and _enemies_spawned >= _current_wave_total:
 		_wave_active = false
 		wave_cleared.emit()
 		print("[WaveSpawner] Wave cleared!")

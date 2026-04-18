@@ -29,6 +29,7 @@ var is_attacking: bool = false
 var _attack_cooldown_timer: float = 0.0
 var _hit_bodies: Array[Node2D] = []
 var _current_weapon: WeaponData = null
+var _debug_plant_cycle: int = 0
 
 func _ready() -> void:
 	_anim_tree.active = true
@@ -134,6 +135,18 @@ func _unhandled_input(event: InputEvent) -> void:
 				print("DEBUG: Force-cleared wave.")
 			else:
 				push_warning("DEBUG: WaveSpawner not found in scene.")
+		elif event.keycode == KEY_F10:
+			_debug_place_plant()
+		elif event.keycode == KEY_F11:
+			if event.shift_pressed:
+				SaveManager.delete_save()
+				print("DEBUG: Deleted save file.")
+			else:
+				var ok: bool = SaveManager.save_to_slot(true)
+				print("DEBUG: Manual save %s" % ("OK" if ok else "BLOCKED (not in EXPLORATION)"))
+		elif event.keycode == KEY_F12:
+			var ok: bool = SaveManager.load_from_slot()
+			print("DEBUG: Load save %s" % ("OK" if ok else "FAILED"))
 
 func take_damage(amount: int) -> void:
 	if is_dead or is_invincible:
@@ -220,6 +233,34 @@ func _end_attack() -> void:
 	var hitbox_shape: CollisionShape2D = _sword_hitbox.get_child(0)
 	hitbox_shape.disabled = true
 	_state_machine.travel("idle")
+
+func _debug_place_plant() -> void:
+	var mouse_pos: Vector2 = get_global_mouse_position()
+	match _debug_plant_cycle:
+		0:
+			var scene: PackedScene = load("res://plants/entities/thornvine.tscn")
+			if scene == null:
+				push_warning("DEBUG: Could not load Thornvine scene.")
+				return
+			var plant: Node2D = scene.instantiate()
+			plant.global_position = mouse_pos
+			get_tree().current_scene.add_child(plant)
+			print("[Debug] Placed Thornvine at %s" % mouse_pos)
+		1:
+			var scene: PackedScene = load("res://plants/entities/gloomshroom.tscn")
+			if scene == null:
+				push_warning("DEBUG: Could not load Gloomshroom scene.")
+				return
+			var plant: Node2D = scene.instantiate()
+			plant.global_position = mouse_pos
+			get_tree().current_scene.add_child(plant)
+			print("[Debug] Placed Gloomshroom at %s" % mouse_pos)
+		2:
+			for plant in get_tree().get_nodes_in_group(&"plants"):
+				plant.queue_free()
+			print("[Debug] Cleared all plants")
+	_debug_plant_cycle = (_debug_plant_cycle + 1) % 3
+
 
 func _debug_spawn_shadowling() -> void:
 	var scene: PackedScene = load("res://enemies/shadowling/shadowling.tscn")

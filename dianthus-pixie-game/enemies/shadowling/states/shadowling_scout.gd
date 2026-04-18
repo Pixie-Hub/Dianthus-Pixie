@@ -53,5 +53,5 @@ func _move(e: EnemyBase, _delta: float) -> void:
 
 	var wander_angle: float = randf_range(-WANDER_ANGLE_MAX, WANDER_ANGLE_MAX)
 	direction = direction.rotated(wander_angle)
-	e.velocity = direction * e.move_speed
+	e.velocity = direction * e.get_effective_speed()
 	e.move_and_slide()

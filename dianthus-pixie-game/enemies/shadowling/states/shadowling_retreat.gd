@@ -28,5 +28,5 @@ func physics_update(delta: float) -> void:
 		e.queue_free()
 		return
 
-	e.velocity = _flee_direction * e.move_speed * RETREAT_SPEED_MULTIPLIER
+	e.velocity = _flee_direction * e.get_effective_speed() * RETREAT_SPEED_MULTIPLIER
 	e.move_and_slide()

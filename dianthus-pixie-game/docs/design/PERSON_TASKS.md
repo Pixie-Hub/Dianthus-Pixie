@@ -303,3 +303,7 @@ FOUND-01..06 (Done)
 | F7 | Skip current phase | FOUND-05 |
 | F8 | Force-start wave | CORE-07 |
 | F9 | Force-clear wave | CORE-07 |
+| F10 | Place plant (Thornvine → Gloomshroom → Clear cycle) | PLANT-01 |
+| F11 | Manual save (`SaveManager.save_to_slot(true)`) | SAVE-01/02 |
+| Shift+F11 | Delete save file (test New Game overwrite) | SAVE-02 |
+| F12 | Load save (`SaveManager.load_from_slot()`) | SAVE-02 |

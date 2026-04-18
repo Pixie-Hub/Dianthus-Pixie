@@ -3,26 +3,23 @@ extends Node
 signal phase_changed(phase: String)
 
 enum Phase {
-	MORNING,
-	AFTERNOON,
+	DAY,
 	NIGHT,
 }
 
 const PHASE_DURATIONS: Dictionary = {
-	Phase.MORNING: 120.0,
-	Phase.AFTERNOON: 60.0,
+	Phase.DAY: 180.0,
 	Phase.NIGHT: 90.0,
 }
 
 const PHASE_TINTS: Dictionary = {
-	Phase.MORNING: Color(1.0, 0.95, 0.85),
-	Phase.AFTERNOON: Color(0.9, 0.75, 0.50),
+	Phase.DAY: Color(1.0, 0.95, 0.85),
 	Phase.NIGHT: Color(0.25, 0.20, 0.40),
 }
 
 const TINT_DURATION: float = 3.0
 
-var current_phase: Phase = Phase.MORNING
+var current_phase: Phase = Phase.DAY
 var day_count: int = 1
 
 var _phase_timer: float = 0.0
@@ -39,14 +36,11 @@ func _process(delta: float) -> void:
 
 func _advance_phase() -> void:
 	match current_phase:
-		Phase.MORNING:
-			current_phase = Phase.AFTERNOON
-			GameManager.set_state(GameManager.GameState.PREPARATION)
-		Phase.AFTERNOON:
+		Phase.DAY:
 			current_phase = Phase.NIGHT
 			GameManager.set_state(GameManager.GameState.DEFENSE)
 		Phase.NIGHT:
-			current_phase = Phase.MORNING
+			current_phase = Phase.DAY
 			day_count += 1
 			GameManager.set_state(GameManager.GameState.EXPLORATION)
 	_phase_timer = PHASE_DURATIONS[current_phase]
@@ -78,5 +72,16 @@ func get_phase_progress() -> float:
 func is_night() -> bool:
 	return current_phase == Phase.NIGHT
 
+func is_day() -> bool:
+	return current_phase == Phase.DAY
+
 func debug_skip_phase() -> void:
 	_phase_timer = 0.0
+
+
+func apply_loaded_state(day: int, phase_name: String, timer_remaining: float) -> void:
+	day_count = max(1, day)
+	current_phase = Phase.DAY if phase_name == "DAY" else Phase.NIGHT
+	_phase_timer = max(0.1, timer_remaining)
+	phase_changed.emit(get_phase_name())
+	_apply_tint()

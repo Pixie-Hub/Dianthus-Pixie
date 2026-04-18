@@ -19,7 +19,7 @@ func _on_restart() -> void:
 	get_tree().paused = false
 	visible = false
 	DayNightCycle.day_count = 1
-	DayNightCycle.current_phase = DayNightCycle.Phase.MORNING
+	DayNightCycle.current_phase = DayNightCycle.Phase.DAY
 	GameManager.current_state = GameManager.GameState.EXPLORATION
 	get_tree().reload_current_scene()
 
