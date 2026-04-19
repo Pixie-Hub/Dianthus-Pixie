@@ -3,10 +3,10 @@ class_name ItemDatabase
 enum Rarity { COMMON, UNCOMMON, RARE }
 
 const ITEMS: Dictionary = {
-	"petal_shard":    { "display_name": "Petal Shard",    "rarity": Rarity.COMMON,   "max_stack": 99, "description": "Common flower petal used for basic crafting." },
-	"verdant_sap":    { "display_name": "Verdant Sap",    "rarity": Rarity.COMMON,   "max_stack": 99, "description": "Sticky sap extracted from trees and shrubs." },
-	"moonspore":      { "display_name": "Moonspore",      "rarity": Rarity.UNCOMMON, "max_stack": 20, "description": "Nocturnal spore that appears only at night." },
-	"shadow_resin":   { "display_name": "Shadow Resin",   "rarity": Rarity.UNCOMMON, "max_stack": 20, "description": "Dark residue dropped by elite enemies." },
+	"petal_shard":    { "display_name": "Petal Shard",    "rarity": Rarity.COMMON,   "max_stack": 99, "description": "Common flower petal used for basic crafting.",       "icon": "res://assets/aseprite/icons/Petal Shard.png" },
+	"verdant_sap":    { "display_name": "Verdant Sap",    "rarity": Rarity.COMMON,   "max_stack": 99, "description": "Sticky sap extracted from trees and shrubs.",         "icon": "res://assets/aseprite/icons/Verdant Sap.png" },
+	"moonspore":      { "display_name": "Moonspore",      "rarity": Rarity.UNCOMMON, "max_stack": 20, "description": "Nocturnal spore that appears only at night.",          "icon": "res://assets/aseprite/icons/Moonspore.png" },
+	"shadow_resin":   { "display_name": "Shadow Resin",   "rarity": Rarity.UNCOMMON, "max_stack": 20, "description": "Dark residue dropped by elite enemies.",            "icon": "res://assets/aseprite/icons/Shadow Resin.png" },
 	"aether_bloom":   { "display_name": "Aether Bloom",   "rarity": Rarity.RARE,     "max_stack": 5,  "description": "Precious bloom found in hidden chests and quest rewards." },
 	"dianthus_pollen":     { "display_name": "Dianthus Pollen",     "rarity": Rarity.RARE,     "max_stack": 5,  "description": "Sacred pollen harvested from the Dianthus Core once per day." },
 	"bougainvillea_extract": { "display_name": "Bougainvillea Extract", "rarity": Rarity.UNCOMMON, "max_stack": 20, "description": "Thorny extract from Bougainvillea petals." },
@@ -34,6 +34,10 @@ static func get_display_name(item_id: String) -> String:
 
 static func get_description(item_id: String) -> String:
 	return ITEMS.get(item_id, {}).get("description", "")
+
+static func get_icon_path(item_id: String) -> String:
+	return ITEMS.get(item_id, {}).get("icon", "")
+
 
 static func get_rarity_color(item_id: String) -> Color:
 	var rarity: Rarity = get_rarity(item_id)

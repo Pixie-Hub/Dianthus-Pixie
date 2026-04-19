@@ -13,6 +13,16 @@ func _ready() -> void:
 
 
 func _create_visual() -> void:
+	var icon_path: String = ItemDatabase.get_icon_path(item_id)
+	if not icon_path.is_empty():
+		var tex: Texture2D = load(icon_path) as Texture2D
+		if tex != null:
+			var sprite: Sprite2D = Sprite2D.new()
+			sprite.texture = tex
+			sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			sprite.scale = Vector2(0.5, 0.5)
+			add_child(sprite)
+			return
 	_color_rect = ColorRect.new()
 	_color_rect.size = Vector2(8.0, 8.0)
 	_color_rect.position = Vector2(-4.0, -4.0)
