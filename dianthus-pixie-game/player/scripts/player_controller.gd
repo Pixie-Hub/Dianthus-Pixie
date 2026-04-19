@@ -4,6 +4,7 @@ signal hp_changed(current_hp: int, max_hp: int)
 signal player_died
 signal player_respawned
 signal attack_hit(target: Node, damage: int)
+signal energy_changed(current_energy: int, max_energy: int)
 
 const TILE_SIZE: int = 16
 const SPEED: float = TILE_SIZE * 5.0
@@ -11,6 +12,11 @@ const MAX_HP: int = 100
 const RESPAWN_DELAY: float = 5.0
 const INVINCIBILITY_DURATION: float = 3.0
 const ENERGY_DEATH_PENALTY: float = 0.25
+const BASE_MAX_ENERGY: int = 100
+const ENERGY_PER_HIT: int = 3
+const ENERGY_PER_KILL: int = 10
+const ENERGY_NEAR_CORE_RATE: float = 2.0
+const CORE_PROXIMITY_RADIUS: float = 64.0
 
 @onready var _sprite: Sprite2D = %Sprite2D
 @onready var _anim_tree: AnimationTree = %AnimationTree
@@ -30,14 +36,20 @@ var _attack_cooldown_timer: float = 0.0
 var _hit_bodies: Array[Node2D] = []
 var _current_weapon: WeaponData = null
 var _debug_plant_cycle: int = 0
+var current_energy: int = 0
+var max_energy: int = BASE_MAX_ENERGY
+var _energy_regen_accumulator: float = 0.0
+var damage_reduction: float = 0.0
 
 func _ready() -> void:
 	_anim_tree.active = true
 	_state_machine = _anim_tree["parameters/playback"]
 	_update_blend_position()
 	hp_changed.emit(current_hp, MAX_HP)
-	_current_weapon = load("res://combat/weapons/thorn_sword/thorn_sword_data.tres")
+	energy_changed.emit(current_energy, max_energy)
+	_current_weapon = CraftingManager.get_weapon_data("thorn_sword")
 	_sword_hitbox.body_entered.connect(_on_sword_hitbox_body_entered)
+	CraftingManager.weapon_crafted.connect(_on_weapon_crafted)
 
 func _physics_process(delta: float) -> void:
 	if is_dead:
@@ -61,6 +73,7 @@ func _physics_process(delta: float) -> void:
 		_travel("idle")
 	_update_blend_position()
 	move_and_slide()
+	_update_core_energy_regen(delta)
 
 func _dominant_direction(dir: Vector2) -> Vector2:
 	if abs(dir.x) >= abs(dir.y):
@@ -107,11 +120,21 @@ func _unhandled_input(event: InputEvent) -> void:
 			return
 	if event is InputEventKey and event.pressed:
 		if event.keycode == KEY_F3:
-			take_damage(25)
-			print("DEBUG: Player took 25 damage. HP: %d/%d" % [current_hp, MAX_HP])
+			if event.shift_pressed:
+				current_energy = 50
+				energy_changed.emit(current_energy, max_energy)
+				print("DEBUG: Energy set to 50/%d" % max_energy)
+			else:
+				take_damage(25)
+				print("DEBUG: Player took 25 damage (DR=%.0f%%). HP: %d/%d" % [damage_reduction * 100, current_hp, MAX_HP])
 		elif event.keycode == KEY_F4:
-			heal(25)
-			print("DEBUG: Player healed 25. HP: %d/%d" % [current_hp, MAX_HP])
+			if event.shift_pressed:
+				current_energy = max_energy
+				energy_changed.emit(current_energy, max_energy)
+				print("DEBUG: Energy filled to %d/%d" % [current_energy, max_energy])
+			else:
+				heal(25)
+				print("DEBUG: Player healed 25. HP: %d/%d" % [current_hp, MAX_HP])
 		elif event.keycode == KEY_F5:
 			_debug_spawn_shadowling()
 		elif event.keycode == KEY_F6:
@@ -147,11 +170,48 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_F12:
 			var ok: bool = SaveManager.load_from_slot()
 			print("DEBUG: Load save %s" % ("OK" if ok else "FAILED"))
+		elif event.keycode == KEY_INSERT:
+			if event.shift_pressed:
+				InventoryManager.add_item("bougainvillea_extract", 1)
+				InventoryManager.add_item("rafflesia_extract", 1)
+				InventoryManager.add_item("beringin_root", 1)
+				InventoryManager.add_item("kecombrang_extract", 1)
+				InventoryManager.add_item("kunyit_extract", 1)
+				InventoryManager.add_item("petal_shard", 5)
+				InventoryManager.add_item("verdant_sap", 5)
+				InventoryManager.add_item("moonspore", 3)
+				InventoryManager.add_item("shadow_resin", 2)
+				InventoryManager.add_item("dianthus_pollen", 1)
+				print("DEBUG: Added crafting test materials (Shift+Insert).")
+			else:
+				InventoryManager.add_item("petal_shard", 5)
+				InventoryManager.add_item("verdant_sap", 2)
+				InventoryManager.add_item("moonspore", 1)
+				print("DEBUG: Added 5 Petal Shard, 2 Verdant Sap, 1 Moonspore to inventory.")
+		if Input.is_action_just_pressed("breeding_toggle"):
+			var bscreen: Node = get_tree().current_scene.find_child("CrossBreedingScreen", true, false)
+			if bscreen != null:
+				if bscreen.visible:
+					bscreen.close()
+				else:
+					bscreen.open()
+			get_viewport().set_input_as_handled()
+		#DEBUG
+		if Input.is_action_just_pressed("crafting_toggle"):
+			var screen: Node = get_tree().current_scene.find_child("CraftingScreen", true, false)
+			if screen != null:
+				if screen.visible:
+					screen.close()
+				else:
+					screen.open()
+			get_viewport().set_input_as_handled()
 
 func take_damage(amount: int) -> void:
 	if is_dead or is_invincible:
 		return
-	current_hp = max(current_hp - amount, 0)
+	var reduced: int = int(float(amount) * (1.0 - damage_reduction))
+	reduced = max(reduced, 1)
+	current_hp = max(current_hp - reduced, 0)
 	hp_changed.emit(current_hp, MAX_HP)
 	var tween: Tween = create_tween()
 	tween.tween_property(_sprite, "modulate", Color(1, 0.3, 0.3), 0.05)
@@ -184,7 +244,9 @@ func _respawn() -> void:
 	set_collision_layer_value(3, true)
 	hp_changed.emit(current_hp, MAX_HP)
 	player_respawned.emit()
-	# TODO (PLANT-07): Apply -25% stored energy penalty here.
+	var energy_penalty: int = int(current_energy * ENERGY_DEATH_PENALTY)
+	current_energy = max(current_energy - energy_penalty, 0)
+	energy_changed.emit(current_energy, max_energy)
 	_state_machine.travel("idle")
 	_update_blend_position()
 	_start_invincibility()
@@ -234,32 +296,71 @@ func _end_attack() -> void:
 	hitbox_shape.disabled = true
 	_state_machine.travel("idle")
 
+func _on_weapon_crafted(weapon_id: String) -> void:
+	var data: WeaponData = CraftingManager.get_weapon_data(weapon_id)
+	if data != null:
+		_current_weapon = data
+		print("[Player] Equipped crafted weapon: %s" % weapon_id)
+
+
+func _update_core_energy_regen(delta: float) -> void:
+	if is_dead:
+		return
+	if not is_instance_valid(GameManager.dianthus_core):
+		return
+	var dist: float = global_position.distance_to(
+		GameManager.dianthus_core.global_position)
+	if dist > CORE_PROXIMITY_RADIUS:
+		_energy_regen_accumulator = 0.0
+		return
+	_energy_regen_accumulator += ENERGY_NEAR_CORE_RATE * delta
+	if _energy_regen_accumulator >= 1.0:
+		var amount: int = int(_energy_regen_accumulator)
+		_energy_regen_accumulator -= float(amount)
+		add_energy(amount)
+
+
+func add_energy(amount: int) -> void:
+	if is_dead:
+		return
+	current_energy = min(current_energy + amount, max_energy)
+	energy_changed.emit(current_energy, max_energy)
+
+
+func try_spend_energy(amount: int) -> bool:
+	if current_energy < amount:
+		return false
+	current_energy -= amount
+	energy_changed.emit(current_energy, max_energy)
+	return true
+	# TODO (PLANT-08): Hook into active skill input.
+
+
 func _debug_place_plant() -> void:
 	var mouse_pos: Vector2 = get_global_mouse_position()
-	match _debug_plant_cycle:
-		0:
-			var scene: PackedScene = load("res://plants/entities/bougainvillea.tscn")
-			if scene == null:
-				push_warning("DEBUG: Could not load Bougainvillea scene.")
-				return
-			var plant: Node2D = scene.instantiate()
-			plant.global_position = mouse_pos
-			get_tree().current_scene.add_child(plant)
-			print("[Debug] Placed Bougainvillea at %s" % mouse_pos)
-		1:
-			var scene: PackedScene = load("res://plants/entities/rafflesia.tscn")
-			if scene == null:
-				push_warning("DEBUG: Could not load Rafflesia scene.")
-				return
-			var plant: Node2D = scene.instantiate()
-			plant.global_position = mouse_pos
-			get_tree().current_scene.add_child(plant)
-			print("[Debug] Placed Rafflesia at %s" % mouse_pos)
-		2:
-			for plant in get_tree().get_nodes_in_group(&"plants"):
-				plant.queue_free()
-			print("[Debug] Cleared all plants")
-	_debug_plant_cycle = (_debug_plant_cycle + 1) % 3
+	var scene_paths: Array[String] = [
+		"res://plants/entities/bougainvillea.tscn",
+		"res://plants/entities/rafflesia.tscn",
+		"res://plants/entities/bunga_api.tscn",
+		"res://plants/entities/bunga_bayang.tscn",
+		"res://plants/entities/melati_emas.tscn",
+		"res://plants/entities/baja_kuning.tscn",
+	]
+	var labels: Array[String] = ["Bougainvillea", "Rafflesia", "Bunga Api", "Bunga Bayang", "Melati Emas", "Baja Kuning"]
+	if _debug_plant_cycle < scene_paths.size():
+		var scene: PackedScene = load(scene_paths[_debug_plant_cycle])
+		if scene == null:
+			push_warning("DEBUG: Could not load %s scene." % labels[_debug_plant_cycle])
+			return
+		var plant: Node2D = scene.instantiate()
+		plant.global_position = mouse_pos
+		get_tree().current_scene.add_child(plant)
+		print("[Debug] Placed %s at %s" % [labels[_debug_plant_cycle], mouse_pos])
+	else:
+		for plant in get_tree().get_nodes_in_group(&"plants"):
+			plant.queue_free()
+		print("[Debug] Cleared all plants")
+	_debug_plant_cycle = (_debug_plant_cycle + 1) % 7
 
 
 func _debug_spawn_shadowling() -> void:
@@ -287,5 +388,5 @@ func _on_sword_hitbox_body_entered(body: Node2D) -> void:
 		body.take_damage(_current_weapon.damage)
 	attack_hit.emit(body, _current_weapon.damage)
 	print("DEBUG: Hit %s for %d damage" % [body.name, _current_weapon.damage])
-	# TODO (PLANT-07): Add +3 energy per hit here.
+	add_energy(ENERGY_PER_HIT)
 	# TODO (VFX-05): Add impact particles on hit.

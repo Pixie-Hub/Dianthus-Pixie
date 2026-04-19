@@ -7,6 +7,7 @@ signal game_over_triggered
 signal player_hp_changed(current_hp: int, max_hp: int)
 signal player_died
 signal player_respawned
+signal player_energy_changed(current_energy: int, max_energy: int)
 signal night_survived(day: int)
 signal colorblind_mode_changed(enabled: bool)
 
@@ -25,7 +26,6 @@ var colorblind_mode: bool = false
 var player_data: Dictionary = {
 	"position": Vector2.ZERO,
 	"last_zone": "",
-	"inventory": {},
 }
 
 func set_state(new_state: GameState) -> void:
@@ -68,3 +68,6 @@ func register_player(p: Node) -> void:
 		p.player_died.connect(func() -> void: player_died.emit())
 	if p.has_signal("player_respawned"):
 		p.player_respawned.connect(func() -> void: player_respawned.emit())
+	if p.has_signal("energy_changed"):
+		p.energy_changed.connect(
+			func(e: int, m: int) -> void: player_energy_changed.emit(e, m))

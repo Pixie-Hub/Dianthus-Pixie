@@ -10,6 +10,11 @@
 [ext_resource type="PackedScene" path="res://ui/screens/night_survived_screen.tscn" id="7_nightsurvived"]
 [ext_resource type="PackedScene" uid="uid://bwavespawntsc" path="res://enemies/spawner/wave_spawner.tscn" id="8_wavespawner"]
 [ext_resource type="PackedScene" uid="uid://cpausetscn01" path="res://ui/menus/pause_menu.tscn" id="9_pausemenu"]
+[ext_resource type="PackedScene" path="res://ui/screens/inventory_screen.tscn" id="10_inv"]
+[ext_resource type="PackedScene" path="res://inventory/pickups/resource_pickup.tscn" id="11_pickup"]
+[ext_resource type="PackedScene" path="res://crafting/bench/breeding_bench.tscn" id="12_bench"]
+[ext_resource type="PackedScene" path="res://ui/screens/crafting_screen.tscn" id="13_crafting"]
+[ext_resource type="PackedScene" uid="uid://cross_breeding_01" path="res://ui/screens/cross_breeding_screen.tscn" id="14_breeding"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_dhprj"]
 texture = ExtResource("2_quyxi")
@@ -937,5 +942,56 @@ position = Vector2(320, 240)
 enemy_container_path = NodePath("../EnemyContainer")
 
 [node name="PauseMenu" parent="." instance=ExtResource("9_pausemenu")]
+
+[node name="InventoryScreen" parent="." instance=ExtResource("10_inv")]
+
+[node name="PickupContainer" type="Node2D" parent="." unique_id=3000000001]
+
+[node name="PetalShard1" parent="PickupContainer" instance=ExtResource("11_pickup")]
+position = Vector2(80, 80)
+item_id = "petal_shard"
+amount = 1
+
+[node name="PetalShard2" parent="PickupContainer" instance=ExtResource("11_pickup")]
+position = Vector2(200, 96)
+item_id = "petal_shard"
+amount = 1
+
+[node name="PetalShard3" parent="PickupContainer" instance=ExtResource("11_pickup")]
+position = Vector2(304, 176)
+item_id = "petal_shard"
+amount = 1
+
+[node name="PetalShard4" parent="PickupContainer" instance=ExtResource("11_pickup")]
+position = Vector2(128, 208)
+item_id = "petal_shard"
+amount = 1
+
+[node name="PetalShard5" parent="PickupContainer" instance=ExtResource("11_pickup")]
+position = Vector2(400, 144)
+item_id = "petal_shard"
+amount = 1
+
+[node name="VerdantSap1" parent="PickupContainer" instance=ExtResource("11_pickup")]
+position = Vector2(480, 80)
+item_id = "verdant_sap"
+amount = 1
+
+[node name="VerdantSap2" parent="PickupContainer" instance=ExtResource("11_pickup")]
+position = Vector2(560, 192)
+item_id = "verdant_sap"
+amount = 1
+
+[node name="VerdantSap3" parent="PickupContainer" instance=ExtResource("11_pickup")]
+position = Vector2(448, 256)
+item_id = "verdant_sap"
+amount = 1
+
+[node name="BreedingBench" parent="." instance=ExtResource("12_bench")]
+position = Vector2(384, 208)
+
+[node name="CraftingScreen" parent="." instance=ExtResource("13_crafting")]
+
+[node name="CrossBreedingScreen" parent="." instance=ExtResource("14_breeding")]
 
 [node name="EnemyContainer" type="Node2D" parent="." unique_id=2222222222]

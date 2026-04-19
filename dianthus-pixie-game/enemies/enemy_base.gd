@@ -49,7 +49,8 @@ func die() -> void:
 		fsm.set_physics_process(false)
 	enemy_died.emit(self)
 	remove_from_group(&"enemies")
-	# TODO (PLANT-07): Award +10 energy to player here.
+	if is_instance_valid(GameManager.player) and GameManager.player.has_method("add_energy"):
+		GameManager.player.add_energy(10)
 	_play_death_animation()
 
 

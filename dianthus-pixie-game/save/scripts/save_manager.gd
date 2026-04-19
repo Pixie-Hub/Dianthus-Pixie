@@ -4,12 +4,16 @@ signal save_completed(success: bool, manual: bool)
 signal load_completed(success: bool)
 
 const SAVE_PATH: String = "user://savegame.json"
-const SCHEMA_VERSION: int = 1
+const SCHEMA_VERSION: int = 5
 const GAME_VERSION: String = "0.1.0"
 
 const PLANT_TYPE_TO_SCENE: Dictionary = {
 	"bougainvillea": "res://plants/entities/bougainvillea.tscn",
 	"rafflesia": "res://plants/entities/rafflesia.tscn",
+	"bunga_api": "res://plants/entities/bunga_api.tscn",
+	"bunga_bayang": "res://plants/entities/bunga_bayang.tscn",
+	"melati_emas": "res://plants/entities/melati_emas.tscn",
+	"baja_kuning": "res://plants/entities/baja_kuning.tscn",
 	# TODO: PLANT-02 add "melati": ...
 	# TODO: PLANT-03 add "wijaya_kusuma": ...
 	# TODO: PLANT-04 add "beringin": ...
@@ -163,14 +167,31 @@ func _gather_state(manual: bool) -> Dictionary:
 		current_scene_path = get_tree().current_scene.scene_file_path
 	if current_scene_path.is_empty():
 		current_scene_path = GameManager.player_data.get("last_zone", "")
+	var player_energy: int = 0
+	var player_max_energy: int = 100
+	if is_instance_valid(GameManager.player):
+		player_energy = GameManager.player.current_energy
+		player_max_energy = GameManager.player.max_energy
 	state["player"] = {
 		"position": player_pos,
 		"current_hp": player_hp,
+		"current_energy": player_energy,
+		"max_energy": player_max_energy,
 		"last_zone": current_scene_path,
 	}
 
 	# Inventory
-	state["inventory"] = GameManager.player_data.get("inventory", {}).duplicate()
+	state["inventory"] = InventoryManager.serialize()
+
+	# Crafting
+	state["crafting"] = CraftingManager.serialize()
+
+	# Breeding
+	state["breeding"] = BreedingManager.serialize()
+	var equipped_id: String = "thorn_sword"
+	if is_instance_valid(GameManager.player) and GameManager.player._current_weapon != null:
+		equipped_id = GameManager.player._current_weapon.weapon_id
+	state["player"]["equipped_weapon"] = equipped_id
 
 	# Core
 	var core_hp: int = 200
@@ -254,10 +275,25 @@ func _apply_state(state: Dictionary) -> void:
 			GameManager.player.current_hp,
 			GameManager.player.MAX_HP
 		)
+		GameManager.player.max_energy = int(pd.get("max_energy", 100))
+		GameManager.player.current_energy = int(pd.get("current_energy", 0))
+		GameManager.player.energy_changed.emit(
+			GameManager.player.current_energy,
+			GameManager.player.max_energy
+		)
 
 	# 5. Inventory.
-	GameManager.player_data["inventory"] = state.get("inventory", {}).duplicate()
-	# TODO (QUEST-01): Emit inventory_changed signal here when pickup UI exists.
+	InventoryManager.deserialize(state.get("inventory", []))
+
+	# 5.6 Crafting.
+	CraftingManager.deserialize(state.get("crafting", {}))
+
+	# 5.7 Breeding.
+	BreedingManager.deserialize(state.get("breeding", {}))
+	var equipped_id: String = state.get("player", {}).get("equipped_weapon", "thorn_sword")
+	var weapon_data: WeaponData = CraftingManager.get_weapon_data(equipped_id)
+	if weapon_data != null and is_instance_valid(GameManager.player):
+		GameManager.player._current_weapon = weapon_data
 
 	# 5.5 Difficulty tier.
 	var diff_tier: String = state.get("difficulty", {}).get("tier", "normal")
@@ -323,5 +359,40 @@ func _migrate(data: Dictionary) -> Dictionary:
 		data["quests"] = {}
 		data["unlocks"] = []
 		data["difficulty"] = {"tier": "normal"}
-	# Future: if version < 2: ... add new fields with sane defaults here.
+	# v1 → v2: inventory migrated from flat Dictionary to slot Array.
+	if version < 2:
+		print("[SaveManager] Migrating save from v%d to v2." % version)
+		var old_inv: Variant = data.get("inventory", {})
+		if old_inv is Dictionary:
+			var slot_array: Array = []
+			for item_id: String in (old_inv as Dictionary):
+				var count: int = int((old_inv as Dictionary)[item_id])
+				if count > 0:
+					slot_array.append({"item_id": item_id, "count": count})
+			data["inventory"] = slot_array
+		data["schema_version"] = 2
+	# v2 → v3: crafting ownership added.
+	if version < 3:
+		print("[SaveManager] Migrating save from v%d to v3." % version)
+		if not data.has("crafting"):
+			data["crafting"] = {"thorn_sword": true}
+		if not data.get("player", {}).has("equipped_weapon"):
+			data["player"]["equipped_weapon"] = "thorn_sword"
+		data["schema_version"] = 3
+	# v3 → v4: energy fields added.
+	if version < 4:
+		print("[SaveManager] Migrating save from v%d to v4." % version)
+		var pd: Dictionary = data.get("player", {})
+		if not pd.has("current_energy"):
+			pd["current_energy"] = 0
+		if not pd.has("max_energy"):
+			pd["max_energy"] = 100
+		data["player"] = pd
+		data["schema_version"] = 4
+	# v4 → v5: breeding discovery tracking added.
+	if version < 5:
+		print("[SaveManager] Migrating save from v%d to v5." % version)
+		if not data.has("breeding"):
+			data["breeding"] = {"discovered": {}}
+		data["schema_version"] = 5
 	return data

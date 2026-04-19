@@ -1,8 +1,8 @@
 # Dianthus Pixie — Per-Person Task Breakdown
 
 **Sprint:** 2-Week Vertical Slice  
-**Last Updated:** 2026-04-17  
-**Source:** `PROMPT_CORE_08.md`
+**Last Updated:** 2026-04-19  
+**Source:** `PROMPT_CORE_08.md`, `PROMPT_CROSSBREEDING.md`
 
 > Status legend: ✅ Done · 🔧 In Progress · ⬜ Not Started
 
@@ -43,7 +43,7 @@
 | Task | Est | Status | Notes |
 |------|-----|--------|-------|
 | Voidrunner enemy (reuse FSM, skip Scout, rush Core) | 1d | ⬜ | New enemy type with simplified FSM |
-| Energy bar + gain (+3/hit, +10/kill) | 0.5d | ⬜ | Replace the CORE-08 energy stub with real system |
+| Energy bar + gain (+3/hit, +10/kill) | 0.5d | ✅ | Replace the CORE-08 energy stub with real system |
 
 ### Key Files A Owns
 
@@ -86,14 +86,15 @@ Complete in order. A pairs for ~2h on Day 1.
 | 1 | Onboarding exercises 1–3 | 1d | ⬜ | A pairs for 2h |
 | 2 | Onboarding exercises 4–5. Read codebase. | 1d | ⬜ | Focus on understanding signals and scene tree |
 | 3–4 | **CORE-01:** Meadow Edge Polish | 2d | ⬜ | Decorate `meadow_edge.tscn` using Sprout Lands tileset. Place Petal Shard (×5) and Verdant Sap (×3) pickup nodes. Polish collisions and walkable area. |
-| 4–5 | **CORE-02:** Resource Pickup System | 1d | ⬜ | Area2D on resources → `body_entered` → add to `GameManager.player_data.inventory` → show "+1 Petal Shard" popup label. No full inventory UI yet. |
+| 4–5 | **CORE-02:** Resource Pickup System | 1d | ✅ | `InventoryManager.add_item()` on body_entered. Floating popup. "Inventory Full!" guard. Files: `inventory/pickups/resource_pickup.gd/.tscn`, `inventory/data/item_database.gd`, `inventory/scripts/inventory_manager.gd` |
 
 ### Week 2
 
 | Day | Task | Est | Status | Notes |
 |-----|------|-----|--------|-------|
 | 6–7 | **Simple Plant Placement** | 2d | ⬜ | AFTERNOON phase only. Select Bougainvillea or Rafflesia. Click 32×32 grid to place. Max 4 plants. No radius viz. Files: `plants/placement/` |
-| 7 | **Bench Crafting** | 1d | ⬜ | StaticBody2D bench in garden. Press E near it → if has 3 Petal Shard + 2 Verdant Sap → grant Thorn Sword. Popup confirm. Files: `crafting/bench/` |
+| 7 | **Bench Crafting / PLANT-06** | 1d | ✅ | BreedingBench (StaticBody2D). Press E near it (day only) → CraftingScreen UI. 8 recipes, material deduction, weapon ownership. Files: `crafting/` |
+| 8 | **Cross-Breeding System / PLANT-CB** | 2d | ✅ | `BreedingManager` autoload, 4 hybrid plant entities, `CrossBreedingScreen` UI, bench opens breeding screen, save/load v5. Files: `crafting/breeding/breeding_manager.gd`, `plants/entities/bunga_api.*`, `plants/entities/bunga_bayang.*`, `plants/entities/melati_emas.*`, `plants/entities/baja_kuning.*`, `ui/screens/cross_breeding_screen.*` |
 | 8 | Plant placement polish. Fix A's review feedback. | 1d | ⬜ | |
 | 9 | Bug-fix. | 1d | ⬜ | Feature freeze. |
 | 10 | Bug-fix. Polish. | 1d | ⬜ | |
@@ -154,8 +155,8 @@ Complete in order. A pairs for ~2h on Day 1.
 | Day | Task | Est | Status | Notes |
 |-----|------|-----|--------|-------|
 | 6 | **Main Menu screen** | 1d | ⬜ | Title + "Start Game" + "Quit" buttons. Files: `ui/menus/main_menu.gd/.tscn` |
-| 7 | **Inventory List overlay** (pair with A 1h) | 1d | ⬜ | Press I → overlay list of items (icon + name + count). Not full 30-slot grid. Files: `ui/screens/inventory_screen.gd/.tscn` |
-| 8 | Inventory list finish. | 1d | ⬜ | Polish, test with collected items |
+| 7 | **UI-02: Inventory Screen** (pair with A 1h) | 1d | ✅ | Press I → 30-slot grid (6×5, 40×40 slots). Rarity-colored panels, stack count, tooltip on hover. Files: `ui/screens/inventory_screen.gd/.tscn` |
+| 8 | Inventory screen finish. | 1d | ✅ | Polish, test with collected items |
 | 9 | Bug-fix + QA testing. | 1d | ⬜ | Feature freeze. Test all screens. |
 | 10 | QA testing. Final check. | 1d | ⬜ | Full playthrough, report bugs. |
 
@@ -297,13 +298,21 @@ FOUND-01..06 (Done)
 | F1 | Core -20 HP | CORE-03 |
 | F2 | Core +20 HP | CORE-03 |
 | F3 | Player -25 HP | CORE-08 |
+| Shift+F3 | Energy set to 50 | PLANT-07 |
 | F4 | Player +25 HP | CORE-08 |
+| Shift+F4 | Energy filled to max | PLANT-07 |
 | F5 | Spawn Shadowling at mouse | CORE-06 |
 | F6 | Kill all enemies | CORE-06 |
 | F7 | Skip current phase | FOUND-05 |
 | F8 | Force-start wave | CORE-07 |
 | F9 | Force-clear wave | CORE-07 |
-| F10 | Place plant (Bougainvillea → Rafflesia → Clear cycle) | PLANT-REWRITE |
+| F10 | Place plant cycle: Bougainvillea → Rafflesia → Bunga Api → Bunga Bayang → Melati Emas → Baja Kuning → Clear | PLANT-REWRITE / PLANT-CB |
 | F11 | Manual save (`SaveManager.save_to_slot(true)`) | SAVE-01/02 |
 | Shift+F11 | Delete save file (test New Game overwrite) | SAVE-02 |
 | F12 | Load save (`SaveManager.load_from_slot()`) | SAVE-02 |
+| Insert | Add 5 Petal Shard + 2 Verdant Sap + 1 Moonspore (inventory test) | CORE-02/UI-02 |
+| Shift+Insert | Add all crafting + breeding test materials (bougainvillea/rafflesia/beringin/kecombrang/kunyit extract ×1 + 5 Petal Shard + 5 Verdant Sap + 3 Moonspore + 2 Shadow Resin + 1 Dianthus Pollen) | PLANT-06 / PLANT-CB |
+| I | Toggle 30-slot Inventory screen | UI-02 |
+| E | Interact with BreedingBench (opens CrossBreeding UI) | PLANT-06 / PLANT-CB |
+| C | Toggle CraftingScreen directly (debug bypass bench proximity) | PLANT-06 |
+| B | Toggle CrossBreedingScreen directly (debug bypass bench proximity) | PLANT-CB |

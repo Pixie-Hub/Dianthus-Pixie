@@ -4,9 +4,9 @@
 
 [resource]
 script = ExtResource("1_wdata")
-weapon_id = "thorn_sword"
-weapon_name = "Thorn Sword"
-damage = 15
-cooldown = 0.5
-attack_range = 24.0
-arc_degrees = 90.0
+weapon_id = "iron_bloom_shield"
+weapon_name = "Iron Bloom Shield"
+damage = 8
+cooldown = 0.3
+attack_range = 16.0
+arc_degrees = 180.0

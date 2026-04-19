@@ -8,7 +8,9 @@ extends CanvasLayer
 @onready var _core_container: MarginContainer = %CoreHPContainer
 @onready var _player_hp_icon: Label = %PlayerHPIcon
 @onready var _core_hp_icon: Label = %CoreHPIcon
-# TODO (PLANT-07): Add EnergyIcon (⚡) label next to future Energy bar.
+@onready var _energy_bar: ProgressBar = %EnergyBar
+@onready var _energy_label: Label = %EnergyLabel
+@onready var _energy_icon: Label = %EnergyIcon
 
 var _prev_player_hp: int = -1
 var _prev_core_hp: int = -1
@@ -18,6 +20,7 @@ func _ready() -> void:
 	GameManager.player_hp_changed.connect(_on_player_hp_changed)
 	GameManager.core_hp_changed.connect(_on_core_hp_changed)
 	GameManager.colorblind_mode_changed.connect(_on_colorblind_changed)
+	GameManager.player_energy_changed.connect(_on_player_energy_changed)
 	_on_colorblind_changed(GameManager.colorblind_mode)
 
 
@@ -39,9 +42,17 @@ func _on_core_hp_changed(current_hp: int, max_hp: int) -> void:
 	_prev_core_hp = current_hp
 
 
+func _on_player_energy_changed(current_energy: int, max_energy: int) -> void:
+	_energy_bar.max_value = max_energy
+	var tween: Tween = create_tween()
+	tween.tween_property(_energy_bar, "value", float(current_energy), 0.15)
+	_energy_label.text = "ENERGY  %d / %d" % [current_energy, max_energy]
+
+
 func _on_colorblind_changed(enabled: bool) -> void:
 	_player_hp_icon.visible = enabled
 	_core_hp_icon.visible = enabled
+	_energy_icon.visible = enabled
 
 
 func _shake(node: Control) -> void:

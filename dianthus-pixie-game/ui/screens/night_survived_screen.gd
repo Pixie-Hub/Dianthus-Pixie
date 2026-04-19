@@ -23,10 +23,11 @@ func _on_night_survived(day: int) -> void:
 
 func _generate_rewards_text() -> String:
 	var common_count: int = randi_range(3, 5)
+	InventoryManager.add_item("petal_shard", common_count)
+	InventoryManager.add_item("verdant_sap", 1)
 	var lines: PackedStringArray = PackedStringArray()
 	lines.append("+ %d Petal Shard" % common_count)
 	lines.append("+ 1 Verdant Sap")
-	# TODO (CORE-02): Actually add rewards to player inventory when pickup system exists.
 	return "\n".join(lines)
 
 

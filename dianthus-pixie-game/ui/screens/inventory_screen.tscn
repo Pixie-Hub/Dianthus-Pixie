@@ -1,0 +1,62 @@
+[gd_scene format=4 uid="uid://inv_screen_01"]
+
+[ext_resource type="Script" path="res://ui/screens/inventory_screen.gd" id="1_script"]
+
+[node name="InventoryScreen" type="CanvasLayer"]
+layer = 90
+script = ExtResource("1_script")
+
+[node name="Overlay" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+color = Color(0, 0, 0, 0.6)
+mouse_filter = 1
+
+[node name="Panel" type="PanelContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -144.0
+offset_top = -128.0
+offset_right = 144.0
+offset_bottom = 128.0
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "INVENTORY"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 16
+
+[node name="SlotGrid" type="GridContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+unique_name_in_owner = true
+columns = 6
+
+[node name="Tooltip" type="Label" parent="."]
+unique_name_in_owner = true
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -48.0
+offset_right = 320.0
+offset_bottom = -8.0
+text = ""
+visible = false
+mouse_filter = 2
+theme_override_font_sizes/font_size = 8
