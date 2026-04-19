@@ -238,23 +238,23 @@ func _debug_place_plant() -> void:
 	var mouse_pos: Vector2 = get_global_mouse_position()
 	match _debug_plant_cycle:
 		0:
-			var scene: PackedScene = load("res://plants/entities/thornvine.tscn")
+			var scene: PackedScene = load("res://plants/entities/bougainvillea.tscn")
 			if scene == null:
-				push_warning("DEBUG: Could not load Thornvine scene.")
+				push_warning("DEBUG: Could not load Bougainvillea scene.")
 				return
 			var plant: Node2D = scene.instantiate()
 			plant.global_position = mouse_pos
 			get_tree().current_scene.add_child(plant)
-			print("[Debug] Placed Thornvine at %s" % mouse_pos)
+			print("[Debug] Placed Bougainvillea at %s" % mouse_pos)
 		1:
-			var scene: PackedScene = load("res://plants/entities/gloomshroom.tscn")
+			var scene: PackedScene = load("res://plants/entities/rafflesia.tscn")
 			if scene == null:
-				push_warning("DEBUG: Could not load Gloomshroom scene.")
+				push_warning("DEBUG: Could not load Rafflesia scene.")
 				return
 			var plant: Node2D = scene.instantiate()
 			plant.global_position = mouse_pos
 			get_tree().current_scene.add_child(plant)
-			print("[Debug] Placed Gloomshroom at %s" % mouse_pos)
+			print("[Debug] Placed Rafflesia at %s" % mouse_pos)
 		2:
 			for plant in get_tree().get_nodes_in_group(&"plants"):
 				plant.queue_free()

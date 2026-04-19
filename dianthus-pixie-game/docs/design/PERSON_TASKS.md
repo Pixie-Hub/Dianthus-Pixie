@@ -30,8 +30,8 @@
 
 | Day | Task | Est | Status | Notes |
 |-----|------|-----|--------|-------|
-| 6 | **Thornvine plant effect** | 0.5d | ⬜ | Area2D deals 5 DMG/sec to enemies passing through. Simple thorn sprite. Files: `plants/entities/thornvine.gd/.tscn` |
-| 6 | **Gloomshroom plant effect** | 0.5d | ⬜ | Area2D slows enemies 40% in radius. Simple mushroom sprite. Files: `plants/entities/gloomshroom.gd/.tscn` |
+| 6 | **Bougainvillea plant effect** | 0.5d | ✅ | Area2D deals 5 DMG/tick to enemies in radius (24px). Magenta-pink placeholder. Files: `plants/entities/bougainvillea.gd/.tscn` |
+| 6 | **Rafflesia plant effect** | 0.5d | ✅ | Area2D slows enemies 0.6× in radius (40px). Deep red-brown placeholder. Files: `plants/entities/rafflesia.gd/.tscn` |
 | 7 | **Simple Difficulty scaling** | 0.5d | ⬜ | Per day: enemies +10% HP, +1 spawn count. Linear multiplier in `wave_spawner.gd`. Data-driven via export vars. |
 | 7 | Code review B's plant placement + crafting | 0.25d | ⬜ | Review CORE-01 polish, plant placement, bench crafting |
 | 8 | **Integration test:** full demo with plants + crafting | 1d | ⬜ | Explore → collect → craft → place plants → fight → survive → next day harder. End-to-end. |
@@ -55,7 +55,7 @@
 - `combat/weapons/`
 - `ui/screens/night_survived_screen.gd/.tscn`
 - `ui/hud/hud.gd/.tscn` (template)
-- `plants/entities/` (Thornvine, Gloomshroom)
+- `plants/entities/` (Bougainvillea, Rafflesia)
 
 ---
 
@@ -92,7 +92,7 @@ Complete in order. A pairs for ~2h on Day 1.
 
 | Day | Task | Est | Status | Notes |
 |-----|------|-----|--------|-------|
-| 6–7 | **Simple Plant Placement** | 2d | ⬜ | AFTERNOON phase only. Select Thornvine or Gloomshroom. Click 32×32 grid to place. Max 4 plants. No radius viz. Files: `plants/placement/` |
+| 6–7 | **Simple Plant Placement** | 2d | ⬜ | AFTERNOON phase only. Select Bougainvillea or Rafflesia. Click 32×32 grid to place. Max 4 plants. No radius viz. Files: `plants/placement/` |
 | 7 | **Bench Crafting** | 1d | ⬜ | StaticBody2D bench in garden. Press E near it → if has 3 Petal Shard + 2 Verdant Sap → grant Thorn Sword. Popup confirm. Files: `crafting/bench/` |
 | 8 | Plant placement polish. Fix A's review feedback. | 1d | ⬜ | |
 | 9 | Bug-fix. | 1d | ⬜ | Feature freeze. |
@@ -303,7 +303,7 @@ FOUND-01..06 (Done)
 | F7 | Skip current phase | FOUND-05 |
 | F8 | Force-start wave | CORE-07 |
 | F9 | Force-clear wave | CORE-07 |
-| F10 | Place plant (Thornvine → Gloomshroom → Clear cycle) | PLANT-01 |
+| F10 | Place plant (Bougainvillea → Rafflesia → Clear cycle) | PLANT-REWRITE |
 | F11 | Manual save (`SaveManager.save_to_slot(true)`) | SAVE-01/02 |
 | Shift+F11 | Delete save file (test New Game overwrite) | SAVE-02 |
 | F12 | Load save (`SaveManager.load_from_slot()`) | SAVE-02 |

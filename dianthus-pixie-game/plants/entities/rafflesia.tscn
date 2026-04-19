@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bgloomshrm1"]
 
-[ext_resource type="Script" path="res://plants/entities/gloomshroom.gd" id="1_gs"]
+[ext_resource type="Script" path="res://plants/entities/rafflesia.gd" id="1_gs"]
 [ext_resource type="Texture2D" uid="uid://ckoljc2d64kcr" path="res://icon.svg" id="2_icon"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
@@ -9,7 +9,7 @@ size = Vector2(16, 16)
 [sub_resource type="CircleShape2D" id="CircleShape2D_effect"]
 radius = 40.0
 
-[node name="Gloomshroom" type="StaticBody2D"]
+[node name="Rafflesia" type="StaticBody2D"]
 collision_layer = 1
 collision_mask = 0
 script = ExtResource("1_gs")
@@ -18,7 +18,7 @@ script = ExtResource("1_gs")
 unique_name_in_owner = true
 texture = ExtResource("2_icon")
 scale = Vector2(0.15, 0.15)
-modulate = Color(0.5, 0.25, 0.5, 1)
+modulate = Color(0.65, 0.12, 0.15, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_body")

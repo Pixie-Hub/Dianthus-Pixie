@@ -107,13 +107,13 @@ Setelah menyelesaikan True Ending, mode Endless terbuka. Tidak ada target hari, 
 | **Nama Tanaman** | **Role** | **Efek Dasar** | **Unlock** |
 | --- | --- | --- | --- |
 | Dianthus | Hybrid (Core) | Sumber energi utama, memancarkan aura pertahanan | Tersedia dari awal |
-| Thornvine | Offensive | Menghasilkan duri yang melukai musuh saat dilewati | Tersedia dari awal |
-| Gloomshroom | Defensive | Mengeluarkan spora yang memperlambat musuh | Hari 2, forage |
-| Sunpetal | Support | Meregenerasi energi pemain secara pasif saat di dekatnya | Hari 3, quest |
-| Nightbloom | Offensive | Menyerang otomatis musuh yang mendekat di malam hari | Hari 4, breeding |
-| Mosswarden | Defensive | Membuat tembok hidup sementara di jalur musuh | Hari 5, craft |
-| Emberfern | Support | Boost attack speed pemain +20% saat diaktifkan | Hari 7, rare forage |
-| Crystalroot | Hybrid | Memperkuat senjata melee, menambah penetrasi armor | Discovery Quest |
+| Bougainvillea | Offensive | Duri yang melukai musuh dalam radius (5 DMG/tick, 24px) | Tersedia dari awal |
+| Rafflesia | Defensive | Miasma busuk yang memperlambat musuh dalam radius (0.6×, 40px) | Hari 2, forage |
+| Melati | Support | Meregenerasi energi pemain secara pasif saat di dekatnya (+3/sec, 32px) | Hari 3, quest |
+| Wijaya Kusuma | Offensive | Menyerang otomatis musuh di malam hari dengan proyektil petal (8 DMG, 48px) | Hari 4, breeding |
+| Beringin | Defensive | Menumbuhkan tembok akar hidup sementara di jalur musuh (Wall HP: 60, 20s) | Hari 5, craft |
+| Kecombrang | Support | Boost attack speed pemain +20% selama 15s saat diaktifkan (28px) | Hari 7, rare forage |
+| Kunyit | Hybrid | Memperkuat senjata melee (+3 DMG, penetrasi armor) dalam radius (24px) | Discovery Quest |
 
 ## **7.2 Cross-Breeding Rules**
 
@@ -133,19 +133,19 @@ Sistem cross-breeding bersifat semi-deterministik:
 
 | **Plant A** | **Plant B** | **Hasil** |
 | --- | --- | --- |
-| Thornvine | Emberfern | Blazethorn (duri + api, AoE kecil) |
-| Gloomshroom | Nightbloom | Voidspore (slow + auto-attack area malam) |
-| Sunpetal | Dianthus Pollen | Goldendianthus (regenerasi HP + energi) |
-| Crystalroot | Shadow Resin | Ironbloom (armor buff + counter-attack) |
+| Bougainvillea | Kecombrang | Bunga Api (duri + api AoE, 7 DMG/tick + 3 burn DMG) |
+| Rafflesia | Wijaya Kusuma | Bunga Bayang (slow + night auto-attack area, 4 DMG, 0.7× slow) |
+| Melati | Dianthus Pollen | Melati Emas (regenerasi HP +2/sec + energi +4/sec) |
+| Kunyit | Shadow Resin | Baja Kuning (armor buff +30% + counter-attack 25% reflect) |
 
 ## **7.3 Crafting Recipes**
 
 | **Senjata** | **Material** | **Crafting Time** | **Upgrade Path** |
 | --- | --- | --- | --- |
-| Thorn Sword | 3x Petal Shard + 2x Thornvine extract | Instan | Thorn Sword > Blazeblade (+ Emberfern) |
-| Spore Bomb | 2x Moonspore + 1x Gloomshroom | Instan | Spore Bomb > Void Grenade (+ Shadow Resin) |
-| Vine Whip | 4x Verdant Sap + 1x Thornvine | Instan | Vine Whip > Crystal Lash (+ Crystalroot) |
-| Petal Shield | 5x Petal Shard + 2x Mosswarden | Instan | Petal Shield > Iron Bloom Shield (+ Shadow Resin) |
+| Thorn Sword | 3x Petal Shard + 2x Bougainvillea extract | Instan | Thorn Sword > Blazeblade (+ Kecombrang) |
+| Spore Bomb | 2x Moonspore + 1x Rafflesia | Instan | Spore Bomb > Void Grenade (+ Shadow Resin) |
+| Vine Whip | 4x Verdant Sap + 1x Bougainvillea | Instan | Vine Whip > Crystal Lash (+ Kunyit) |
+| Petal Shield | 5x Petal Shard + 2x Beringin root | Instan | Petal Shield > Iron Bloom Shield (+ Shadow Resin) |
 
 ## **7.4 Plant Placement (Defense Phase)**
 
@@ -161,11 +161,11 @@ Sistem cross-breeding bersifat semi-deterministik:
 
 | **Nama** | **HP** | **Kecepatan** | **Damage** | **FSM Quirk** | **Kelemahan** | **Muncul Hari** |
 | --- | --- | --- | --- | --- | --- | --- |
-| Shadowling | 40 | Sedang | 8/hit | Standard FSM | Sunpetal, Emberfern | Hari 1 |
-| Voidrunner | 25 | Sangat Cepat | 5/hit | Skip Scouting — langsung Rush | Slow trap, Gloomshroom | Hari 2 |
+| Shadowling | 40 | Sedang | 8/hit | Standard FSM | Melati, Kecombrang | Hari 1 |
+| Voidrunner | 25 | Sangat Cepat | 5/hit | Skip Scouting — langsung Rush | Slow trap, Rafflesia | Hari 2 |
 | Stonehusk | 120 | Lambat | 20/hit | Tidak retreat — terus Siege sampai mati | Vine Whip, Crystal Lash | Hari 4 |
-| Phantom Weaver | 60 | Cepat | 12/hit | Teleport saat HP < 30%, re-Scout ulang | Nightbloom, cahaya area | Hari 6 |
-| Swarm Larva | 15 per unit | Cepat | 3/hit | Bergerak 5-10 unit sekaligus | AoE weapon (Spore Bomb) | Hari 8 |
+| Phantom Weaver | 60 | Cepat | 12/hit | Teleport saat HP < 30%, re-Scout ulang | Wijaya Kusuma, cahaya area | Hari 6 |
+| Swarm Larva | 15 per unit | Cepat | 3/hit | Bergerak 5-10 unit sekaligus | AoE weapon (Spore Bomb / Rafflesia) | Hari 8 |
 | The Devourer | 1200 (Boss) | Lambat-Sedang | 50/hit | Boss unik — 3 fase, memanggil minion | Dianthus Pollen weapon | Final Night |
 
 ## **8.2 Difficulty Scaling**
@@ -188,9 +188,9 @@ Sistem cross-breeding bersifat semi-deterministik:
 | **Stat** | **Nilai Awal** | **Cara Upgrade** |
 | --- | --- | --- |
 | Max HP | 100 | Tiap survive 5 malam (+10 HP), quest tertentu |
-| Movement Speed | 5 tiles/sec | Emberfern brew, upgrade Garden |
-| Attack Speed | 1.0x (base) | Emberfern activation (+20%), Blazeblade (+15%) |
-| Energy Capacity | 100 | Tiap 3 Sunpetal ditemukan (+10 Energy Max) |
+| Movement Speed | 5 tiles/sec | Kecombrang brew, upgrade Garden |
+| Attack Speed | 1.0x (base) | Kecombrang activation (+20%), Blazeblade (+15%) |
+| Energy Capacity | 100 | Tiap 3 Melati ditemukan (+10 Energy Max) |
 | Respawn Invincibility | 3 detik | Tidak bisa diupgrade |
 
 ## **9.2 Loadout**
@@ -214,9 +214,9 @@ Tidak ada skill tree. Progression bersifat item-driven:
 
 | **Zone** | **Biome** | **Resource Unik** | **Unlock** |
 | --- | --- | --- | --- |
-| Meadow Edge | Padang rumput — zona awal | Petal Shard, Thornvine, Verdant Sap | Tersedia dari awal |
-| Dusk Forest | Hutan gelap — cahaya redup | Moonspore, Nightbloom, Gloomshroom | Hari 3 |
-| Ruins of Veld | Reruntuhan kota kuno | Shadow Resin, Crystalroot | Hari 7, quest |
+| Meadow Edge | Padang rumput — zona awal | Petal Shard, Bougainvillea, Verdant Sap | Tersedia dari awal |
+| Dusk Forest | Hutan gelap — cahaya redup | Moonspore, Wijaya Kusuma, Rafflesia | Hari 3 |
+| Ruins of Veld | Reruntuhan kota kuno | Shadow Resin, Kunyit | Hari 7, quest |
 | Obsidian Bog | Rawa hitam — terrain sulit | Aether Bloom, Void materials | Hari 14 |
 | Core Sanctum | Area sakral Dianthus | Dianthus Pollen (unlimited) | Final quest |
 

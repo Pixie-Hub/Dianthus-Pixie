@@ -14,13 +14,17 @@ var current_hp: int = MAX_HP
 
 var _base_aura_energy: float = 1.5
 var _regen_accumulator: float = 0.0
+var _base_sprite_scale: Vector2
+var _breathe_tween: Tween = null
 
 
 func _ready() -> void:
 	_base_aura_energy = _aura_light.energy
+	_base_sprite_scale = _sprite.scale
 	$DamageArea.body_entered.connect(_on_enemy_entered)
 	DayNightCycle.phase_changed.connect(_on_phase_changed)
 	call_deferred("_emit_initial_hp")
+	call_deferred("_start_breathe_animation")
 
 
 func _process(delta: float) -> void:
@@ -67,6 +71,17 @@ func get_hp_ratio() -> float:
 
 func _emit_initial_hp() -> void:
 	hp_changed.emit(current_hp, MAX_HP)
+
+
+func _start_breathe_animation() -> void:
+	if _breathe_tween:
+		_breathe_tween.kill()
+	_breathe_tween = create_tween().set_loops()
+	var inhale: Vector2 = _base_sprite_scale * Vector2(0.96, 1.06)
+	_breathe_tween.tween_property(_sprite, "scale", inhale, 1.8) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_breathe_tween.tween_property(_sprite, "scale", _base_sprite_scale, 1.8) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 
 func _on_phase_changed(_phase: String) -> void:

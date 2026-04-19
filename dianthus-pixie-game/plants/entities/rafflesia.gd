@@ -1,4 +1,4 @@
-class_name Gloomshroom
+class_name Rafflesia
 extends PlantBase
 
 @export var slow_multiplier: float = 0.6
@@ -8,7 +8,7 @@ var _enemies_in_range: Array[EnemyBase] = []
 
 func _ready() -> void:
 	super._ready()
-	add_to_group(&"gloomshrooms")
+	add_to_group(&"rafflesias")
 	max_hp = 40
 	current_hp = max_hp
 	effect_radius = 40.0
@@ -42,8 +42,8 @@ func _apply_slow(enemy: EnemyBase) -> void:
 
 func _recalculate_slow(enemy: EnemyBase) -> void:
 	var strongest: float = 1.0
-	for plant in get_tree().get_nodes_in_group(&"gloomshrooms"):
-		if plant is Gloomshroom and not plant.is_destroyed:
+	for plant in get_tree().get_nodes_in_group(&"rafflesias"):
+		if plant is Rafflesia and not plant.is_destroyed:
 			if plant._enemies_in_range.has(enemy):
 				strongest = min(strongest, plant.slow_multiplier)
 	enemy.speed_modifier = strongest

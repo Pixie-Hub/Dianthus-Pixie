@@ -1,4 +1,4 @@
-class_name Thornvine
+class_name Bougainvillea
 extends PlantBase
 
 @export var damage_per_tick: int = 5
@@ -10,7 +10,7 @@ var _tick_timer: float = 0.0
 
 func _ready() -> void:
 	super._ready()
-	add_to_group(&"thornvines")
+	add_to_group(&"bougainvilleas")
 	max_hp = 30
 	current_hp = max_hp
 	effect_radius = 24.0
