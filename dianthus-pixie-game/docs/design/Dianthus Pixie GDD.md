@@ -150,7 +150,7 @@ Sistem cross-breeding bersifat semi-deterministik:
 ## **7.4 Plant Placement (Defense Phase)**
 
 - Sistem penempatan berbasis grid (16x16 px per tile)
-- Pemain menempatkan tanaman selama Preparation Phase (sore hari), bukan saat malam berjalan
+- Pemain menempatkan tanaman selama Preparation Phase, bukan saat malam berjalan
 - Tanaman bisa dihancurkan musuh — dapat ditanam ulang di siang berikutnya
 - Maksimal 8 tanaman aktif di kebun secara bersamaan
 - Tiap jenis tanaman memiliki radius efek visualisasi saat placement mode
@@ -272,7 +272,7 @@ Tidak ada skill tree. Progression bersifat item-driven:
 
 ## **12.1 Visual Style**
 
-- Resolusi tile: 32x32 px per tile; karakter 32x48 px
+- Resolusi tile: 16x16 px per tile; karakter 16x24 px
 - Palette daytime: hangat, vibrant — kuning, hijau cerah, biru langit
 - Palette nighttime: desaturated, dingin — ungu gelap, abu-abu biru, aksen merah bahaya
 - Dianthus Core: glowing pink-white aura yang berfluktuasi sesuai HP — makin redup saat HP rendah

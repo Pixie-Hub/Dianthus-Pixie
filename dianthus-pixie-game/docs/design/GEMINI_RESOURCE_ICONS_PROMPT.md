@@ -168,6 +168,26 @@ The item is a Baja Kuning Seed — a hybrid seed from Kunyit x Shadow Resin cros
 Colors: shell (#B89830, #D4A820), purple veins (#5C3080, #3D1B58), metallic highlight (#FFD860), dark shadow (#6A5010).
 ```
 
+### 16. Bougainvillea Seed (Common)
+
+```
+Create a single 16x16 pixel art item icon on a transparent background.
+
+The item is a Bougainvillea Seed — a small, rounded seed from the Bougainvillea plant. The seed has a warm magenta-pink tinted husk with a slightly papery, dry texture suggested by faint lighter pixel lines. A tiny pointed tip at one end.
+
+Colors: husk (#C0406A, #8C2848), highlight (#E87BA0), tip shadow (#5C1830), dry texture (#D46080).
+```
+
+### 17. Rafflesia Seed (Uncommon)
+
+```
+Create a single 16x16 pixel art item icon on a transparent background.
+
+The item is a Rafflesia Seed — a small, waxy seed from the Rafflesia flower. It's roughly oval with a dark red-brown surface covered in faint irregular spots (1-pixel dots) referencing Rafflesia's spotted bloom. It looks dense and unusual.
+
+Colors: seed body (#7A1E22, #5C1418), spots (#A63030, #C04040), waxy highlight (#B85050), dark outline (#2A0808).
+```
+
 ---
 
 ## Usage Notes
@@ -179,12 +199,12 @@ Colors: shell (#B89830, #D4A820), purple veins (#5C3080, #3D1B58), metallic high
 
 ## Batch Request Tip
 
-If Gemini supports batch generation, you can combine all 15 prompts with:
+If Gemini supports batch generation, you can combine all 17 prompts with:
 
 ```
-Generate 15 separate 16x16 pixel art item icons, each on its own transparent background, as individual images. All icons share these rules: strict pixel art, no anti-aliasing, no gradients, limited 6-10 color palette per icon, clean readable silhouette at 16x16.
+Generate 17 separate 16x16 pixel art item icons, each on its own transparent background, as individual images. All icons share these rules: strict pixel art, no anti-aliasing, no gradients, limited 6-10 color palette per icon, clean readable silhouette at 16x16.
 
-The 15 items are:
+The 17 items are:
 1. Petal Shard — curved pink petal fragment (pink #E87BA0 → pale #F2C4D4)
 2. Verdant Sap — green sap in a glass vial (sap #5DAE3B, vial #B8D4E3)
 3. Moonspore — glowing lavender spore sphere with sparkles (#B8A0D4, glow #E8E0FF)
@@ -200,14 +220,16 @@ The 15 items are:
 13. Bunga Bayang Seed — deep purple-black round seed with violet aura (#2A1040, aura #6B3FA0)
 14. Melati Emas Seed — golden-white oval seed with pink accent (#FFE878, pink #FFB8D0)
 15. Baja Kuning Seed — metallic golden-brown angular seed with purple veins (#B89830, veins #5C3080)
+16. Bougainvillea Seed — small rounded seed with magenta-pink papery husk and pointed tip (#C0406A, highlight #E87BA0)
+17. Rafflesia Seed — dark red-brown oval seed with faint irregular spots, dense and waxy (#7A1E22, spots #A63030)
 
-Output: 15 separate PNG images, each 16×16 pixels, transparent background, no upscaling, no smoothing.
+Output: 17 separate PNG images, each 16×16 pixels, transparent background, no upscaling, no smoothing.
 ```
 
 ## Rarity Color Coding Reference
 
 | Rarity | Border/Glow Color | Items |
 |---|---|---|
-| **Common** | Grey (#E5E5E5) | Petal Shard, Verdant Sap |
-| **Uncommon** | Blue (#668AFF) | Moonspore, Shadow Resin, Bougainvillea Extract, Rafflesia Extract, Beringin Root |
+| **Common** | Grey (#E5E5E5) | Petal Shard, Verdant Sap, Bougainvillea Seed |
+| **Uncommon** | Blue (#668AFF) | Moonspore, Shadow Resin, Bougainvillea Extract, Rafflesia Extract, Beringin Root, Rafflesia Seed |
 | **Rare** | Gold (#FFCC33) | Aether Bloom, Dianthus Pollen, Kecombrang Extract, Kunyit Extract, all 4 Hybrid Seeds |

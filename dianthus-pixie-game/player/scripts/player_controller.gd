@@ -160,6 +160,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				push_warning("DEBUG: WaveSpawner not found in scene.")
 		elif event.keycode == KEY_F10:
 			_debug_place_plant()
+			print("DEBUG: F10 direct-places at mouse (no grid). Use P key for proper grid placement mode.")
 		elif event.keycode == KEY_F11:
 			if event.shift_pressed:
 				SaveManager.delete_save()
@@ -182,7 +183,13 @@ func _unhandled_input(event: InputEvent) -> void:
 				InventoryManager.add_item("moonspore", 3)
 				InventoryManager.add_item("shadow_resin", 2)
 				InventoryManager.add_item("dianthus_pollen", 1)
-				print("DEBUG: Added crafting test materials (Shift+Insert).")
+				InventoryManager.add_item("bougainvillea_seed", 3)
+				InventoryManager.add_item("rafflesia_seed", 2)
+				InventoryManager.add_item("bunga_api_seed", 1)
+				InventoryManager.add_item("bunga_bayang_seed", 1)
+				InventoryManager.add_item("melati_emas_seed", 1)
+				InventoryManager.add_item("baja_kuning_seed", 1)
+				print("DEBUG: Added crafting + plant seed test materials (Shift+Insert).")
 			else:
 				InventoryManager.add_item("petal_shard", 5)
 				InventoryManager.add_item("verdant_sap", 2)

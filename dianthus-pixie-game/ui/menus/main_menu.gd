@@ -43,9 +43,13 @@ func _on_overwrite_confirmed() -> void:
 func _start_new_game() -> void:
 	print("[MainMenu] Starting new game.")
 	GameManager.current_state = GameManager.GameState.EXPLORATION
-	GameManager.player_data = {"position": Vector2.ZERO, "last_zone": "", "inventory": {}}
+	GameManager.player_data = {"position": Vector2.ZERO, "last_zone": ""}
 	DayNightCycle.day_count = 1
 	DayNightCycle.current_phase = DayNightCycle.Phase.DAY
+	DayNightCycle._phase_timer = DayNightCycle.PHASE_DURATIONS[DayNightCycle.Phase.DAY]
+	InventoryManager.clear_all()
+	CraftingManager.deserialize({})
+	BreedingManager.deserialize({})
 	get_tree().change_scene_to_file("res://world/zones/meadow_edge/meadow_edge.tscn")
 
 

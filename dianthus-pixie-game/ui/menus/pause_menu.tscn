@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://do43bmhqxi163"]
 
-[ext_resource type="Script" path="res://ui/menus/pause_menu.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://cpausegdmn01" path="res://ui/menus/pause_menu.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://csettgscrn01" path="res://ui/menus/settings_screen.tscn" id="2_settings"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
@@ -131,7 +131,6 @@ text = "Main Menu"
 
 [node name="SettingsScreen" parent="." unique_id=56530314 instance=ExtResource("2_settings")]
 unique_name_in_owner = true
-layout_mode = 3
 
 [node name="SaveFeedbackLabel" type="Label" parent="." unique_id=144507091]
 unique_name_in_owner = true

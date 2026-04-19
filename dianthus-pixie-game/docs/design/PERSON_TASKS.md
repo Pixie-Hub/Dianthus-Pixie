@@ -92,7 +92,7 @@ Complete in order. A pairs for ~2h on Day 1.
 
 | Day | Task | Est | Status | Notes |
 |-----|------|-----|--------|-------|
-| 6–7 | **Simple Plant Placement** | 2d | ⬜ | AFTERNOON phase only. Select Bougainvillea or Rafflesia. Click 32×32 grid to place. Max 4 plants. No radius viz. Files: `plants/placement/` |
+| 6–7 | **PLANT-03/04: Plant Grid Placement + Effect Radius** | 2d | ✅ | P key → placement mode (DAY only). Seed palette HUD. Ghost preview + 16×16 grid snap. Effect radius viz. Max 8 plants. 12×10 garden centered on Core. Files: `plants/placement/plant_placement_manager.gd/.tscn`, `plants/placement/plant_palette_ui.gd` |
 | 7 | **Bench Crafting / PLANT-06** | 1d | ✅ | BreedingBench (StaticBody2D). Press E near it (day only) → CraftingScreen UI. 8 recipes, material deduction, weapon ownership. Files: `crafting/` |
 | 8 | **Cross-Breeding System / PLANT-CB** | 2d | ✅ | `BreedingManager` autoload, 4 hybrid plant entities, `CrossBreedingScreen` UI, bench opens breeding screen, save/load v5. Files: `crafting/breeding/breeding_manager.gd`, `plants/entities/bunga_api.*`, `plants/entities/bunga_bayang.*`, `plants/entities/melati_emas.*`, `plants/entities/baja_kuning.*`, `ui/screens/cross_breeding_screen.*` |
 | 8 | Plant placement polish. Fix A's review feedback. | 1d | ⬜ | |
@@ -306,13 +306,14 @@ FOUND-01..06 (Done)
 | F7 | Skip current phase | FOUND-05 |
 | F8 | Force-start wave | CORE-07 |
 | F9 | Force-clear wave | CORE-07 |
-| F10 | Place plant cycle: Bougainvillea → Rafflesia → Bunga Api → Bunga Bayang → Melati Emas → Baja Kuning → Clear | PLANT-REWRITE / PLANT-CB |
+| F10 | Place plant cycle at mouse (no grid): Bougainvillea → Rafflesia → Bunga Api → Bunga Bayang → Melati Emas → Baja Kuning → Clear | PLANT-REWRITE / PLANT-CB |
 | F11 | Manual save (`SaveManager.save_to_slot(true)`) | SAVE-01/02 |
 | Shift+F11 | Delete save file (test New Game overwrite) | SAVE-02 |
 | F12 | Load save (`SaveManager.load_from_slot()`) | SAVE-02 |
 | Insert | Add 5 Petal Shard + 2 Verdant Sap + 1 Moonspore (inventory test) | CORE-02/UI-02 |
-| Shift+Insert | Add all crafting + breeding test materials (bougainvillea/rafflesia/beringin/kecombrang/kunyit extract ×1 + 5 Petal Shard + 5 Verdant Sap + 3 Moonspore + 2 Shadow Resin + 1 Dianthus Pollen) | PLANT-06 / PLANT-CB |
+| Shift+Insert | Add all crafting + breeding + plant seed test materials (extracts ×1 each + 5 Petal Shard + 5 Verdant Sap + 3 Moonspore + 2 Shadow Resin + 1 Dianthus Pollen + 3 Bougainvillea Seed + 2 Rafflesia Seed + 1 of each hybrid seed) | PLANT-06 / PLANT-CB / PLANT-03 |
 | I | Toggle 30-slot Inventory screen | UI-02 |
 | E | Interact with BreedingBench (opens CrossBreeding UI) | PLANT-06 / PLANT-CB |
 | C | Toggle CraftingScreen directly (debug bypass bench proximity) | PLANT-06 |
 | B | Toggle CrossBreedingScreen directly (debug bypass bench proximity) | PLANT-CB |
+| P | Toggle plant placement mode (DAY only; shows seed palette HUD) | PLANT-03 |

@@ -39,6 +39,8 @@ func _on_effect_area_body_entered(body: Node2D) -> void:
 
 func _on_effect_area_body_exited(body: Node2D) -> void:
 	_enemies_in_range.erase(body)
+	if body is EnemyBase and body.enemy_died.is_connected(_on_tracked_enemy_died.bind(body)):
+		body.enemy_died.disconnect(_on_tracked_enemy_died.bind(body))
 
 
 func _on_tracked_enemy_died(_enemy: EnemyBase, body: EnemyBase) -> void:

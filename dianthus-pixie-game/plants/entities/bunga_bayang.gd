@@ -32,24 +32,27 @@ func _process(delta: float) -> void:
 			_fire_projectile()
 	else:
 		_projectile_timer = 0.0
-	# Move active projectiles
-	for proj in _active_projectiles.duplicate():
+	# Move active projectiles (iterate backwards so remove_at doesn't shift indices)
+	var i := _active_projectiles.size() - 1
+	while i >= 0:
+		var proj: Node2D = _active_projectiles[i]
 		if not is_instance_valid(proj):
-			_active_projectiles.erase(proj)
+			_active_projectiles.remove_at(i)
+			i -= 1
 			continue
 		var target: Variant = proj.get_meta("target", null)
 		var lifetime: float = float(proj.get_meta("lifetime", 0.0)) - delta
 		proj.set_meta("lifetime", lifetime)
 		if lifetime <= 0.0:
 			proj.queue_free()
-			_active_projectiles.erase(proj)
-			continue
-		if is_instance_valid(target) and not (target as EnemyBase).is_dead:
+			_active_projectiles.remove_at(i)
+		elif is_instance_valid(target) and not (target as EnemyBase).is_dead:
 			var dir: Vector2 = ((target as EnemyBase).global_position - proj.global_position).normalized()
 			proj.global_position += dir * projectile_speed * delta
 		else:
 			proj.queue_free()
-			_active_projectiles.erase(proj)
+			_active_projectiles.remove_at(i)
+		i -= 1
 
 
 func _fire_projectile() -> void:
@@ -109,6 +112,8 @@ func _on_effect_area_body_entered(body: Node2D) -> void:
 func _on_effect_area_body_exited(body: Node2D) -> void:
 	if body is EnemyBase:
 		_enemies_in_range.erase(body)
+		if body.enemy_died.is_connected(_on_tracked_enemy_died.bind(body)):
+			body.enemy_died.disconnect(_on_tracked_enemy_died.bind(body))
 		if is_instance_valid(body) and not body.is_dead:
 			_recalculate_slow(body)
 

@@ -21,7 +21,8 @@ func _on_effect_area_body_entered(body: Node2D) -> void:
 	if body is EnemyBase and not body.is_dead:
 		if not _enemies_in_range.has(body):
 			_enemies_in_range.append(body)
-			body.enemy_died.connect(_on_tracked_enemy_died.bind(body), CONNECT_ONE_SHOT)
+			if not body.enemy_died.is_connected(_on_tracked_enemy_died.bind(body)):
+				body.enemy_died.connect(_on_tracked_enemy_died.bind(body), CONNECT_ONE_SHOT)
 		_apply_slow(body)
 
 
