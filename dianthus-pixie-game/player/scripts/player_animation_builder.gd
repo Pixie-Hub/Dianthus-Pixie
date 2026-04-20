@@ -1,7 +1,8 @@
 @tool
 class_name PlayerAnimationBuilder
 
-const FRAME_SIZE: int = 64
+const FRAME_W: int = 32
+const FRAME_H: int = 48
 
 const DIR_DOWN: int = 0
 const DIR_LEFT: int = 1
@@ -13,9 +14,9 @@ const DIR_NAMES: PackedStringArray = ["down", "left", "right", "up"]
 const ANIM_DEFS: Array[Dictionary] = [
 	{
 		"prefix": "idle",
-		"sheet": "res://player/sprites/PNG/Unarmed_Idle/Unarmed_Idle_full.png",
-		"columns": 12,
-		"frames": [12, 12, 12, 4],
+		"sheet": "res://player/sprites/PNG/Unarmed_Idle/player_idle_full.png",
+		"columns": 6,
+		"frames": [6, 6, 6, 6],
 		"loop": true,
 		"duration": 1.2,
 	},
@@ -102,10 +103,10 @@ static func build(anim_player: AnimationPlayer, sprite_path: String) -> void:
 
 			for f: int in frame_count:
 				var rect: Rect2 = Rect2(
-					f * FRAME_SIZE,
-					dir_idx * FRAME_SIZE,
-					FRAME_SIZE,
-					FRAME_SIZE
+					f * FRAME_W,
+					dir_idx * FRAME_H,
+					FRAME_W,
+					FRAME_H
 				)
 				anim.track_insert_key(t_rect, f * frame_dur, rect)
 
@@ -116,7 +117,7 @@ static func build(anim_player: AnimationPlayer, sprite_path: String) -> void:
 	var rt: int = reset.add_track(Animation.TYPE_VALUE)
 	reset.track_set_path(rt, "%s:region_rect" % sprite_path)
 	reset.value_track_set_update_mode(rt, Animation.UPDATE_DISCRETE)
-	reset.track_insert_key(rt, 0.0, Rect2(0, 0, FRAME_SIZE, FRAME_SIZE))
+	reset.track_insert_key(rt, 0.0, Rect2(0, 0, FRAME_W, FRAME_H))
 	lib.add_animation("RESET", reset)
 
 	if anim_player.has_animation_library(""):

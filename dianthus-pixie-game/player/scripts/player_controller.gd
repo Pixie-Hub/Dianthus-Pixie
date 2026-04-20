@@ -42,6 +42,8 @@ var _energy_regen_accumulator: float = 0.0
 var damage_reduction: float = 0.0
 
 func _ready() -> void:
+	PlayerAnimationBuilder.build(%AnimationPlayer, "Sprite2D")
+	PlayerAnimationBuilder.build_tree(%AnimationTree)
 	_anim_tree.active = true
 	_state_machine = _anim_tree["parameters/playback"]
 	_update_blend_position()

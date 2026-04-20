@@ -1,4 +1,4 @@
-# Gemini Image Generation Prompt — Dianthus Pixie Player Sprite
+# Gemini Image Generation Prompt — Dianthus Pixie Player Sprite (Idle Right)
 
 ## Style Rules
 
@@ -11,7 +11,7 @@
 - 1-pixel dark outline around the character for readability
 - Output: a single PNG image, 32x48 pixels, transparent background, no upscaling, no smoothing, no filtering
 - Art direction: 2D pixel art for a fantasy survival crafting game with a Southeast Asian botanical theme
-- Front-facing idle pose, standing upright, arms slightly at sides
+- Right-facing idle pose (profile view), standing upright
 - The character must be fully contained within the 32x48 pixel canvas with no cropping
 ```
 
@@ -20,20 +20,20 @@
 ## Prompt
 
 ```
-Create a single 32x48 pixel art character sprite on a transparent background. This is the player character for a 2D pixel art survival crafting game.
+Create a single 32x48 pixel art character sprite on a transparent background. This is the player character for a 2D pixel art survival crafting game, shown in a RIGHT-FACING SIDE VIEW (profile).
 
 The character is a young plant alchemist — a nature-themed adventurer who tends a magical garden and fights creatures at night. They wear a simple hooded cloak over light clothing, with a small satchel or pouch at the hip for carrying herbs and reagents.
 
-Design details:
-- Head (top ~8 rows): a soft hood or headwrap in muted green with small pink dianthus flower accents (2-3 pink pixels) on the hood's front or sides, with visible face beneath — simple dot eyes and a skin-tone face. Hair peeking out from under the hood in dark brown or black.
-- Torso (middle ~8 rows): a layered outfit — inner tunic in warm cream/off-white, outer cloak/vest in forest green with a subtle leaf or vine motif (1-2 accent pixels). A small brown leather satchel or pouch on the hip.
-- Legs and feet (bottom ~8 rows): simple brown trousers and darker brown boots. Feet should be 2-3 pixels wide for a grounded stance.
+This is the same character as the front-facing and back-facing sprites, now shown from the right side (facing right). The silhouette width, height, and proportions must match those existing sprites exactly.
 
-The overall silhouette should be compact and readable. The character should look like a nature-themed adventurer — earthy tones, practical clothing, with small botanical accents.
+Design details for the right-facing profile:
+- Head (top ~8 rows): the hood shown in profile — the front edge of the hood frames the face on the right side. One dot eye visible on the right side of the face. Skin-tone face in profile, with dark brown/black hair peeking out from under the hood on the right. A small pink dianthus flower accent (1-2 pink pixels) visible on the side of the hood.
+- Torso (middle ~8 rows): the cloak/vest is visible from the side — forest green outer layer with the cream/off-white tunic peeking through at the front (right side). The brown leather satchel/pouch hangs at the hip, visible on the character's near side. One arm hangs at the side in a relaxed idle pose.
+- Legs and feet (bottom ~8 rows): profile view of brown trousers and dark brown boots. Feet should face right, 2-3 pixels long for a grounded stance. Legs slightly overlapping as seen from the side.
 
-Front-facing idle pose, standing upright, arms resting at sides.
+The overall silhouette should be compact and readable at 32x48. The character faces right. The body is narrower from the side — approximately 8-10 pixels wide — centered on the 32-pixel canvas.
 
-Color palette:
+Color palette (must match front and back sprites exactly):
 - Skin: warm tan (#C8956E, #A87048)
 - Hood/cloak: forest green (#4A7A3A, #3D6430), dark green shadow (#2A4820)
 - Dianthus flower accents: pink/magenta (#FF9EC8, #FF6B9D, #E84A7F)
@@ -54,8 +54,8 @@ Output: a single PNG image, exactly 32x48 pixels, transparent background, no ups
 
 - Import into Godot as `Texture2D`.
 - In the Godot import settings set **Filter** to `Nearest` (no interpolation) so the sprite stays crisp.
-- Store at `assets/sprites/player/player_idle.png`.
-- This sprite will be used as the base reference for animation frames (walk, attack, roll, respawn) to be created later.
+- Store at `player/sprites/PNG/player_idle_right.png`.
+- The idle-left sprite can be produced by horizontally flipping this sprite in Godot (flip_h = true), so only the right-facing version is needed.
 
 ## Troubleshooting — "Model Provider Unreachable"
 
@@ -72,7 +72,7 @@ If Gemini returns a network error or "model provider unreachable":
 ```
 Create a single 32x48 pixel art character sprite, transparent background, strict pixel art, no anti-aliasing.
 
-A young plant alchemist: green hooded cloak with small pink dianthus flower accents, cream tunic, brown satchel at hip, brown trousers, dark boots. Warm tan skin, dark hair. Front-facing idle pose. Southeast Asian botanical fantasy theme.
+A young plant alchemist in RIGHT-FACING PROFILE VIEW: green hooded cloak shown from the side with small pink dianthus flower accent, cream tunic visible at front, brown satchel at hip, brown trousers, dark boots facing right. Warm tan skin, one dot eye visible, dark hair under hood. Standing idle pose. Southeast Asian botanical fantasy theme.
 
 Palette: skin #C8956E, cloak #4A7A3A, dianthus pink #FF9EC8, tunic #E8D8B8, leather #8C6030, boots #3D2A18, outline #1A1410.
 
