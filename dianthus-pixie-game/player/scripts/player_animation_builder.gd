@@ -22,19 +22,11 @@ const ANIM_DEFS: Array[Dictionary] = [
 	},
 	{
 		"prefix": "walk",
-		"sheet": "res://player/sprites/PNG/Unarmed_Walk/Unarmed_Walk_full.png",
+		"sheet": "res://player/sprites/PNG/Unarmed_Walk/player_walk_full.png",
 		"columns": 6,
 		"frames": [6, 6, 6, 6],
 		"loop": true,
 		"duration": 0.6,
-	},
-	{
-		"prefix": "run",
-		"sheet": "res://player/sprites/PNG/Unarmed_Run/Unarmed_Run_full.png",
-		"columns": 8,
-		"frames": [8, 8, 8, 8],
-		"loop": true,
-		"duration": 0.8,
 	},
 	{
 		"prefix": "hurt",
