@@ -2,6 +2,7 @@ extends CanvasLayer
 
 var _manager: Node = null
 var _panel: PanelContainer = null
+var _scroll: ScrollContainer = null
 var _hbox: HBoxContainer = null
 
 
@@ -37,9 +38,15 @@ func _build_layout() -> void:
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(title)
 
+	_scroll = ScrollContainer.new()
+	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_scroll.custom_minimum_size = Vector2(0, 40)
+	vbox.add_child(_scroll)
+
 	_hbox = HBoxContainer.new()
 	_hbox.add_theme_constant_override("separation", 4)
-	vbox.add_child(_hbox)
+	_scroll.add_child(_hbox)
 
 	var hint: Label = Label.new()
 	hint.text = "[P] Close  [RMB] Cancel"
@@ -106,6 +113,10 @@ func refresh() -> void:
 
 		slot.gui_input.connect(_on_slot_clicked.bind(seed_id))
 		_hbox.add_child(slot)
+
+	var slot_count: int = _hbox.get_child_count()
+	var content_width: float = slot_count * (32 + 4) + 8.0
+	_scroll.custom_minimum_size.x = min(content_width, 320.0)
 
 	await get_tree().process_frame
 	_position_panel()

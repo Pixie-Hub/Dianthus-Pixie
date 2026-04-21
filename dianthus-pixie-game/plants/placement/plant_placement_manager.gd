@@ -15,7 +15,11 @@ const SEED_TO_SCENE: Dictionary = {
 	"bunga_bayang_seed": "res://plants/entities/bunga_bayang.tscn",
 	"melati_emas_seed": "res://plants/entities/melati_emas.tscn",
 	"baja_kuning_seed": "res://plants/entities/baja_kuning.tscn",
-	# TODO: PLANT-05 add seeds for remaining base plants as they are implemented
+	"melati_seed": "res://plants/entities/melati.tscn",
+	"wijaya_kusuma_seed": "res://plants/entities/wijaya_kusuma.tscn",
+	"beringin_seed": "res://plants/entities/beringin.tscn",
+	"kecombrang_seed": "res://plants/entities/kecombrang.tscn",
+	"kunyit_seed": "res://plants/entities/kunyit.tscn",
 }
 
 const SEED_RADIUS_COLORS: Dictionary = {
@@ -25,6 +29,11 @@ const SEED_RADIUS_COLORS: Dictionary = {
 	"bunga_bayang_seed": Color(0.3, 0.1, 0.4, 0.25),
 	"melati_emas_seed": Color(1.0, 0.85, 0.3, 0.25),
 	"baja_kuning_seed": Color(0.85, 0.7, 0.15, 0.25),
+	"melati_seed": Color(0.9, 0.95, 1.0, 0.25),
+	"wijaya_kusuma_seed": Color(0.94, 0.91, 1.0, 0.25),
+	"beringin_seed": Color(0.24, 0.48, 0.13, 0.25),
+	"kecombrang_seed": Color(1.0, 0.22, 0.38, 0.25),
+	"kunyit_seed": Color(0.83, 0.72, 0.13, 0.25),
 }
 
 const SEED_EFFECT_RADIUS: Dictionary = {
@@ -34,6 +43,11 @@ const SEED_EFFECT_RADIUS: Dictionary = {
 	"bunga_bayang_seed": 36.0,
 	"melati_emas_seed": 32.0,
 	"baja_kuning_seed": 28.0,
+	"melati_seed": 32.0,
+	"wijaya_kusuma_seed": 48.0,
+	"beringin_seed": 32.0,
+	"kecombrang_seed": 28.0,
+	"kunyit_seed": 24.0,
 }
 
 var is_placement_mode: bool = false
@@ -139,7 +153,8 @@ func _place_plant() -> void:
 		return
 	var plant: PlantBase = packed.instantiate() as PlantBase
 	plant.global_position = _grid_to_world(_ghost_grid_pos)
-	get_tree().current_scene.add_child(plant)
+	var _ys: Node = get_tree().current_scene.get_node_or_null("YSortLayer")
+	(_ys if _ys != null else get_tree().current_scene).add_child(plant)
 	_occupied_tiles[_ghost_grid_pos] = plant
 	plant.plant_destroyed.connect(_on_plant_destroyed)
 	InventoryManager.remove_item(selected_seed_id, 1)

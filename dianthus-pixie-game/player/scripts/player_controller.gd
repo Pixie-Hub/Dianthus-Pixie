@@ -40,6 +40,8 @@ var current_energy: int = 0
 var max_energy: int = BASE_MAX_ENERGY
 var _energy_regen_accumulator: float = 0.0
 var damage_reduction: float = 0.0
+var attack_speed_bonus: float = 0.0
+var bonus_melee_damage: int = 0
 
 func _ready() -> void:
 	PlayerAnimationBuilder.build(%AnimationPlayer, "Sprite2D")
@@ -187,6 +189,11 @@ func _unhandled_input(event: InputEvent) -> void:
 				InventoryManager.add_item("dianthus_pollen", 1)
 				InventoryManager.add_item("bougainvillea_seed", 3)
 				InventoryManager.add_item("rafflesia_seed", 2)
+				InventoryManager.add_item("melati_seed", 2)
+				InventoryManager.add_item("wijaya_kusuma_seed", 1)
+				InventoryManager.add_item("beringin_seed", 1)
+				InventoryManager.add_item("kecombrang_seed", 1)
+				InventoryManager.add_item("kunyit_seed", 1)
 				InventoryManager.add_item("bunga_api_seed", 1)
 				InventoryManager.add_item("bunga_bayang_seed", 1)
 				InventoryManager.add_item("melati_emas_seed", 1)
@@ -291,16 +298,17 @@ func _start_attack() -> void:
 	print("DEBUG: Attack! Damage: %d, Direction: %s" % [_current_weapon.damage, last_direction])
 	if _sword_sfx.stream != null:
 		_sword_sfx.play()
-	await get_tree().create_timer(_current_weapon.cooldown * 0.25).timeout
+	var effective_cd: float = _current_weapon.cooldown * (1.0 - attack_speed_bonus)
+	await get_tree().create_timer(effective_cd * 0.25).timeout
 	hitbox_shape.disabled = false
-	await get_tree().create_timer(_current_weapon.cooldown * 0.5).timeout
+	await get_tree().create_timer(effective_cd * 0.5).timeout
 	hitbox_shape.disabled = true
-	await get_tree().create_timer(_current_weapon.cooldown * 0.25).timeout
+	await get_tree().create_timer(effective_cd * 0.25).timeout
 	_end_attack()
 
 func _end_attack() -> void:
 	is_attacking = false
-	_attack_cooldown_timer = _current_weapon.cooldown
+	_attack_cooldown_timer = _current_weapon.cooldown * (1.0 - attack_speed_bonus)
 	var hitbox_shape: CollisionShape2D = _sword_hitbox.get_child(0)
 	hitbox_shape.disabled = true
 	_state_machine.travel("idle")
@@ -350,12 +358,20 @@ func _debug_place_plant() -> void:
 	var scene_paths: Array[String] = [
 		"res://plants/entities/bougainvillea.tscn",
 		"res://plants/entities/rafflesia.tscn",
+		"res://plants/entities/melati.tscn",
+		"res://plants/entities/wijaya_kusuma.tscn",
+		"res://plants/entities/beringin.tscn",
+		"res://plants/entities/kecombrang.tscn",
+		"res://plants/entities/kunyit.tscn",
 		"res://plants/entities/bunga_api.tscn",
 		"res://plants/entities/bunga_bayang.tscn",
 		"res://plants/entities/melati_emas.tscn",
 		"res://plants/entities/baja_kuning.tscn",
 	]
-	var labels: Array[String] = ["Bougainvillea", "Rafflesia", "Bunga Api", "Bunga Bayang", "Melati Emas", "Baja Kuning"]
+	var labels: Array[String] = [
+		"Bougainvillea", "Rafflesia", "Melati", "Wijaya Kusuma", "Beringin",
+		"Kecombrang", "Kunyit", "Bunga Api", "Bunga Bayang", "Melati Emas", "Baja Kuning",
+	]
 	if _debug_plant_cycle < scene_paths.size():
 		var scene: PackedScene = load(scene_paths[_debug_plant_cycle])
 		if scene == null:
@@ -369,7 +385,7 @@ func _debug_place_plant() -> void:
 		for plant in get_tree().get_nodes_in_group(&"plants"):
 			plant.queue_free()
 		print("[Debug] Cleared all plants")
-	_debug_plant_cycle = (_debug_plant_cycle + 1) % 7
+	_debug_plant_cycle = (_debug_plant_cycle + 1) % 12
 
 
 func _debug_spawn_shadowling() -> void:
@@ -393,9 +409,10 @@ func _on_sword_hitbox_body_entered(body: Node2D) -> void:
 	if body in _hit_bodies:
 		return
 	_hit_bodies.append(body)
+	var total_damage: int = _current_weapon.damage + bonus_melee_damage
 	if body.has_method("take_damage"):
-		body.take_damage(_current_weapon.damage)
-	attack_hit.emit(body, _current_weapon.damage)
-	print("DEBUG: Hit %s for %d damage" % [body.name, _current_weapon.damage])
+		body.take_damage(total_damage)
+	attack_hit.emit(body, total_damage)
+	print("DEBUG: Hit %s for %d damage" % [body.name, total_damage])
 	add_energy(ENERGY_PER_HIT)
 	# TODO (VFX-05): Add impact particles on hit.

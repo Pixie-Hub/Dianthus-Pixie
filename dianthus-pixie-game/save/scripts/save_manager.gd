@@ -14,11 +14,11 @@ const PLANT_TYPE_TO_SCENE: Dictionary = {
 	"bunga_bayang": "res://plants/entities/bunga_bayang.tscn",
 	"melati_emas": "res://plants/entities/melati_emas.tscn",
 	"baja_kuning": "res://plants/entities/baja_kuning.tscn",
-	# TODO: PLANT-02 add "melati": ...
-	# TODO: PLANT-03 add "wijaya_kusuma": ...
-	# TODO: PLANT-04 add "beringin": ...
-	# TODO: PLANT-05 add "kecombrang": ...
-	# TODO: PLANT-06 add "kunyit": ...
+	"melati": "res://plants/entities/melati.tscn",
+	"wijaya_kusuma": "res://plants/entities/wijaya_kusuma.tscn",
+	"beringin": "res://plants/entities/beringin.tscn",
+	"kecombrang": "res://plants/entities/kecombrang.tscn",
+	"kunyit": "res://plants/entities/kunyit.tscn",
 }
 
 var _pending_load_state: Dictionary = {}
@@ -307,6 +307,9 @@ func _apply_state(state: Dictionary) -> void:
 
 	# 6. Garden plants — instantiate each saved entry into the current scene.
 	var scene_root: Node = get_tree().current_scene
+	var plant_parent: Node = scene_root.get_node_or_null("YSortLayer")
+	if plant_parent == null:
+		plant_parent = scene_root
 	var plants_arr: Array = state.get("garden", {}).get("plants", [])
 	for entry: Variant in plants_arr:
 		if not entry is Dictionary:
@@ -326,7 +329,7 @@ func _apply_state(state: Dictionary) -> void:
 			float(entry_pos.get("x", 0.0)),
 			float(entry_pos.get("y", 0.0))
 		)
-		scene_root.add_child(plant)
+		plant_parent.add_child(plant)
 		# Set current_hp after _ready() so it is not overwritten by plant init.
 		plant.current_hp = int(entry_dict.get("current_hp", plant.max_hp))
 

@@ -1213,6 +1213,9 @@ script = ExtResource("1_ctrl")
 unique_name_in_owner = true
 texture_filter = 1
 scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_8h4do")
+offset = Vector2(0, -28)
+region_enabled = true
 region_rect = Rect2(0, 0, 64, 64)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=234567891]
@@ -1232,10 +1235,12 @@ parameters/run/blend_position = Vector2(0, 0)
 parameters/walk/blend_position = Vector2(0, 0)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1686530223]
+position = Vector2(0, -10)
 shape = SubResource("CapsuleShape2D_1")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=47602216]
 unique_name_in_owner = true
+position = Vector2(0, -10)
 zoom = Vector2(1.5, 1.5)
 script = ExtResource("4_cam")
 
@@ -1244,6 +1249,7 @@ unique_name_in_owner = true
 
 [node name="SwordHitbox" type="Area2D" parent="." unique_id=567890123]
 unique_name_in_owner = true
+position = Vector2(0, -10)
 collision_layer = 0
 collision_mask = 8
 

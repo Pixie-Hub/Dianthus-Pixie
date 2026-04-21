@@ -32,6 +32,11 @@
 |-----|------|-----|--------|-------|
 | 6 | **Bougainvillea plant effect** | 0.5d | ✅ | Area2D deals 5 DMG/tick to enemies in radius (24px). Magenta-pink placeholder. Files: `plants/entities/bougainvillea.gd/.tscn` |
 | 6 | **Rafflesia plant effect** | 0.5d | ✅ | Area2D slows enemies 0.6× in radius (40px). Deep red-brown placeholder. Files: `plants/entities/rafflesia.gd/.tscn` |
+| 6 | **PLANT-02: Melati** | 0.25d | ✅ | Support — energy regen +3/sec to player in 32px radius. Files: `plants/entities/melati.gd/.tscn` |
+| 6 | **PLANT-03: Wijaya Kusuma** | 0.5d | ✅ | Offensive — night auto-attack projectile 8 DMG, 48px range. Files: `plants/entities/wijaya_kusuma.gd/.tscn` |
+| 6 | **PLANT-04: Beringin** | 0.5d | ✅ | Defensive — spawns root wall (HP:60, 20s, cooldown 25s) blocking enemies. Files: `plants/entities/beringin.gd/.tscn` |
+| 6 | **PLANT-05: Kecombrang** | 0.25d | ✅ | Support — attack speed +20% to player in 28px radius. Files: `plants/entities/kecombrang.gd/.tscn` |
+| 6 | **PLANT-06b: Kunyit** | 0.25d | ✅ | Hybrid — melee damage +3 to player in 24px radius. Files: `plants/entities/kunyit.gd/.tscn` |
 | 7 | **Simple Difficulty scaling** | 0.5d | ⬜ | Per day: enemies +10% HP, +1 spawn count. Linear multiplier in `wave_spawner.gd`. Data-driven via export vars. |
 | 7 | Code review B's plant placement + crafting | 0.25d | ⬜ | Review CORE-01 polish, plant placement, bench crafting |
 | 8 | **Integration test:** full demo with plants + crafting | 1d | ⬜ | Explore → collect → craft → place plants → fight → survive → next day harder. End-to-end. |
@@ -55,7 +60,7 @@
 - `combat/weapons/`
 - `ui/screens/night_survived_screen.gd/.tscn`
 - `ui/hud/hud.gd/.tscn` (template)
-- `plants/entities/` (Bougainvillea, Rafflesia)
+- `plants/entities/` (all 11 plants: Bougainvillea, Rafflesia, Melati, Wijaya Kusuma, Beringin, Kecombrang, Kunyit + 4 hybrids)
 
 ---
 
@@ -306,12 +311,12 @@ FOUND-01..06 (Done)
 | F7 | Skip current phase | FOUND-05 |
 | F8 | Force-start wave | CORE-07 |
 | F9 | Force-clear wave | CORE-07 |
-| F10 | Place plant cycle at mouse (no grid): Bougainvillea → Rafflesia → Bunga Api → Bunga Bayang → Melati Emas → Baja Kuning → Clear | PLANT-REWRITE / PLANT-CB |
+| F10 | Place plant cycle at mouse (no grid): Bougainvillea → Rafflesia → Melati → Wijaya Kusuma → Beringin → Kecombrang → Kunyit → Bunga Api → Bunga Bayang → Melati Emas → Baja Kuning → Clear | PLANT-02..06b |
 | F11 | Manual save (`SaveManager.save_to_slot(true)`) | SAVE-01/02 |
 | Shift+F11 | Delete save file (test New Game overwrite) | SAVE-02 |
 | F12 | Load save (`SaveManager.load_from_slot()`) | SAVE-02 |
 | Insert | Add 5 Petal Shard + 2 Verdant Sap + 1 Moonspore (inventory test) | CORE-02/UI-02 |
-| Shift+Insert | Add all crafting + breeding + plant seed test materials (extracts ×1 each + 5 Petal Shard + 5 Verdant Sap + 3 Moonspore + 2 Shadow Resin + 1 Dianthus Pollen + 3 Bougainvillea Seed + 2 Rafflesia Seed + 1 of each hybrid seed) | PLANT-06 / PLANT-CB / PLANT-03 |
+| Shift+Insert | Add all crafting + breeding + plant seed test materials (extracts ×1 each + 5 Petal Shard + 5 Verdant Sap + 3 Moonspore + 2 Shadow Resin + 1 Dianthus Pollen + 3 Bougainvillea Seed + 2 Rafflesia/Melati Seed + 1 of each remaining base + hybrid seed) | PLANT-02..06b |
 | I | Toggle 30-slot Inventory screen | UI-02 |
 | E | Interact with BreedingBench (opens CrossBreeding UI) | PLANT-06 / PLANT-CB |
 | C | Toggle CraftingScreen directly (debug bypass bench proximity) | PLANT-06 |

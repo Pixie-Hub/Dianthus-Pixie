@@ -8,7 +8,7 @@ const TILE_SIZE: int = 16
 @onready var _phase_label: Label = $DebugOverlay/PhaseLabel
 @onready var _day_label: Label = $DebugOverlay/DayLabel
 @onready var _timer_label: Label = $DebugOverlay/TimerLabel
-@onready var _player: CharacterBody2D = $Player
+@onready var _player: CharacterBody2D = $YSortLayer/Player
 
 var _wave_spawner: WaveSpawner = null
 
@@ -18,7 +18,7 @@ func _ready() -> void:
 	_update_debug_labels()
 	_setup_camera()
 	_restore_player_position()
-	var core: Node = $DianthusCore
+	var core: Node = $YSortLayer/DianthusCore
 	if is_instance_valid(core) and core.has_method("get_hp_ratio"):
 		GameManager.register_core(core)
 	if is_instance_valid(_player):

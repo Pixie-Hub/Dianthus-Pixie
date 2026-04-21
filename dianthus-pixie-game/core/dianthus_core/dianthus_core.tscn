@@ -31,8 +31,10 @@ texture_filter = 1
 position = Vector2(1.1920929e-07, 1)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("2_fjt3g")
+offset = Vector2(0, -18)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=829838864]
+position = Vector2(0, -18)
 shape = SubResource("CircleShape2D_body")
 
 [node name="AuraLight" type="PointLight2D" parent="." unique_id=734855353]
@@ -44,6 +46,7 @@ texture = SubResource("GradientTexture2D_aura")
 texture_scale = 3.0
 
 [node name="DamageArea" type="Area2D" parent="." unique_id=69319340]
+position = Vector2(0, -18)
 collision_layer = 0
 collision_mask = 8
 

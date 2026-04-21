@@ -20,6 +20,11 @@ const ITEMS: Dictionary = {
 	"baja_kuning_seed":    { "display_name": "Baja Kuning Seed",    "rarity": Rarity.RARE,     "max_stack": 5,  "description": "Hybrid seed: Kunyit x Shadow Resin. Armor + counter-attack.", "icon": "res://assets/aseprite/icons/Baja Kuning Seed.png" },
 	"bougainvillea_seed":  { "display_name": "Bougainvillea Seed",  "rarity": Rarity.COMMON,   "max_stack": 99, "description": "Thorny plant seed. Deals damage to nearby enemies.", "icon": "res://assets/aseprite/icons/Bougainvillea Seed.png" },
 	"rafflesia_seed":      { "display_name": "Rafflesia Seed",      "rarity": Rarity.UNCOMMON, "max_stack": 20, "description": "Pungent bloom seed. Slows enemies in radius.", "icon": "res://assets/aseprite/icons/Rafflesia Seed.png" },
+	"melati_seed":         { "display_name": "Melati Seed",         "rarity": Rarity.UNCOMMON, "max_stack": 20, "description": "Sacred jasmine seed. Regenerates player energy nearby.", "icon": "res://assets/aseprite/icons/Melati Seed.png" },
+	"wijaya_kusuma_seed":  { "display_name": "Wijaya Kusuma Seed",  "rarity": Rarity.UNCOMMON, "max_stack": 20, "description": "Nocturnal bloom seed. Auto-attacks enemies at night.", "icon": "res://assets/aseprite/icons/Wijaya Kusuma Seed.png" },
+	"beringin_seed":       { "display_name": "Beringin Seed",       "rarity": Rarity.UNCOMMON, "max_stack": 20, "description": "Banyan sapling seed. Spawns root walls to block enemies.", "icon": "res://assets/aseprite/icons/Beringin Seed.png" },
+	"kecombrang_seed":     { "display_name": "Kecombrang Seed",     "rarity": Rarity.RARE,     "max_stack": 5,  "description": "Torch ginger seed. Boosts player attack speed nearby.", "icon": "res://assets/aseprite/icons/Kecombrang Seed.png" },
+	"kunyit_seed":         { "display_name": "Kunyit Seed",         "rarity": Rarity.RARE,     "max_stack": 5,  "description": "Turmeric seed. Boosts player melee damage nearby.", "icon": "res://assets/aseprite/icons/Kunyit Seed.png" },
 }
 
 static func get_item(item_id: String) -> Dictionary:

@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://ccd81tsrewjge"]
+
+[ext_resource type="Script" uid="uid://dqp8xvm0obj3l" path="res://plants/entities/melati.gd" id="1_mel"]
+[ext_resource type="Texture2D" uid="uid://dlvn7dac0aggy" path="res://plants/sprites/Melati.png" id="2_vv8vl"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(16, 16)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_effect"]
+radius = 32.0
+
+[node name="Melati" type="StaticBody2D" unique_id=1155895858]
+collision_mask = 0
+script = ExtResource("1_mel")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1049159589]
+unique_name_in_owner = true
+modulate = Color(0.9, 0.95, 1, 1)
+texture_filter = 1
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_vv8vl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=358308528]
+shape = SubResource("RectangleShape2D_body")
+
+[node name="EffectArea" type="Area2D" parent="." unique_id=1966728631]
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EffectArea" unique_id=187819375]
+shape = SubResource("CircleShape2D_effect")
