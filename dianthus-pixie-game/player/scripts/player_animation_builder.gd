@@ -1,8 +1,8 @@
 @tool
 class_name PlayerAnimationBuilder
 
-const FRAME_W: int = 32
-const FRAME_H: int = 48
+const FRAME_W: int = 64
+const FRAME_H: int = 80
 
 const DIR_DOWN: int = 0
 const DIR_LEFT: int = 1
@@ -38,7 +38,7 @@ const ANIM_DEFS: Array[Dictionary] = [
 	},
 	{
 		"prefix": "death",
-		"sheet": "res://player/sprites/PNG/Unarmed_Death/Unarmed_Death_full.png",
+		"sheet": "res://player/sprites/PNG/Unarmed_Death/player_death_full.png",
 		"columns": 7,
 		"frames": [7, 7, 7, 7],
 		"loop": false,

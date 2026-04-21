@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dpgegkv2jedj8"
-path="res://.godot/imported/Unarmed_Walk_full.png-c7078cc3e10eefe76090c78b12837aa1.ctex"
+uid="uid://cmso0ipnkevs7"
+path="res://.godot/imported/player_death_down.png-70d183c33697dd8bf57b3f41e8cdf3d9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://player/sprites/PNG/Unarmed_Walk/Unarmed_Walk_full.png"
-dest_files=["res://.godot/imported/Unarmed_Walk_full.png-c7078cc3e10eefe76090c78b12837aa1.ctex"]
+source_file="res://player/sprites/PNG/Unarmed_Death/player_death_down.png"
+dest_files=["res://.godot/imported/player_death_down.png-70d183c33697dd8bf57b3f41e8cdf3d9.ctex"]
 
 [params]
 

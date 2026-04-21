@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://buqmsqqcw6br7"
-path="res://.godot/imported/Unarmed_Idle1_shadow.png-ba87c0b818003c811b5f4b198c9e16b7.ctex"
+uid="uid://dgskombtokat6"
+path="res://.godot/imported/player_death_full.png-f6cbcc5a435cdaf50e00595011a0d3d5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://player/sprites/PNG/Unarmed_Idle/Unarmed_Idle1_shadow.png"
-dest_files=["res://.godot/imported/Unarmed_Idle1_shadow.png-ba87c0b818003c811b5f4b198c9e16b7.ctex"]
+source_file="res://player/sprites/PNG/Unarmed_Death/player_death_full.png"
+dest_files=["res://.godot/imported/player_death_full.png-f6cbcc5a435cdaf50e00595011a0d3d5.ctex"]
 
 [params]
 
