@@ -137,24 +137,19 @@ static func build_tree(anim_tree: AnimationTree) -> void:
 	sm.add_transition("idle", "walk", AnimationNodeStateMachineTransition.new())
 	sm.add_transition("walk", "idle", AnimationNodeStateMachineTransition.new())
 
-	sm.add_transition("idle", "run", AnimationNodeStateMachineTransition.new())
-	sm.add_transition("run", "idle", AnimationNodeStateMachineTransition.new())
-	sm.add_transition("walk", "run", AnimationNodeStateMachineTransition.new())
-	sm.add_transition("run", "walk", AnimationNodeStateMachineTransition.new())
-
-	for src: String in ["idle", "walk", "run"]:
+	for src: String in ["idle", "walk"]:
 		sm.add_transition(src, "hurt", AnimationNodeStateMachineTransition.new())
 
 	var hurt_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
 	hurt_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
 	sm.add_transition("hurt", "idle", hurt_to_idle)
 
-	for src: String in ["idle", "walk", "run", "hurt"]:
+	for src: String in ["idle", "walk", "hurt"]:
 		sm.add_transition(src, "death", AnimationNodeStateMachineTransition.new())
 
 	sm.add_transition("death", "idle", AnimationNodeStateMachineTransition.new())
 
-	for src: String in ["idle", "walk", "run"]:
+	for src: String in ["idle", "walk"]:
 		sm.add_transition(src, "attack", AnimationNodeStateMachineTransition.new())
 
 	var attack_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
