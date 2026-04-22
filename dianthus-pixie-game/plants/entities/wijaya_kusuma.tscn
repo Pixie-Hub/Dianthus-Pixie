@@ -1,7 +1,7 @@
-[gd_scene format=3 uid="uid://wijaya_kusuma_01"]
+[gd_scene format=3 uid="uid://bg24p1yngkj8f"]
 
-[ext_resource type="Script" path="res://plants/entities/wijaya_kusuma.gd" id="1_wk"]
-[ext_resource type="Texture2D" uid="uid://ckoljc2d64kcr" path="res://icon.svg" id="2_icon"]
+[ext_resource type="Script" uid="uid://e6ugjq2sjne2" path="res://plants/entities/wijaya_kusuma.gd" id="1_wk"]
+[ext_resource type="Texture2D" uid="uid://d26iu23i8f3k4" path="res://plants/sprites/Wijaya Kusuma.png" id="2_yxheg"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(16, 16)
@@ -9,26 +9,23 @@ size = Vector2(16, 16)
 [sub_resource type="CircleShape2D" id="CircleShape2D_effect"]
 radius = 48.0
 
-[node name="WijayaKusuma" type="StaticBody2D"]
-collision_layer = 1
+[node name="WijayaKusuma" type="StaticBody2D" unique_id=201801952]
 collision_mask = 0
 script = ExtResource("1_wk")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=351757375]
 unique_name_in_owner = true
-texture = ExtResource("2_icon")
 texture_filter = 1
-scale = Vector2(0.15, 0.15)
-modulate = Color(0.94, 0.91, 1.0, 1)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_yxheg")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1550974078]
 shape = SubResource("RectangleShape2D_body")
 
-[node name="EffectArea" type="Area2D" parent="."]
+[node name="EffectArea" type="Area2D" parent="." unique_id=74894194]
 collision_layer = 0
 collision_mask = 8
-monitoring = true
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="EffectArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EffectArea" unique_id=1682564019]
 shape = SubResource("CircleShape2D_effect")
