@@ -322,3 +322,5 @@ FOUND-01..06 (Done)
 | C | Toggle CraftingScreen directly (debug bypass bench proximity) | PLANT-06 |
 | B | Toggle CrossBreedingScreen directly (debug bypass bench proximity) | PLANT-CB |
 | P | Toggle plant placement mode (DAY only; shows seed palette HUD) | PLANT-03 |
+| J | Toggle Plant Codex screen (pauses game) | UI-04 |
+| Shift+J | Discover all 11 plants in codex (debug unlock) | UI-04 |

@@ -1,7 +1,7 @@
-[gd_scene format=3 uid="uid://bunga_bayang_01"]
+[gd_scene format=3 uid="uid://cw1hv4my6xv0h"]
 
-[ext_resource type="Script" path="res://plants/entities/bunga_bayang.gd" id="1_bbay"]
-[ext_resource type="Texture2D" uid="uid://ckoljc2d64kcr" path="res://icon.svg" id="2_icon"]
+[ext_resource type="Script" uid="uid://c2om8f8c0idnr" path="res://plants/entities/bunga_bayang.gd" id="1_bbay"]
+[ext_resource type="Texture2D" uid="uid://dhms0bpkw5221" path="res://plants/sprites/Bunga Bayang.png" id="2_kha6h"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(16, 16)
@@ -9,25 +9,23 @@ size = Vector2(16, 16)
 [sub_resource type="CircleShape2D" id="CircleShape2D_effect"]
 radius = 36.0
 
-[node name="BungaBayang" type="StaticBody2D"]
-collision_layer = 1
+[node name="BungaBayang" type="StaticBody2D" unique_id=727632205]
 collision_mask = 0
 script = ExtResource("1_bbay")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=421100948]
 unique_name_in_owner = true
-texture = ExtResource("2_icon")
-scale = Vector2(0.15, 0.15)
-modulate = Color(0.3, 0.1, 0.4, 1)
+texture_filter = 1
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_kha6h")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=139931232]
 shape = SubResource("RectangleShape2D_body")
 
-[node name="EffectArea" type="Area2D" parent="."]
+[node name="EffectArea" type="Area2D" parent="." unique_id=1469457615]
 collision_layer = 0
 collision_mask = 8
-monitoring = true
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="EffectArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EffectArea" unique_id=1046327881]
 shape = SubResource("CircleShape2D_effect")

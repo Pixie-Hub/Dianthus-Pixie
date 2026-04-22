@@ -188,6 +188,56 @@ The item is a Rafflesia Seed — a small, waxy seed from the Rafflesia flower. I
 Colors: seed body (#7A1E22, #5C1418), spots (#A63030, #C04040), waxy highlight (#B85050), dark outline (#2A0808).
 ```
 
+### 18. Melati Seed (Uncommon)
+
+```
+Create a single 16x16 pixel art item icon on a transparent background.
+
+The item is a Melati Seed — a tiny, oval seed from the Melati jasmine plant. The husk is a clean ivory-white with a very faint cool blue tint, suggesting the plant's energy-restoring aura. A delicate 1-pixel pale-blue highlight on the upper curve, and a tiny darker shadow at the base.
+
+Colors: husk (#EAF0FF, #C8D8F0), highlight (#FFFFFF), shadow (#8FAFC4), pale blue tint (#B0C8E8).
+```
+
+### 19. Wijaya Kusuma Seed (Uncommon)
+
+```
+Create a single 16x16 pixel art item icon on a transparent background.
+
+The item is a Wijaya Kusuma Seed — a small, teardrop-shaped seed from the night-blooming Wijaya Kusuma flower. The surface is pale lavender-white with a faint inner glow, hinting at its nocturnal magic. Two tiny crescent-shaped pixel marks (lighter pixels) on the seed's face suggest a moon motif.
+
+Colors: seed body (#D8D0F0, #B8A8E0), inner glow (#FFFBE8, #E8E0FF), moon marks (#F5F0FF), shadow (#7860A8).
+```
+
+### 20. Beringin Seed (Uncommon)
+
+```
+Create a single 16x16 pixel art item icon on a transparent background.
+
+The item is a Beringin Seed — a small, round fig-like seed from the Banyan tree. It is a warm earthy brown with subtle bark-texture lines (1-pixel horizontal marks). A tiny strand of root (1-2 curved pixels) trails from the base, referencing the Banyan's aerial roots.
+
+Colors: seed body (#7B5935, #5C3D20), bark marks (#9C7A4A), root strand (#4A2E10), highlight (#B89868).
+```
+
+### 21. Kecombrang Seed (Rare)
+
+```
+Create a single 16x16 pixel art item icon on a transparent background.
+
+The item is a Kecombrang Seed — a small, round seed from the Torch Ginger (Kecombrang) plant. The outer shell is a vivid coral-red with a bright orange highlight streak running diagonally, suggesting heat and energy. A ring of 1-pixel bright-orange dots around the equator adds a peppery, spicy feel.
+
+Colors: shell (#CC2040, #991830), highlight (#FF6840), dot ring (#FF9020), dark shadow (#601018).
+```
+
+### 22. Kunyit Seed (Rare)
+
+```
+Create a single 16x16 pixel art item icon on a transparent background.
+
+The item is a Kunyit Seed — represented as a tiny, knobbly turmeric rhizome segment (turmeric spreads by rhizome, not true seed). It is a compact, slightly irregular oblong shape with a rich golden-orange surface. Faint horizontal pixel lines suggest the ringed nodes of the rhizome. A bright golden-yellow highlight pixel on the top-left.
+
+Colors: rhizome body (#C88010, #A06008), node lines (#8C5808), highlight (#FFD040), dark tip (#603804).
+```
+
 ---
 
 ## Usage Notes
@@ -199,12 +249,12 @@ Colors: seed body (#7A1E22, #5C1418), spots (#A63030, #C04040), waxy highlight (
 
 ## Batch Request Tip
 
-If Gemini supports batch generation, you can combine all 17 prompts with:
+If Gemini supports batch generation, you can combine all 22 prompts with:
 
 ```
-Generate 17 separate 16x16 pixel art item icons, each on its own transparent background, as individual images. All icons share these rules: strict pixel art, no anti-aliasing, no gradients, limited 6-10 color palette per icon, clean readable silhouette at 16x16.
+Generate 22 separate 16x16 pixel art item icons, each on its own transparent background, as individual images. All icons share these rules: strict pixel art, no anti-aliasing, no gradients, limited 6-10 color palette per icon, clean readable silhouette at 16x16.
 
-The 17 items are:
+The 22 items are:
 1. Petal Shard — curved pink petal fragment (pink #E87BA0 → pale #F2C4D4)
 2. Verdant Sap — green sap in a glass vial (sap #5DAE3B, vial #B8D4E3)
 3. Moonspore — glowing lavender spore sphere with sparkles (#B8A0D4, glow #E8E0FF)
@@ -222,8 +272,13 @@ The 17 items are:
 15. Baja Kuning Seed — metallic golden-brown angular seed with purple veins (#B89830, veins #5C3080)
 16. Bougainvillea Seed — small rounded seed with magenta-pink papery husk and pointed tip (#C0406A, highlight #E87BA0)
 17. Rafflesia Seed — dark red-brown oval seed with faint irregular spots, dense and waxy (#7A1E22, spots #A63030)
+18. Melati Seed — tiny ivory-white oval seed with pale blue tint and cool highlight (#EAF0FF, tint #B0C8E8)
+19. Wijaya Kusuma Seed — pale lavender-white teardrop seed with faint inner glow and moon-mark pixels (#D8D0F0, glow #E8E0FF)
+20. Beringin Seed — earthy brown round fig-like seed with bark lines and trailing root strand (#7B5935, root #4A2E10)
+21. Kecombrang Seed — vivid coral-red round seed with orange highlight streak and dot ring (#CC2040, highlight #FF6840)
+22. Kunyit Seed — knobbly golden-orange rhizome segment with node lines and bright highlight (#C88010, highlight #FFD040)
 
-Output: 17 separate PNG images, each 16×16 pixels, transparent background, no upscaling, no smoothing.
+Output: 22 separate PNG images, each 16×16 pixels, transparent background, no upscaling, no smoothing.
 ```
 
 ## Rarity Color Coding Reference
@@ -231,5 +286,5 @@ Output: 17 separate PNG images, each 16×16 pixels, transparent background, no u
 | Rarity | Border/Glow Color | Items |
 |---|---|---|
 | **Common** | Grey (#E5E5E5) | Petal Shard, Verdant Sap, Bougainvillea Seed |
-| **Uncommon** | Blue (#668AFF) | Moonspore, Shadow Resin, Bougainvillea Extract, Rafflesia Extract, Beringin Root, Rafflesia Seed |
-| **Rare** | Gold (#FFCC33) | Aether Bloom, Dianthus Pollen, Kecombrang Extract, Kunyit Extract, all 4 Hybrid Seeds |
+| **Uncommon** | Blue (#668AFF) | Moonspore, Shadow Resin, Bougainvillea Extract, Rafflesia Extract, Beringin Root, Rafflesia Seed, Melati Seed, Wijaya Kusuma Seed, Beringin Seed |
+| **Rare** | Gold (#FFCC33) | Aether Bloom, Dianthus Pollen, Kecombrang Extract, Kunyit Extract, Kecombrang Seed, Kunyit Seed, all 4 Hybrid Seeds |

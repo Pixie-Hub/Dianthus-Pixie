@@ -204,6 +204,18 @@ func _unhandled_input(event: InputEvent) -> void:
 				InventoryManager.add_item("verdant_sap", 2)
 				InventoryManager.add_item("moonspore", 1)
 				print("DEBUG: Added 5 Petal Shard, 2 Verdant Sap, 1 Moonspore to inventory.")
+		if event.keycode == KEY_J and event.shift_pressed:
+			for pid: String in PlantRegistry.get_all_plant_ids():
+				CodexManager.discover_plant(pid)
+			print("DEBUG: Shift+J — discovered all %d plants in codex." % PlantRegistry.get_all_plant_ids().size())
+		if Input.is_action_just_pressed("codex_toggle"):
+			var cscreen: Node = get_tree().current_scene.find_child("CodexScreen", true, false)
+			if cscreen != null:
+				if cscreen.visible:
+					cscreen.close()
+				else:
+					cscreen.open()
+			get_viewport().set_input_as_handled()
 		if Input.is_action_just_pressed("breeding_toggle"):
 			var bscreen: Node = get_tree().current_scene.find_child("CrossBreedingScreen", true, false)
 			if bscreen != null:
