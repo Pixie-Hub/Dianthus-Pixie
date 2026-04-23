@@ -5,6 +5,7 @@ signal player_died
 signal player_respawned
 signal attack_hit(target: Node, damage: int)
 signal energy_changed(current_energy: int, max_energy: int)
+signal loadout_changed(weapon_slots: Array, skill_id: String, selected_slot: int)
 
 const TILE_SIZE: int = 16
 const SPEED: float = TILE_SIZE * 5.0
@@ -17,6 +18,8 @@ const ENERGY_PER_HIT: int = 3
 const ENERGY_PER_KILL: int = 10
 const ENERGY_NEAR_CORE_RATE: float = 2.0
 const CORE_PROXIMITY_RADIUS: float = 64.0
+const WEAPON_SLOT_COUNT: int = 2
+const SKILL_ENERGY_COST: int = 30
 
 @onready var _sprite: Sprite2D = %Sprite2D
 @onready var _anim_tree: AnimationTree = %AnimationTree
@@ -34,6 +37,9 @@ var _blink_tween: Tween = null
 var is_attacking: bool = false
 var _attack_cooldown_timer: float = 0.0
 var _hit_bodies: Array[Node2D] = []
+var weapon_slots: Array[String] = ["thorn_sword", ""]
+var active_skill_id: String = ""
+var selected_weapon_slot: int = 0
 var _current_weapon: WeaponData = null
 var _debug_plant_cycle: int = 0
 var current_energy: int = 0
@@ -51,9 +57,10 @@ func _ready() -> void:
 	_update_blend_position()
 	hp_changed.emit(current_hp, MAX_HP)
 	energy_changed.emit(current_energy, max_energy)
-	_current_weapon = CraftingManager.get_weapon_data("thorn_sword")
+	_current_weapon = CraftingManager.get_weapon_data(weapon_slots[0])
 	_sword_hitbox.body_entered.connect(_on_sword_hitbox_body_entered)
 	CraftingManager.weapon_crafted.connect(_on_weapon_crafted)
+	loadout_changed.emit(weapon_slots, active_skill_id, selected_weapon_slot)
 
 func _physics_process(delta: float) -> void:
 	if is_dead:
@@ -118,8 +125,32 @@ func set_camera_limits(left: int, top: int, right: int, bottom: int) -> void:
 	_camera.limit_bottom = bottom
 
 func _unhandled_input(event: InputEvent) -> void:
+	if Input.is_action_just_pressed("hotbar_weapon_1"):
+		select_weapon_slot(0)
+		get_viewport().set_input_as_handled()
+		return
+	if Input.is_action_just_pressed("hotbar_weapon_2"):
+		select_weapon_slot(1)
+		get_viewport().set_input_as_handled()
+		return
+	if Input.is_action_just_pressed("activate_skill"):
+		_activate_skill()
+		get_viewport().set_input_as_handled()
+		return
+	if Input.is_action_just_pressed("loadout_toggle"):
+		var lscreen: Node = get_tree().current_scene.find_child("LoadoutScreen", true, false)
+		if lscreen != null:
+			if lscreen.visible:
+				lscreen.close()
+			else:
+				lscreen.open()
+		get_viewport().set_input_as_handled()
+		return
 	if Input.is_action_just_pressed("attack"):
 		if not is_dead and not is_attacking and _attack_cooldown_timer <= 0.0:
+			if _current_weapon == null:
+				print("[Player] No weapon in selected slot — cannot attack.")
+				return
 			_start_attack()
 			return
 	if event is InputEventKey and event.pressed:
@@ -204,6 +235,16 @@ func _unhandled_input(event: InputEvent) -> void:
 				InventoryManager.add_item("verdant_sap", 2)
 				InventoryManager.add_item("moonspore", 1)
 				print("DEBUG: Added 5 Petal Shard, 2 Verdant Sap, 1 Moonspore to inventory.")
+		if event.keycode == KEY_L and event.shift_pressed:
+			for wid: String in CraftingManager.get_owned_weapon_ids():
+				pass
+			for wid: String in ["thorn_sword", "spore_bomb", "vine_whip", "petal_shield",
+					"blazeblade", "void_grenade", "crystal_lash", "iron_bloom_shield"]:
+				CraftingManager.owned_weapons[wid] = true
+			print("DEBUG: Shift+L — granted all 8 weapons.")
+			var ls2: Node = get_tree().current_scene.find_child("LoadoutScreen", true, false)
+			if ls2 != null and ls2.has_method("_refresh"):
+				ls2._refresh()
 		if event.keycode == KEY_J and event.shift_pressed:
 			for pid: String in PlantRegistry.get_all_plant_ids():
 				CodexManager.discover_plant(pid)
@@ -326,10 +367,17 @@ func _end_attack() -> void:
 	_state_machine.travel("idle")
 
 func _on_weapon_crafted(weapon_id: String) -> void:
-	var data: WeaponData = CraftingManager.get_weapon_data(weapon_id)
-	if data != null:
-		_current_weapon = data
-		print("[Player] Equipped crafted weapon: %s" % weapon_id)
+	if DayNightCycle.is_night():
+		print("[Player] Loadout locked at night — cannot auto-equip %s." % weapon_id)
+		return
+	var empty_slot: int = -1
+	for i: int in range(WEAPON_SLOT_COUNT):
+		if weapon_slots[i].is_empty():
+			empty_slot = i
+			break
+	var target_slot: int = empty_slot if empty_slot >= 0 else 0
+	equip_weapon(target_slot, weapon_id)
+	print("[Player] Crafted weapon '%s' auto-equipped to slot %d." % [weapon_id, target_slot])
 
 
 func _update_core_energy_regen(delta: float) -> void:
@@ -362,7 +410,57 @@ func try_spend_energy(amount: int) -> bool:
 	current_energy -= amount
 	energy_changed.emit(current_energy, max_energy)
 	return true
-	# TODO (PLANT-08): Hook into active skill input.
+
+
+func select_weapon_slot(index: int) -> void:
+	if index < 0 or index >= WEAPON_SLOT_COUNT:
+		return
+	selected_weapon_slot = index
+	var wid: String = weapon_slots[selected_weapon_slot]
+	if wid.is_empty():
+		_current_weapon = null
+	else:
+		_current_weapon = CraftingManager.get_weapon_data(wid)
+	loadout_changed.emit(weapon_slots, active_skill_id, selected_weapon_slot)
+	print("[Player] Selected weapon slot %d: %s" % [index, wid if not wid.is_empty() else "[Empty]"])
+
+
+func equip_weapon(slot: int, weapon_id: String) -> void:
+	if DayNightCycle.is_night():
+		print("[Player] Loadout locked! Cannot equip during Night.")
+		loadout_changed.emit(weapon_slots, active_skill_id, selected_weapon_slot)
+		return
+	if slot < 0 or slot >= WEAPON_SLOT_COUNT:
+		return
+	weapon_slots[slot] = weapon_id
+	if slot == selected_weapon_slot:
+		if weapon_id.is_empty():
+			_current_weapon = null
+		else:
+			_current_weapon = CraftingManager.get_weapon_data(weapon_id)
+	loadout_changed.emit(weapon_slots, active_skill_id, selected_weapon_slot)
+
+
+func set_active_skill(skill_id: String) -> void:
+	if DayNightCycle.is_night():
+		print("[Player] Loadout locked! Cannot change skill during Night.")
+		loadout_changed.emit(weapon_slots, active_skill_id, selected_weapon_slot)
+		return
+	active_skill_id = skill_id
+	loadout_changed.emit(weapon_slots, active_skill_id, selected_weapon_slot)
+
+
+func _activate_skill() -> void:
+	if active_skill_id.is_empty():
+		print("[Player] No active skill equipped.")
+		return
+	if not try_spend_energy(SKILL_ENERGY_COST):
+		print("[Player] Not enough energy for skill. Need %d, have %d." % [SKILL_ENERGY_COST, current_energy])
+		return
+	print("[Player] Activated skill: %s (-%d energy)" % [active_skill_id, SKILL_ENERGY_COST])
+	# TODO (PLANT-09): Spore Bomb skill behavior.
+	# TODO (PLANT-10): Vine Whip skill behavior.
+	# TODO (PLANT-11): Petal Shield skill behavior.
 
 
 func _debug_place_plant() -> void:

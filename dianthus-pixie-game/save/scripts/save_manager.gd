@@ -4,7 +4,7 @@ signal save_completed(success: bool, manual: bool)
 signal load_completed(success: bool)
 
 const SAVE_PATH: String = "user://savegame.json"
-const SCHEMA_VERSION: int = 6
+const SCHEMA_VERSION: int = 7
 const GAME_VERSION: String = "0.1.0"
 
 const PLANT_TYPE_TO_SCENE: Dictionary = {
@@ -188,10 +188,18 @@ func _gather_state(manual: bool) -> Dictionary:
 
 	# Breeding
 	state["breeding"] = BreedingManager.serialize()
-	var equipped_id: String = "thorn_sword"
-	if is_instance_valid(GameManager.player) and GameManager.player._current_weapon != null:
-		equipped_id = GameManager.player._current_weapon.weapon_id
-	state["player"]["equipped_weapon"] = equipped_id
+
+	# Loadout (PLANT-08)
+	var loadout: Dictionary = {
+		"weapon_slots": ["thorn_sword", ""],
+		"active_skill": "",
+		"selected_slot": 0,
+	}
+	if is_instance_valid(GameManager.player):
+		loadout["weapon_slots"] = GameManager.player.weapon_slots.duplicate()
+		loadout["active_skill"] = GameManager.player.active_skill_id
+		loadout["selected_slot"] = GameManager.player.selected_weapon_slot
+	state["player"]["loadout"] = loadout
 
 	# Core
 	var core_hp: int = 200
@@ -296,10 +304,27 @@ func _apply_state(state: Dictionary) -> void:
 
 	# 5.8 Codex.
 	CodexManager.deserialize(state.get("codex", {}))
-	var equipped_id: String = state.get("player", {}).get("equipped_weapon", "thorn_sword")
-	var weapon_data: WeaponData = CraftingManager.get_weapon_data(equipped_id)
-	if weapon_data != null and is_instance_valid(GameManager.player):
-		GameManager.player._current_weapon = weapon_data
+
+	# 5.9 Loadout (PLANT-08).
+	var ld: Dictionary = state.get("player", {}).get("loadout", {})
+	if is_instance_valid(GameManager.player):
+		var slots: Array = ld.get("weapon_slots", ["thorn_sword", ""])
+		GameManager.player.weapon_slots = [
+			str(slots[0]) if slots.size() > 0 else "thorn_sword",
+			str(slots[1]) if slots.size() > 1 else "",
+		]
+		GameManager.player.active_skill_id = str(ld.get("active_skill", ""))
+		GameManager.player.selected_weapon_slot = int(ld.get("selected_slot", 0))
+		var wid: String = GameManager.player.weapon_slots[GameManager.player.selected_weapon_slot]
+		if not wid.is_empty():
+			GameManager.player._current_weapon = CraftingManager.get_weapon_data(wid)
+		else:
+			GameManager.player._current_weapon = null
+		GameManager.player.loadout_changed.emit(
+			GameManager.player.weapon_slots,
+			GameManager.player.active_skill_id,
+			GameManager.player.selected_weapon_slot
+		)
 
 	# 5.5 Difficulty tier.
 	var diff_tier: String = state.get("difficulty", {}).get("tier", "normal")
@@ -410,4 +435,17 @@ func _migrate(data: Dictionary) -> Dictionary:
 		if not data.has("codex"):
 			data["codex"] = {"discovered_plants": {}}
 		data["schema_version"] = 6
+	# v6 → v7: equipped_weapon replaced by loadout dict.
+	if version < 7:
+		print("[SaveManager] Migrating save from v%d to v7." % version)
+		var pd: Dictionary = data.get("player", {})
+		var old_weapon: String = pd.get("equipped_weapon", "thorn_sword")
+		pd["loadout"] = {
+			"weapon_slots": [old_weapon, ""],
+			"active_skill": "",
+			"selected_slot": 0,
+		}
+		pd.erase("equipped_weapon")
+		data["player"] = pd
+		data["schema_version"] = 7
 	return data

@@ -8,6 +8,7 @@ signal player_hp_changed(current_hp: int, max_hp: int)
 signal player_died
 signal player_respawned
 signal player_energy_changed(current_energy: int, max_energy: int)
+signal loadout_changed(weapon_slots: Array, skill_id: String, selected_slot: int)
 signal night_survived(day: int)
 signal colorblind_mode_changed(enabled: bool)
 
@@ -71,3 +72,6 @@ func register_player(p: Node) -> void:
 	if p.has_signal("energy_changed"):
 		p.energy_changed.connect(
 			func(e: int, m: int) -> void: player_energy_changed.emit(e, m))
+	if p.has_signal("loadout_changed"):
+		p.loadout_changed.connect(
+			func(slots: Array, sid: String, sel: int) -> void: loadout_changed.emit(slots, sid, sel))

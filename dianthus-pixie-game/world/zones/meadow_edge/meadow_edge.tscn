@@ -17,6 +17,7 @@
 [ext_resource type="PackedScene" uid="uid://cross_breeding_01" path="res://ui/screens/cross_breeding_screen.tscn" id="14_breeding"]
 [ext_resource type="PackedScene" uid="uid://plant_placement01" path="res://plants/placement/plant_placement_manager.tscn" id="15_ppm"]
 [ext_resource type="PackedScene" uid="uid://codex_screen_01" path="res://ui/codex/codex_screen.tscn" id="16_codex"]
+[ext_resource type="PackedScene" uid="uid://loadout_screen_01" path="res://ui/screens/loadout_screen.tscn" id="17_loadout"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_dhprj"]
 texture = ExtResource("2_quyxi")
@@ -1003,3 +1004,5 @@ position = Vector2(384, 208)
 [node name="CodexScreen" parent="." instance=ExtResource("16_codex")]
 
 [node name="PlantPlacementManager" parent="." instance=ExtResource("15_ppm")]
+
+[node name="LoadoutScreen" parent="." instance=ExtResource("17_loadout")]

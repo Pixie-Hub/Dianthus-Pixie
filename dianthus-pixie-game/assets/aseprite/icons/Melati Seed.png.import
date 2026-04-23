@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b4fe7ymu1avf3"
-path="res://.godot/imported/Melati.png-0465643f1312ad70201bcf954dd63639.ctex"
+uid="uid://dqa6nh74m7r82"
+path="res://.godot/imported/Melati Seed.png-1ade132ae2af3727efedea15407427dc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/aseprite/icons/Melati.png"
-dest_files=["res://.godot/imported/Melati.png-0465643f1312ad70201bcf954dd63639.ctex"]
+source_file="res://assets/aseprite/icons/Melati Seed.png"
+dest_files=["res://.godot/imported/Melati Seed.png-1ade132ae2af3727efedea15407427dc.ctex"]
 
 [params]
 

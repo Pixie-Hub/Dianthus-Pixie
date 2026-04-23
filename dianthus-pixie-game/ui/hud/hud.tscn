@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://ui/hud/hud.gd" id="1_script"]
 
@@ -39,6 +39,42 @@ corner_radius_bottom_left = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_energy_fill"]
 bg_color = Color(0.2, 0.7, 0.9, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slot_normal"]
+bg_color = Color(0.1, 0.1, 0.1, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.3, 0.3, 0.3, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slot_selected"]
+bg_color = Color(0.1, 0.1, 0.1, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.9, 0.75, 0.2, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slot_skill"]
+bg_color = Color(0.1, 0.1, 0.1, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.7, 0.9, 1)
 corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
@@ -143,3 +179,96 @@ horizontal_alignment = 1
 theme_override_font_sizes/font_size = 8
 theme_override_colors/font_color = Color(0.2, 0.9, 0.3, 1)
 visible = false
+
+[node name="HotbarContainer" type="MarginContainer" parent="."]
+unique_name_in_owner = true
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -192.0
+offset_top = -40.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HotbarContainer"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="WeaponSlot1" type="PanelContainer" parent="HotbarContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(56, 30)
+theme_override_styles/panel = SubResource("StyleBoxFlat_slot_selected")
+
+[node name="VBox" type="VBoxContainer" parent="HotbarContainer/HBoxContainer/WeaponSlot1"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="KeyLabel" type="Label" parent="HotbarContainer/HBoxContainer/WeaponSlot1/VBox"]
+layout_mode = 2
+text = "1"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 5
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+
+[node name="Slot1NameLabel" type="Label" parent="HotbarContainer/HBoxContainer/WeaponSlot1/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Thorn Sword"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 6
+
+[node name="WeaponSlot2" type="PanelContainer" parent="HotbarContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(56, 30)
+theme_override_styles/panel = SubResource("StyleBoxFlat_slot_normal")
+
+[node name="VBox" type="VBoxContainer" parent="HotbarContainer/HBoxContainer/WeaponSlot2"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="KeyLabel" type="Label" parent="HotbarContainer/HBoxContainer/WeaponSlot2/VBox"]
+layout_mode = 2
+text = "2"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 5
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+
+[node name="Slot2NameLabel" type="Label" parent="HotbarContainer/HBoxContainer/WeaponSlot2/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "[Empty]"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 6
+
+[node name="SkillSlotPanel" type="PanelContainer" parent="HotbarContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(56, 30)
+theme_override_styles/panel = SubResource("StyleBoxFlat_slot_skill")
+
+[node name="VBox" type="VBoxContainer" parent="HotbarContainer/HBoxContainer/SkillSlotPanel"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="KeyLabel" type="Label" parent="HotbarContainer/HBoxContainer/SkillSlotPanel/VBox"]
+layout_mode = 2
+text = "Q"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 5
+theme_override_colors/font_color = Color(0.2, 0.7, 0.9, 1)
+
+[node name="SkillNameLabel" type="Label" parent="HotbarContainer/HBoxContainer/SkillSlotPanel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "[Empty]"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 6

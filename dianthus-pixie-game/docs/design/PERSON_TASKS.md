@@ -324,3 +324,8 @@ FOUND-01..06 (Done)
 | P | Toggle plant placement mode (DAY only; shows seed palette HUD) | PLANT-03 |
 | J | Toggle Plant Codex screen (pauses game) | UI-04 |
 | Shift+J | Discover all 11 plants in codex (debug unlock) | UI-04 |
+| L | Toggle Loadout screen (pauses game) | PLANT-08 |
+| Shift+L | Grant all 8 weapons to CraftingManager (debug unlock) | PLANT-08 |
+| 1 | Select weapon slot 1 | PLANT-08 |
+| 2 | Select weapon slot 2 | PLANT-08 |
+| Q | Activate equipped skill (costs 30 energy) | PLANT-08 |
