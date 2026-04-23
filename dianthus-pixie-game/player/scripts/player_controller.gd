@@ -339,13 +339,13 @@ func _start_attack() -> void:
 	_update_blend_position()
 	var hitbox_offset: Vector2
 	if last_direction == Vector2.DOWN:
-		hitbox_offset = Vector2(0, 4)
+		hitbox_offset = Vector2(0, -4)
 	elif last_direction == Vector2.UP:
-		hitbox_offset = Vector2(0, -28)
+		hitbox_offset = Vector2(0, -36)
 	elif last_direction == Vector2.LEFT:
-		hitbox_offset = Vector2(-16, -12)
+		hitbox_offset = Vector2(-16, -24)
 	else:
-		hitbox_offset = Vector2(16, -12)
+		hitbox_offset = Vector2(16, -24)
 	_sword_hitbox.position = hitbox_offset
 	var hitbox_shape: CollisionShape2D = _sword_hitbox.get_child(0)
 	print("DEBUG: Attack! Damage: %d, Direction: %s" % [_current_weapon.damage, last_direction])

@@ -1,25 +1,24 @@
-[gd_scene load_steps=3 format=3 uid="uid://loadout_screen_01"]
+[gd_scene format=3 uid="uid://0bemb33ejawu"]
 
-[ext_resource type="Script" path="res://ui/screens/loadout_screen.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://cuax181spoy6j" path="res://ui/screens/loadout_screen.gd" id="1_script"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_overlay"]
-bg_color = Color(0, 0, 0, 0.6)
-
-[node name="LoadoutScreen" type="CanvasLayer"]
+[node name="LoadoutScreen" type="CanvasLayer" unique_id=1050054688]
+process_mode = 3
 layer = 94
 script = ExtResource("1_script")
 
-[node name="Overlay" type="ColorRect" parent="."]
+[node name="Overlay" type="ColorRect" parent="." unique_id=1038068571]
 unique_name_in_owner = true
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.6)
 mouse_filter = 2
+color = Color(0, 0, 0, 0.6)
 
-[node name="Panel" type="PanelContainer" parent="."]
+[node name="Panel" type="PanelContainer" parent="." unique_id=1980297307]
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -31,138 +30,138 @@ offset_bottom = 110.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=675750491]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 6
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 6
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=1936884314]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=303438951]
 layout_mode = 2
+theme_override_font_sizes/font_size = 8
 text = "LOADOUT"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 8
 
-[node name="HSeparator" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer" unique_id=222413835]
 layout_mode = 2
 
-[node name="LockLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="LockLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=1034028557]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.15, 0.15, 1)
+theme_override_font_sizes/font_size = 6
 text = "LOCKED (Night)"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 6
-theme_override_colors/font_color = Color(0.8, 0.15, 0.15, 1)
-visible = false
 
-[node name="WeaponsLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="WeaponsLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=1377336329]
 layout_mode = 2
-text = "WEAPONS"
 theme_override_font_sizes/font_size = 6
+text = "WEAPONS"
 
-[node name="WeaponSlotsRow" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="WeaponSlotsRow" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=148232120]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="Slot1" type="PanelContainer" parent="Panel/MarginContainer/VBoxContainer/WeaponSlotsRow"]
+[node name="Slot1" type="PanelContainer" parent="Panel/MarginContainer/VBoxContainer/WeaponSlotsRow" unique_id=1470146697]
 unique_name_in_owner = true
-layout_mode = 2
 custom_minimum_size = Vector2(120, 28)
+layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBox" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/WeaponSlotsRow/Slot1"]
+[node name="VBox" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/WeaponSlotsRow/Slot1" unique_id=1824886055]
 layout_mode = 2
 
-[node name="KeyLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/WeaponSlotsRow/Slot1/VBox"]
+[node name="KeyLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/WeaponSlotsRow/Slot1/VBox" unique_id=266760685]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 6
 text = "[1]"
-theme_override_font_sizes/font_size = 6
-theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 
-[node name="Slot1WeaponLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/WeaponSlotsRow/Slot1/VBox"]
+[node name="Slot1WeaponLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/WeaponSlotsRow/Slot1/VBox" unique_id=243244750]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 6
 text = "Thorn Sword"
-theme_override_font_sizes/font_size = 6
 
-[node name="Slot2" type="PanelContainer" parent="Panel/MarginContainer/VBoxContainer/WeaponSlotsRow"]
+[node name="Slot2" type="PanelContainer" parent="Panel/MarginContainer/VBoxContainer/WeaponSlotsRow" unique_id=925499107]
 unique_name_in_owner = true
-layout_mode = 2
 custom_minimum_size = Vector2(120, 28)
+layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBox" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/WeaponSlotsRow/Slot2"]
+[node name="VBox" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/WeaponSlotsRow/Slot2" unique_id=807233706]
 layout_mode = 2
 
-[node name="KeyLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/WeaponSlotsRow/Slot2/VBox"]
+[node name="KeyLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/WeaponSlotsRow/Slot2/VBox" unique_id=1812122541]
 layout_mode = 2
-text = "[2]"
-theme_override_font_sizes/font_size = 6
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 6
+text = "[2]"
 
-[node name="Slot2WeaponLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/WeaponSlotsRow/Slot2/VBox"]
+[node name="Slot2WeaponLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/WeaponSlotsRow/Slot2/VBox" unique_id=1704992066]
 unique_name_in_owner = true
 layout_mode = 2
-text = "[Empty]"
 theme_override_font_sizes/font_size = 6
+text = "[Empty]"
 
-[node name="HSeparator2" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer" unique_id=465569686]
 layout_mode = 2
 
-[node name="SkillLabel2" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="SkillLabel2" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=58736486]
 layout_mode = 2
+theme_override_font_sizes/font_size = 6
 text = "ACTIVE SKILL [Q]"
-theme_override_font_sizes/font_size = 6
 
-[node name="SkillSlot" type="PanelContainer" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="SkillSlot" type="PanelContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=1048468444]
 unique_name_in_owner = true
-layout_mode = 2
 custom_minimum_size = Vector2(0, 20)
-
-[node name="HBox" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/SkillSlot"]
 layout_mode = 2
 
-[node name="SkillLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/SkillSlot/HBox"]
+[node name="HBox" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/SkillSlot" unique_id=2013124172]
+layout_mode = 2
+
+[node name="SkillLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/SkillSlot/HBox" unique_id=523352090]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 6
 text = "[Empty]"
-size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 6
 
-[node name="CostLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/SkillSlot/HBox"]
+[node name="CostLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/SkillSlot/HBox" unique_id=999382379]
 layout_mode = 2
-text = "30E"
-theme_override_font_sizes/font_size = 6
 theme_override_colors/font_color = Color(0.2, 0.7, 0.9, 1)
-
-[node name="HSeparator3" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="OwnedWeaponsLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "OWNED WEAPONS (click →1 or →2 to assign)"
 theme_override_font_sizes/font_size = 6
+text = "30E"
 
-[node name="OwnedScroll" type="ScrollContainer" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="HSeparator3" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer" unique_id=1361292196]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 60)
 
-[node name="OwnedList" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/OwnedScroll"]
+[node name="OwnedWeaponsLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=1477758260]
+layout_mode = 2
+theme_override_font_sizes/font_size = 6
+text = "OWNED WEAPONS (click →1 or →2 to assign)"
+
+[node name="OwnedScroll" type="ScrollContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=1860330462]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+
+[node name="OwnedList" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/OwnedScroll" unique_id=1038578985]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HSeparator4" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="HSeparator4" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer" unique_id=1109179733]
 layout_mode = 2
 
-[node name="CloseHint" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="CloseHint" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=899668027]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_font_sizes/font_size = 6
 text = "Press L to close"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 6
-theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)

@@ -14,6 +14,8 @@ func _ready() -> void:
 func _on_night_survived(day: int) -> void:
 	if GameManager.current_state == GameManager.GameState.GAME_OVER:
 		return
+	if not is_inside_tree():
+		return
 	get_tree().paused = true
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_day_label.text = "Day %d Complete" % day

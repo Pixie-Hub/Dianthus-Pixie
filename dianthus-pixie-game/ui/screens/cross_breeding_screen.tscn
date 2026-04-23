@@ -1,53 +1,17 @@
-[gd_scene format=3 uid="uid://cross_breeding_01"]
+[gd_scene format=3 uid="uid://x7fot4dj7rwb"]
 
-[ext_resource type="Script" path="res://ui/screens/cross_breeding_screen.gd" id="1_cbs"]
+[ext_resource type="Script" uid="uid://bvf1qpqwfd7jp" path="res://ui/screens/cross_breeding_screen.gd" id="1_cbs"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_overlay"]
-bg_color = Color(0, 0, 0, 0.6)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-bg_color = Color(0.08, 0.08, 0.08, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.4, 0.4, 0.4, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slot"]
-bg_color = Color(0.15, 0.15, 0.15, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.5, 0.5, 0.5, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_output"]
-bg_color = Color(0.2, 0.2, 0.1, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.9, 0.75, 0.2, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_picker"]
-bg_color = Color(0.1, 0.1, 0.1, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.6, 0.6, 0.6, 1)
-
-[node name="CrossBreedingScreen" type="CanvasLayer"]
+[node name="CrossBreedingScreen" type="CanvasLayer" unique_id=1687957879]
 script = ExtResource("1_cbs")
 
-[node name="Overlay" type="ColorRect" parent="."]
+[node name="Overlay" type="ColorRect" parent="." unique_id=1829548517]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-add_theme_stylebox_override = SubResource("StyleBoxFlat_overlay")
-mouse_filter = 0
+color = Color(0, 0, 0, 0.6)
 
-[node name="Panel" type="PanelContainer" parent="."]
+[node name="Panel" type="PanelContainer" parent="." unique_id=1982488185]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -57,117 +21,107 @@ offset_left = -160.0
 offset_top = -130.0
 offset_right = 160.0
 offset_bottom = 130.0
-add_theme_stylebox_override("panel") = SubResource("StyleBoxFlat_panel")
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=958681332]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=1236601577]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=1342085113]
 layout_mode = 2
 text = "CROSS-BREEDING"
-add_theme_font_size_override("font_size") = 10
 horizontal_alignment = 1
 
-[node name="SlotsRow" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="SlotsRow" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=1900253441]
 layout_mode = 2
-alignment = 1
 theme_override_constants/separation = 4
+alignment = 1
 
-[node name="SlotA" type="PanelContainer" parent="Panel/MarginContainer/VBoxContainer/SlotsRow"]
+[node name="SlotA" type="PanelContainer" parent="Panel/MarginContainer/VBoxContainer/SlotsRow" unique_id=1825749573]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(48, 48)
-add_theme_stylebox_override("panel") = SubResource("StyleBoxFlat_slot")
-mouse_filter = 0
+layout_mode = 2
 
-[node name="SlotALabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/SlotsRow/SlotA"]
+[node name="SlotALabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/SlotsRow/SlotA" unique_id=2069077792]
 unique_name_in_owner = true
 layout_mode = 2
 text = "?"
-add_theme_font_size_override("font_size") = 8
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="PlusLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/SlotsRow"]
+[node name="PlusLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/SlotsRow" unique_id=654864745]
 layout_mode = 2
 text = "+"
-add_theme_font_size_override("font_size") = 12
 vertical_alignment = 1
 
-[node name="SlotB" type="PanelContainer" parent="Panel/MarginContainer/VBoxContainer/SlotsRow"]
+[node name="SlotB" type="PanelContainer" parent="Panel/MarginContainer/VBoxContainer/SlotsRow" unique_id=1985837556]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(48, 48)
-add_theme_stylebox_override("panel") = SubResource("StyleBoxFlat_slot")
-mouse_filter = 0
+layout_mode = 2
 
-[node name="SlotBLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/SlotsRow/SlotB"]
+[node name="SlotBLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/SlotsRow/SlotB" unique_id=1122059471]
 unique_name_in_owner = true
 layout_mode = 2
 text = "?"
-add_theme_font_size_override("font_size") = 8
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="ArrowLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/SlotsRow"]
+[node name="ArrowLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/SlotsRow" unique_id=288216324]
 layout_mode = 2
 text = "->"
-add_theme_font_size_override("font_size") = 12
 vertical_alignment = 1
 
-[node name="OutputSlot" type="PanelContainer" parent="Panel/MarginContainer/VBoxContainer/SlotsRow"]
+[node name="OutputSlot" type="PanelContainer" parent="Panel/MarginContainer/VBoxContainer/SlotsRow" unique_id=1954485026]
 custom_minimum_size = Vector2(48, 48)
-add_theme_stylebox_override("panel") = SubResource("StyleBoxFlat_output")
+layout_mode = 2
 
-[node name="OutputLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/SlotsRow/OutputSlot"]
+[node name="OutputLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/SlotsRow/OutputSlot" unique_id=1746520428]
 unique_name_in_owner = true
 layout_mode = 2
 text = "?"
-add_theme_font_size_override("font_size") = 8
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="Separator" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="Separator" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer" unique_id=1293318401]
 layout_mode = 2
 
-[node name="ComboListTitle" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="ComboListTitle" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=1375508003]
 layout_mode = 2
 text = "Known Combinations:"
-add_theme_font_size_override("font_size") = 8
 
-[node name="ComboScroll" type="ScrollContainer" parent="Panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
+[node name="ComboScroll" type="ScrollContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=91772928]
 custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
 
-[node name="ComboList" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/ComboScroll"]
+[node name="ComboList" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/ComboScroll" unique_id=1793529733]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ButtonsRow" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="ButtonsRow" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=908071243]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="BreedButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/ButtonsRow"]
+[node name="BreedButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/ButtonsRow" unique_id=1274586395]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-text = "BREED"
 disabled = true
+text = "BREED"
 
-[node name="SwitchToCraftingBtn" type="Button" parent="Panel/MarginContainer/VBoxContainer/ButtonsRow"]
+[node name="SwitchToCraftingBtn" type="Button" parent="Panel/MarginContainer/VBoxContainer/ButtonsRow" unique_id=811832668]
 layout_mode = 2
 text = ">> Crafting"
 
-[node name="ItemPickerPanel" type="PanelContainer" parent="."]
+[node name="ItemPickerPanel" type="PanelContainer" parent="." unique_id=1977388512]
 unique_name_in_owner = true
 anchors_preset = 8
 anchor_left = 0.5
@@ -178,11 +132,10 @@ offset_left = -100.0
 offset_top = -80.0
 offset_right = 100.0
 offset_bottom = 80.0
-add_theme_stylebox_override("panel") = SubResource("StyleBoxFlat_picker")
 
-[node name="ItemPickerScroll" type="ScrollContainer" parent="ItemPickerPanel"]
+[node name="ItemPickerScroll" type="ScrollContainer" parent="ItemPickerPanel" unique_id=1363646181]
 layout_mode = 2
 
-[node name="ItemPickerList" type="VBoxContainer" parent="ItemPickerPanel/ItemPickerScroll"]
+[node name="ItemPickerList" type="VBoxContainer" parent="ItemPickerPanel/ItemPickerScroll" unique_id=1215934109]
 unique_name_in_owner = true
 layout_mode = 2

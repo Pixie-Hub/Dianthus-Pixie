@@ -123,6 +123,19 @@ func _weapon_display(weapon_id: String) -> String:
 	return weapon_id.capitalize().replace("_", " ")
 
 
+func _unhandled_input(_event: InputEvent) -> void:
+	if not visible:
+		return
+	if Input.is_action_just_pressed("loadout_toggle"):
+		close()
+		get_viewport().set_input_as_handled()
+		return
+	if Input.is_action_just_pressed("ui_cancel"):
+		close()
+		get_viewport().set_input_as_handled()
+		return
+
+
 func _apply_slot_border(panel: PanelContainer, selected: bool) -> void:
 	var sb: StyleBoxFlat = StyleBoxFlat.new()
 	sb.bg_color = Color(0.12, 0.12, 0.12, 1)
