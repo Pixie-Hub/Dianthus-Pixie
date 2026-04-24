@@ -18,9 +18,11 @@ func _refresh_continue_button() -> void:
 		var day: int = meta.get("day_count", 1)
 		_continue_btn.text = _CONTINUE_LABEL_FORMAT % day
 		_continue_btn.disabled = false
+		_continue_btn.modulate = Color.WHITE
 	else:
 		_continue_btn.text = "Continue"
 		_continue_btn.disabled = true
+		_continue_btn.modulate = Color(0.42, 0.353, 0.282, 1)
 
 
 func _on_continue_pressed() -> void:

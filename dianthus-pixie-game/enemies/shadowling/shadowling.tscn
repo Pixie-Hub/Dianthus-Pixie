@@ -1,23 +1,17 @@
 [gd_scene format=3 uid="uid://d3nm4wr5o2abe"]
 
-[ext_resource type="Script" path="res://enemies/shadowling/shadowling.gd" id="1_shad"]
-[ext_resource type="Script" path="res://enemies/fsm/state_machine.gd" id="2_fsm"]
-[ext_resource type="Script" path="res://enemies/shadowling/states/shadowling_idle.gd" id="3_idle"]
-[ext_resource type="Script" path="res://enemies/shadowling/states/shadowling_scout.gd" id="4_scout"]
-[ext_resource type="Script" path="res://enemies/shadowling/states/shadowling_siege.gd" id="5_siege"]
-[ext_resource type="Script" path="res://enemies/shadowling/states/shadowling_attack.gd" id="6_atk"]
-[ext_resource type="Script" path="res://enemies/shadowling/states/shadowling_retreat.gd" id="7_ret"]
-[ext_resource type="Texture2D" uid="uid://ckoljc2d64kcr" path="res://icon.svg" id="8_icon"]
+[ext_resource type="Script" uid="uid://dn733jjthon78" path="res://enemies/shadowling/shadowling.gd" id="1_shad"]
+[ext_resource type="Script" uid="uid://bp6rkgxl62npj" path="res://enemies/fsm/state_machine.gd" id="2_fsm"]
+[ext_resource type="Texture2D" uid="uid://c7c6sdu1bxftq" path="res://enemies/shadowling/shadowling.png" id="2_g6v54"]
+[ext_resource type="Script" uid="uid://br2r5o1fv782p" path="res://enemies/shadowling/states/shadowling_idle.gd" id="3_idle"]
+[ext_resource type="Script" uid="uid://6k8pglsysw7v" path="res://enemies/shadowling/states/shadowling_scout.gd" id="4_scout"]
+[ext_resource type="Script" uid="uid://dah0677m0i5yo" path="res://enemies/shadowling/states/shadowling_siege.gd" id="5_siege"]
+[ext_resource type="Script" uid="uid://73g6b8tq4j7r" path="res://enemies/shadowling/states/shadowling_attack.gd" id="6_atk"]
+[ext_resource type="Script" uid="uid://0ntjmpumpt0l" path="res://enemies/shadowling/states/shadowling_retreat.gd" id="7_ret"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
-radius = 4.0
+radius = 2.0
 height = 4.0
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_detect"]
-radius = 80.0
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_atk"]
-radius = 20.0
 
 [sub_resource type="Animation" id="Animation_RESET"]
 length = 0.001
@@ -31,12 +25,27 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(0.2, 0.2)]
+"values": [Vector2(0.5, 0.5)]
+}
+
+[sub_resource type="Animation" id="Animation_attack"]
+resource_name = "attack"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(5, 0), Vector2(5, 0), Vector2(0, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_idle"]
 resource_name = "idle"
-length = 1.0
 loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -45,10 +54,10 @@ tracks/0/path = NodePath("Sprite2D:scale")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.0, 0.5, 1.0),
+"times": PackedFloat32Array(0, 0.5, 0.96666664),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector2(0.2, 0.2), Vector2(0.22, 0.22), Vector2(0.2, 0.2)]
+"values": [Vector2(0.5, 0.5), Vector2(0.22, 0.22), Vector2(0.2, 0.2)]
 }
 
 [sub_resource type="Animation" id="Animation_walk"]
@@ -62,96 +71,83 @@ tracks/0/path = NodePath("Sprite2D:scale")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.0, 0.25, 0.5),
+"times": PackedFloat32Array(0, 0.25, 0.5),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector2(0.2, 0.2), Vector2(0.21, 0.19), Vector2(0.2, 0.2)]
-}
-
-[sub_resource type="Animation" id="Animation_attack"]
-resource_name = "attack"
-length = 0.3
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = false
-tracks/0/keys = {
-"times": PackedFloat32Array(0.0, 0.1, 0.2, 0.3),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(0, 0), Vector2(5, 0), Vector2(5, 0), Vector2(0, 0)]
+"values": [Vector2(0.5, 0.5), Vector2(0.21, 0.19), Vector2(0.2, 0.2)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_shad"]
 _data = {
 &"RESET": SubResource("Animation_RESET"),
+&"attack": SubResource("Animation_attack"),
 &"idle": SubResource("Animation_idle"),
-&"walk": SubResource("Animation_walk"),
-&"attack": SubResource("Animation_attack")
+&"walk": SubResource("Animation_walk")
 }
 
-[node name="Shadowling" type="CharacterBody2D"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_detect"]
+radius = 80.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_atk"]
+radius = 20.0
+
+[node name="Shadowling" type="CharacterBody2D" unique_id=582079207]
 collision_layer = 8
 collision_mask = 6
 script = ExtResource("1_shad")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1415891623]
 unique_name_in_owner = true
-texture = ExtResource("8_icon")
-scale = Vector2(0.2, 0.2)
-modulate = Color(0.4, 0.2, 0.6, 1)
+texture_filter = 1
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_g6v54")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=231849059]
 shape = SubResource("CapsuleShape2D_body")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1082306106]
 unique_name_in_owner = true
-libraries = {
-&"": SubResource("AnimationLibrary_shad")
-}
+libraries/ = SubResource("AnimationLibrary_shad")
 
-[node name="StateMachine" type="Node" parent="."]
+[node name="StateMachine" type="Node" parent="." unique_id=1607109441]
 script = ExtResource("2_fsm")
-initial_state = &"Idle"
 
-[node name="Idle" type="Node" parent="StateMachine"]
+[node name="Idle" type="Node" parent="StateMachine" unique_id=1389954862]
 script = ExtResource("3_idle")
 
-[node name="Scout" type="Node" parent="StateMachine"]
+[node name="Scout" type="Node" parent="StateMachine" unique_id=635974994]
 script = ExtResource("4_scout")
 
-[node name="Siege" type="Node" parent="StateMachine"]
+[node name="Siege" type="Node" parent="StateMachine" unique_id=2076339364]
 script = ExtResource("5_siege")
 
-[node name="Attack" type="Node" parent="StateMachine"]
+[node name="Attack" type="Node" parent="StateMachine" unique_id=442319690]
 script = ExtResource("6_atk")
 
-[node name="Retreat" type="Node" parent="StateMachine"]
+[node name="Retreat" type="Node" parent="StateMachine" unique_id=1666205516]
 script = ExtResource("7_ret")
 
-[node name="DetectionArea" type="Area2D" parent="."]
+[node name="DetectionArea" type="Area2D" parent="." unique_id=600845043]
 collision_layer = 0
 collision_mask = 0
 monitoring = false
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" unique_id=1031166215]
 shape = SubResource("CircleShape2D_detect")
 
-[node name="AttackArea" type="Area2D" parent="."]
+[node name="AttackArea" type="Area2D" parent="." unique_id=1735424535]
 collision_layer = 0
 collision_mask = 0
 monitoring = false
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea" unique_id=1790612599]
 shape = SubResource("CircleShape2D_atk")
 
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1450290044]
 unique_name_in_owner = true
 
-[node name="HitFlashTimer" type="Timer" parent="."]
+[node name="HitFlashTimer" type="Timer" parent="." unique_id=1663489630]
 wait_time = 0.2
 one_shot = true
