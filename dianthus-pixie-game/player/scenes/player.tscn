@@ -1213,9 +1213,7 @@ script = ExtResource("1_ctrl")
 unique_name_in_owner = true
 texture_filter = 1
 scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_8h4do")
 offset = Vector2(0, -28)
-region_enabled = true
 region_rect = Rect2(0, 0, 64, 64)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=234567891]
