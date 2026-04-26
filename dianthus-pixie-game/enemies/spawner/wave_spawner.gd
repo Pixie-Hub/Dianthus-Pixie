@@ -200,8 +200,19 @@ func _cleanup_wave() -> void:
 
 func get_alive_count() -> int:
 	# TODO (AUDIO-03): Used by dynamic music layer intensity.
-	# TODO (UI-01): HUD reads this for remaining enemy count display.
 	return _enemies_alive
+
+
+func get_active_spawn_points() -> Array[Vector2]:
+	return _active_spawn_points.duplicate()
+
+
+func get_wave_total() -> int:
+	return _current_wave_total
+
+
+func is_wave_active() -> bool:
+	return _wave_active
 
 
 func _pick_enemy_scene() -> PackedScene:

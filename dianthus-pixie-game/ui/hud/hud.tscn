@@ -1,6 +1,24 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene format=3 uid="uid://shyr5xnjuqkr"]
 
-[ext_resource type="Script" path="res://ui/hud/hud.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://cgu6f8pnrtcni" path="res://ui/hud/hud.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://co8gar52s1lgm" path="res://ui/hud/time_of_day_indicator.gd" id="2_tod_script"]
+[ext_resource type="Script" uid="uid://c0sg7ynup6dgi" path="res://ui/hud/minimap.gd" id="3_minimap_script"]
+[ext_resource type="Script" uid="uid://dcea8ljris45v" path="res://ui/hud/wave_counter.gd" id="4_wavecounter_script"]
+[ext_resource type="Texture2D" uid="uid://bnpfpreensksj" path="res://ui/hud/sun.png" id="5_sun"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wood"]
+bg_color = Color(0.3, 0.22, 0.15, 0.85)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.65, 0.5, 0.25, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color(0, 0, 0, 0.4)
+shadow_size = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_player_bg"]
 bg_color = Color(0.1, 0.1, 0.1, 0.8)
@@ -11,20 +29,6 @@ corner_radius_bottom_left = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_player_fill"]
 bg_color = Color(0.9, 0.2, 0.2, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_core_bg"]
-bg_color = Color(0.1, 0.1, 0.1, 0.8)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_core_fill"]
-bg_color = Color(0.2, 0.9, 0.3, 1)
 corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
@@ -44,13 +48,15 @@ corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slot_normal"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_core_bg"]
 bg_color = Color(0.1, 0.1, 0.1, 0.8)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.3, 0.3, 0.3, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_core_fill"]
+bg_color = Color(0.2, 0.9, 0.3, 1)
 corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
@@ -68,6 +74,18 @@ corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slot_normal"]
+bg_color = Color(0.1, 0.1, 0.1, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.3, 0.3, 0.3, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slot_skill"]
 bg_color = Color(0.1, 0.1, 0.1, 0.8)
 border_width_left = 1
@@ -80,264 +98,404 @@ corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
-[node name="HUD" type="CanvasLayer"]
+[node name="HUD" type="CanvasLayer" unique_id=416668404]
 layer = 10
 script = ExtResource("1_script")
 
-[node name="PlayerHPContainer" type="MarginContainer" parent="."]
+[node name="PlayerVitalsPanel" type="PanelContainer" parent="." unique_id=570046399]
 unique_name_in_owner = true
-offset_left = 8.0
+offset_left = 4.0
 offset_top = 4.0
-offset_right = 128.0
-offset_bottom = 64.0
+offset_right = 136.0
+offset_bottom = 74.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_wood")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PlayerHPContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PlayerVitalsPanel" unique_id=1450940296]
 layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
 
-[node name="PlayerHPLabel" type="Label" parent="PlayerHPContainer/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PlayerVitalsPanel/MarginContainer" unique_id=820984613]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="PlayerHPLabel" type="Label" parent="PlayerVitalsPanel/MarginContainer/VBoxContainer" unique_id=578656390]
 unique_name_in_owner = true
 layout_mode = 2
-text = "PLAYER HP"
 theme_override_font_sizes/font_size = 6
+text = "HP  100 / 100"
 
-[node name="PlayerHPBar" type="ProgressBar" parent="PlayerHPContainer/VBoxContainer"]
+[node name="PlayerHPBar" type="ProgressBar" parent="PlayerVitalsPanel/MarginContainer/VBoxContainer" unique_id=1087742391]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 8)
 layout_mode = 2
-custom_minimum_size = Vector2(120, 10)
-max_value = 100.0
-value = 100.0
-show_percentage = false
 theme_override_styles/background = SubResource("StyleBoxFlat_player_bg")
 theme_override_styles/fill = SubResource("StyleBoxFlat_player_fill")
-
-[node name="PlayerHPIcon" type="Label" parent="PlayerHPContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "HP"
-theme_override_font_sizes/font_size = 8
-theme_override_colors/font_color = Color(0.9, 0.2, 0.2, 1)
-visible = false
-
-[node name="EnergyLabel" type="Label" parent="PlayerHPContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "ENERGY"
-theme_override_font_sizes/font_size = 6
-
-[node name="EnergyBar" type="ProgressBar" parent="PlayerHPContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(120, 10)
-max_value = 100.0
-value = 0.0
+value = 100.0
 show_percentage = false
+
+[node name="PlayerHPIcon" type="Label" parent="PlayerVitalsPanel/MarginContainer/VBoxContainer" unique_id=1377914520]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.2, 0.2, 1)
+theme_override_font_sizes/font_size = 6
+text = "HP"
+
+[node name="EnergyLabel" type="Label" parent="PlayerVitalsPanel/MarginContainer/VBoxContainer" unique_id=531047685]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 6
+text = "ENERGY  0 / 100"
+
+[node name="EnergyBar" type="ProgressBar" parent="PlayerVitalsPanel/MarginContainer/VBoxContainer" unique_id=852510237]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 8)
+layout_mode = 2
 theme_override_styles/background = SubResource("StyleBoxFlat_energy_bg")
 theme_override_styles/fill = SubResource("StyleBoxFlat_energy_fill")
+show_percentage = false
 
-[node name="EnergyIcon" type="Label" parent="PlayerHPContainer/VBoxContainer"]
+[node name="EnergyIcon" type="Label" parent="PlayerVitalsPanel/MarginContainer/VBoxContainer" unique_id=956450471]
 unique_name_in_owner = true
-layout_mode = 2
-text = "[E]"
-theme_override_font_sizes/font_size = 8
-theme_override_colors/font_color = Color(0.2, 0.7, 0.9, 1)
 visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.7, 0.9, 1)
+theme_override_font_sizes/font_size = 6
+text = "[E]"
 
-[node name="CoreHPContainer" type="MarginContainer" parent="."]
+[node name="CoreHPPanel" type="PanelContainer" parent="." unique_id=1564407319]
 unique_name_in_owner = true
+anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -80.0
-offset_right = 80.0
+offset_left = -86.0
 offset_top = 4.0
-offset_bottom = 30.0
+offset_right = 86.0
+offset_bottom = 36.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_wood")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CoreHPContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CoreHPPanel" unique_id=781835318]
 layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
 
-[node name="CoreHPLabel" type="Label" parent="CoreHPContainer/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CoreHPPanel/MarginContainer" unique_id=189409218]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="CoreHPLabel" type="Label" parent="CoreHPPanel/MarginContainer/VBoxContainer" unique_id=735237461]
 unique_name_in_owner = true
 layout_mode = 2
-text = "DIANTHUS CORE"
-horizontal_alignment = 1
 theme_override_font_sizes/font_size = 6
+text = "CORE  200 / 200"
+horizontal_alignment = 1
 
-[node name="CoreHPBar" type="ProgressBar" parent="CoreHPContainer/VBoxContainer"]
+[node name="CoreHPBar" type="ProgressBar" parent="CoreHPPanel/MarginContainer/VBoxContainer" unique_id=66112670]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 8)
 layout_mode = 2
-custom_minimum_size = Vector2(160, 10)
+theme_override_styles/background = SubResource("StyleBoxFlat_core_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_core_fill")
 max_value = 200.0
 value = 200.0
 show_percentage = false
-theme_override_styles/background = SubResource("StyleBoxFlat_core_bg")
-theme_override_styles/fill = SubResource("StyleBoxFlat_core_fill")
 
-[node name="CoreHPIcon" type="Label" parent="CoreHPContainer/VBoxContainer"]
+[node name="CoreHPIcon" type="Label" parent="CoreHPPanel/MarginContainer/VBoxContainer" unique_id=1252299202]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.9, 0.3, 1)
+theme_override_font_sizes/font_size = 6
 text = "[S]"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 8
-theme_override_colors/font_color = Color(0.2, 0.9, 0.3, 1)
-visible = false
 
-[node name="HotbarContainer" type="MarginContainer" parent="."]
-unique_name_in_owner = true
+[node name="HotbarPanel" type="PanelContainer" parent="." unique_id=1318245336]
+anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -192.0
-offset_top = -40.0
+offset_left = -198.0
+offset_top = -46.0
 offset_right = -4.0
 offset_bottom = -4.0
 grow_horizontal = 0
 grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_wood")
+
+[node name="HotbarContainer" type="MarginContainer" parent="HotbarPanel" unique_id=1341821508]
+unique_name_in_owner = true
+layout_mode = 2
 theme_override_constants/margin_left = 2
 theme_override_constants/margin_top = 2
 theme_override_constants/margin_right = 2
 theme_override_constants/margin_bottom = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HotbarContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HotbarPanel/HotbarContainer" unique_id=152223020]
 layout_mode = 2
 theme_override_constants/separation = 3
 
-[node name="WeaponSlot1" type="PanelContainer" parent="HotbarContainer/HBoxContainer"]
+[node name="WeaponSlot1" type="PanelContainer" parent="HotbarPanel/HotbarContainer/HBoxContainer" unique_id=895123729]
 unique_name_in_owner = true
-layout_mode = 2
 custom_minimum_size = Vector2(56, 30)
+layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_slot_selected")
 
-[node name="VBox" type="VBoxContainer" parent="HotbarContainer/HBoxContainer/WeaponSlot1"]
+[node name="VBox" type="VBoxContainer" parent="HotbarPanel/HotbarContainer/HBoxContainer/WeaponSlot1" unique_id=802788281]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="KeyLabel" type="Label" parent="HotbarContainer/HBoxContainer/WeaponSlot1/VBox"]
+[node name="KeyLabel" type="Label" parent="HotbarPanel/HotbarContainer/HBoxContainer/WeaponSlot1/VBox" unique_id=1912355185]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_font_sizes/font_size = 5
 text = "1"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 5
-theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
 
-[node name="Slot1NameLabel" type="Label" parent="HotbarContainer/HBoxContainer/WeaponSlot1/VBox"]
+[node name="Slot1NameLabel" type="Label" parent="HotbarPanel/HotbarContainer/HBoxContainer/WeaponSlot1/VBox" unique_id=379889492]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 6
 text = "Thorn Sword"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 6
 
-[node name="WeaponSlot2" type="PanelContainer" parent="HotbarContainer/HBoxContainer"]
+[node name="WeaponSlot2" type="PanelContainer" parent="HotbarPanel/HotbarContainer/HBoxContainer" unique_id=475326397]
 unique_name_in_owner = true
-layout_mode = 2
 custom_minimum_size = Vector2(56, 30)
+layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_slot_normal")
 
-[node name="VBox" type="VBoxContainer" parent="HotbarContainer/HBoxContainer/WeaponSlot2"]
+[node name="VBox" type="VBoxContainer" parent="HotbarPanel/HotbarContainer/HBoxContainer/WeaponSlot2" unique_id=228257266]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="KeyLabel" type="Label" parent="HotbarContainer/HBoxContainer/WeaponSlot2/VBox"]
+[node name="KeyLabel" type="Label" parent="HotbarPanel/HotbarContainer/HBoxContainer/WeaponSlot2/VBox" unique_id=1450629658]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_font_sizes/font_size = 5
 text = "2"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 5
-theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
 
-[node name="Slot2NameLabel" type="Label" parent="HotbarContainer/HBoxContainer/WeaponSlot2/VBox"]
+[node name="Slot2NameLabel" type="Label" parent="HotbarPanel/HotbarContainer/HBoxContainer/WeaponSlot2/VBox" unique_id=1643064675]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 6
 text = "[Empty]"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 6
 
-[node name="SkillSlotPanel" type="PanelContainer" parent="HotbarContainer/HBoxContainer"]
+[node name="SkillSlotPanel" type="PanelContainer" parent="HotbarPanel/HotbarContainer/HBoxContainer" unique_id=1259344111]
 unique_name_in_owner = true
-layout_mode = 2
 custom_minimum_size = Vector2(56, 30)
+layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_slot_skill")
 
-[node name="VBox" type="VBoxContainer" parent="HotbarContainer/HBoxContainer/SkillSlotPanel"]
+[node name="VBox" type="VBoxContainer" parent="HotbarPanel/HotbarContainer/HBoxContainer/SkillSlotPanel" unique_id=1050245507]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="KeyLabel" type="Label" parent="HotbarContainer/HBoxContainer/SkillSlotPanel/VBox"]
+[node name="KeyLabel" type="Label" parent="HotbarPanel/HotbarContainer/HBoxContainer/SkillSlotPanel/VBox" unique_id=316706488]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.7, 0.9, 1)
+theme_override_font_sizes/font_size = 5
 text = "Q"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 5
-theme_override_colors/font_color = Color(0.2, 0.7, 0.9, 1)
 
-[node name="SkillNameLabel" type="Label" parent="HotbarContainer/HBoxContainer/SkillSlotPanel/VBox"]
+[node name="SkillNameLabel" type="Label" parent="HotbarPanel/HotbarContainer/HBoxContainer/SkillSlotPanel/VBox" unique_id=589304178]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 6
 text = "[Empty]"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 6
 
-[node name="MenuHintsContainer" type="MarginContainer" parent="."]
-unique_name_in_owner = true
-anchor_left = 0.0
-anchor_top = 1.0
-anchor_right = 0.0
-anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = -48.0
-offset_right = 120.0
-offset_bottom = -8.0
+[node name="TimeOfDayPanel" type="PanelContainer" parent="." unique_id=1071428876]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -132.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = 52.0
 grow_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_wood")
+
+[node name="MarginContainer" type="MarginContainer" parent="TimeOfDayPanel" unique_id=1040711555]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="TimeOfDayIndicator" type="Control" parent="TimeOfDayPanel/MarginContainer" unique_id=1341934896]
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+script = ExtResource("2_tod_script")
+
+[node name="ToDTrack" type="ColorRect" parent="TimeOfDayPanel/MarginContainer/TimeOfDayIndicator" unique_id=1093645009]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 120.0
+offset_bottom = 14.0
+color = Color(0.2, 0.4, 0.6, 0.7)
+
+[node name="ToDIcon" type="TextureRect" parent="TimeOfDayPanel/MarginContainer/TimeOfDayIndicator" unique_id=1692771402]
+unique_name_in_owner = true
+modulate = Color(1, 0.85, 0.2, 1)
+layout_mode = 0
+offset_top = 1.0
+offset_right = 12.0
+offset_bottom = 13.0
+texture = ExtResource("5_sun")
+stretch_mode = 4
+
+[node name="ToDPhaseLabel" type="Label" parent="TimeOfDayPanel/MarginContainer/TimeOfDayIndicator" unique_id=2044229190]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_top = 16.0
+offset_right = 120.0
+offset_bottom = 28.0
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 5
+text = "DAY"
+horizontal_alignment = 1
+
+[node name="ToDLabel" type="Label" parent="TimeOfDayPanel/MarginContainer/TimeOfDayIndicator" unique_id=1312621340]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 26.0
+offset_right = 120.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 6
+text = "Day 1   03:00"
+horizontal_alignment = 1
+
+[node name="MinimapPanel" type="PanelContainer" parent="." unique_id=2019636696]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = -96.0
+offset_right = 96.0
+offset_bottom = -4.0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_wood")
+
+[node name="MarginContainer" type="MarginContainer" parent="MinimapPanel" unique_id=887203604]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="Minimap" type="Control" parent="MinimapPanel/MarginContainer" unique_id=907949149]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+script = ExtResource("3_minimap_script")
+
+[node name="WaveCounterPanel" type="PanelContainer" parent="." unique_id=1512697353]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = -116.0
+offset_right = 96.0
+offset_bottom = -100.0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_wood")
+
+[node name="MarginContainer" type="MarginContainer" parent="WaveCounterPanel" unique_id=2057782206]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="WaveCounter" type="Control" parent="WaveCounterPanel/MarginContainer" unique_id=1509710891]
+custom_minimum_size = Vector2(84, 12)
+layout_mode = 2
+script = ExtResource("4_wavecounter_script")
+
+[node name="WaveCounterLabel" type="Label" parent="WaveCounterPanel/MarginContainer/WaveCounter" unique_id=438530447]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 84.0
+offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.95, 0.85, 0.5, 1)
+theme_override_font_sizes/font_size = 5
+text = "Wave 1 / 1   Enemies: 0 / 0"
+
+[node name="MenuHintsContainer" type="MarginContainer" parent="." unique_id=116137408]
+unique_name_in_owner = true
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -60.0
+offset_top = -48.0
+offset_right = 60.0
+offset_bottom = -4.0
+grow_horizontal = 2
 grow_vertical = 0
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MenuHintsContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MenuHintsContainer" unique_id=1577095359]
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="HintRow1" type="HBoxContainer" parent="MenuHintsContainer/VBoxContainer"]
+[node name="HintRow1" type="HBoxContainer" parent="MenuHintsContainer/VBoxContainer" unique_id=303811290]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 6
 
-[node name="InventoryHint" type="Label" parent="MenuHintsContainer/VBoxContainer/HintRow1"]
+[node name="InventoryHint" type="Label" parent="MenuHintsContainer/VBoxContainer/HintRow1" unique_id=752841097]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_font_sizes/font_size = 5
 text = "[I] Inv"
-theme_override_font_sizes/font_size = 5
-theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 
-[node name="CraftingHint" type="Label" parent="MenuHintsContainer/VBoxContainer/HintRow1"]
+[node name="CraftingHint" type="Label" parent="MenuHintsContainer/VBoxContainer/HintRow1" unique_id=505885219]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_font_sizes/font_size = 5
 text = "[C] Craft"
+
+[node name="BreedingHint" type="Label" parent="MenuHintsContainer/VBoxContainer/HintRow1" unique_id=1394936159]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
 theme_override_font_sizes/font_size = 5
-theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
-
-[node name="HintRow2" type="HBoxContainer" parent="MenuHintsContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="BreedingHint" type="Label" parent="MenuHintsContainer/VBoxContainer/HintRow2"]
-layout_mode = 2
 text = "[B] Breed"
-theme_override_font_sizes/font_size = 5
-theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 
-[node name="CodexHint" type="Label" parent="MenuHintsContainer/VBoxContainer/HintRow2"]
+[node name="HintRow2" type="HBoxContainer" parent="MenuHintsContainer/VBoxContainer" unique_id=291447887]
 layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="CodexHint" type="Label" parent="MenuHintsContainer/VBoxContainer/HintRow2" unique_id=1419659396]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_font_sizes/font_size = 5
 text = "[J] Codex"
+
+[node name="PlantHint" type="Label" parent="MenuHintsContainer/VBoxContainer/HintRow2" unique_id=2070250521]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
 theme_override_font_sizes/font_size = 5
-theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
-
-[node name="HintRow3" type="HBoxContainer" parent="MenuHintsContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="PlantHint" type="Label" parent="MenuHintsContainer/VBoxContainer/HintRow3"]
-layout_mode = 2
 text = "[P] Plants"
-theme_override_font_sizes/font_size = 5
-theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 
-[node name="LoadoutHint" type="Label" parent="MenuHintsContainer/VBoxContainer/HintRow3"]
+[node name="LoadoutHint" type="Label" parent="MenuHintsContainer/VBoxContainer/HintRow2" unique_id=925250721]
 layout_mode = 2
-text = "[L] Loadout"
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
 theme_override_font_sizes/font_size = 5
-theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+text = "[L] Loadout"

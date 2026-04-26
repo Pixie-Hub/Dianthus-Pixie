@@ -86,7 +86,7 @@
 
 | Task ID | Title | Category | Priority | Status | Dependencies | Assignee | Effort | Acceptance Criteria |
 |---------|-------|----------|----------|--------|--------------|----------|--------|---------------------|
-| UI-01 | Full HUD Implementation | UI/HUD | High | Not Started | CORE-10, PLANT-07 | [Unassigned] | L | • All 7 HUD elements per GDD §11.1: Player HP, Core HP, Energy Meter, Time-of-Day indicator, Hotbar (2 weapon + 1 skill), Minimap, Wave Counter; • minimap shows spawn direction arrows at night only |
+| UI-01 | Full HUD Implementation | UI/HUD | High | Done | CORE-10, PLANT-07 | [Unassigned] | L | • All 7 HUD elements per GDD §11.1: Player HP, Core HP, Energy Meter, Time-of-Day indicator, Hotbar (2 weapon + 1 skill), Minimap, Wave Counter; • minimap shows spawn direction arrows at night only |
 | UI-02 | Inventory Screen (30-Slot Grid) | UI/HUD | High | Done | CORE-02 | [Unassigned] | M | • 30-slot grid per GDD §6.2; • stack limits enforced (99 Common / 20 Uncommon / 5 Rare); • shortcut I opens/closes |
 | UI-03 | Quest Log Screen | UI/HUD | High | Not Started | QUEST-01 | [Unassigned] | M | • Active quests shown with progress bars per GDD §11.2; • shortcut Q opens/closes; • completed quests archived in a separate tab |
 | UI-04 | Plant Codex Screen | UI/HUD | Medium | Done | PLANT-05, QUEST-04 | [Unassigned] | M | • Lists all discovered plants and attempted combos per GDD §11.2; • entries unlock on discovery; • unknown combos display "?" |

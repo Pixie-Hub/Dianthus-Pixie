@@ -40,11 +40,11 @@ func _on_new_game_pressed() -> void:
 
 
 func _on_overwrite_confirmed() -> void:
-	SaveManager.delete_save()
 	_difficulty_selection.open()
 
 
 func _start_new_game() -> void:
+	SaveManager.delete_save()
 	print("[MainMenu] Starting new game.")
 	GameManager.current_state = GameManager.GameState.EXPLORATION
 	GameManager.player_data = {"position": Vector2.ZERO, "last_zone": ""}

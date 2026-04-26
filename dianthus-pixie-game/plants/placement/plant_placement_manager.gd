@@ -317,3 +317,20 @@ func _draw() -> void:
 	draw_circle(ghost_world, radius, radius_color)
 	draw_arc(ghost_world, radius, 0, TAU, 64, Color(radius_color, 0.6), 1.0)
 	# TODO: UI-09 — plant removal/uprooting mechanic
+
+
+func get_active_plants() -> Array[Node2D]:
+	var result: Array[Node2D] = []
+	for tile: Vector2i in _occupied_tiles.keys():
+		var plant: Node2D = _occupied_tiles[tile] as Node2D
+		if is_instance_valid(plant):
+			result.append(plant)
+	return result
+
+
+func get_garden_origin() -> Vector2:
+	return _garden_origin
+
+
+func get_garden_size_world() -> Vector2:
+	return Vector2(_garden_size.x * GRID_SIZE, _garden_size.y * GRID_SIZE)

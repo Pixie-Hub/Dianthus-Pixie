@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://wave_counter_hud_01"]
+
+[ext_resource type="Script" path="res://ui/hud/wave_counter.gd" id="1_script"]
+
+[node name="WaveCounter" type="Control"]
+script = ExtResource("1_script")
+custom_minimum_size = Vector2(84, 16)
+
+[node name="WaveCounterLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+offset_right = 84.0
+offset_bottom = 16.0
+text = "Wave 1 / 1   Enemies: 0 / 0"
+theme_override_font_sizes/font_size = 5
+theme_override_colors/font_color = Color(0.95, 0.85, 0.5, 1)

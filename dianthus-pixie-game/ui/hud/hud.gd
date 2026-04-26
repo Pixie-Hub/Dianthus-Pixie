@@ -4,8 +4,8 @@ extends CanvasLayer
 @onready var _player_label: Label = %PlayerHPLabel
 @onready var _core_bar: ProgressBar = %CoreHPBar
 @onready var _core_label: Label = %CoreHPLabel
-@onready var _player_container: MarginContainer = %PlayerHPContainer
-@onready var _core_container: MarginContainer = %CoreHPContainer
+@onready var _player_panel: PanelContainer = %PlayerVitalsPanel
+@onready var _core_panel: PanelContainer = %CoreHPPanel
 @onready var _player_hp_icon: Label = %PlayerHPIcon
 @onready var _core_hp_icon: Label = %CoreHPIcon
 @onready var _energy_bar: ProgressBar = %EnergyBar
@@ -21,8 +21,16 @@ const HOTBAR_SELECTED_COLOR: Color = Color(0.9, 0.75, 0.2, 1)
 const HOTBAR_NORMAL_COLOR: Color = Color(0.3, 0.3, 0.3, 1)
 const HOTBAR_LOCKED_COLOR: Color = Color(0.5, 0.15, 0.15, 1)
 
+const WOOD_PANEL_BG: Color = Color(0.30, 0.22, 0.15, 0.85)
+const WOOD_PANEL_BORDER: Color = Color(0.65, 0.50, 0.25, 1.0)
+const WOOD_PANEL_BORDER_DANGER: Color = Color(0.85, 0.20, 0.15, 1.0)
+const LOW_HP_THRESHOLD: float = 0.25
+
 var _prev_player_hp: int = -1
 var _prev_core_hp: int = -1
+var _low_hp_tween: Tween = null
+var _core_danger_tween: Tween = null
+var _core_in_danger: bool = false
 
 
 func _ready() -> void:
@@ -37,20 +45,33 @@ func _ready() -> void:
 
 func _on_player_hp_changed(current_hp: int, max_hp: int) -> void:
 	_player_bar.max_value = max_hp
-	_player_bar.value = current_hp
-	_player_label.text = "PLAYER HP  %d / %d" % [current_hp, max_hp]
+	var tween_hp: Tween = create_tween()
+	tween_hp.tween_property(_player_bar, "value", float(current_hp), 0.15)
+	_player_label.text = "HP  %d / %d" % [current_hp, max_hp]
 	if _prev_player_hp >= 0 and current_hp < _prev_player_hp:
-		_shake(_player_container)
+		_shake(_player_panel)
 	_prev_player_hp = current_hp
+	var ratio: float = float(current_hp) / float(max(max_hp, 1))
+	if ratio <= LOW_HP_THRESHOLD:
+		_start_low_hp_pulse()
+	else:
+		_stop_low_hp_pulse()
 
 
 func _on_core_hp_changed(current_hp: int, max_hp: int) -> void:
 	_core_bar.max_value = max_hp
 	_core_bar.value = current_hp
-	_core_label.text = "DIANTHUS CORE  %d / %d" % [current_hp, max_hp]
+	_core_label.text = "CORE  %d / %d" % [current_hp, max_hp]
 	if _prev_core_hp >= 0 and current_hp < _prev_core_hp:
-		_shake(_core_container)
+		_shake(_core_panel)
 	_prev_core_hp = current_hp
+	var ratio: float = float(current_hp) / float(max(max_hp, 1))
+	if ratio <= LOW_HP_THRESHOLD and not _core_in_danger:
+		_core_in_danger = true
+		_start_core_danger_pulse()
+	elif ratio > LOW_HP_THRESHOLD and _core_in_danger:
+		_core_in_danger = false
+		_stop_core_danger_pulse()
 
 
 func _on_player_energy_changed(current_energy: int, max_energy: int) -> void:
@@ -81,6 +102,36 @@ func _on_phase_changed_hud(phase: String) -> void:
 	_slot2_panel.modulate = tint
 
 
+func _start_low_hp_pulse() -> void:
+	if is_instance_valid(_low_hp_tween):
+		return
+	_low_hp_tween = create_tween().set_loops()
+	_low_hp_tween.tween_property(_player_panel, "modulate", Color(1, 0.5, 0.5, 1), 0.5)
+	_low_hp_tween.tween_property(_player_panel, "modulate", Color.WHITE, 0.5)
+
+
+func _stop_low_hp_pulse() -> void:
+	if is_instance_valid(_low_hp_tween):
+		_low_hp_tween.kill()
+	_low_hp_tween = null
+	_player_panel.modulate = Color.WHITE
+
+
+func _start_core_danger_pulse() -> void:
+	if is_instance_valid(_core_danger_tween):
+		return
+	_core_danger_tween = create_tween().set_loops()
+	_core_danger_tween.tween_property(_core_panel, "modulate", Color(1.3, 0.5, 0.5, 1), 0.4)
+	_core_danger_tween.tween_property(_core_panel, "modulate", Color.WHITE, 0.4)
+
+
+func _stop_core_danger_pulse() -> void:
+	if is_instance_valid(_core_danger_tween):
+		_core_danger_tween.kill()
+	_core_danger_tween = null
+	_core_panel.modulate = Color.WHITE
+
+
 func _hotbar_label(weapon_id: String) -> String:
 	if weapon_id.is_empty():
 		return "[Empty]"
@@ -103,6 +154,23 @@ func _apply_hotbar_border(panel: PanelContainer, selected: bool) -> void:
 	sb.corner_radius_bottom_right = 2
 	sb.corner_radius_bottom_left = 2
 	panel.add_theme_stylebox_override("panel", sb)
+
+
+func _make_wood_stylebox(border_color: Color = WOOD_PANEL_BORDER) -> StyleBoxFlat:
+	var sb: StyleBoxFlat = StyleBoxFlat.new()
+	sb.bg_color = WOOD_PANEL_BG
+	sb.border_width_left = 2
+	sb.border_width_right = 2
+	sb.border_width_top = 2
+	sb.border_width_bottom = 2
+	sb.border_color = border_color
+	sb.corner_radius_top_left = 4
+	sb.corner_radius_top_right = 4
+	sb.corner_radius_bottom_right = 4
+	sb.corner_radius_bottom_left = 4
+	sb.shadow_color = Color(0, 0, 0, 0.4)
+	sb.shadow_size = 2
+	return sb
 
 
 func _shake(node: Control) -> void:

@@ -332,3 +332,4 @@ FOUND-01..06 (Done)
 | 1 | Select weapon slot 1 | PLANT-08 |
 | 2 | Select weapon slot 2 | PLANT-08 |
 | Q | Activate equipped skill (costs 30 energy) | PLANT-08 |
+| (DayNightCycle.debug_skip_phase via console / F7) | Force phase change | UI-01: Time-of-Day color/label flips, minimap arrows toggle on night |
