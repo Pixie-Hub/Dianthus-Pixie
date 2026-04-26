@@ -4,7 +4,7 @@ signal save_completed(success: bool, manual: bool)
 signal load_completed(success: bool)
 
 const SAVE_PATH: String = "user://savegame.json"
-const SCHEMA_VERSION: int = 7
+const SCHEMA_VERSION: int = 5
 const GAME_VERSION: String = "0.1.0"
 
 const PLANT_TYPE_TO_SCENE: Dictionary = {
@@ -188,18 +188,10 @@ func _gather_state(manual: bool) -> Dictionary:
 
 	# Breeding
 	state["breeding"] = BreedingManager.serialize()
-
-	# Loadout (PLANT-08)
-	var loadout: Dictionary = {
-		"weapon_slots": ["thorn_sword", ""],
-		"active_skill": "",
-		"selected_slot": 0,
-	}
-	if is_instance_valid(GameManager.player):
-		loadout["weapon_slots"] = GameManager.player.weapon_slots.duplicate()
-		loadout["active_skill"] = GameManager.player.active_skill_id
-		loadout["selected_slot"] = GameManager.player.selected_weapon_slot
-	state["player"]["loadout"] = loadout
+	var equipped_id: String = "thorn_sword"
+	if is_instance_valid(GameManager.player) and GameManager.player._current_weapon != null:
+		equipped_id = GameManager.player._current_weapon.weapon_id
+	state["player"]["equipped_weapon"] = equipped_id
 
 	# Core
 	var core_hp: int = 200
@@ -225,9 +217,6 @@ func _gather_state(manual: bool) -> Dictionary:
 			"is_destroyed": false,
 		})
 	state["garden"] = {"plants": plants_arr}
-
-	# Codex
-	state["codex"] = CodexManager.serialize()
 
 	# Reserved stubs — populated by their owning tasks.
 	state["quests"] = {}        # TODO (QUEST-01)
@@ -301,30 +290,10 @@ func _apply_state(state: Dictionary) -> void:
 
 	# 5.7 Breeding.
 	BreedingManager.deserialize(state.get("breeding", {}))
-
-	# 5.8 Codex.
-	CodexManager.deserialize(state.get("codex", {}))
-
-	# 5.9 Loadout (PLANT-08).
-	var ld: Dictionary = state.get("player", {}).get("loadout", {})
-	if is_instance_valid(GameManager.player):
-		var slots: Array = ld.get("weapon_slots", ["thorn_sword", ""])
-		GameManager.player.weapon_slots = [
-			str(slots[0]) if slots.size() > 0 else "thorn_sword",
-			str(slots[1]) if slots.size() > 1 else "",
-		]
-		GameManager.player.active_skill_id = str(ld.get("active_skill", ""))
-		GameManager.player.selected_weapon_slot = int(ld.get("selected_slot", 0))
-		var wid: String = GameManager.player.weapon_slots[GameManager.player.selected_weapon_slot]
-		if not wid.is_empty():
-			GameManager.player._current_weapon = CraftingManager.get_weapon_data(wid)
-		else:
-			GameManager.player._current_weapon = null
-		GameManager.player.loadout_changed.emit(
-			GameManager.player.weapon_slots,
-			GameManager.player.active_skill_id,
-			GameManager.player.selected_weapon_slot
-		)
+	var equipped_id: String = state.get("player", {}).get("equipped_weapon", "thorn_sword")
+	var weapon_data: WeaponData = CraftingManager.get_weapon_data(equipped_id)
+	if weapon_data != null and is_instance_valid(GameManager.player):
+		GameManager.player._current_weapon = weapon_data
 
 	# 5.5 Difficulty tier.
 	var diff_tier: String = state.get("difficulty", {}).get("tier", "normal")
@@ -338,9 +307,6 @@ func _apply_state(state: Dictionary) -> void:
 
 	# 6. Garden plants — instantiate each saved entry into the current scene.
 	var scene_root: Node = get_tree().current_scene
-	var plant_parent: Node = scene_root.get_node_or_null("YSortLayer")
-	if plant_parent == null:
-		plant_parent = scene_root
 	var plants_arr: Array = state.get("garden", {}).get("plants", [])
 	for entry: Variant in plants_arr:
 		if not entry is Dictionary:
@@ -360,7 +326,7 @@ func _apply_state(state: Dictionary) -> void:
 			float(entry_pos.get("x", 0.0)),
 			float(entry_pos.get("y", 0.0))
 		)
-		plant_parent.add_child(plant)
+		scene_root.add_child(plant)
 		# Set current_hp after _ready() so it is not overwritten by plant init.
 		plant.current_hp = int(entry_dict.get("current_hp", plant.max_hp))
 
@@ -429,23 +395,4 @@ func _migrate(data: Dictionary) -> Dictionary:
 		if not data.has("breeding"):
 			data["breeding"] = {"discovered": {}}
 		data["schema_version"] = 5
-	# v5 → v6: codex discovery tracking added.
-	if version < 6:
-		print("[SaveManager] Migrating save from v%d to v6." % version)
-		if not data.has("codex"):
-			data["codex"] = {"discovered_plants": {}}
-		data["schema_version"] = 6
-	# v6 → v7: equipped_weapon replaced by loadout dict.
-	if version < 7:
-		print("[SaveManager] Migrating save from v%d to v7." % version)
-		var pd: Dictionary = data.get("player", {})
-		var old_weapon: String = pd.get("equipped_weapon", "thorn_sword")
-		pd["loadout"] = {
-			"weapon_slots": [old_weapon, ""],
-			"active_skill": "",
-			"selected_slot": 0,
-		}
-		pd.erase("equipped_weapon")
-		data["player"] = pd
-		data["schema_version"] = 7
 	return data
