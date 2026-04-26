@@ -149,6 +149,12 @@ func _unhandled_input(event: InputEvent) -> void:
 		select_weapon_slot(1)
 		get_viewport().set_input_as_handled()
 		return
+	if Input.is_action_just_pressed("quest_log_toggle"):
+		var screen: Node = get_tree().current_scene.find_child("QuestLogScreen", true, false)
+		if screen != null and screen.has_method("toggle"):
+			screen.toggle()
+		get_viewport().set_input_as_handled()
+		return
 	if Input.is_action_just_pressed("activate_skill"):
 		_activate_skill()
 		get_viewport().set_input_as_handled()
@@ -270,6 +276,24 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_3 and event.shift_pressed:
 			equip_weapon(0, "petal_shield")
 			print("DEBUG: Shift+3 — Equip Petal Shield to slot 1.")
+		if event.keycode == KEY_K and event.shift_pressed and not event.alt_pressed:
+			var active: Array[QuestData] = QuestManager.get_active_quests()
+			if active.is_empty():
+				print("DEBUG: No active quests.")
+			for q: QuestData in active:
+				var prog: Dictionary = QuestManager.get_progress(q.quest_id)
+				print("[Quest] %s (%s)" % [q.display_name, q.quest_id])
+				for obj_id: StringName in prog:
+					var entry: Dictionary = prog[obj_id]
+					print("  %s: %d / %d" % [entry.get("description", obj_id), entry.get("current", 0), entry.get("target", 1)])
+		if event.keycode == KEY_K and event.shift_pressed and event.alt_pressed:
+			var active2: Array[QuestData] = QuestManager.get_active_quests()
+			if active2.is_empty():
+				print("DEBUG: No active quests to force-complete.")
+			else:
+				var first: QuestData = active2[0]
+				print("DEBUG: Force-completing quest: %s" % first.quest_id)
+				QuestManager.complete_quest(first.quest_id)
 		if event.keycode == KEY_J and event.shift_pressed:
 			for pid: String in PlantRegistry.get_all_plant_ids():
 				CodexManager.discover_plant(pid)
@@ -332,6 +356,9 @@ func _die() -> void:
 	if is_blocking:
 		_drop_block()
 	is_dead = true
+	is_attacking = false
+	var _hs: CollisionShape2D = _sword_hitbox.get_child(0)
+	_hs.disabled = true
 	velocity = Vector2.ZERO
 	player_died.emit()
 	_state_machine.travel("death")
@@ -405,9 +432,15 @@ func _attack_melee_sword() -> void:
 		_sword_sfx.play()
 	var effective_cd: float = _current_weapon.cooldown * (1.0 - attack_speed_bonus)
 	await get_tree().create_timer(effective_cd * 0.25).timeout
+	if is_dead:
+		is_attacking = false
+		return
 	hitbox_shape.disabled = false
 	await get_tree().create_timer(effective_cd * 0.5).timeout
 	hitbox_shape.disabled = true
+	if is_dead:
+		is_attacking = false
+		return
 	await get_tree().create_timer(effective_cd * 0.25).timeout
 	_end_attack()
 
@@ -435,9 +468,15 @@ func _attack_vine_whip() -> void:
 		_sword_sfx.play()
 	var effective_cd: float = _current_weapon.cooldown * (1.0 - attack_speed_bonus)
 	await get_tree().create_timer(effective_cd * 0.25).timeout
+	if is_dead:
+		is_attacking = false
+		return
 	hitbox_shape.disabled = false
 	await get_tree().create_timer(effective_cd * 0.5).timeout
 	hitbox_shape.disabled = true
+	if is_dead:
+		is_attacking = false
+		return
 	await get_tree().create_timer(effective_cd * 0.25).timeout
 	_end_attack()
 
@@ -462,6 +501,8 @@ func _attack_spore_bomb() -> void:
 		_current_weapon.damage, _current_weapon.attack_range * 0.4, target])
 	await get_tree().create_timer(0.2).timeout
 	is_attacking = false
+	if is_dead:
+		return
 	_attack_cooldown_timer = _current_weapon.cooldown * (1.0 - attack_speed_bonus)
 	_state_machine.travel("idle")
 
@@ -520,6 +561,8 @@ func _spawn_counter_vfx(radius: float) -> void:
 
 func _end_attack() -> void:
 	is_attacking = false
+	if is_dead:
+		return
 	_attack_cooldown_timer = _current_weapon.cooldown * (1.0 - attack_speed_bonus)
 	var hitbox_shape: CollisionShape2D = _sword_hitbox.get_child(0)
 	hitbox_shape.disabled = true

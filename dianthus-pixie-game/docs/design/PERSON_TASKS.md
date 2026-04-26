@@ -1,7 +1,7 @@
 # Dianthus Pixie — Per-Person Task Breakdown
 
 **Sprint:** 2-Week Vertical Slice  
-**Last Updated:** 2026-04-19  
+**Last Updated:** 2026-04-26  
 **Source:** `PROMPT_CORE_08.md`, `PROMPT_CROSSBREEDING.md`
 
 > Status legend: ✅ Done · 🔧 In Progress · ⬜ Not Started
@@ -49,6 +49,7 @@
 |------|-----|--------|-------|
 | Voidrunner enemy (reuse FSM, skip Scout, rush Core) | 1d | ⬜ | New enemy type with simplified FSM |
 | Energy bar + gain (+3/hit, +10/kill) | 0.5d | ✅ | Replace the CORE-08 energy stub with real system |
+| **DIALOG-01: Dialogic integration** | 1d | 🔧 | Addon installed (`addons/dialogic/`). Author `.dch` character resources + first `.dtl` timeline for Day 1 tutorial prompt. Wire `Dialogic.start()` from NPC interact / QuestManager. Pause game input during dialog. |
 
 ### Key Files A Owns
 
@@ -61,6 +62,7 @@
 - `ui/screens/night_survived_screen.gd/.tscn`
 - `ui/hud/hud.gd/.tscn` (template)
 - `plants/entities/` (all 11 plants: Bougainvillea, Rafflesia, Melati, Wijaya Kusuma, Beringin, Kecombrang, Kunyit + 4 hybrids)
+- `addons/dialogic/` (Dialogic addon — dialog timelines + character resources)
 
 ---
 
@@ -331,5 +333,9 @@ FOUND-01..06 (Done)
 | Shift+3 | Equip Petal Shield to weapon slot 1 (night-locked) | PLANT-11 |
 | 1 | Select weapon slot 1 | PLANT-08 |
 | 2 | Select weapon slot 2 | PLANT-08 |
-| Q | Activate equipped skill (costs 30 energy) | PLANT-08 |
+| Q | Toggle Quest Log screen (pauses game; Active/Completed/Failed tabs with progress bars) | UI-03 |
+| F | Activate equipped skill (costs 30 energy) | QUEST-01 |
+| Shift+K | Print all active quest progress to Output log | QUEST-01 |
+| Shift+Alt+K | Force-complete the first active quest (grants rewards) | QUEST-01 |
 | (DayNightCycle.debug_skip_phase via console / F7) | Force phase change | UI-01: Time-of-Day color/label flips, minimap arrows toggle on night |
+| `Dialogic.start("res://...")` via console | Trigger a Dialogic timeline directly for testing | DIALOG-01 |

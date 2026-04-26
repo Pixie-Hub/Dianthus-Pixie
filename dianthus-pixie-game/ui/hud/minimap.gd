@@ -10,6 +10,8 @@ const ARROW_SIZE: float = 5.0
 const PLAYER_DOT_COLOR: Color = Color(1, 1, 1)
 const CORE_DOT_COLOR: Color = Color(1.0, 0.4, 0.7)
 const PLANT_DOT_COLOR: Color = Color(0.3, 0.9, 0.3)
+const ENEMY_DOT_COLOR: Color = Color(0.95, 0.25, 0.25)
+const ENEMY_DOT_RADIUS: float = 2.5
 const SPAWN_ARROW_COLOR: Color = Color(0.95, 0.25, 0.25)
 const BOUNDS_COLOR: Color = Color(0.65, 0.50, 0.25, 0.9)
 const BG_COLOR: Color = Color(0.08, 0.08, 0.12, 0.85)
@@ -79,6 +81,13 @@ func _draw() -> void:
 		var core_mp: Vector2 = _world_to_map((core as Node2D).global_position, player_pos)
 		core_mp = _clamp_to_map(core_mp)
 		draw_circle(core_mp, CORE_DOT_RADIUS, CORE_DOT_COLOR)
+
+	# Enemy dots.
+	for enemy: Node2D in get_tree().get_nodes_in_group(&"enemies"):
+		if is_instance_valid(enemy):
+			var emp: Vector2 = _world_to_map(enemy.global_position, player_pos)
+			if Rect2(Vector2.ZERO, MAP_SIZE).has_point(emp):
+				draw_circle(emp, ENEMY_DOT_RADIUS, ENEMY_DOT_COLOR)
 
 	# Player dot (always center).
 	draw_circle(MAP_SIZE * 0.5, PLAYER_DOT_RADIUS, PLAYER_DOT_COLOR)

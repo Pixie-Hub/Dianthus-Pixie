@@ -302,7 +302,7 @@ theme_override_constants/separation = 0
 layout_mode = 2
 theme_override_colors/font_color = Color(0.2, 0.7, 0.9, 1)
 theme_override_font_sizes/font_size = 5
-text = "Q"
+text = "F"
 horizontal_alignment = 1
 
 [node name="SkillNameLabel" type="Label" parent="HotbarPanel/HotbarContainer/HBoxContainer/SkillSlotPanel/VBox" unique_id=589304178]

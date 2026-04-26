@@ -19,7 +19,6 @@ func discover_plant(plant_id: String) -> void:
 	discovered_plants[plant_id] = true
 	plant_discovered.emit(plant_id)
 	print("[CodexManager] Discovered: %s" % plant_id)
-	# TODO: QUEST-04 — emit discovery quest trigger
 
 
 func is_plant_discovered(plant_id: String) -> bool:

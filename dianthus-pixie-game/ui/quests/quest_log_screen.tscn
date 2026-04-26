@@ -1,0 +1,102 @@
+[gd_scene format=3 uid="uid://quest_log_screen_01"]
+
+[ext_resource type="Script" uid="uid://quest_log_scr_gd" path="res://ui/quests/quest_log_screen.gd" id="1_script"]
+
+[node name="QuestLogScreen" type="CanvasLayer" unique_id=1234567891]
+process_mode = 3
+layer = 95
+script = ExtResource("1_script")
+
+[node name="Overlay" type="ColorRect" parent="." unique_id=1234567892]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="Panel" type="PanelContainer" parent="." unique_id=1234567893]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -190.0
+offset_top = -150.0
+offset_right = 190.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=1234567894]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=1234567895]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=1234567896]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "QUEST LOG"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer" unique_id=1234567897]
+layout_mode = 2
+
+[node name="TabRow" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=1234567898]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="ActiveTabBtn" type="Button" parent="Panel/MarginContainer/VBoxContainer/TabRow" unique_id=1234567899]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 7
+text = "Active (0)"
+flat = true
+
+[node name="CompletedTabBtn" type="Button" parent="Panel/MarginContainer/VBoxContainer/TabRow" unique_id=1234567900]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 7
+text = "Completed (0)"
+flat = true
+
+[node name="FailedTabBtn" type="Button" parent="Panel/MarginContainer/VBoxContainer/TabRow" unique_id=1234567901]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 7
+text = "Failed (0)"
+flat = true
+
+[node name="HSeparator2" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer" unique_id=1234567902]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=1234567903]
+custom_minimum_size = Vector2(0, 220)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="QuestList" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/ScrollContainer" unique_id=1234567904]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="HSeparator3" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer" unique_id=1234567905]
+layout_mode = 2
+
+[node name="CloseHint" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=1234567906]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_font_sizes/font_size = 6
+text = "Press Q or Esc to close"
+horizontal_alignment = 1

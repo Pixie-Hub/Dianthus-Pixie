@@ -3,7 +3,7 @@
 **Project:** Dianthus Pixie  
 **Engine:** Godot 4.x  
 **Art:** Aseprite (16×16 tiles, 16×24 characters)  
-**Last Updated:** 2026-04-20  
+**Last Updated:** 2026-04-26  
 **GDD Reference:** `Dianthus Pixie GDD.md` (v1.1)
 
 > **Legend — Effort:** XS < 2 h · S < 1 d · M 1–3 d · L 3–7 d · XL > 1 wk  
@@ -88,12 +88,12 @@
 |---------|-------|----------|----------|--------|--------------|----------|--------|---------------------|
 | UI-01 | Full HUD Implementation | UI/HUD | High | Done | CORE-10, PLANT-07 | [Unassigned] | L | • All 7 HUD elements per GDD §11.1: Player HP, Core HP, Energy Meter, Time-of-Day indicator, Hotbar (2 weapon + 1 skill), Minimap, Wave Counter; • minimap shows spawn direction arrows at night only |
 | UI-02 | Inventory Screen (30-Slot Grid) | UI/HUD | High | Done | CORE-02 | [Unassigned] | M | • 30-slot grid per GDD §6.2; • stack limits enforced (99 Common / 20 Uncommon / 5 Rare); • shortcut I opens/closes |
-| UI-03 | Quest Log Screen | UI/HUD | High | Not Started | QUEST-01 | [Unassigned] | M | • Active quests shown with progress bars per GDD §11.2; • shortcut Q opens/closes; • completed quests archived in a separate tab |
+| UI-03 | Quest Log Screen | UI/HUD | High | Done | QUEST-01 | [Unassigned] | M | • Active quests shown with progress bars per GDD §11.2; • shortcut Q opens/closes; • completed quests archived in a separate tab |
 | UI-04 | Plant Codex Screen | UI/HUD | Medium | Done | PLANT-05, QUEST-04 | [Unassigned] | M | • Lists all discovered plants and attempted combos per GDD §11.2; • entries unlock on discovery; • unknown combos display "?" |
 | UI-05 | Pause Menu | UI/HUD | High | Not Started | FOUND-01 | [Unassigned] | S | • Accessible at any time (excluding hard-scripted cutscenes); • sub-screens: Settings, Save/Load, Main Menu per GDD §11.2; • game time frozen while paused |
 | SAVE-01 | Auto-Save System (Post-Night) | Save System | High | Done | CORE-09 | [Unassigned] | M | • Auto-save fires on day transition after successful night per GDD §11.3; • persists: day count, inventory, garden layout, quest state, player stats, unlock flags |
 | SAVE-02 | Manual Save & Single-Slot Load | Save System | High | Done | SAVE-01 | [Unassigned] | S | • Manual save available in Exploration and Preparation phases per GDD §11.3; • single slot; New Game shows overwrite confirmation if save exists |
-| QUEST-01 | Quest System Architecture | Quest System | High | Not Started | FOUND-01 | [Unassigned] | L | • `QuestManager` autoload tracks active/completed quests via signals; • quest data defined in `Resource` files (not hard-coded); • `quest_progress_updated` and `quest_completed` signals emitted correctly |
+| QUEST-01 | Quest System Architecture | Quest System | High | Done | FOUND-01 | [Unassigned] | L | • `QuestManager` autoload tracks active/completed quests via signals; • quest data defined in `Resource` files (not hard-coded); • `quest_progress_updated` and `quest_completed` signals emitted correctly |
 | QUEST-02 | Daily Quests | Quest System | Medium | Not Started | QUEST-01 | [Unassigned] | M | • Daily objectives generated each Morning per GDD §16 (e.g., "Collect 10 Petal Shard", "Defeat 5 Shadowling"); • reward granted on completion; • quest expires at end of same day |
 | QUEST-03 | Progress Quests | Quest System | Medium | Not Started | QUEST-01 | [Unassigned] | M | • Milestone quests track cumulative stats per GDD §16 (e.g., "Survive to Day 10", "Unlock all zones before Day 15"); • reward: Aether Bloom or upgrade unlock |
 | QUEST-04 | Discovery Quests | Quest System | Medium | Not Started | QUEST-01, PLANT-05 | [Unassigned] | M | • Quests fire when new plant is found or new breeding combo is attempted per GDD §16; • reward: Codex entries and new recipes |
@@ -124,7 +124,8 @@
 | ACCESS-01 | 3 Difficulty Levels | Accessibility | High | Done | DIFF-01 | [Unassigned] | M | • Normal (default), Easy (enemy −20% stats), Hard (enemy +30% stats) per GDD §11.4; • selectable at new game start; • changeable in Settings mid-run |
 | ACCESS-02 | Colorblind Mode | Accessibility | Medium | Done | UI-01 | [Unassigned] | S | • HP and Energy bars show supplemental icons alongside color coding per GDD §11.4; • toggle available in Settings |
 | ACCESS-03 | Interactive Tutorial (Days 1–3) | Accessibility | High | Not Started | CORE-09 | [Unassigned] | L | • Tutorial guides player through movement, combat, crafting, and night defense across Days 1–3 per GDD §11.4; • fully skippable via Settings |
-| ACCESS-04 | Text Speed Setting | Accessibility | Low | Not Started | UI-05 | [Unassigned] | XS | • Text speed slider (Slow / Normal / Fast / Instant) in Settings per GDD §11.4 |
+| ACCESS-04 | Text Speed Setting | Accessibility | Low | Not Started | UI-05, DIALOG-01 | [Unassigned] | XS | • Text speed slider (Slow / Normal / Fast / Instant) in Settings per GDD §11.4; • wired to Dialogic text-speed setting |
+| DIALOG-01 | Dialogic Dialog System Integration | Quest System | High | In Progress | FOUND-01 | [Unassigned] | M | • Dialogic addon installed at `addons/dialogic/`; • author `.dch` character resources for named NPCs; • create `.dtl` timeline files for tutorial prompts + story quest cutscenes per GDD §16; • `Dialogic.start(timeline)` callable from QuestManager / NPC interact; • text-speed setting wired to Dialogic subsystem; • dialog pauses game world input while active |
 | RES-01 | Resource Scarcity Scaling | Resource & Inventory | Medium | Not Started | DIFF-01 | [Unassigned] | M | • Common resources remain accessible throughout; Uncommon/Rare spawn rates decrease every 5 days per GDD §6.3; • Night reward (3–5 Common + 1 Uncommon per cleared wave) implemented |
 | QA-01 | Full QA Pass | Polish/QA | High | Not Started | (all above) | [Unassigned] | XL | • All phases tested end-to-end; • no Critical or High bugs (crash, game-breaking, data loss); • performance ≥ 30 FPS on target hardware; • all GDD §5–§17 features verified functional |
 

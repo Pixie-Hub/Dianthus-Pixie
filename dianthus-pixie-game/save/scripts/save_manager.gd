@@ -4,7 +4,7 @@ signal save_completed(success: bool, manual: bool)
 signal load_completed(success: bool)
 
 const SAVE_PATH: String = "user://savegame.json"
-const SCHEMA_VERSION: int = 5
+const SCHEMA_VERSION: int = 6
 const GAME_VERSION: String = "0.1.0"
 
 const PLANT_TYPE_TO_SCENE: Dictionary = {
@@ -219,7 +219,7 @@ func _gather_state(manual: bool) -> Dictionary:
 	state["garden"] = {"plants": plants_arr}
 
 	# Reserved stubs — populated by their owning tasks.
-	state["quests"] = {}        # TODO (QUEST-01)
+	state["quests"] = QuestManager.serialize()
 	state["unlocks"] = []       # TODO (END-01, END-04)
 	state["difficulty"] = {"tier": DifficultyManager.get_tier_label().to_lower()}
 
@@ -290,6 +290,9 @@ func _apply_state(state: Dictionary) -> void:
 
 	# 5.7 Breeding.
 	BreedingManager.deserialize(state.get("breeding", {}))
+
+	# 5.8 Quests.
+	QuestManager.deserialize(state.get("quests", {}))
 	var equipped_id: String = state.get("player", {}).get("equipped_weapon", "thorn_sword")
 	var weapon_data: WeaponData = CraftingManager.get_weapon_data(equipped_id)
 	if weapon_data != null and is_instance_valid(GameManager.player):
@@ -395,4 +398,10 @@ func _migrate(data: Dictionary) -> Dictionary:
 		if not data.has("breeding"):
 			data["breeding"] = {"discovered": {}}
 		data["schema_version"] = 5
+	# v5 → v6: quest system added.
+	if version < 6:
+		print("[SaveManager] Migrating save from v%d to v6." % version)
+		if not data.has("quests"):
+			data["quests"] = {"active": {}, "completed": {}, "failed": {}}
+		data["schema_version"] = 6
 	return data

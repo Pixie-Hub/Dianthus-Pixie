@@ -266,7 +266,7 @@ Tidak ada skill tree. Progression bersifat item-driven:
 - 3 level kesulitan: Normal (default), Easy (musuh -20% stats), Hard (musuh +30% stats)
 - Colorblind mode: ikon tambahan pada bar HP/Energy (simbol tidak hanya warna)
 - Tutorial interaktif di 3 hari pertama — bisa dinonaktifkan
-- Kecepatan teks dialog bisa diatur
+- Kecepatan teks dialog bisa diatur (dikelola melalui Dialogic text-speed setting)
 
 # **12. Audio & Visual Direction**
 
@@ -358,6 +358,8 @@ Setiap enemy type memiliki quirk FSM yang membedakan behavior-nya (lihat tabel E
 
 # **16. Quest System**
 
+Dialog NPC dan cutscene story diimplementasikan menggunakan **Dialogic** (addon Godot) — timeline `.dtl`, resource karakter `.dch`, dan branching berbasis variabel. Story Quest menggunakan Dialogic timeline untuk percakapan penting.
+
 | **Jenis Quest** | **Contoh Objective** | **Reward** |
 | --- | --- | --- |
 | Daily Quest | Kumpulkan 10 Petal Shard; Kalahkan 5 Shadowling | Resource Common/Uncommon |
@@ -381,6 +383,7 @@ Beberapa aktivitas dikemas dalam minigame untuk menambah keterlibatan pemain:
 | **Visual Style** | 2D Pixel Art — 16x16 tile, 16x24 character |
 | **Audio** | Godot AudioStreamPlayer + dynamic layer system |
 | **AI** | Finite State Machine (FSM) — implemented via Godot StateMachine node |
+| **Dialog** | Dialogic (Godot addon) — timeline-based dialog, character portraits, branching |
 
 # **19. Game References**
 

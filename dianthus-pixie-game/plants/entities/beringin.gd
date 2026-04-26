@@ -50,7 +50,7 @@ func _process(delta: float) -> void:
 func _on_effect_area_body_entered(body: Node2D) -> void:
 	if body is EnemyBase and not body.is_dead:
 		if _active_wall == null and _cooldown_timer <= 0.0:
-			_spawn_wall(body as EnemyBase)
+			_spawn_wall.call_deferred(body as EnemyBase)
 
 
 func _spawn_wall(toward_enemy: EnemyBase) -> void:

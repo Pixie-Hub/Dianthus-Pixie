@@ -18,6 +18,7 @@
 [ext_resource type="PackedScene" path="res://plants/placement/plant_placement_manager.tscn" id="15_ppm"]
 [ext_resource type="PackedScene" path="res://ui/codex/codex_screen.tscn" id="16_codex"]
 [ext_resource type="PackedScene" uid="uid://0bemb33ejawu" path="res://ui/screens/loadout_screen.tscn" id="17_loadout"]
+[ext_resource type="PackedScene" uid="uid://quest_log_screen_01" path="res://ui/quests/quest_log_screen.tscn" id="18_questlog"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_dhprj"]
 texture = ExtResource("2_quyxi")
@@ -1008,3 +1009,5 @@ enemy_container_path = NodePath("../YSortLayer")
 [node name="PlantPlacementManager" parent="." unique_id=1744596446 instance=ExtResource("15_ppm")]
 
 [node name="LoadoutScreen" parent="." unique_id=1507759462 instance=ExtResource("17_loadout")]
+
+[node name="QuestLogScreen" parent="." unique_id=1607759462 instance=ExtResource("18_questlog")]
