@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://csettgscrn01"]
 
-[ext_resource type="Script" path="res://ui/menus/settings_screen.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://csettgscrgd01" path="res://ui/menus/settings_screen.gd" id="1_script"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 bg_color = Color(0.165, 0.122, 0.078, 1)
