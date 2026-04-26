@@ -5,11 +5,13 @@ const _CONTINUE_LABEL_FORMAT: String = "Continue \u2014 Day %d"
 @onready var _continue_btn: Button = %ContinueButton
 @onready var _settings_screen: Control = %SettingsScreen
 @onready var _overwrite_dialog: ConfirmationDialog = %OverwriteDialog
+@onready var _difficulty_selection: Control = %DifficultySelection
 
 
 func _ready() -> void:
 	_refresh_continue_button()
 	_overwrite_dialog.confirmed.connect(_on_overwrite_confirmed)
+	_difficulty_selection.difficulty_selected.connect(_on_difficulty_selected)
 
 
 func _refresh_continue_button() -> void:
@@ -34,12 +36,12 @@ func _on_new_game_pressed() -> void:
 	if SaveManager.has_save():
 		_overwrite_dialog.popup_centered()
 	else:
-		_start_new_game()
+		_difficulty_selection.open()
 
 
 func _on_overwrite_confirmed() -> void:
 	SaveManager.delete_save()
-	_start_new_game()
+	_difficulty_selection.open()
 
 
 func _start_new_game() -> void:
@@ -57,6 +59,10 @@ func _start_new_game() -> void:
 
 func _on_settings_pressed() -> void:
 	_settings_screen.open()
+
+
+func _on_difficulty_selected(_tier_id: int) -> void:
+	_start_new_game()
 
 
 func _on_quit_pressed() -> void:

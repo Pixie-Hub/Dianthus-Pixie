@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cmaingd000001" path="res://ui/menus/main_menu.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://csettgscrn01" path="res://ui/menus/settings_screen.tscn" id="2_settings"]
+[ext_resource type="PackedScene" uid="uid://diff_sel_01" path="res://ui/menus/difficulty_selection.tscn" id="3_difficulty"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_n"]
 bg_color = Color(0.227, 0.165, 0.094, 1)
@@ -225,6 +226,10 @@ text = "v0.1.0 · Dianthus Pixie"
 horizontal_alignment = 1
 
 [node name="SettingsScreen" parent="." unique_id=371311818 instance=ExtResource("2_settings")]
+unique_name_in_owner = true
+layout_mode = 1
+
+[node name="DifficultySelection" parent="." unique_id=371311819 instance=ExtResource("3_difficulty")]
 unique_name_in_owner = true
 layout_mode = 1
 

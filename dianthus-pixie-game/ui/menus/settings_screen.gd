@@ -6,17 +6,12 @@ const SETTINGS_PATH: String = "user://settings.cfg"
 @onready var _music_slider: HSlider = %MusicSlider
 @onready var _sfx_slider: HSlider = %SFXSlider
 @onready var _fullscreen_toggle: CheckButton = %FullscreenToggle
-@onready var _difficulty_option: OptionButton = %DifficultyOption
 @onready var _colorblind_toggle: CheckButton = %ColorblindToggle
 @onready var _text_speed_option: OptionButton = %TextSpeedOption
 
 
 func _ready() -> void:
 	visible = false
-	_difficulty_option.add_item("Easy", 0)
-	_difficulty_option.add_item("Normal", 1)
-	_difficulty_option.add_item("Hard", 2)
-	_difficulty_option.selected = 1
 	_text_speed_option.add_item("Slow", 0)
 	_text_speed_option.add_item("Normal", 1)
 	_text_speed_option.add_item("Fast", 2)
@@ -27,7 +22,6 @@ func _ready() -> void:
 	_music_slider.value_changed.connect(_on_music_changed)
 	_sfx_slider.value_changed.connect(_on_sfx_changed)
 	_fullscreen_toggle.toggled.connect(_on_fullscreen_toggled)
-	_difficulty_option.item_selected.connect(_on_difficulty_changed)
 	_colorblind_toggle.toggled.connect(_on_colorblind_toggled)
 	_text_speed_option.item_selected.connect(_on_text_speed_changed)
 
@@ -77,8 +71,6 @@ func _on_fullscreen_toggled(enabled: bool) -> void:
 
 # --- Stubs ---
 
-func _on_difficulty_changed(index: int) -> void:
-	DifficultyManager.set_tier(index)
 
 
 func _on_colorblind_toggled(enabled: bool) -> void:
@@ -97,7 +89,6 @@ func _save_settings() -> void:
 	config.set_value("audio", "music", _music_slider.value)
 	config.set_value("audio", "sfx", _sfx_slider.value)
 	config.set_value("display", "fullscreen", _fullscreen_toggle.button_pressed)
-	config.set_value("accessibility", "difficulty", _difficulty_option.selected)
 	config.set_value("accessibility", "colorblind", _colorblind_toggle.button_pressed)
 	config.set_value("accessibility", "text_speed", _text_speed_option.selected)
 	config.save(SETTINGS_PATH)
@@ -112,13 +103,11 @@ func _load_settings() -> void:
 	_music_slider.value = config.get_value("audio", "music", 100.0)
 	_sfx_slider.value = config.get_value("audio", "sfx", 100.0)
 	_fullscreen_toggle.button_pressed = config.get_value("display", "fullscreen", false)
-	_difficulty_option.selected = config.get_value("accessibility", "difficulty", 1)
 	_colorblind_toggle.button_pressed = config.get_value("accessibility", "colorblind", false)
 	_text_speed_option.selected = config.get_value("accessibility", "text_speed", 1)
 	_on_master_changed(_master_slider.value)
 	_on_music_changed(_music_slider.value)
 	_on_sfx_changed(_sfx_slider.value)
 	_on_fullscreen_toggled(_fullscreen_toggle.button_pressed)
-	DifficultyManager.set_tier(_difficulty_option.selected)
 	GameManager.set_colorblind_mode(_colorblind_toggle.button_pressed)
 	print("[Settings] Settings loaded.")

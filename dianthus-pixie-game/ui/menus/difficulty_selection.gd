@@ -1,0 +1,40 @@
+extends Control
+
+signal difficulty_selected(tier_id: int)
+
+@onready var _easy_btn: Button = %EasyButton
+@onready var _normal_btn: Button = %NormalButton
+@onready var _hard_btn: Button = %HardButton
+
+
+func _ready() -> void:
+	visible = false
+	_easy_btn.pressed.connect(_on_easy_pressed)
+	_normal_btn.pressed.connect(_on_normal_pressed)
+	_hard_btn.pressed.connect(_on_hard_pressed)
+
+
+func open() -> void:
+	visible = true
+
+
+func close() -> void:
+	visible = false
+
+
+func _on_easy_pressed() -> void:
+	DifficultyManager.set_tier(DifficultyManager.Tier.EASY)
+	difficulty_selected.emit(DifficultyManager.Tier.EASY)
+	close()
+
+
+func _on_normal_pressed() -> void:
+	DifficultyManager.set_tier(DifficultyManager.Tier.NORMAL)
+	difficulty_selected.emit(DifficultyManager.Tier.NORMAL)
+	close()
+
+
+func _on_hard_pressed() -> void:
+	DifficultyManager.set_tier(DifficultyManager.Tier.HARD)
+	difficulty_selected.emit(DifficultyManager.Tier.HARD)
+	close()
