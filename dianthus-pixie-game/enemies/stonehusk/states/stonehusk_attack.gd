@@ -1,7 +1,8 @@
 extends State
 
 const NAV_UPDATE_INTERVAL: float = 0.3
-const LEASH_MULTIPLIER: float = 1.5
+# Shorter leash — Stonehusk gives up on player sooner and returns to Core.
+const LEASH_MULTIPLIER: float = 1.2
 
 var _nav_timer: float = 0.0
 var _attack_timer: float = 0.0
@@ -33,11 +34,9 @@ func physics_update(delta: float) -> void:
 		return
 
 	if e.is_player_dead():
-		state_machine.transition_to(&"Siege")
+		state_machine.transition_to(&"Scout")
 		return
-	if e.should_retreat():
-		state_machine.transition_to(&"Retreat")
-		return
+	# No retreat check — Stonehusk never retreats.
 	if e.distance_to_player() > e.detection_radius * LEASH_MULTIPLIER:
 		state_machine.transition_to(&"Scout")
 		return
@@ -77,5 +76,5 @@ func _move(e: EnemyBase) -> void:
 		direction = (_nav_agent.get_next_path_position() - e.global_position).normalized()
 	else:
 		direction = (e.get_player_position() - e.global_position).normalized()
-	e.velocity = direction * e.get_effective_speed() * 1.2
+	e.velocity = direction * e.get_effective_speed()
 	e.move_and_slide()

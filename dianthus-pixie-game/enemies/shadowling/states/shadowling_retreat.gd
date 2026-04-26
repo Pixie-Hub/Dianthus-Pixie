@@ -15,11 +15,12 @@ func enter() -> void:
 		_flee_direction = (e.global_position - e.get_core_position()).normalized()
 		if _flee_direction == Vector2.ZERO:
 			_flee_direction = Vector2.RIGHT
+		e.play_animation(&"walk")
 
 
 func physics_update(delta: float) -> void:
 	var e: EnemyBase = enemy as EnemyBase
-	if e == null:
+	if e == null or e.is_stunned():
 		return
 
 	_retreat_timer -= delta

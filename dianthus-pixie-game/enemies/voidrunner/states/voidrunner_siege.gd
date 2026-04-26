@@ -25,14 +25,12 @@ func physics_update(_delta: float) -> void:
 	if e == null or e.is_stunned():
 		return
 
-	if e.should_retreat():
-		state_machine.transition_to(&"Retreat")
-		return
+	# No retreat check — Voidrunner never retreats.
 	if not e.is_player_dead() and e.distance_to_player() <= e.attack_range:
 		state_machine.transition_to(&"Attack")
 		return
 	if e.distance_to_core() > e.attack_range:
-		state_machine.transition_to(&"Scout")
+		state_machine.transition_to(&"Rush")
 		return
 
 	e.velocity = Vector2.ZERO

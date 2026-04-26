@@ -21,12 +21,11 @@ func update(delta: float) -> void:
 
 
 func physics_update(_delta: float) -> void:
-	var e: EnemyBase = enemy as EnemyBase
+	var e: PhantomWeaver = enemy as PhantomWeaver
 	if e == null or e.is_stunned():
 		return
-
-	if e.should_retreat():
-		state_machine.transition_to(&"Retreat")
+	if e._pending_teleport:
+		state_machine.transition_to(&"Teleport")
 		return
 	if not e.is_player_dead() and e.distance_to_player() <= e.attack_range:
 		state_machine.transition_to(&"Attack")

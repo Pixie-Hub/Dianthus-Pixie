@@ -1,7 +1,7 @@
 extends State
 
 const NAV_UPDATE_INTERVAL: float = 0.3
-const LEASH_MULTIPLIER: float = 1.5
+const LEASH_MULTIPLIER: float = 1.2
 
 var _nav_timer: float = 0.0
 var _attack_timer: float = 0.0
@@ -33,13 +33,12 @@ func physics_update(delta: float) -> void:
 		return
 
 	if e.is_player_dead():
-		state_machine.transition_to(&"Siege")
+		state_machine.transition_to(&"Rush")
 		return
-	if e.should_retreat():
-		state_machine.transition_to(&"Retreat")
-		return
+	# No retreat check — Voidrunner never retreats.
+	# Short leash — return to Rush sooner.
 	if e.distance_to_player() > e.detection_radius * LEASH_MULTIPLIER:
-		state_machine.transition_to(&"Scout")
+		state_machine.transition_to(&"Rush")
 		return
 
 	_nav_timer -= delta

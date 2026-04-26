@@ -28,15 +28,14 @@ func update(delta: float) -> void:
 
 
 func physics_update(delta: float) -> void:
-	var e: EnemyBase = enemy as EnemyBase
+	var e: PhantomWeaver = enemy as PhantomWeaver
 	if e == null or e.is_stunned():
 		return
-
+	if e._pending_teleport:
+		state_machine.transition_to(&"Teleport")
+		return
 	if e.is_player_dead():
 		state_machine.transition_to(&"Siege")
-		return
-	if e.should_retreat():
-		state_machine.transition_to(&"Retreat")
 		return
 	if e.distance_to_player() > e.detection_radius * LEASH_MULTIPLIER:
 		state_machine.transition_to(&"Scout")

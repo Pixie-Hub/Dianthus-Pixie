@@ -42,12 +42,28 @@ var active_skill_id: String = ""
 var selected_weapon_slot: int = 0
 var _current_weapon: WeaponData = null
 var _debug_plant_cycle: int = 0
+var _debug_enemy_index: int = 0
+
+const DEBUG_ENEMY_SCENES: Array[String] = [
+	"res://enemies/shadowling/shadowling.tscn",
+	"res://enemies/voidrunner/voidrunner.tscn",
+	"res://enemies/stonehusk/stonehusk.tscn",
+	"res://enemies/phantom_weaver/phantom_weaver.tscn",
+]
 var current_energy: int = 0
 var max_energy: int = BASE_MAX_ENERGY
 var _energy_regen_accumulator: float = 0.0
 var damage_reduction: float = 0.0
 var attack_speed_bonus: float = 0.0
 var bonus_melee_damage: int = 0
+
+const PETAL_SHIELD_DR: float = 0.8
+const PETAL_SHIELD_PERFECT_WINDOW: float = 0.2
+const PETAL_SHIELD_COUNTER_STUN: float = 0.6
+
+var is_blocking: bool = false
+var _block_raised_time: float = -1.0
+var _saved_damage_reduction: float = 0.0
 
 func _ready() -> void:
 	PlayerAnimationBuilder.build(%AnimationPlayer, "Sprite2D")
@@ -171,7 +187,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				heal(25)
 				print("DEBUG: Player healed 25. HP: %d/%d" % [current_hp, MAX_HP])
 		elif event.keycode == KEY_F5:
-			_debug_spawn_shadowling()
+			_debug_spawn_enemy()
 		elif event.keycode == KEY_F6:
 			get_tree().call_group(&"enemies", "die")
 			print("DEBUG: Killed all enemies.")
@@ -245,6 +261,15 @@ func _unhandled_input(event: InputEvent) -> void:
 			var ls2: Node = get_tree().current_scene.find_child("LoadoutScreen", true, false)
 			if ls2 != null and ls2.has_method("_refresh"):
 				ls2._refresh()
+		if event.keycode == KEY_1 and event.shift_pressed:
+			equip_weapon(0, "spore_bomb")
+			print("DEBUG: Shift+1 — Equip Spore Bomb to slot 1.")
+		elif event.keycode == KEY_2 and event.shift_pressed:
+			equip_weapon(0, "vine_whip")
+			print("DEBUG: Shift+2 — Equip Vine Whip to slot 1.")
+		elif event.keycode == KEY_3 and event.shift_pressed:
+			equip_weapon(0, "petal_shield")
+			print("DEBUG: Shift+3 — Equip Petal Shield to slot 1.")
 		if event.keycode == KEY_J and event.shift_pressed:
 			for pid: String in PlantRegistry.get_all_plant_ids():
 				CodexManager.discover_plant(pid)
@@ -278,6 +303,15 @@ func _unhandled_input(event: InputEvent) -> void:
 func take_damage(amount: int) -> void:
 	if is_dead or is_invincible:
 		return
+	if is_blocking:
+		var window: float = PETAL_SHIELD_PERFECT_WINDOW
+		if _current_weapon != null and _current_weapon.weapon_id == "iron_bloom_shield":
+			window = 0.3
+		var elapsed: float = (Time.get_ticks_msec() / 1000.0) - _block_raised_time
+		if elapsed <= window:
+			print("[Player] Perfect block! Counter-attack.")
+			_trigger_petal_counter()
+			return
 	var reduced: int = int(float(amount) * (1.0 - damage_reduction))
 	reduced = max(reduced, 1)
 	current_hp = max(current_hp - reduced, 0)
@@ -295,6 +329,8 @@ func heal(amount: int) -> void:
 	hp_changed.emit(current_hp, MAX_HP)
 
 func _die() -> void:
+	if is_blocking:
+		_drop_block()
 	is_dead = true
 	velocity = Vector2.ZERO
 	player_died.emit()
@@ -332,6 +368,22 @@ func _start_invincibility() -> void:
 	_sprite.modulate = Color.WHITE
 
 func _start_attack() -> void:
+	if _current_weapon == null:
+		return
+	match _current_weapon.weapon_id:
+		"thorn_sword", "blazeblade":
+			_attack_melee_sword()
+		"vine_whip", "crystal_lash":
+			_attack_vine_whip()
+		"spore_bomb", "void_grenade":
+			_attack_spore_bomb()
+		"petal_shield", "iron_bloom_shield":
+			_attack_petal_shield()
+		_:
+			push_warning("[Player] Unknown weapon_id: %s" % _current_weapon.weapon_id)
+
+
+func _attack_melee_sword() -> void:
 	is_attacking = true
 	velocity = Vector2.ZERO
 	_hit_bodies.clear()
@@ -358,6 +410,113 @@ func _start_attack() -> void:
 	hitbox_shape.disabled = true
 	await get_tree().create_timer(effective_cd * 0.25).timeout
 	_end_attack()
+
+
+func _attack_vine_whip() -> void:
+	is_attacking = true
+	velocity = Vector2.ZERO
+	_hit_bodies.clear()
+	_state_machine.travel("attack")
+	_update_blend_position()
+	var hitbox_offset: Vector2
+	if last_direction == Vector2.DOWN:
+		hitbox_offset = Vector2(0, -4)
+	elif last_direction == Vector2.UP:
+		hitbox_offset = Vector2(0, -36)
+	elif last_direction == Vector2.LEFT:
+		hitbox_offset = Vector2(-16, -24)
+	else:
+		hitbox_offset = Vector2(16, -24)
+	_sword_hitbox.position = hitbox_offset
+	var hitbox_shape: CollisionShape2D = _sword_hitbox.get_child(0)
+	print("DEBUG: Vine Whip! Damage: %d, Range: %.0f, Direction: %s" % [
+		_current_weapon.damage + bonus_melee_damage, _current_weapon.attack_range, last_direction])
+	if _sword_sfx.stream != null:
+		_sword_sfx.play()
+	var effective_cd: float = _current_weapon.cooldown * (1.0 - attack_speed_bonus)
+	await get_tree().create_timer(effective_cd * 0.25).timeout
+	hitbox_shape.disabled = false
+	await get_tree().create_timer(effective_cd * 0.5).timeout
+	hitbox_shape.disabled = true
+	await get_tree().create_timer(effective_cd * 0.25).timeout
+	_end_attack()
+
+
+func _attack_spore_bomb() -> void:
+	is_attacking = true
+	_state_machine.travel("attack")
+	var target: Vector2 = get_global_mouse_position()
+	var dir: Vector2 = target - global_position
+	if dir.length() > _current_weapon.attack_range:
+		target = global_position + dir.normalized() * _current_weapon.attack_range
+	var proj: SporeBombProjectile = preload(
+		"res://combat/projectiles/spore_bomb_projectile.tscn").instantiate()
+	proj.damage = _current_weapon.damage
+	proj.aoe_radius = _current_weapon.attack_range * 0.4
+	proj.launch(global_position, target)
+	var proj_parent: Node = get_tree().current_scene.get_node_or_null("YSortLayer")
+	if proj_parent == null:
+		proj_parent = get_tree().current_scene
+	proj_parent.add_child(proj)
+	print("DEBUG: Spore Bomb launched! Damage: %d, AoE: %.0f, Target: %s" % [
+		_current_weapon.damage, _current_weapon.attack_range * 0.4, target])
+	await get_tree().create_timer(0.2).timeout
+	is_attacking = false
+	_attack_cooldown_timer = _current_weapon.cooldown * (1.0 - attack_speed_bonus)
+	_state_machine.travel("idle")
+
+
+func _attack_petal_shield() -> void:
+	# Petal Shield damage = counter damage, attack_range = counter radius, cooldown = post-counter cooldown.
+	if is_blocking:
+		_drop_block()
+	else:
+		_raise_block()
+
+
+func _raise_block() -> void:
+	is_blocking = true
+	_block_raised_time = Time.get_ticks_msec() / 1000.0
+	_saved_damage_reduction = damage_reduction
+	damage_reduction = max(damage_reduction, PETAL_SHIELD_DR)
+	_sprite.modulate = Color(0.8, 0.9, 1.0)
+	print("[Player] Block raised (%s)" % _current_weapon.weapon_id)
+
+
+func _drop_block() -> void:
+	is_blocking = false
+	_block_raised_time = -1.0
+	damage_reduction = _saved_damage_reduction
+	_sprite.modulate = Color.WHITE
+	print("[Player] Block dropped")
+
+
+func _trigger_petal_counter() -> void:
+	var radius: float = _current_weapon.attack_range
+	var dmg: int = _current_weapon.damage
+	for body in get_tree().get_nodes_in_group(&"enemies"):
+		if body is EnemyBase and not body.is_dead:
+			if global_position.distance_to(body.global_position) <= radius:
+				body.take_damage(dmg)
+				if body.has_method("apply_stun"):
+					body.apply_stun(PETAL_SHIELD_COUNTER_STUN)
+				add_energy(ENERGY_PER_HIT)
+	_spawn_counter_vfx(radius)
+	print("[Player] Petal Shield counter! Radius: %.0f, Dmg: %d" % [radius, dmg])
+
+
+func _spawn_counter_vfx(radius: float) -> void:
+	# TODO (VFX-05): Replace with real counter-attack particle ring.
+	var ring: ColorRect = ColorRect.new()
+	ring.color = Color(0.8, 0.9, 1.0, 0.6)
+	var size: float = radius * 2.0
+	ring.size = Vector2(size, size)
+	ring.position = -Vector2(size * 0.5, size * 0.5)
+	add_child(ring)
+	var tween: Tween = create_tween()
+	tween.tween_property(ring, "modulate:a", 0.0, 0.3)
+	tween.tween_callback(ring.queue_free)
+
 
 func _end_attack() -> void:
 	is_attacking = false
@@ -415,6 +574,8 @@ func try_spend_energy(amount: int) -> bool:
 func select_weapon_slot(index: int) -> void:
 	if index < 0 or index >= WEAPON_SLOT_COUNT:
 		return
+	if is_blocking:
+		_drop_block()
 	selected_weapon_slot = index
 	var wid: String = weapon_slots[selected_weapon_slot]
 	if wid.is_empty():
@@ -498,21 +659,27 @@ func _debug_place_plant() -> void:
 	_debug_plant_cycle = (_debug_plant_cycle + 1) % 12
 
 
-func _debug_spawn_shadowling() -> void:
-	var scene: PackedScene = load("res://enemies/shadowling/shadowling.tscn")
+func _debug_spawn_enemy() -> void:
+	var scene_path: String = DEBUG_ENEMY_SCENES[_debug_enemy_index]
+	var scene: PackedScene = load(scene_path)
 	if scene == null:
-		push_warning("DEBUG: Could not load Shadowling scene.")
+		push_warning("DEBUG: Could not load enemy scene: %s" % scene_path)
 		return
-	var shadowling: Node2D = scene.instantiate() as Node2D
+	var e: EnemyBase = scene.instantiate() as EnemyBase
 	var spawn_pos: Vector2 = global_position + Vector2(100, 0)
 	if get_viewport() != null:
 		var mouse_world: Vector2 = get_canvas_transform().affine_inverse() * get_viewport().get_mouse_position()
 		spawn_pos = mouse_world
-	shadowling.global_position = spawn_pos
-	get_tree().current_scene.add_child(shadowling)
-	if shadowling.has_method("activate"):
-		shadowling.activate()
-	print("DEBUG: Spawned Shadowling at %s" % spawn_pos)
+	e.global_position = spawn_pos
+	var ysort: Node = get_tree().current_scene.get_node_or_null("YSortLayer")
+	if ysort != null:
+		ysort.add_child(e)
+	else:
+		get_tree().current_scene.add_child(e)
+	if e.has_method("activate"):
+		e.activate()
+	print("[Debug] Spawned %s at %s" % [scene_path.get_file().get_basename(), spawn_pos])
+	_debug_enemy_index = (_debug_enemy_index + 1) % DEBUG_ENEMY_SCENES.size()
 
 
 func _on_sword_hitbox_body_entered(body: Node2D) -> void:
@@ -525,4 +692,7 @@ func _on_sword_hitbox_body_entered(body: Node2D) -> void:
 	attack_hit.emit(body, total_damage)
 	print("DEBUG: Hit %s for %d damage" % [body.name, total_damage])
 	add_energy(ENERGY_PER_HIT)
+	if _current_weapon != null and (_current_weapon.weapon_id == "vine_whip" or _current_weapon.weapon_id == "crystal_lash"):
+		if body.has_method("apply_pull"):
+			body.apply_pull(global_position, 0.25, 24.0)
 	# TODO (VFX-05): Add impact particles on hit.

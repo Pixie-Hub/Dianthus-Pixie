@@ -1,7 +1,8 @@
 extends State
 
 const NAV_UPDATE_INTERVAL: float = 0.5
-const WANDER_ANGLE_MAX: float = deg_to_rad(15.0)
+# Tighter wander — Stonehusk marches more directly toward Core.
+const WANDER_ANGLE_MAX: float = deg_to_rad(5.0)
 
 var _nav_timer: float = 0.0
 var _nav_agent: NavigationAgent2D = null
@@ -23,12 +24,7 @@ func physics_update(delta: float) -> void:
 	if e == null or e.is_stunned():
 		return
 
-	if e.should_retreat():
-		state_machine.transition_to(&"Retreat")
-		return
-	if not e.is_player_dead() and e.distance_to_player() <= e.detection_radius:
-		state_machine.transition_to(&"Attack")
-		return
+	# No retreat check — Stonehusk never retreats.
 	if e.distance_to_core() <= e.attack_range:
 		state_machine.transition_to(&"Siege")
 		return

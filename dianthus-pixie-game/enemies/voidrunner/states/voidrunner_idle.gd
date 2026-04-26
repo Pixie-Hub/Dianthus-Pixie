@@ -8,11 +8,11 @@ func enter() -> void:
 	if e != null:
 		e.play_animation(&"idle")
 	if DayNightCycle.is_night():
-		state_machine.transition_to(&"Scout")
+		state_machine.transition_to(&"Rush")
 		return
 	_phase_connection = func(phase: String) -> void:
 		if phase == "NIGHT":
-			state_machine.transition_to(&"Scout")
+			state_machine.transition_to(&"Rush")
 	DayNightCycle.phase_changed.connect(_phase_connection)
 
 

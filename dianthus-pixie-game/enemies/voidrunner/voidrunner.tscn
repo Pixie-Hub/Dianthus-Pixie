@@ -1,0 +1,155 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://enemies/voidrunner/voidrunner.gd" id="1_vr"]
+[ext_resource type="Script" path="res://enemies/fsm/state_machine.gd" id="2_fsm"]
+[ext_resource type="Texture2D" path="res://enemies/voidrunner/voidrunner.png" id="3_vrpng"]
+[ext_resource type="Script" path="res://enemies/voidrunner/states/voidrunner_idle.gd" id="4_idle"]
+[ext_resource type="Script" path="res://enemies/voidrunner/states/voidrunner_rush.gd" id="5_rush"]
+[ext_resource type="Script" path="res://enemies/voidrunner/states/voidrunner_siege.gd" id="6_siege"]
+[ext_resource type="Script" path="res://enemies/voidrunner/states/voidrunner_attack.gd" id="7_atk"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
+radius = 2.0
+height = 4.0
+
+[sub_resource type="Animation" id="Animation_RESET"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.5, 0.5)]
+}
+
+[sub_resource type="Animation" id="Animation_attack"]
+resource_name = "attack"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.07, 0.14, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(6, 0), Vector2(6, 0), Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_idle"]
+resource_name = "idle"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.5, 0.5)]
+}
+
+[sub_resource type="Animation" id="Animation_walk"]
+resource_name = "walk"
+length = 0.35
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.5, 0.5)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_vr"]
+_data = {
+&"RESET": SubResource("Animation_RESET"),
+&"attack": SubResource("Animation_attack"),
+&"idle": SubResource("Animation_idle"),
+&"walk": SubResource("Animation_walk")
+}
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_detect"]
+radius = 48.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_atk"]
+radius = 16.0
+
+[node name="Voidrunner" type="CharacterBody2D"]
+collision_layer = 8
+collision_mask = 6
+script = ExtResource("1_vr")
+max_hp = 25
+damage = 5
+move_speed = 80.0
+detection_radius = 48.0
+attack_range = 16.0
+attack_cooldown = 0.6
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1415891624]
+unique_name_in_owner = true
+texture_filter = 1
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_vrpng")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_body")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1082306107]
+unique_name_in_owner = true
+libraries/ = SubResource("AnimationLibrary_vr")
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("2_fsm")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("4_idle")
+
+[node name="Rush" type="Node" parent="StateMachine"]
+script = ExtResource("5_rush")
+
+[node name="Siege" type="Node" parent="StateMachine"]
+script = ExtResource("6_siege")
+
+[node name="Attack" type="Node" parent="StateMachine"]
+script = ExtResource("7_atk")
+
+[node name="DetectionArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 0
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
+shape = SubResource("CircleShape2D_detect")
+
+[node name="AttackArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 0
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
+shape = SubResource("CircleShape2D_atk")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1450290045]
+unique_name_in_owner = true
+
+[node name="HitFlashTimer" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true

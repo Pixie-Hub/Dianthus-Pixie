@@ -5,7 +5,23 @@ signal wave_started()
 signal wave_cleared()
 signal enemy_spawned(enemy: EnemyBase)
 
-@export var enemy_scene: PackedScene = preload("res://enemies/shadowling/shadowling.tscn")
+@export var enemy_scene: PackedScene = preload("res://enemies/shadowling/shadowling.tscn")  # Fallback — ENEMY_POOL takes priority.
+
+const ENEMY_SCENES: Dictionary = {
+	"shadowling": preload("res://enemies/shadowling/shadowling.tscn"),
+	"voidrunner": preload("res://enemies/voidrunner/voidrunner.tscn"),
+	"stonehusk": preload("res://enemies/stonehusk/stonehusk.tscn"),
+	"phantom_weaver": preload("res://enemies/phantom_weaver/phantom_weaver.tscn"),
+}
+
+# Each entry: { "type": String, "weight": float, "min_day": int }
+const ENEMY_POOL: Array[Dictionary] = [
+	{ "type": "shadowling", "weight": 1.0, "min_day": 1 },
+	{ "type": "voidrunner", "weight": 0.6, "min_day": 2 },
+	{ "type": "stonehusk", "weight": 0.3, "min_day": 4 },
+	{ "type": "phantom_weaver", "weight": 0.4, "min_day": 6 },
+]
+
 @export var total_enemies: int = 5
 @export var min_entry_points: int = 1
 @export var max_entry_points: int = 3
@@ -78,8 +94,12 @@ func start_wave() -> void:
 	for i: int in range(count):
 		_active_spawn_points.append(shuffled[i].global_position)
 	wave_started.emit()
-	print("[WaveSpawner] Wave started. Day: %d, Difficulty: %s, Entry points: %d, Enemies: %d, HP x%.2f" \
-		% [day, DifficultyManager.get_tier_label(), count, _current_wave_total, _current_hp_multiplier])
+	var available_types: Array[String] = []
+	for entry: Dictionary in ENEMY_POOL:
+		if day >= entry["min_day"]:
+			available_types.append(entry["type"])
+	print("[WaveSpawner] Wave started. Day: %d, Difficulty: %s, Entry points: %d, Enemies: %d, HP x%.2f, Types: %s" \
+		% [day, DifficultyManager.get_tier_label(), count, _current_wave_total, _current_hp_multiplier, available_types])
 
 
 func _process(delta: float) -> void:
@@ -101,7 +121,7 @@ func _spawn_enemy() -> void:
 	if rand_dir != Vector2.ZERO:
 		rand_dir = rand_dir.normalized()
 	var spawn_pos: Vector2 = base_pos + rand_dir * randf_range(0.0, spawn_offset_radius)
-	var enemy: EnemyBase = enemy_scene.instantiate() as EnemyBase
+	var enemy: EnemyBase = _pick_enemy_scene().instantiate() as EnemyBase
 	if enemy == null:
 		push_warning("[WaveSpawner] Failed to instantiate enemy scene as EnemyBase.")
 		return
@@ -182,6 +202,27 @@ func get_alive_count() -> int:
 	# TODO (AUDIO-03): Used by dynamic music layer intensity.
 	# TODO (UI-01): HUD reads this for remaining enemy count display.
 	return _enemies_alive
+
+
+func _pick_enemy_scene() -> PackedScene:
+	if ENEMY_POOL.is_empty():
+		return enemy_scene
+	var day: int = max(1, DayNightCycle.day_count)
+	var pool: Array[Dictionary] = []
+	var total_weight: float = 0.0
+	for entry: Dictionary in ENEMY_POOL:
+		if day >= entry["min_day"]:
+			pool.append(entry)
+			total_weight += entry["weight"]
+	if pool.is_empty():
+		return ENEMY_SCENES["shadowling"]
+	var roll: float = randf() * total_weight
+	var cumulative: float = 0.0
+	for entry: Dictionary in pool:
+		cumulative += entry["weight"]
+		if roll <= cumulative:
+			return ENEMY_SCENES[entry["type"]]
+	return ENEMY_SCENES[pool.back()["type"]]
 
 
 # TODO (DIFF-02): Add override_entry_point_count(n: int) for Surge Night to force all 4 entry points.
