@@ -98,10 +98,10 @@
 | QUEST-03 | Progress Quests | Quest System | Medium | Done | QUEST-01 | [Unassigned] | M | • Milestone quests track cumulative stats per GDD §16 (e.g., "Survive to Day 10", "Unlock all zones before Day 15"); • reward: Aether Bloom or upgrade unlock |
 | QUEST-04 | Discovery Quests | Quest System | Medium | Done | QUEST-01, PLANT-05 | [Unassigned] | M | • Quests fire when new plant is found or new breeding combo is attempted per GDD §16; • reward: Codex entries and new recipes |
 | QUEST-05 | Story Quests | Quest System | High | Done | QUEST-01, WORLD-02 | [Unassigned] | L | • Full chain per GDD §16: Ruins investigation → Voidlord → Devourer; • critical quests carry time limits; • failure triggers alternative ending, not immediate game over per GDD §5.1 |
-| END-01 | True Ending | Core Mechanics | High | Not Started | ENEMY-05, QUEST-05 | [Unassigned] | M | • Full Dianthus potential unlocked + Devourer defeated on Day 30+ triggers True Ending per GDD §5.2; • Endless mode unlocks after credits |
-| END-02 | Survival Ending | Core Mechanics | Medium | Not Started | DIFF-01 | [Unassigned] | S | • Surviving to Day 20 without unlocking full Dianthus potential triggers Survival Ending per GDD §5.2; • open-story resolution screen displayed |
-| END-03 | Discovery Ending | Core Mechanics | Medium | Not Started | QUEST-04 | [Unassigned] | S | • Completing all Discovery Quests triggers Discovery Ending per GDD §5.2; • Dianthus evolves into a living creature in the outro |
-| END-04 | Endless Post-Game Mode | Core Mechanics | Low | Not Started | END-01 | [Unassigned] | M | • Endless mode unlocks after True Ending per GDD §5.2; • exponential scaling (×1.5 HP/DMG every 5 days) continues indefinitely; • local leaderboard records highest day reached |
+| END-01 | True Ending | Core Mechanics | High | Done | ENEMY-05, QUEST-05 | [Unassigned] | M | • Full Dianthus potential unlocked + Devourer defeated on Day 30+ triggers True Ending per GDD §5.2; • Endless mode unlocks after credits |
+| END-02 | Survival Ending | Core Mechanics | Medium | Done | DIFF-01 | [Unassigned] | S | • Surviving to Day 20 without unlocking full Dianthus potential triggers Survival Ending per GDD §5.2; • open-story resolution screen displayed |
+| END-03 | Discovery Ending | Core Mechanics | Medium | Done | QUEST-04 | [Unassigned] | S | • Completing all Discovery Quests triggers Discovery Ending per GDD §5.2; • Dianthus evolves into a living creature in the outro |
+| END-04 | Endless Post-Game Mode | Core Mechanics | Low | Done | END-01 | [Unassigned] | M | • Endless mode unlocks after True Ending per GDD §5.2; • exponential scaling (×1.5 HP/DMG every 5 days) continues indefinitely; • local leaderboard records highest day reached |
 
 ---
 

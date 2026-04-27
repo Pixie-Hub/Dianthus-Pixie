@@ -141,11 +141,11 @@ func set_camera_limits(left: int, top: int, right: int, bottom: int) -> void:
 	_camera.limit_bottom = bottom
 
 func _unhandled_input(event: InputEvent) -> void:
-	if Input.is_action_just_pressed("hotbar_weapon_1"):
+	if Input.is_action_just_pressed("hotbar_weapon_1") and not Input.is_key_pressed(KEY_CTRL) and not Input.is_key_pressed(KEY_SHIFT):
 		select_weapon_slot(0)
 		get_viewport().set_input_as_handled()
 		return
-	if Input.is_action_just_pressed("hotbar_weapon_2"):
+	if Input.is_action_just_pressed("hotbar_weapon_2") and not Input.is_key_pressed(KEY_CTRL) and not Input.is_key_pressed(KEY_SHIFT):
 		select_weapon_slot(1)
 		get_viewport().set_input_as_handled()
 		return
@@ -171,11 +171,11 @@ func _unhandled_input(event: InputEvent) -> void:
 			screen.toggle()
 		get_viewport().set_input_as_handled()
 		return
-	if Input.is_action_just_pressed("activate_skill"):
+	if Input.is_action_just_pressed("activate_skill") and not Input.is_key_pressed(KEY_CTRL) and not Input.is_key_pressed(KEY_SHIFT):
 		_activate_skill()
 		get_viewport().set_input_as_handled()
 		return
-	if Input.is_action_just_pressed("loadout_toggle"):
+	if Input.is_action_just_pressed("loadout_toggle") and not Input.is_key_pressed(KEY_SHIFT):
 		var lscreen: Node = get_tree().current_scene.find_child("LoadoutScreen", true, false)
 		if lscreen != null:
 			if lscreen.visible:
@@ -302,6 +302,21 @@ func _unhandled_input(event: InputEvent) -> void:
 			QuestManager._on_devourer_defeated()
 			print("DEBUG: Shift+7 — Emitted devourer_defeated.")
 			print("DEBUG: flag_story_devourer_defeated == %s" % str(UnlockFlags.has_flag("flag_story_devourer_defeated")))
+		elif event.keycode == KEY_1 and event.ctrl_pressed and not event.shift_pressed:
+			EndingManager.force_trigger("true")
+			print("DEBUG: Ctrl+1 — Force-triggered True ending.")
+		elif event.keycode == KEY_2 and event.ctrl_pressed and not event.shift_pressed:
+			EndingManager.force_trigger("survival")
+			print("DEBUG: Ctrl+2 — Force-triggered Survival ending.")
+		elif event.keycode == KEY_3 and event.ctrl_pressed and not event.shift_pressed:
+			EndingManager.force_trigger("discovery")
+			print("DEBUG: Ctrl+3 — Force-triggered Discovery ending.")
+		elif event.keycode == KEY_4 and event.ctrl_pressed and not event.shift_pressed:
+			GameManager.endless_mode = !GameManager.endless_mode
+			print("DEBUG: Ctrl+4 — Endless Mode: %s" % ("ON" if GameManager.endless_mode else "OFF"))
+		elif event.keycode == KEY_4 and event.ctrl_pressed and event.shift_pressed:
+			var rank: int = EndlessLeaderboard.submit_score(DayNightCycle.day_count)
+			print("DEBUG: Ctrl+Shift+4 — Submitted Day %d to leaderboard. Rank: #%d. Best: Day %d." % [DayNightCycle.day_count, rank, EndlessLeaderboard.get_best_day()])
 		elif event.keycode == KEY_5 and event.ctrl_pressed and event.shift_pressed:
 			QuestManager.start_quest(&"story_01_whispers")
 			print("DEBUG: Ctrl+Shift+5 — Force-started story_01_whispers.")

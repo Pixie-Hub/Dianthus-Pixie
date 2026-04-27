@@ -14,3 +14,14 @@ const flag_alt_ending_lingering: String = "flag_alt_ending_lingering"
 const unlock_zone_ruins: String = "unlock_zone_ruins"
 const unlock_zone_core_sanctum: String = "unlock_zone_core_sanctum"
 const unlock_recipe_void_grenade: String = "unlock_recipe_void_grenade"
+
+# Ending-seen one-shot flags
+const flag_ending_seen_true: String = "flag_ending_seen_true"
+const flag_ending_seen_survival: String = "flag_ending_seen_survival"
+const flag_ending_seen_discovery: String = "flag_ending_seen_discovery"
+
+# Endless mode unlock (END-04 reads this)
+const unlock_endless_mode: String = "unlock_endless_mode"
+
+# Discovery quest completion flag (already used by discovery_all_hybrids.tres)
+const flag_discovery_complete: String = "discovery_complete"

@@ -88,6 +88,11 @@ func start_wave() -> void:
 	_current_hp_multiplier = min(1.0 + hp_growth_per_day * days_passed, max_hp_multiplier)
 	_current_wave_total = min(total_enemies + spawn_growth_per_day * days_passed, max_spawn_count)
 	var count: int = randi_range(min_entry_points, min(max_entry_points, _spawn_point_markers.size()))
+	if GameManager.endless_mode and day >= 30:
+		var endless_exp: float = pow(1.5, floor(float(day - 30) / 5.0))
+		_current_hp_multiplier *= endless_exp
+		_current_wave_total = total_enemies + spawn_growth_per_day * days_passed
+		count = _spawn_point_markers.size()
 	var shuffled: Array[Marker2D] = _spawn_point_markers.duplicate()
 	shuffled.shuffle()
 	_active_spawn_points.clear()
@@ -98,8 +103,8 @@ func start_wave() -> void:
 	for entry: Dictionary in ENEMY_POOL:
 		if day >= entry["min_day"]:
 			available_types.append(entry["type"])
-	print("[WaveSpawner] Wave started. Day: %d, Difficulty: %s, Entry points: %d, Enemies: %d, HP x%.2f, Types: %s" \
-		% [day, DifficultyManager.get_tier_label(), count, _current_wave_total, _current_hp_multiplier, available_types])
+	print("[WaveSpawner] Wave started. Day: %d, Difficulty: %s, Endless: %s, Entry points: %d, Enemies: %d, HP x%.2f, Types: %s" \
+		% [day, DifficultyManager.get_tier_label(), str(GameManager.endless_mode), count, _current_wave_total, _current_hp_multiplier, available_types])
 
 
 func _process(delta: float) -> void:
@@ -136,6 +141,10 @@ func _spawn_enemy() -> void:
 
 	# ACCESS-01: Difficulty tier damage modifier.
 	var dmg_mult: float = DifficultyManager.get_dmg_multiplier()
+	# END-04: Endless exponential damage scaling (stacks on top of difficulty tier).
+	if GameManager.endless_mode and DayNightCycle.day_count >= 30:
+		var day_now: int = DayNightCycle.day_count
+		dmg_mult *= pow(1.5, floor(float(day_now - 30) / 5.0))
 	if dmg_mult != 1.0:
 		enemy.damage = int(round(enemy.damage * dmg_mult))
 

@@ -4,7 +4,7 @@ signal save_completed(success: bool, manual: bool)
 signal load_completed(success: bool)
 
 const SAVE_PATH: String = "user://savegame.json"
-const SCHEMA_VERSION: int = 8
+const SCHEMA_VERSION: int = 10
 const GAME_VERSION: String = "0.1.0"
 
 const PLANT_TYPE_TO_SCENE: Dictionary = {
@@ -223,7 +223,7 @@ func _gather_state(manual: bool) -> Dictionary:
 	state["quest_daily"] = DailyQuestRoller.serialize()
 	state["unlock_flags"] = UnlockFlags.serialize()
 	state["codex"] = CodexManager.serialize()
-	state["unlocks"] = []       # TODO (END-01, END-04)
+	state["endless_mode"] = GameManager.endless_mode
 	state["difficulty"] = {"tier": DifficultyManager.get_tier_label().to_lower()}
 
 	return state
@@ -305,6 +305,9 @@ func _apply_state(state: Dictionary) -> void:
 	CodexManager.deserialize(state.get("codex", {}))
 	DailyQuestRoller.deserialize(state.get("quest_daily", {}))
 	UnlockFlags.deserialize(state.get("unlock_flags", {}))
+
+	# 5.10 Endless mode.
+	GameManager.endless_mode = bool(state.get("endless_mode", false))
 
 	# 5.5 Difficulty tier.
 	var diff_tier: String = state.get("difficulty", {}).get("tier", "normal")
@@ -426,4 +429,13 @@ func _migrate(data: Dictionary) -> Dictionary:
 		if not data.has("unlock_flags"):
 			data["unlock_flags"] = {}
 		data["schema_version"] = 8
+	# v8 → v9: endings system added (flags travel via unlock_flags — no data change).
+	if version < 9:
+		print("[SaveManager] Migrated v8 → v9 (endings)")
+		data["schema_version"] = 9
+	# v9 → v10: endless mode flag added.
+	if version < 10:
+		print("[SaveManager] Migrating save from v%d to v10." % version)
+		data["endless_mode"] = false
+		data["schema_version"] = 10
 	return data

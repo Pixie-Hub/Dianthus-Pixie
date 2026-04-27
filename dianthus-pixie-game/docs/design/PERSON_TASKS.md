@@ -345,4 +345,9 @@ FOUND-01..06 (Done)
 | Shift+7 | Emit `devourer_defeated` — satisfies story_07_devourer objective; prints flag confirmation | QUEST-05 |
 | Ctrl+Shift+5 | Force-start `story_01_whispers` (skips Day 2 wait) | QUEST-05 |
 | Ctrl+Shift+F | Force-fail the current active story quest with `time_limit` (tests alt-ending branch) | QUEST-05 |
+| Ctrl+1 | Force-trigger True ending (`EndingManager.force_trigger("true")`) | END-01 |
+| Ctrl+2 | Force-trigger Survival ending (`EndingManager.force_trigger("survival")`) | END-02 |
+| Ctrl+3 | Force-trigger Discovery ending (`EndingManager.force_trigger("discovery")`) | END-03 |
+| Ctrl+4 | Toggle Endless Mode on/off (`GameManager.endless_mode`) | END-04 |
+| Ctrl+Shift+4 | Submit current day score to EndlessLeaderboard; print rank and best | END-04 |
 | `Dialogic.start("res://...")` via console | Trigger a Dialogic timeline directly for testing | DIALOG-01 |

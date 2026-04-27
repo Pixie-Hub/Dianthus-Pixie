@@ -1,0 +1,97 @@
+[gd_scene format=4 uid="uid://ending_screen_01"]
+
+[ext_resource type="Script" path="res://ui/screens/ending_screen.gd" id="1_script"]
+
+[node name="EndingScreen" type="CanvasLayer"]
+layer = 101
+process_mode = 3
+script = ExtResource("1_script")
+
+[node name="Overlay" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.85)
+
+[node name="CenterContainer" type="CenterContainer" parent="Overlay"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Overlay/CenterContainer"]
+custom_minimum_size = Vector2(480, 260)
+
+[node name="MarginContainer" type="MarginContainer" parent="Overlay/CenterContainer/Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Overlay/CenterContainer/Panel/MarginContainer"]
+theme_override_constants/separation = 6
+
+[node name="AccentBar" type="ColorRect" parent="Overlay/CenterContainer/Panel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 6)
+color = Color(1, 0.85, 0.3, 1)
+
+[node name="TitleLabel" type="Label" parent="Overlay/CenterContainer/Panel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+theme_override_font_sizes/font_size = 20
+text = "ENDING TITLE"
+horizontal_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="Overlay/CenterContainer/Panel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+theme_override_font_sizes/font_size = 11
+text = "Subtitle text"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Overlay/CenterContainer/Panel/MarginContainer/VBoxContainer"]
+
+[node name="BodyLabel" type="Label" parent="Overlay/CenterContainer/Panel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+autowrap_mode = 3
+theme_override_font_sizes/font_size = 10
+text = "Body text goes here."
+
+[node name="HSeparator2" type="HSeparator" parent="Overlay/CenterContainer/Panel/MarginContainer/VBoxContainer"]
+
+[node name="StatsLabel" type="Label" parent="Overlay/CenterContainer/Panel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+theme_override_font_sizes/font_size = 10
+modulate = Color(0.7, 0.7, 0.7, 1)
+text = "Day reached: 1  •  Plants discovered: 1 / 11"
+
+[node name="CreditsLabel" type="Label" parent="Overlay/CenterContainer/Panel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+autowrap_mode = 3
+theme_override_font_sizes/font_size = 8
+modulate = Color(0.6, 0.6, 0.6, 1)
+text = "Dianthus Pixie — Demo Build"
+
+[node name="ButtonRow" type="HBoxContainer" parent="Overlay/CenterContainer/Panel/MarginContainer/VBoxContainer"]
+alignment = 1
+theme_override_constants/separation = 8
+
+[node name="ContinueButton" type="Button" parent="Overlay/CenterContainer/Panel/MarginContainer/VBoxContainer/ButtonRow"]
+unique_name_in_owner = true
+text = "Continue Run"
+
+[node name="MainMenuButton" type="Button" parent="Overlay/CenterContainer/Panel/MarginContainer/VBoxContainer/ButtonRow"]
+unique_name_in_owner = true
+text = "Main Menu"
+
+[node name="EndlessButton" type="Button" parent="Overlay/CenterContainer/Panel/MarginContainer/VBoxContainer/ButtonRow"]
+unique_name_in_owner = true
+visible = false
+text = "Endless Mode"

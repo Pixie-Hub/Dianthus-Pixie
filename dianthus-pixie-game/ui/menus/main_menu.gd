@@ -25,6 +25,9 @@ func _refresh_continue_button() -> void:
 		_continue_btn.text = "Continue"
 		_continue_btn.disabled = true
 		_continue_btn.modulate = Color(0.42, 0.353, 0.282, 1)
+	var best: int = EndlessLeaderboard.get_best_day()
+	if best > 0:
+		_continue_btn.tooltip_text = "Best Endless: Day %d" % best
 
 
 func _on_continue_pressed() -> void:
@@ -47,6 +50,7 @@ func _start_new_game() -> void:
 	SaveManager.delete_save()
 	print("[MainMenu] Starting new game.")
 	GameManager.current_state = GameManager.GameState.EXPLORATION
+	GameManager.endless_mode = false
 	GameManager.player_data = {"position": Vector2.ZERO, "last_zone": ""}
 	DayNightCycle.day_count = 1
 	DayNightCycle.current_phase = DayNightCycle.Phase.DAY

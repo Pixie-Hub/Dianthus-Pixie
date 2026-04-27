@@ -31,6 +31,7 @@ var _prev_core_hp: int = -1
 var _low_hp_tween: Tween = null
 var _core_danger_tween: Tween = null
 var _core_in_danger: bool = false
+var _endless_label: Label = null
 
 
 func _ready() -> void:
@@ -41,6 +42,9 @@ func _ready() -> void:
 	GameManager.loadout_changed.connect(_on_loadout_changed)
 	DayNightCycle.phase_changed.connect(_on_phase_changed_hud)
 	_on_colorblind_changed(GameManager.colorblind_mode)
+	GameManager.game_state_changed.connect(_on_game_state_changed)
+	_setup_endless_label()
+	_refresh_endless_label()
 
 
 func _on_player_hp_changed(current_hp: int, max_hp: int) -> void:
@@ -171,6 +175,34 @@ func _make_wood_stylebox(border_color: Color = WOOD_PANEL_BORDER) -> StyleBoxFla
 	sb.shadow_color = Color(0, 0, 0, 0.4)
 	sb.shadow_size = 2
 	return sb
+
+
+func _on_game_state_changed(_state: String) -> void:
+	_refresh_endless_label()
+
+
+func _setup_endless_label() -> void:
+	_endless_label = Label.new()
+	_endless_label.name = "EndlessLabel"
+	_endless_label.text = "\u221e ENDLESS"
+	_endless_label.add_theme_color_override("font_color", Color(1.0, 0.85, 0.3, 1))
+	_endless_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_endless_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_endless_label.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	_endless_label.anchor_left = 1.0
+	_endless_label.anchor_top = 1.0
+	_endless_label.anchor_right = 1.0
+	_endless_label.anchor_bottom = 1.0
+	_endless_label.offset_left = -90.0
+	_endless_label.offset_top = -112.0
+	_endless_label.offset_right = -4.0
+	_endless_label.offset_bottom = -100.0
+	add_child(_endless_label)
+
+
+func _refresh_endless_label() -> void:
+	if _endless_label != null:
+		_endless_label.visible = GameManager.endless_mode
 
 
 func _shake(node: Control) -> void:

@@ -10,6 +10,7 @@ signal player_respawned
 signal player_energy_changed(current_energy: int, max_energy: int)
 signal loadout_changed(weapon_slots: Array, skill_id: String, selected_slot: int)
 signal night_survived(day: int)
+signal ending_triggered(ending_id: String)
 signal colorblind_mode_changed(enabled: bool)
 
 enum GameState {
@@ -23,6 +24,7 @@ var current_state: GameState = GameState.EXPLORATION
 var dianthus_core: Node = null
 var player: Node = null
 var colorblind_mode: bool = false
+var endless_mode: bool = false
 
 var player_data: Dictionary = {
 	"position": Vector2.ZERO,

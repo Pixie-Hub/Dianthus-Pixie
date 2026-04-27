@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://by4f4owty1cul"
-path="res://.godot/imported/Sword_Walk5_head.png-cacad8a0d0ef6e3be9c8478dc8b613b9.ctex"
+uid="uid://cxxknxfqf6n2g"
+path="res://.godot/imported/player_sword_walk_full.png-9fd0d3c91fbae07009c103dd4f4046f6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://player/sprites/PNG/Sword_Walk/Sword_Walk5_head.png"
-dest_files=["res://.godot/imported/Sword_Walk5_head.png-cacad8a0d0ef6e3be9c8478dc8b613b9.ctex"]
+source_file="res://player/sprites/PNG/Sword_Walk/player_sword_walk_full.png"
+dest_files=["res://.godot/imported/player_sword_walk_full.png-9fd0d3c91fbae07009c103dd4f4046f6.ctex"]
 
 [params]
 

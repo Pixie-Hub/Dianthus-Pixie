@@ -1,16 +1,35 @@
-# Gemini Image Generation Prompt — Dianthus Pixie Attack Animation Spritesheets
+# Gemini Image Generation Prompt — Dianthus Pixie Sword Attack Animation Spritesheets
 
 ## Overview
 
-Generate **4 attack animation spritesheets** (one per direction) for the player wielding the **Thorn Sword / Blazeblade** — a short, slightly curved single-handed blade with thorned vines wrapped around the handle and a faint green-pink glow at its edge. Each spritesheet is a single horizontal strip of **6 frames**, each frame 32×48 pixels, producing a **192×48 pixel PNG**.
+Generate **4 sword attack animation spritesheets** (one per direction) for the Dianthus Pixie player character wielding the **Thorn Sword / Blazeblade**. Each spritesheet is a single horizontal strip of **8 frames**, each frame **64×64 pixels**, producing a **512×64 pixel PNG**.
 
-**This is a ONE-SHOT animation — it does NOT loop.** Frame 6 returns to the idle/ready stance.
+**This is a ONE-SHOT animation — it does NOT loop.** Frame 8 is the end of the recovery pose, which should transition cleanly back to the idle stance.
 
-**Attach the following reference images** when sending each prompt to Gemini:
-- `player/sprites/PNG/Unarmed_Idle/player_idle_full.png` — full 4-direction idle sheet (character design reference)
-- `player/sprites/PNG/Sword_Idle/Sword_Idle_full.png` — full 4-direction sword idle sheet (weapon + character equipped reference)
-- `player/sprites/PNG/Sword_attack/Sword_attack_full.png` — existing layered sword attack sheet (motion arc reference)
-- The single-direction **sword idle** frame for the direction you are generating
+**Attach the reference spritesheet** (`player/sprites/PNG/Sword_attack/Sword_attack_full.png`) **AND the full idle spritesheet** (`player/sprites/PNG/Unarmed_Idle/player_idle_full.png`) when sending each prompt to Gemini.
+
+---
+
+## Reference Spritesheet Analysis
+
+The attached `Sword_attack_full.png` is a **512×256 pixel** composite reference (4 rows × 8 columns, each cell 64×64 pixels). It uses a generic placeholder character. You must **replace the generic character with the Dianthus Pixie character** (hooded cloak, green hood with pink/magenta Dianthus flower accents, cream tunic, leather satchel, earthy trousers, dark boots) while **replicating the exact same motion arc, body lean, sword angle, and swing path in each corresponding frame**.
+
+### Motion arc summary (applies to ALL directions):
+
+```
+Frame 1: Neutral stance — character holds sword at rest, facing the attack direction. Slight alert posture.
+Frame 2: Windup — sword arm pulls back/up. Body leans into the wind-up. Opposite arm stabilizes.
+Frame 3: Windup peak — sword is fully raised/drawn back at maximum pull. Body coiled. Feet planted.
+Frame 4: Attack release — sword begins sweeping forward in a wide arc. Body lunges into the strike.
+          ** HITBOX ACTIVE (frames 4–7) **
+Frame 5: Mid-swing — sword at the midpoint of the arc. Body fully extended into the swing.
+          The sword's sweep trail/arc flash is most prominent here. ** HITBOX ACTIVE **
+Frame 6: Swing continues — sword past center, nearing the end of the arc. ** HITBOX ACTIVE **
+Frame 7: Swing completion — sword reaches end of arc. Body still extended. ** HITBOX ACTIVE **
+Frame 8: Recovery — body returns toward neutral. Sword lowers back to rest. Momentum settling.
+```
+
+**Sword arc flash (frames 4–7):** A white/light-grey semi-transparent arc trail should be visible sweeping in a wide radius around the character — matching the white circular slash effect visible in the reference sheet on frames 4–7. The arc is broadest on frame 5.
 
 ---
 
@@ -18,23 +37,22 @@ Generate **4 attack animation spritesheets** (one per direction) for the player 
 
 ```
 - Strict pixel art — no anti-aliasing, no gradients, no soft edges, no sub-pixel rendering
-- Each frame is exactly 32 pixels wide × 48 pixels tall
-- 6 frames arranged in a single horizontal strip → total image size: 192×48 pixels
+- Each frame is exactly 64 pixels wide × 64 pixels tall
+- 8 frames arranged in a single horizontal strip → total image size: 512×64 pixels
 - Transparent background — no solid background color
-- Limited palette: same colors as the reference images — do not introduce new colors
-- 1-pixel dark outline around the character and weapon on every frame
-- Output: a single PNG image, 192×48 pixels, transparent background, no upscaling, no smoothing, no filtering
+- Limited palette: same colors as the idle reference image + steel/silver for the sword blade
+- 1-pixel dark outline around the character and sword
+- Output: a single PNG image, 512×64 pixels, transparent background, no upscaling, no smoothing, no filtering
 - Art direction: 2D pixel art for a fantasy survival crafting game with a Southeast Asian botanical theme
-- The character and sword must be fully contained within each 32×48 cell with no cropping
-- This animation does NOT loop — Frame 6 is a held ready/recovery pose
+- The character must be fully contained within each 64×64 cell with no cropping
+- This animation does NOT loop — Frame 8 transitions back to idle
 ```
 
 ---
 
-## Color Palette (all directions — must match reference exactly)
+## Color Palette (must match reference exactly, plus sword colors)
 
 ```
-Character:
 - Skin: warm tan (#C8956E, #A87048)
 - Hood/cloak: forest green (#4A7A3A, #3D6430), dark green shadow (#2A4820)
 - Dianthus flower accents: pink/magenta (#FF9EC8, #FF6B9D, #E84A7F)
@@ -45,320 +63,257 @@ Character:
 - Hair: dark brown (#2A1810)
 - Eyes: dark (#1A1008)
 - Outline: near-black (#1A1410)
-
-Thorn Sword / Blazeblade:
-- Blade: cool steel grey (#A8B8C0, #7898A8) with a faint pink-green edge glow (use existing palette pinks and greens only)
-- Thorned vine handle wrap: dark green (#2A4820) with tiny thorn spike highlights (light tan #D4C4A0)
-- Guard/crossguard: brown leather tone (#8C6030) with thorn detail
-- Blazeblade upgrade: blade edge takes on a warm amber-orange tint (#D87820, #B85A10) — use only if referencing the upgraded form
-- No additional colors beyond the established palette
+- Sword blade: steel silver (#C8D8E8, #A0B8C8), edge highlight (#E8F0F8)
+- Sword handle/guard: dark brown (#3D2A18), gold accent (#C89030)
+- Sword arc trail / swing flash: white (#FFFFFF) or near-white (#F0F4FF), semi-opaque pixels scattered in arc shape
 ```
 
 ---
 
-## Weapon Design Reference
-
-The **Thorn Sword** is a short, single-handed melee weapon:
-- **Blade**: slightly curved, ~10-12 pixels long in side profile, thin (2 pixels wide at base, 1 pixel at tip)
-- **Handle**: 5-6 pixels long, wrapped in dark thorned vines — visible as alternating dark green and tiny highlight pixels
-- **Guard**: small simple crossguard, 3 pixels wide, brown leather tone
-- **Tip**: pointed, slightly angled upward on the cutting edge
-- **Visual signature**: a faint 1-pixel pink or green glow dot at the blade edge tip (subtle, not glowing dramatically)
-
-When the character swings, the blade should trace a visible arc — the weapon extends beyond the body silhouette on the swing frame.
-
----
-
-## Animation Description (all directions)
-
-The attack animation is a **6-frame melee sword slash** — a quick windup into a decisive downward-diagonal or horizontal swing, then a brief recovery. The full animation at 10 FPS takes ~0.6 seconds.
+## Sword Design — Thorn Sword / Blazeblade
 
 ```
-Frame 1 — Ready / Windup Start:
-Character shifts weight to the weapon side. Sword raises to shoulder height (held vertically or at ~45° upward).
-Knees slightly bent (legs 1 pixel shorter — weight loading). Free arm pulls back for balance.
-Cloak shifts with the lean. Eyes/face focused forward.
-
-Frame 2 — Full Windup:
-Sword at maximum raised position — hilt near shoulder, blade pointing upward-back.
-Body coiled — torso rotates toward weapon side (1-2 pixel lean). Weight loaded on back foot.
-Free arm raised to balance. Cloak/hood hem shifts from momentum.
-
-Frame 3 — Swing Release (Action Frame):
-The main attack frame — the sword sweeps through its arc.
-Blade extends to full reach, now horizontal or diagonally downward. Arm extended forward or to the side.
-A 3-5 pixel motion blur arc of pixels trails behind the blade tip (same blade color, 50% faded — 
-use dithered pixels or a lighter version of the blade grey).
-Body weight transfers — torso lunges forward 1-2 pixels. Back foot begins lifting.
-This frame should show the blade at maximum extension — it may visually break the character silhouette edge.
-
-Frame 4 — Follow-Through:
-Sword continues past the swing — now angled downward or behind the character.
-Arm follows through, partially behind or below the body.
-Body slightly overextended from the lunge momentum. Front foot now planted.
-Small motion trail pixels fading (1-2 faded blade pixels remaining).
-
-Frame 5 — Recovery Start:
-Sword draws back toward the body — returning to a guard position.
-Stance begins resetting — weight shifting back to both feet.
-Body uprighting from the lunge. Hood/cloak settles.
-
-Frame 6 — Recovery / Ready Pose:
-Character back in combat-ready stance — sword held at mid-guard (diagonal, blade forward).
-Feet at normal width. Body upright. Cloak settled.
-This is the held final frame — identical to or slightly distinct from the Sword Idle pose.
+The sword is a short one-handed sword with a slightly curved blade. The blade features thorn-like serrations along the spine.
+- Thorn Sword: steel-silver blade with dark thorn notches along the back edge, brown leather-wrapped handle
+- Blazeblade (upgrade): same silhouette but blade has warm orange/amber highlights (#C86020, #E88030) along the edge — like heat shimmer on the steel. Still the same handle.
+- The sword fits within the 64×64 cell even when fully extended during the swing arc
+- The sword arc trail (frames 4–7) is a sweeping white/light arc of 3–5 scattered pixels along the blade's path, curved in a broad semicircle around the character
 ```
 
 ---
 
 ## Prompt 1 — Attack Down (front-facing)
 
-> **Attach:** `player/sprites/PNG/Unarmed_Idle/player_idle_full.png` AND `player/sprites/PNG/Sword_Idle/Sword_Idle_full.png` AND `player/sprites/PNG/Sword_attack/Sword_attack_full.png` AND the single front-facing Sword Idle frame
+> **Attach:** `player/sprites/PNG/Sword_attack/Sword_attack_full.png` (motion reference — row 1 is attack-down) AND `player/sprites/PNG/Unarmed_Idle/player_idle_full.png` (character design reference)
 
 ```
-I am attaching four reference images:
-1. Full unarmed idle spritesheet (192x192, 4 rows × 6 cols of 32x48) — overall character design, proportions, and color palette.
-2. Full sword idle spritesheet (192x192, same layout) — how the character looks while holding the Thorn Sword in all 4 directions.
-3. Full sword attack spritesheet (192x192, same layout) — existing motion arc reference for how the character swings.
-4. A single 32x48 pixel art sprite (front-facing sword idle pose) — use this as the base starting pose.
+I am attaching two reference images:
+1. A sword attack animation spritesheet (512x256, 4 rows × 8 columns of 64x64 frames). Row 1 (top row) shows the attack-down direction. Use this ONLY as a motion/pose reference — the character body pose, sword angle, and arc path in each frame.
+2. A full idle spritesheet (192x192, 4 rows × 6 cols of 32x48) showing the Dianthus Pixie character design — hooded cloak with green hood and pink Dianthus flower accents, cream tunic, leather satchel, earthy trousers, dark boots.
 
-Create a 6-frame ONE-SHOT ATTACK animation spritesheet, front-facing direction (character faces the camera, swings sword toward/downward at the viewer).
-Output: 192x48 PNG, 6 frames of 32x48, horizontal strip, transparent background. Does NOT loop.
+Create an 8-frame ONE-SHOT SWORD ATTACK animation spritesheet, front-facing (attacking downward/toward camera).
+Output: 512x64 PNG, 8 frames of 64x64, horizontal strip, transparent background. Does NOT loop.
 
-The Thorn Sword / Blazeblade: short curved single-handed blade (~10-12px long), vine-wrapped dark handle (~5-6px), small leather crossguard. Faint pink-green glow pixel at blade tip.
+Use EXACTLY the same body poses and sword motion as Row 1 of the reference spritesheet, but draw the Dianthus Pixie character (green hood, pink flower accents, cream tunic, satchel, earthy trousers, dark boots) instead of the generic placeholder character.
 
-Frame 1 — Windup Start: Upright front-facing stance. Sword rises to shoulder height on the right side, blade angled upward-right at ~45°. Left arm pulls back slightly for balance. Knees slightly bent (1px shorter). Cloak shifts right.
+The sword is a short one-handed sword with a slightly curved steel-silver blade and thorn notches along the spine. Draw a white pixel arc trail sweeping in a broad semicircle on frames 4–7 (the hitbox-active frames).
 
-Frame 2 — Full Windup: Sword raised to maximum — hilt near right shoulder, blade angled upward-backward. Body leans/coils right. Left arm raised left for balance. Weight on back/right foot.
-
-Frame 3 — Swing (Action Frame): Sword sweeps downward-forward in a wide arc. Blade tip extends toward the camera at full reach — blade now nearly horizontal or angled downward-left at the viewer. 3-5 faded grey pixels trail the blade tip in an arc. Body lunges forward 1-2px, torso dips. The sword may extend past the left edge of the character silhouette.
-
-Frame 4 — Follow-Through: Sword past center, now angled down-left or below center. Arm follows through. Body slightly overextended. 1-2 faint trail pixels remain. Front foot planted.
-
-Frame 5 — Recovery Start: Sword draws back to mid-guard. Stance resetting. Body uprighting. Cloak settling.
-
-Frame 6 — Recovery / Ready: Back to combat-ready stance. Sword at mid-guard diagonal (blade angled forward-up). Both feet planted, body upright. Final held frame.
+Frame 1: Neutral/alert stance facing downward. Sword held at side, ready. Both feet planted.
+Frame 2: Wind-up — sword arm raises up and back. Body leans back slightly. Hood flower accents intact.
+Frame 3: Wind-up peak — sword pulled fully back overhead or behind. Maximum coil. Body tensed.
+Frame 4: Attack release — sword sweeps down-forward in a wide arc. Body lunges forward. Arc trail begins (2-3 white pixels).
+Frame 5: Mid-swing — sword at widest point of arc, crossing in front of the body. Arc trail most prominent (4-5 white pixels in curved line). Body fully extended.
+Frame 6: Swing continues past center. Arc trail still visible (3-4 white pixels). Body weight shifting.
+Frame 7: Swing end — sword reaches the far side of the arc. Trail fading (2-3 white pixels). Body momentum finishing.
+Frame 8: Recovery — sword lowers back toward resting position. Body straightening. No arc trail.
 
 Rules:
 - Strict pixel art, no anti-aliasing, no gradients, no soft edges
-- Use ONLY the colors from the attached references — do not add new colors
-- Keep the 1-pixel dark outline on the character AND the sword every frame
-- Character and sword must remain within each 32x48 cell — only the swing arc of the blade tip may visually extend to the cell edge
-- Satchel, hood flower accents, all clothing details preserved every frame
-- The sword design (vine handle, curved blade, tip glow pixel) must be consistent across all frames
-- Output: single PNG, exactly 192x48 pixels, transparent background, no upscaling, no smoothing
-- Does NOT loop — Frame 6 is the final held pose
+- Use ONLY colors from the attached idle reference plus steel-silver for the sword and white for the arc trail
+- Keep the 1-pixel dark outline intact on every frame
+- Character and sword must remain fully within each 64x64 cell
+- The Dianthus flower accent on the hood, satchel, and all clothing details must be preserved in every frame
+- Output: single PNG, exactly 512x64 pixels, transparent background, no upscaling, no smoothing
+- Does NOT loop — Frame 8 ends the attack and returns toward idle
 ```
 
 ---
 
 ## Prompt 2 — Attack Up (back-facing)
 
-> **Attach:** `player/sprites/PNG/Unarmed_Idle/player_idle_full.png` AND `player/sprites/PNG/Sword_Idle/Sword_Idle_full.png` AND `player/sprites/PNG/Sword_attack/Sword_attack_full.png` AND the single back-facing Sword Idle frame
+> **Attach:** `player/sprites/PNG/Sword_attack/Sword_attack_full.png` (motion reference — row 3 is attack-up) AND `player/sprites/PNG/Unarmed_Idle/player_idle_full.png` (character design reference)
 
 ```
-I am attaching four reference images:
-1. Full unarmed idle spritesheet (192x192, 4 rows × 6 cols of 32x48) — overall character design, proportions, and color palette.
-2. Full sword idle spritesheet (192x192, same layout) — how the character holds the Thorn Sword in all 4 directions.
-3. Full sword attack spritesheet (192x192, same layout) — motion arc reference.
-4. A single 32x48 pixel art sprite (back-facing sword idle pose, facing away from camera) — base starting pose.
+I am attaching two reference images:
+1. A sword attack animation spritesheet (512x256, 4 rows × 8 columns of 64x64 frames). Row 3 shows the attack-up (back-facing) direction. Use this ONLY as a motion/pose reference.
+2. A full idle spritesheet (192x192) showing the Dianthus Pixie character — green hood with pink Dianthus flower accents, cream tunic, leather satchel, earthy trousers, dark boots.
 
-Create a 6-frame ONE-SHOT ATTACK animation spritesheet, back-facing direction (character faces away, swings sword upward/forward away from camera).
-Output: 192x48 PNG, 6 frames of 32x48, horizontal strip, transparent background. Does NOT loop.
+Create an 8-frame ONE-SHOT SWORD ATTACK animation spritesheet, back-facing (attacking upward/away from camera).
+Output: 512x64 PNG, 8 frames of 64x64, horizontal strip, transparent background. Does NOT loop.
 
-The Thorn Sword: short curved single-handed blade (~10-12px), vine-wrapped dark handle, small leather crossguard, faint glow pixel at tip.
+Use EXACTLY the same body poses and sword motion as Row 3 of the reference spritesheet, but draw the Dianthus Pixie character. Since this is back-facing, the cloak and hood back are prominent. The back-cloak Dianthus flower arrangement should be visible.
 
-Frame 1 — Windup Start: Upright back-facing stance. Sword raises on the right side — from the back, the blade appears on the right, angling upward-right. Cloak visible. Left arm pulls back.
-
-Frame 2 — Full Windup: Sword at maximum raise — hilt near right shoulder, blade points upward-right from behind. Body coils right. Back-cloak shifts. Left arm raised for balance.
-
-Frame 3 — Swing (Action Frame): Sword sweeps upward-forward (away from camera) in a wide arc. Blade extends forward-right at full reach. 3-5 faded blade pixels trail in arc. Body leans forward (away from camera) 1-2px. Sword tip may extend past the right edge of the character's body silhouette.
-
-Frame 4 — Follow-Through: Sword continues past center — now angled forward-left or across the back. Body slightly overextended forward. 1-2 faint blade trail pixels remain.
-
-Frame 5 — Recovery Start: Sword draws back to mid-guard position (behind-right from this view). Stance resetting, body uprighting. Back-cloak settling.
-
-Frame 6 — Recovery / Ready: Back to combat-ready stance, back-facing. Sword at mid-guard. Back-cloak with dianthus flower detail settled. Final held frame.
+Frame 1: Neutral/alert stance facing away. Sword held at side. Back of hood facing camera.
+Frame 2: Wind-up — sword arm raises. Back of cloak shifts. Back of hood visible.
+Frame 3: Wind-up peak — sword fully raised up above the back. Maximum pull. Cloak billows slightly.
+Frame 4: Attack release — sword sweeps forward (away from camera) in a wide arc. Arc trail begins.
+Frame 5: Mid-swing — sword at widest arc point. Arc trail most prominent. Back of cloak pushed by momentum.
+Frame 6: Swing continues. Arc trail still visible. Back of hood tilts with effort.
+Frame 7: Swing end. Trail fading. Body straightening from follow-through.
+Frame 8: Recovery — sword lowers. Cloak settles. Back of hood returns to neutral.
 
 Rules:
-- Strict pixel art, no anti-aliasing, no gradients, same colors only, 1px outline on character and sword every frame
-- Character and sword within each 32x48 cell
-- Back-cloak dianthus flower arrangement preserved every frame
-- Sword design consistent across all frames
-- Output: single PNG, exactly 192x48 pixels, transparent background, no upscaling, no smoothing
-- Does NOT loop — Frame 6 is the final held pose
+- Strict pixel art, no anti-aliasing, no gradients, no soft edges
+- Same colors only from idle reference + steel-silver sword + white arc trail
+- 1-pixel dark outline every frame, character + sword within 64x64 cells
+- Back-cloak Dianthus flower arrangement and all clothing details preserved every frame
+- Output: 512x64 PNG, transparent background, no upscaling, no smoothing
+- Does NOT loop — Frame 8 ends the attack
 ```
 
 ---
 
 ## Prompt 3 — Attack Right (side-facing)
 
-> **Attach:** `player/sprites/PNG/Unarmed_Idle/player_idle_full.png` AND `player/sprites/PNG/Sword_Idle/Sword_Idle_full.png` AND `player/sprites/PNG/Sword_attack/Sword_attack_full.png` AND the single right-facing Sword Idle frame
+> **Attach:** `player/sprites/PNG/Sword_attack/Sword_attack_full.png` (motion reference — row 2 is attack-right) AND `player/sprites/PNG/Unarmed_Idle/player_idle_full.png` (character design reference)
 
 ```
-I am attaching four reference images:
-1. Full unarmed idle spritesheet (192x192, 4 rows × 6 cols of 32x48) — character design, proportions, palette.
-2. Full sword idle spritesheet (192x192, same layout) — character with Thorn Sword in all 4 directions.
-3. Full sword attack spritesheet (192x192, same layout) — motion arc reference.
-4. A single 32x48 pixel art sprite (right-facing profile sword idle pose) — base starting pose.
+I am attaching two reference images:
+1. A sword attack animation spritesheet (512x256, 4 rows × 8 columns of 64x64 frames). Row 2 shows the attack-right (right-facing profile) direction. Use this ONLY as a motion/pose reference.
+2. A full idle spritesheet (192x192) showing the Dianthus Pixie character — green hood with pink Dianthus flower accents, cream tunic, leather satchel, earthy trousers, dark boots.
 
-Create a 6-frame ONE-SHOT ATTACK animation spritesheet, right-facing profile direction (character faces right, swings sword rightward).
-Output: 192x48 PNG, 6 frames of 32x48, horizontal strip, transparent background. Does NOT loop.
+Create an 8-frame ONE-SHOT SWORD ATTACK animation spritesheet, right-facing profile (attacking rightward).
+Output: 512x64 PNG, 8 frames of 64x64, horizontal strip, transparent background. Does NOT loop.
 
-In this profile view the sword arc is most visually dramatic — the blade extends clearly to the right.
-The Thorn Sword: short curved blade (~10-12px long in profile), vine-wrapped handle (~5-6px), small crossguard. Blade tip with faint glow pixel.
+Use EXACTLY the same body poses and sword motion as Row 2 of the reference spritesheet, but draw the Dianthus Pixie character. In profile view, the satchel is visible at the hip and the sword arm is fully readable through the swing.
 
-Frame 1 — Windup Start: Right-facing profile. Sword raises upward-right — blade angled up and back at ~135° (pointing backward-upward from a right-facing view). Arm pulls back. Front leg slightly bent. Cloak trails left. Satchel at hip.
-
-Frame 2 — Full Windup: Sword at maximum raised-back position — blade pointing upward-left (fully coiled behind). Torso rotates back slightly. Weight shifts to back foot. Cloak hem lifts slightly from the wind-up.
-
-Frame 3 — Swing (Action Frame): THE KEY FRAME. Sword sweeps forward-right in a wide horizontal or diagonal arc. Blade at full extension — tip pointing right, clearly past the character's right edge (the blade tip extends to or near the right edge of the 32px wide cell). Arm fully extended right. 3-5 faded grey/blade-colored pixels arc behind the blade tip showing the slash trail. Body lunges right 1-2px. Front foot forward.
-
-Frame 4 — Follow-Through: Sword past center, now angled downward-right or forward-down. Arm still extended but dropping. Body slightly forward from lunge momentum. 1-2 faint trail pixels. Front foot planted.
-
-Frame 5 — Recovery Start: Sword draws back toward mid-guard, arm returning. Stance resetting. Cloak settling back.
-
-Frame 6 — Recovery / Ready: Right-facing combat-ready stance. Sword at mid-guard — blade angled forward-up at ~45° from a right profile view. Feet at normal stance width. Satchel at hip. Cloak settled. Final held frame.
+Frame 1: Neutral/alert stance facing right. Sword held at side or low. Body in profile.
+Frame 2: Wind-up — sword arm swings back (to the left in profile view). Body leans back/left. Hood flower accent visible in profile.
+Frame 3: Wind-up peak — sword pulled fully back, arm extended behind. Body coiled ready to strike.
+Frame 4: Attack release — sword swings right in a wide horizontal arc. Body lunges right. Arc trail begins. 
+Frame 5: Mid-swing — sword at full horizontal extension to the right. Arc trail most prominent (curved line of 4-5 white pixels). Satchel bounces at hip.
+Frame 6: Swing continues past center, sword now angled down-right. Arc trail visible. Body weight forward.
+Frame 7: Swing end — sword at lowest/furthest point of arc. Trail fading. Body still leaning forward.
+Frame 8: Recovery — sword returns toward rest. Body straightens. Cloak settles behind.
 
 Rules:
 - Strict pixel art, no anti-aliasing, no gradients, no soft edges
-- Same colors only, 1px outline on character and sword every frame
-- Character within each 32x48 cell; blade tip may reach the right cell edge in Frame 3 only
-- Satchel and hood flower accents preserved every frame
-- Sword design (vine handle, curved blade, tip glow) consistent across all frames
-- Output: single PNG, exactly 192x48 pixels, transparent background, no upscaling, no smoothing
-- Does NOT loop — Frame 6 is the final held pose
+- Same colors only from idle reference + steel-silver sword + white arc trail
+- 1-pixel dark outline every frame, character + sword within 64x64 cells
+- Satchel, hood flower accent in profile, and all clothing details preserved every frame
+- Output: 512x64 PNG, transparent background, no upscaling, no smoothing
+- Does NOT loop — Frame 8 ends the attack
 ```
 
 ---
 
 ## Prompt 4 — Attack Left (side-facing)
 
-> **Attach:** `player/sprites/PNG/Unarmed_Idle/player_idle_full.png` AND `player/sprites/PNG/Sword_Idle/Sword_Idle_full.png` AND `player/sprites/PNG/Sword_attack/Sword_attack_full.png` AND the single left-facing Sword Idle frame
+> **Attach:** `player/sprites/PNG/Sword_attack/Sword_attack_full.png` (motion reference — row 4 is attack-left) AND `player/sprites/PNG/Unarmed_Idle/player_idle_full.png` (character design reference)
 
 ```
-I am attaching four reference images:
-1. Full unarmed idle spritesheet (192x192, 4 rows × 6 cols of 32x48) — character design, proportions, palette.
-2. Full sword idle spritesheet (192x192, same layout) — character with Thorn Sword in all 4 directions.
-3. Full sword attack spritesheet (192x192, same layout) — motion arc reference.
-4. A single 32x48 pixel art sprite (left-facing profile sword idle pose) — base starting pose.
+I am attaching two reference images:
+1. A sword attack animation spritesheet (512x256, 4 rows × 8 columns of 64x64 frames). Row 4 shows the attack-left (left-facing profile) direction. Use this ONLY as a motion/pose reference.
+2. A full idle spritesheet (192x192) showing the Dianthus Pixie character — green hood with pink Dianthus flower accents, cream tunic, leather satchel, earthy trousers, dark boots.
 
-Create a 6-frame ONE-SHOT ATTACK animation spritesheet, left-facing profile direction (character faces left, swings sword leftward).
-Output: 192x48 PNG, 6 frames of 32x48, horizontal strip, transparent background. Does NOT loop.
+Create an 8-frame ONE-SHOT SWORD ATTACK animation spritesheet, left-facing profile (attacking leftward).
+Output: 512x64 PNG, 8 frames of 64x64, horizontal strip, transparent background. Does NOT loop.
 
-This is the horizontally mirrored counterpart to the right-facing attack. The satchel appears on the opposite hip. The blade arc extends to the LEFT.
-The Thorn Sword: short curved blade (~10-12px long in profile), vine-wrapped handle (~5-6px), small crossguard. Blade tip with faint glow pixel.
+This is the horizontally mirrored counterpart to the right-facing attack. The satchel is on the opposite hip. The sword swings to the left. Use EXACTLY the same body poses and sword motion as Row 4 of the reference spritesheet, but draw the Dianthus Pixie character.
 
-Frame 1 — Windup Start: Left-facing profile. Sword raises upward-left — blade angled up and back at ~135° from left-facing (pointing backward-upward). Arm pulls back. Front leg slightly bent. Cloak trails right. Satchel at mirrored hip.
-
-Frame 2 — Full Windup: Sword at maximum raised-back position — blade pointing upward-right (fully coiled behind). Torso rotates back slightly. Weight shifts to back foot.
-
-Frame 3 — Swing (Action Frame): Sword sweeps forward-left in a wide horizontal or diagonal arc. Blade at full extension — tip pointing left, clearly reaching or near the left edge of the 32px cell. Arm fully extended left. 3-5 faded arc/trail pixels behind the blade tip. Body lunges left 1-2px.
-
-Frame 4 — Follow-Through: Sword past center, angled downward-left or forward-down. Arm dropping. Body slightly forward from lunge. 1-2 faint trail pixels.
-
-Frame 5 — Recovery Start: Sword draws back to mid-guard. Stance resetting. Cloak settling.
-
-Frame 6 — Recovery / Ready: Left-facing combat-ready stance. Sword at mid-guard diagonal, blade angled forward-up at ~45° from left profile. Feet planted, satchel at mirrored hip, cloak settled. Final held frame.
+Frame 1: Neutral/alert stance facing left. Sword held at side. Satchel on mirrored hip.
+Frame 2: Wind-up — sword arm swings back (to the right in this profile view). Body leans back/right.
+Frame 3: Wind-up peak — sword fully pulled back to the right. Maximum coil.
+Frame 4: Attack release — sword swings left in a wide arc. Body lunges left. Arc trail begins.
+Frame 5: Mid-swing — sword at full left extension. Arc trail most prominent. Satchel bounces at mirrored hip.
+Frame 6: Swing continues. Arc trail visible.
+Frame 7: Swing end — sword at furthest left point. Trail fading.
+Frame 8: Recovery — sword returns toward rest. Cloak settles. Body straightens.
 
 Rules:
 - Strict pixel art, no anti-aliasing, no gradients, no soft edges
-- Same colors only, 1px outline on character and sword every frame
-- Character within each 32x48 cell; blade tip may reach the left cell edge in Frame 3 only
-- Satchel (mirrored hip) and hood flower accents preserved every frame
-- Sword design (vine handle, curved blade, tip glow) consistent across all frames
-- Output: single PNG, exactly 192x48 pixels, transparent background, no upscaling, no smoothing
-- Does NOT loop — Frame 6 is the final held pose
+- Same colors only from idle reference + steel-silver sword + white arc trail
+- 1-pixel dark outline every frame, character + sword within 64x64 cells
+- Satchel (mirrored hip), hood flower accent in profile, and all clothing details preserved every frame
+- Output: 512x64 PNG, transparent background, no upscaling, no smoothing
+- Does NOT loop — Frame 8 ends the attack
 ```
 
 ---
 
 ## Bonus — Full Attack Spritesheet (all 4 directions)
 
-> **Attach:** `player/sprites/PNG/Unarmed_Idle/player_idle_full.png` AND `player/sprites/PNG/Sword_Idle/Sword_Idle_full.png` AND `player/sprites/PNG/Sword_attack/Sword_attack_full.png`
+> **Attach:** `player/sprites/PNG/Sword_attack/Sword_attack_full.png` AND `player/sprites/PNG/Unarmed_Idle/player_idle_full.png`
 
 ```
-I am attaching three reference images:
-1. Full unarmed idle spritesheet (192x192, 4 rows × 6 cols of 32x48) — character design, proportions, palette.
-2. Full sword idle spritesheet (192x192, same layout) — character with Thorn Sword equipped in all 4 directions.
-3. Full sword attack spritesheet (192x192, same layout) — existing motion arc reference.
+I am attaching two reference images:
+1. A sword attack animation spritesheet (512x256, 4 rows × 8 columns of 64x64 frames) with a generic placeholder character — use this ONLY as a motion reference for body poses, sword angles, and swing arc paths.
+2. A 192x192 idle spritesheet showing the Dianthus Pixie character design — green hood with pink Dianthus flower accents, cream tunic, leather satchel, earthy trousers, dark boots.
 
-Create a ONE-SHOT ATTACK animation spritesheet: 192x192 PNG, 4 rows × 6 columns, 32x48 cells, transparent background.
-Does NOT loop — Column 6 of every row is the final recovery/ready pose.
+Create a ONE-SHOT SWORD ATTACK animation spritesheet: 512x256 PNG, 4 rows × 8 columns, each cell 64x64 pixels, transparent background. Does NOT loop.
 
-The Thorn Sword / Blazeblade: short curved single-handed blade (~10-12px), vine-wrapped dark handle (~5-6px), small leather crossguard, faint pink-green glow pixel at blade tip.
+Layout matches the reference:
+- Row 1 (Down/front): attack toward camera — sword sweeps down and across in front of the body
+- Row 2 (Right/profile): attack rightward — sword sweeps horizontally right in profile
+- Row 3 (Up/back-facing): attack away from camera — sword sweeps forward/upward, back of cloak visible
+- Row 4 (Left/profile): attack leftward — mirrored version of Row 2, satchel on opposite hip
 
-Row 1 (Down/front): character faces camera, swings sword downward toward viewer.
-Row 2 (Right/profile): character faces right, swings sword in wide rightward horizontal arc.
-Row 3 (Up/back): character faces away, swings sword forward-upward away from camera.
-Row 4 (Left/profile): character faces left, swings sword in wide leftward horizontal arc (mirror of Row 2).
+Draw the Dianthus Pixie character (green hood, pink Dianthus flower accents, cream tunic, satchel, earthy trousers, dark boots) using the EXACT same body poses and sword motion as the reference's corresponding row.
 
-Per-row attack arc (6 frames):
-F1: Windup Start — sword raises to shoulder height (~45° upward), knees slightly bent (1px shorter), free arm pulls back, cloak shifts.
-F2: Full Windup — sword at maximum raised position, body coiled toward weapon side, weight on back foot.
-F3: Swing/Action — sword at full extension in the swing arc, blade tip at maximum reach (may touch cell edge), 3-5 faded blade-color arc pixels trail behind tip, body lunges 1-2px forward.
-F4: Follow-Through — sword past swing center, arm following through, body slightly overextended, 1-2 faint trail pixels.
-F5: Recovery Start — sword returns toward mid-guard, stance resetting, cloak settling.
-F6: Recovery/Ready — combat-ready stance, sword at mid-guard diagonal, body upright. Final held frame.
+The sword is a short one-handed slightly-curved steel-silver blade with thorn notches along the spine and a leather-wrapped handle.
+
+Per-row 8-frame arc:
+F1: Neutral alert stance — sword at side, facing attack direction
+F2: Wind-up — sword arm pulls back, body leans into the coil
+F3: Wind-up peak — sword fully drawn back, maximum coil, feet planted
+F4: Attack release — sword begins wide sweep forward, body lunges, arc trail starts (2-3 white pixels) — HITBOX ACTIVE
+F5: Mid-swing — sword at widest arc point, arc trail most prominent (4-5 white pixels curved), body fully extended — HITBOX ACTIVE
+F6: Swing continues, arc trail visible (3-4 white pixels), body weight shifting — HITBOX ACTIVE
+F7: Swing end — sword reaches far side of arc, trail fading (2-3 white pixels) — HITBOX ACTIVE
+F8: Recovery — sword returns toward rest, body straightening, no arc trail
 
 Rules:
 - Strict pixel art, no anti-aliasing, no gradients, no soft edges
-- Same colors only — do not add new colors
-- 1-pixel dark outline on character AND sword every frame
-- Character and sword within each 32x48 cell — only blade tip in swing Frame 3 may reach the cell edge
-- Satchel, hood flower accents, all clothing details preserved every frame
-- Sword design (vine handle, curved blade, crossguard, tip glow) consistent across all directions and frames
-- Output: single PNG, exactly 192x192 pixels, transparent background, no upscaling, no smoothing
-- Does NOT loop — Column 6 of every row is the final held recovery pose
+- Same colors only from idle reference + steel-silver sword (#C8D8E8, #A0B8C8, #E8F0F8) + white arc trail (#FFFFFF, #F0F4FF)
+- 1-pixel dark outline every frame, character + sword within each 64x64 cell
+- Hood Dianthus flower accents, satchel, and all clothing details preserved in every frame
+- Output: single PNG, exactly 512x256 pixels, transparent background, no upscaling, no smoothing
+- Does NOT loop — Frame 8 (column 8) of every row is the recovery/end pose
 ```
 
 ---
 
 ## Compact Fallback Prompts
 
-If Gemini times out, use these shorter versions (still attach all reference images):
-
 ### Compact — Attack Down
 ```
-Using the attached sword idle and attack reference spritesheets and the single 32x48 front-facing sword idle frame, create a 6-frame ONE-SHOT attack animation. 192x48 PNG (6 cells of 32x48), horizontal strip, transparent background, strict pixel art, no anti-aliasing. Thorn Sword: short curved blade (~12px), vine handle, small crossguard, glow pixel at tip. Arc: F1=sword raised to shoulder windup, F2=full windup blade up-back, F3=swing forward toward viewer + 3-5 faded blade arc pixels, F4=follow-through, F5=recovery start, F6=combat ready mid-guard. NOT looping. Same colors only. No upscaling.
+Using the attached sword attack reference spritesheet (row 1 = attack down, 8 frames of 64x64) as motion reference, and the idle spritesheet as character design reference, create an 8-frame ONE-SHOT sword attack animation for the Dianthus Pixie character (green hood with pink flower accents, cream tunic, satchel, earthy trousers) attacking downward. 512x64 PNG, horizontal strip, transparent background, strict pixel art, no anti-aliasing. Motion: F1=neutral stance, F2-F3=wind-up (sword pulled back), F4-F7=wide sweep arc (white arc trail pixels, HITBOX ACTIVE), F8=recovery. Steel-silver thorn sword. Same colors only + silver + white trail. Not looping. No upscaling.
 ```
 
 ### Compact — Attack Up
 ```
-Using the attached sword idle and attack reference spritesheets and the single 32x48 back-facing sword idle frame, create a 6-frame ONE-SHOT attack animation. 192x48 PNG (6 cells of 32x48), horizontal strip, transparent background, strict pixel art, no anti-aliasing. Thorn Sword: short curved blade (~12px), vine handle, small crossguard, glow pixel at tip. Arc: F1=sword raised windup from behind, F2=full windup blade up-back, F3=swing forward-away from camera + 3-5 faded arc pixels, F4=follow-through, F5=recovery, F6=combat ready back-facing. NOT looping. Same colors only. No upscaling.
+Using the attached sword attack reference spritesheet (row 3 = attack up, 8 frames of 64x64) as motion reference, and the idle spritesheet as character design reference, create an 8-frame ONE-SHOT sword attack animation for the Dianthus Pixie character (green hood with pink flower accents, cream tunic, satchel, earthy trousers) attacking upward/away from camera. 512x64 PNG, horizontal strip, transparent background, strict pixel art, no anti-aliasing. Motion: F1=neutral back-facing, F2-F3=wind-up, F4-F7=wide arc sweep (white arc trail, HITBOX ACTIVE), F8=recovery. Back-cloak Dianthus flowers visible. Steel-silver thorn sword. Same colors + silver + white trail. Not looping. No upscaling.
 ```
 
 ### Compact — Attack Right
 ```
-Using the attached sword idle and attack reference spritesheets and the single 32x48 right-facing sword idle frame, create a 6-frame ONE-SHOT attack animation. 192x48 PNG (6 cells of 32x48), horizontal strip, transparent background, strict pixel art, no anti-aliasing. Thorn Sword: short curved blade (~12px), vine handle, small crossguard, glow pixel at tip. Arc: F1=sword raised up-back windup (right profile), F2=full coiled windup, F3=swing rightward at full reach + blade tip near right cell edge + 3-5 arc trail pixels, F4=follow-through, F5=recovery, F6=mid-guard right-facing ready. NOT looping. Same colors only. No upscaling.
+Using the attached sword attack reference spritesheet (row 2 = attack right, 8 frames of 64x64) as motion reference, and the idle spritesheet as character design reference, create an 8-frame ONE-SHOT sword attack animation for the Dianthus Pixie character (green hood with pink flower accents, cream tunic, satchel, earthy trousers) attacking rightward in profile. 512x64 PNG, horizontal strip, transparent background, strict pixel art, no anti-aliasing. Motion: F1=neutral profile, F2-F3=wind-up (sword pulled left), F4-F7=wide horizontal right sweep (white arc trail, HITBOX ACTIVE), F8=recovery. Satchel at hip. Steel-silver thorn sword. Same colors + silver + white trail. Not looping. No upscaling.
 ```
 
 ### Compact — Attack Left
 ```
-Using the attached sword idle and attack reference spritesheets and the single 32x48 left-facing sword idle frame, create a 6-frame ONE-SHOT attack animation. 192x48 PNG (6 cells of 32x48), horizontal strip, transparent background, strict pixel art, no anti-aliasing. Thorn Sword: short curved blade (~12px), vine handle, small crossguard, glow pixel at tip. Arc: F1=sword raised up-back windup (left profile, satchel mirrored), F2=full coiled windup, F3=swing leftward at full reach + blade tip near left cell edge + 3-5 arc trail pixels, F4=follow-through, F5=recovery, F6=mid-guard left-facing ready. NOT looping. Same colors only. No upscaling.
+Using the attached sword attack reference spritesheet (row 4 = attack left, 8 frames of 64x64) as motion reference, and the idle spritesheet as character design reference, create an 8-frame ONE-SHOT sword attack animation for the Dianthus Pixie character (green hood with pink flower accents, cream tunic, satchel, earthy trousers) attacking leftward in profile. 512x64 PNG, horizontal strip, transparent background, strict pixel art, no anti-aliasing. Motion: F1=neutral left-profile, F2-F3=wind-up (sword pulled right), F4-F7=wide horizontal left sweep (white arc trail, HITBOX ACTIVE), F8=recovery. Satchel on mirrored hip. Steel-silver thorn sword. Same colors + silver + white trail. Not looping. No upscaling.
 ```
 
 ### Compact — Full Sheet (all 4 directions)
 ```
-Using the attached 192x192 sword idle + sword attack spritesheets as reference, create a ONE-SHOT ATTACK animation spritesheet: 192x192 PNG, 4 rows × 6 cols of 32x48, transparent background. R1=attack down (front-facing, sword swings toward viewer), R2=attack right (profile, sword swings right), R3=attack up (back-facing, sword swings away), R4=attack left (profile, sword swings left, mirrored R2). Per-row arc: F1=windup sword raised, F2=full coiled windup, F3=swing at full reach (blade tip to cell edge) + 3-5 faded arc trail pixels, F4=follow-through, F5=recovery start, F6=mid-guard ready. Thorn Sword: short curved blade ~12px, vine handle, small crossguard, glow pixel at tip. NOT looping. Strict pixel art, same colors only, no anti-aliasing, no upscaling.
+Using the attached sword attack reference spritesheet (512x256, 4 rows × 8 cols of 64x64) as motion reference and the idle spritesheet as character design reference, create a ONE-SHOT sword attack spritesheet: 512x256 PNG, 4 rows × 8 cols of 64x64, transparent background. Draw the Dianthus Pixie character (green hood, pink Dianthus flower accents, cream tunic, satchel, earthy trousers, dark boots) with a steel-silver thorn sword. R1=attack down, R2=attack right, R3=attack up, R4=attack left. Per-row: F1=neutral, F2-F3=wind-up, F4-F7=wide arc sweep + white arc trail (HITBOX ACTIVE frames), F8=recovery. Strict pixel art, same colors only + silver + white trail, no anti-aliasing, not looping, no upscaling.
 ```
+
+---
+
+## Hitbox Notes for Implementation
+
+The attack hitbox in code is active on **frames 4–7** (0-indexed: frames 3–6). This matches the white arc trail being visible. Implement in `player_controller.gd`:
+- Enable sword hitbox `CollisionShape2D` at the start of frame 4 in `AnimationPlayer`
+- Disable it at the end of frame 7
 
 ---
 
 ## Usage Notes
 
 - Save output spritesheets as:
-  - `player/sprites/PNG/Sword_Attack_Anim/player_attack_down_sheet.png`
-  - `player/sprites/PNG/Sword_Attack_Anim/player_attack_up_sheet.png`
-  - `player/sprites/PNG/Sword_Attack_Anim/player_attack_right_sheet.png`
-  - `player/sprites/PNG/Sword_Attack_Anim/player_attack_left_sheet.png`
-  - Or full sheet: `player/sprites/PNG/Sword_Attack_Anim/player_attack_full.png`
+  - `player/sprites/PNG/Sword_Attack/player_attack_down_sheet.png`
+  - `player/sprites/PNG/Sword_Attack/player_attack_up_sheet.png`
+  - `player/sprites/PNG/Sword_Attack/player_attack_right_sheet.png`
+  - `player/sprites/PNG/Sword_Attack/player_attack_left_sheet.png`
+  - Or full sheet: `player/sprites/PNG/Sword_Attack/player_attack_full.png`
 - Import into Godot with **Filter = Nearest** (no interpolation).
-- In `SpriteFrames`, configure the `attack` animation with **6 frames** from the horizontal strip.
+- In `SpriteFrames`, configure the `attack` animation with **8 frames** from the horizontal strip, each frame **64×64 pixels**.
 - Set the animation as **non-looping** in Godot's SpriteFrames or AnimationPlayer.
-- Recommended playback speed: **10-12 FPS** (faster than walk/idle to feel snappy).
-- The action frame (Frame 3) is the one where `_start_attack()` / hitbox should activate in `player_controller.gd`.
+- Recommended playback speed: **12 FPS** (total attack duration ~0.67s).
 - The attack-left sheet can alternatively be produced by **horizontally flipping** the attack-right sheet frame-by-frame, if Gemini struggles with left-facing consistency.
+- The same attack animation applies to both **Thorn Sword** and **Blazeblade** — for Blazeblade, add warm orange/amber edge highlights (#C86020, #E88030) along the blade in a second pass.
 
 ---
 
@@ -366,11 +321,11 @@ Using the attached 192x192 sword idle + sword attack spritesheets as reference, 
 
 1. **Retry after 30-60 seconds** — transient TCP resets are common with Google API endpoints.
 2. **Shorten the prompt** — use the compact version if the full prompt times out.
-3. **Use Gemini via browser (AI Studio)** — paste the prompt at https://aistudio.google.com instead of API calls.
-4. **Switch model** — try `gemini-2.0-flash-exp` or `gemini-2.0-flash` if the default model is overloaded.
-5. **If sword is missing in some frames** — add: "The Thorn Sword MUST be visible and held in the character's hand in EVERY frame. The sword does not disappear between frames."
-6. **If the swing arc is not visible** — add: "Frame 3 MUST show the sword at full extension with the blade tip clearly reaching toward the swing direction. Include 3-5 faded grey pixels trailing behind the blade tip to show the slash motion arc."
-7. **If character looks identical to idle** — add: "This is an ATTACK animation. The character's body MUST clearly lean, coil, and lunge during Frames 1–4. Frame 2 should look noticeably different from Frame 1 — the sword is raised high and the body is coiled."
-8. **If output is wrong size** — add: "Do NOT upscale. The final PNG must be exactly 192 pixels wide and 48 pixels tall."
-9. **If the blade trail looks like a solid shape** — add: "The motion trail behind the blade tip should be 3-5 individual 1-pixel dots or a dithered/faded arc — NOT a solid filled shape. Use a lighter, 50% opacity version of the blade color."
-10. **If the sword design is inconsistent across frames** — add: "The sword must look identical in every frame: same blade length (~12px), same vine-wrapped handle (~6px), same small crossguard. Only the ANGLE and POSITION of the sword changes between frames."
+3. **Use Gemini via browser (AI Studio)** — paste at https://aistudio.google.com.
+4. **Switch model** — try `gemini-2.0-flash-exp` or `gemini-2.0-flash` if overloaded.
+5. **If the character doesn't match the reference design** — re-emphasize "Use the idle spritesheet as the ONLY source of truth for the character's appearance. The sword attack reference is for motion ONLY."
+6. **If the sword arc trail is missing** — add: "On frames 4–7, draw 3–5 white or near-white (#FFFFFF or #F0F4FF) scattered pixels in a curved arc path tracing where the blade just swept. This is a motion trail, not a glow — individual pixel dots along a curved line."
+7. **If the swing is too small** — add: "The sword arc must sweep across at least half the 64-pixel width of the frame. The swing is WIDE and dramatic — this is the primary attack animation."
+8. **If the wind-up (frames 2–3) looks wrong** — add: "On frames 2 and 3, the sword arm should be pulled clearly BACK and AWAY from the attack direction, loading energy for the swing. This is the opposite direction to the attack."
+9. **If frames 4–7 all look identical** — add: "Each of frames 4, 5, 6, 7 must show the sword at a DIFFERENT angle along the arc. The blade rotates visibly from frame to frame as it sweeps through the air."
+10. **If output is wrong size** — add: "Do NOT upscale. The final PNG must be exactly 512 pixels wide and 64 pixels tall."
