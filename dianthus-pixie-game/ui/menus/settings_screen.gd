@@ -31,6 +31,7 @@ func open() -> void:
 
 
 func close() -> void:
+	SfxManager.play("ui_button_click")
 	visible = false
 	_save_settings()
 
@@ -63,6 +64,7 @@ func _set_bus_volume(bus_name: String, percent: float) -> void:
 # --- Fullscreen ---
 
 func _on_fullscreen_toggled(enabled: bool) -> void:
+	SfxManager.play("ui_button_click")
 	if enabled:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	else:
@@ -74,6 +76,7 @@ func _on_fullscreen_toggled(enabled: bool) -> void:
 
 
 func _on_colorblind_toggled(enabled: bool) -> void:
+	SfxManager.play("ui_button_click")
 	GameManager.set_colorblind_mode(enabled)
 
 

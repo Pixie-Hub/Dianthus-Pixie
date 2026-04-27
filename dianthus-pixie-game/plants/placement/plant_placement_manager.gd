@@ -160,6 +160,7 @@ func _place_plant() -> void:
 	InventoryManager.remove_item(selected_seed_id, 1)
 	var placed_plant_id: String = selected_seed_id.trim_suffix("_seed")
 	CodexManager.discover_plant(placed_plant_id)
+	SfxManager.play("plant_placed")
 	plant_placed.emit(selected_seed_id, _ghost_grid_pos)
 	print("[PlantPlacement] Placed %s at grid %s (world %s)" % [
 		selected_seed_id, _ghost_grid_pos, plant.global_position])

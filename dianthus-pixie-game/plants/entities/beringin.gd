@@ -99,6 +99,7 @@ func _spawn_wall(toward_enemy: EnemyBase) -> void:
 	_wall_current_hp = wall_hp
 	_wall_dmg_accumulator = 0.0
 	_wall_enemies.clear()
+	SfxManager.play_at("beringin_wall_spawn", wall_pos)
 
 
 func _on_wall_body_entered(body: Node2D) -> void:
@@ -114,6 +115,7 @@ func _on_wall_body_exited(body: Node2D) -> void:
 
 func _destroy_wall() -> void:
 	if is_instance_valid(_active_wall):
+		SfxManager.play_at("beringin_wall_break", _active_wall.global_position)
 		_active_wall.queue_free()
 	_active_wall = null
 	_wall_enemies.clear()

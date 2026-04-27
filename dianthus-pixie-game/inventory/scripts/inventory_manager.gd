@@ -40,6 +40,8 @@ func add_item(item_id: String, amount: int = 1) -> int:
 		var to_add: int = min(remaining, space)
 		slot["count"] += to_add
 		remaining -= to_add
+		SfxManager.play("item_stack")
+		item_added.emit(item_id, to_add)
 
 	# 2. Fill empty slots.
 	for i: int in range(slots.size()):
@@ -50,12 +52,14 @@ func add_item(item_id: String, amount: int = 1) -> int:
 		var to_add: int = min(remaining, max_stack)
 		slots[i] = {"item_id": item_id, "count": to_add}
 		remaining -= to_add
+		SfxManager.play("item_pickup")
+		item_added.emit(item_id, to_add)
 
 	var added: int = amount - remaining
 	if added > 0:
 		inventory_changed.emit()
-		item_added.emit(item_id, added)
 	if remaining > 0:
+		SfxManager.play("inventory_full")
 		inventory_full.emit()
 	return remaining
 

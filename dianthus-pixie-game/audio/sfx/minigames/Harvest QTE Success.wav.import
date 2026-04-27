@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://d2hn7vrf4g58a"
+path="res://.godot/imported/Harvest QTE Success.wav-7a769bcc95b9d77efbce8131ac86519f.sample"
+
+[deps]
+
+source_file="res://audio/sfx/minigames/Harvest QTE Success.wav"
+dest_files=["res://.godot/imported/Harvest QTE Success.wav-7a769bcc95b9d77efbce8131ac86519f.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

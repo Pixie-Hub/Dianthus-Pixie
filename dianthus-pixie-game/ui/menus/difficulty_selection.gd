@@ -19,22 +19,26 @@ func open() -> void:
 
 
 func close() -> void:
+	SfxManager.play("ui_button_click")
 	visible = false
 
 
 func _on_easy_pressed() -> void:
+	SfxManager.play("ui_button_click")
 	DifficultyManager.set_tier(DifficultyManager.Tier.EASY)
 	difficulty_selected.emit(DifficultyManager.Tier.EASY)
 	close()
 
 
 func _on_normal_pressed() -> void:
+	SfxManager.play("ui_button_click")
 	DifficultyManager.set_tier(DifficultyManager.Tier.NORMAL)
 	difficulty_selected.emit(DifficultyManager.Tier.NORMAL)
 	close()
 
 
 func _on_hard_pressed() -> void:
+	SfxManager.play("ui_button_click")
 	DifficultyManager.set_tier(DifficultyManager.Tier.HARD)
 	difficulty_selected.emit(DifficultyManager.Tier.HARD)
 	close()

@@ -20,6 +20,7 @@ func _ready() -> void:
 func _on_effect_area_body_entered(body: Node2D) -> void:
 	if body == GameManager.player:
 		_player_in_range = true
+		SfxManager.play_at("kunyit_melee_buff", global_position)
 		_recalculate_player_bonus_damage()
 
 

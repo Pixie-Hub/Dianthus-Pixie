@@ -25,6 +25,7 @@ func _process(delta: float) -> void:
 	_tick_timer += delta
 	if _tick_timer >= tick_interval:
 		_tick_timer -= tick_interval
+		SfxManager.play_at("bougainvillea_thorn_tick", global_position)
 		for enemy in _enemies_in_range.duplicate():
 			if is_instance_valid(enemy) and not enemy.is_dead:
 				enemy.take_damage(damage_per_tick)

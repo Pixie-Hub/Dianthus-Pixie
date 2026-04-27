@@ -20,6 +20,7 @@ func _ready() -> void:
 func _on_effect_area_body_entered(body: Node2D) -> void:
 	if body == GameManager.player:
 		_player_in_range = true
+		SfxManager.play_at("baja_kuning_armor_buff", global_position)
 		if body.has_method("heal"):
 			body.set("damage_reduction", damage_reduction_amount)
 

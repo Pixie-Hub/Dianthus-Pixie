@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dar4qdte07gnw"
+path="res://.godot/imported/Crafting Success.wav-f7ca3733ae93468a04b1bd0245e56134.sample"
+
+[deps]
+
+source_file="res://audio/sfx/crafting_ui/Crafting Success.wav"
+dest_files=["res://.godot/imported/Crafting Success.wav-f7ca3733ae93468a04b1bd0245e56134.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

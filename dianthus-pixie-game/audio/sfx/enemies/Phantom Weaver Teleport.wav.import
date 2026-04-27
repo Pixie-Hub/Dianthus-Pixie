@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://byu1cup4pc3jf"
+path="res://.godot/imported/Phantom Weaver Teleport.wav-a49a2e83d8f59ada3b190e14a25afea1.sample"
+
+[deps]
+
+source_file="res://audio/sfx/enemies/Phantom Weaver Teleport.wav"
+dest_files=["res://.godot/imported/Phantom Weaver Teleport.wav-a49a2e83d8f59ada3b190e14a25afea1.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

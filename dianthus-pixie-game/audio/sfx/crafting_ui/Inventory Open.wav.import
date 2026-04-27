@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://ujwc53aajvry"
+path="res://.godot/imported/Inventory Open.wav-15bef9c5dfa0b19472307a729eca291a.sample"
+
+[deps]
+
+source_file="res://audio/sfx/crafting_ui/Inventory Open.wav"
+dest_files=["res://.godot/imported/Inventory Open.wav-15bef9c5dfa0b19472307a729eca291a.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

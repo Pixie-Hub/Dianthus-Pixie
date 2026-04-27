@@ -32,6 +32,7 @@ UnlockFlags="*res://shared/autoloads/unlock_flags.gd"
 DailyQuestRoller="*res://quests/scripts/daily_quest_roller.gd"
 EndingManager="*res://core/endings/ending_manager.gd"
 EndlessLeaderboard="*res://save/scripts/endless_leaderboard.gd"
+SfxManager="*res://audio/sfx_manager.gd"
 
 [display]
 

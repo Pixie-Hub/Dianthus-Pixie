@@ -99,6 +99,7 @@ func start_wave() -> void:
 	for i: int in range(count):
 		_active_spawn_points.append(shuffled[i].global_position)
 	wave_started.emit()
+	SfxManager.play("wave_start")
 	var available_types: Array[String] = []
 	for entry: Dictionary in ENEMY_POOL:
 		if day >= entry["min_day"]:
@@ -187,6 +188,7 @@ func _check_wave_cleared() -> void:
 	if _enemies_alive <= 0 and _enemies_spawned >= _current_wave_total:
 		_wave_active = false
 		wave_cleared.emit()
+		SfxManager.play("wave_cleared")
 		print("[WaveSpawner] Wave cleared!")
 
 

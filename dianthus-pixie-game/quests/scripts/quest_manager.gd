@@ -37,6 +37,7 @@ func start_quest(id: StringName) -> bool:
 		prog[obj.objective_id] = 0
 	_active[id] = {"progress": prog, "started_day": DayNightCycle.day_count}
 	quest_started.emit(id)
+	SfxManager.play("quest_accepted")
 	print("[QuestManager] Started: %s" % id)
 	return true
 
@@ -50,6 +51,7 @@ func complete_quest(id: StringName) -> void:
 	_active.erase(id)
 	_completed[id] = true
 	quest_completed.emit(id)
+	SfxManager.play("quest_completed")
 	_grant_rewards(q)
 	print("[QuestManager] Completed: %s" % id)
 	var dialogic: Node = get_node_or_null("/root/Dialogic")
@@ -73,6 +75,7 @@ func fail_quest(id: StringName, reason: String) -> void:
 	_active.erase(id)
 	_failed[id] = reason
 	quest_failed.emit(id, reason)
+	SfxManager.play("quest_failed")
 	print("[QuestManager] Failed: %s  reason: %s" % [id, reason])
 	if q == null:
 		return

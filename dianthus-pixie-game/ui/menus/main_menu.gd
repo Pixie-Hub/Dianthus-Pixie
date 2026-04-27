@@ -31,11 +31,13 @@ func _refresh_continue_button() -> void:
 
 
 func _on_continue_pressed() -> void:
+	SfxManager.play("ui_button_click")
 	print("[MainMenu] Loading save...")
 	SaveManager.load_from_slot()
 
 
 func _on_new_game_pressed() -> void:
+	SfxManager.play("ui_button_click")
 	if SaveManager.has_save():
 		_overwrite_dialog.popup_centered()
 	else:
@@ -62,6 +64,7 @@ func _start_new_game() -> void:
 
 
 func _on_settings_pressed() -> void:
+	SfxManager.play("ui_button_click")
 	_settings_screen.open()
 
 
@@ -70,4 +73,5 @@ func _on_difficulty_selected(_tier_id: int) -> void:
 
 
 func _on_quit_pressed() -> void:
+	SfxManager.play("ui_button_click")
 	get_tree().quit()

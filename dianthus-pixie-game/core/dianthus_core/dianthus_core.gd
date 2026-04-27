@@ -37,14 +37,19 @@ func _process(delta: float) -> void:
 
 
 func take_damage(amount: int) -> void:
+	var was_above_low: bool = current_hp > MAX_HP * 0.25
 	current_hp = max(current_hp - amount, 0)
 	hp_changed.emit(current_hp, MAX_HP)
 	core_damaged.emit(amount)
 	_update_aura()
+	SfxManager.play("core_take_damage")
+	if was_above_low and current_hp <= MAX_HP * 0.25 and current_hp > 0:
+		SfxManager.play("core_low_hp")
 	var tween: Tween = create_tween()
 	tween.tween_property(_sprite, "modulate", Color(1, 0.3, 0.3), 0.1)
 	tween.tween_property(_sprite, "modulate", Color(1.0, 0.8, 0.9), 0.2)
 	if current_hp <= 0:
+		SfxManager.play("core_destroyed")
 		core_destroyed.emit()
 
 
@@ -52,6 +57,7 @@ func heal(amount: int) -> void:
 	current_hp = min(current_hp + amount, MAX_HP)
 	hp_changed.emit(current_hp, MAX_HP)
 	_update_aura()
+	SfxManager.play("core_heal")
 
 
 func _update_aura() -> void:

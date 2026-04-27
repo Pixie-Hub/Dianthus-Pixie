@@ -34,6 +34,8 @@ func _physics_process(delta: float) -> void:
 func _explode() -> void:
 	_exploded = true
 	set_physics_process(false)
+	var _det_sfx: String = "void_grenade_detonate" if damage >= 30 else "spore_bomb_detonate"
+	SfxManager.play_at(_det_sfx, global_position)
 	for body in get_tree().get_nodes_in_group(&"enemies"):
 		if body is EnemyBase and not body.is_dead:
 			if global_position.distance_to(body.global_position) <= aoe_radius:

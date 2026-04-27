@@ -16,6 +16,7 @@ func _on_night_survived(day: int) -> void:
 		return
 	if not is_inside_tree():
 		return
+	SfxManager.play("night_survived")
 	get_tree().paused = true
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_day_label.text = "Day %d Complete" % day

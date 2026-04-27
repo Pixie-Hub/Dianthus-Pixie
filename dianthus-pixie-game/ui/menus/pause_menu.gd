@@ -48,6 +48,7 @@ func _open() -> void:
 
 
 func _close() -> void:
+	SfxManager.play("ui_button_click")
 	_is_open = false
 	visible = false
 	_save_feedback.visible = false
@@ -56,10 +57,12 @@ func _close() -> void:
 
 
 func _on_resume_pressed() -> void:
+	SfxManager.play("ui_button_click")
 	_close()
 
 
 func _on_save_pressed() -> void:
+	SfxManager.play("ui_button_click")
 	SaveManager.save_to_slot(true)
 
 
@@ -75,14 +78,17 @@ func _on_save_completed(success: bool, manual: bool) -> void:
 
 
 func _on_settings_pressed() -> void:
+	SfxManager.play("ui_button_click")
 	_settings_screen.open()
 
 
 func _on_main_menu_pressed() -> void:
+	SfxManager.play("ui_button_click")
 	_main_menu_dialog.popup_centered()
 
 
 func _on_main_menu_confirmed() -> void:
+	SfxManager.play("ui_button_click")
 	_is_open = false
 	visible = false
 	get_tree().paused = false

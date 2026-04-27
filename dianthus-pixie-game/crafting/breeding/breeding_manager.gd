@@ -64,15 +64,18 @@ func can_breed(item_a: String, item_b: String) -> bool:
 
 func breed(item_a: String, item_b: String) -> bool:
 	if not can_breed(item_a, item_b):
+		SfxManager.play("breeding_fail")
 		combo_attempted.emit("", false)
 		breed_failed.emit("Not enough materials.")
 		return false
+	SfxManager.play("breeding_start")
 	# Consume inputs
 	InventoryManager.remove_item(item_a, 1)
 	InventoryManager.remove_item(item_b, 1)
 	var combo_id: String = find_combo(item_a, item_b)
 	if combo_id.is_empty():
 		print("[BreedingManager] Unknown combination — resources lost.")
+		SfxManager.play("breeding_critical_fail")
 		combo_attempted.emit("", false)
 		breed_failed.emit("Unknown combination — resources lost.")
 		return true  # Resources still consumed per GDD §7.2
@@ -82,7 +85,9 @@ func breed(item_a: String, item_b: String) -> bool:
 	var first_discovery: bool = not discovered_combos.has(combo_id)
 	discovered_combos[combo_id] = true
 	if first_discovery:
+		SfxManager.play("combo_discovered")
 		combo_discovered.emit(combo_id)
+	SfxManager.play("breeding_success")
 	combo_attempted.emit(combo_id, true)
 	breed_succeeded.emit(combo_id, result_item)
 	print("[BreedingManager] Bred: %s → %s" % [combo_id, result_item])

@@ -38,9 +38,11 @@ func _advance_phase() -> void:
 	match current_phase:
 		Phase.DAY:
 			current_phase = Phase.NIGHT
+			SfxManager.play("night_transition")
 			GameManager.set_state(GameManager.GameState.DEFENSE)
 		Phase.NIGHT:
 			current_phase = Phase.DAY
+			SfxManager.play("dawn_transition")
 			day_count += 1
 			GameManager.set_state(GameManager.GameState.EXPLORATION)
 	_phase_timer = PHASE_DURATIONS[current_phase]
@@ -77,7 +79,6 @@ func is_day() -> bool:
 
 func debug_skip_phase() -> void:
 	_phase_timer = 0.0
-
 
 func apply_loaded_state(day: int, phase_name: String, timer_remaining: float) -> void:
 	day_count = max(1, day)

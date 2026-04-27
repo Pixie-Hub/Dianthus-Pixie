@@ -12,11 +12,10 @@ func _ready() -> void:
 
 
 func discover_plant(plant_id: String) -> void:
-	if discovered_plants.has(plant_id):
-		return
-	if not PlantRegistry.PLANTS.has(plant_id):
+	if plant_id.is_empty() or discovered_plants.has(plant_id):
 		return
 	discovered_plants[plant_id] = true
+	SfxManager.play("codex_unlocked")
 	plant_discovered.emit(plant_id)
 	print("[CodexManager] Discovered: %s" % plant_id)
 

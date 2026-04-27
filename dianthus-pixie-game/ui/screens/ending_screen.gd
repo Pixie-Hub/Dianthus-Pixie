@@ -55,6 +55,7 @@ func _on_ending(ending_id: String) -> void:
 	]
 	_credits_label.text = CREDITS_TEXT
 	_endless_button.visible = UnlockFlags.has_flag(StoryEndingFlags.unlock_endless_mode)
+	SfxManager.play("ending_screen")
 	get_tree().paused = true
 	visible = true
 
@@ -71,6 +72,7 @@ func _on_main_menu() -> void:
 
 
 func _on_endless() -> void:
+	SfxManager.play("endless_mode_activate")
 	GameManager.endless_mode = true
 	get_tree().paused = false
 	visible = false

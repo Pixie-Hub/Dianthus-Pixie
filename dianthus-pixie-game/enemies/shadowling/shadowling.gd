@@ -10,3 +10,7 @@ func activate() -> void:
 	var fsm: StateMachine = get_node_or_null("StateMachine") as StateMachine
 	if fsm != null:
 		fsm.transition_to(&"Scout")
+
+
+func _get_death_sfx_id() -> String:
+	return "shadowling_death"

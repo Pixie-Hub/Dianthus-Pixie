@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://cne20vkgv5aju"
+path="res://.godot/imported/Shadowling Death.wav-b44ef12f581d45bbd6a7fc6a8abadf7d.sample"
+
+[deps]
+
+source_file="res://audio/sfx/enemies/Shadowling Death.wav"
+dest_files=["res://.godot/imported/Shadowling Death.wav-b44ef12f581d45bbd6a7fc6a8abadf7d.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

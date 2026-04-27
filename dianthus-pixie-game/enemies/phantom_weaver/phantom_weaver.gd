@@ -30,6 +30,10 @@ func should_retreat() -> bool:
 	return false
 
 
+func _get_death_sfx_id() -> String:
+	return "phantom_weaver_death"
+
+
 # Override: detect 30% HP crossover; trigger one-time teleport.
 func take_damage(amount: int) -> void:
 	if is_dead or _is_teleporting:

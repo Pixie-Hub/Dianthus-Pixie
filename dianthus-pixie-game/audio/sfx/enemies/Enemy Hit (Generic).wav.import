@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dmf1dfu1givlc"
+path="res://.godot/imported/Enemy Hit (Generic).wav-f527f7a91ea2a30d9b3a03592737ce74.sample"
+
+[deps]
+
+source_file="res://audio/sfx/enemies/Enemy Hit (Generic).wav"
+dest_files=["res://.godot/imported/Enemy Hit (Generic).wav-f527f7a91ea2a30d9b3a03592737ce74.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

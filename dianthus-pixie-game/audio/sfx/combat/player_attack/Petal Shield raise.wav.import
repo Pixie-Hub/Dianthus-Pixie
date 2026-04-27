@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://hwe4nqqmwmx6"
+path="res://.godot/imported/Petal Shield raise.wav-2d510619e714bc88e2f860314c7f504e.sample"
+
+[deps]
+
+source_file="res://audio/sfx/combat/player_attack/Petal Shield raise.wav"
+dest_files=["res://.godot/imported/Petal Shield raise.wav-2d510619e714bc88e2f860314c7f504e.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

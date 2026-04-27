@@ -391,10 +391,12 @@ func take_damage(amount: int) -> void:
 			print("[Player] Perfect block! Counter-attack.")
 			_trigger_petal_counter()
 			return
+		SfxManager.play("petal_shield_block")
 	var reduced: int = int(float(amount) * (1.0 - damage_reduction))
 	reduced = max(reduced, 1)
 	current_hp = max(current_hp - reduced, 0)
 	hp_changed.emit(current_hp, MAX_HP)
+	SfxManager.play("player_take_damage")
 	var tween: Tween = create_tween()
 	tween.tween_property(_sprite, "modulate", Color(1, 0.3, 0.3), 0.05)
 	tween.tween_property(_sprite, "modulate", Color.WHITE, 0.15)
@@ -412,6 +414,7 @@ func _die() -> void:
 		_drop_block()
 	is_dead = true
 	is_attacking = false
+	SfxManager.play("player_death")
 	var _hs: CollisionShape2D = _sword_hitbox.get_child(0)
 	_hs.disabled = true
 	velocity = Vector2.ZERO
@@ -431,6 +434,7 @@ func _respawn() -> void:
 	set_collision_layer_value(3, true)
 	hp_changed.emit(current_hp, MAX_HP)
 	player_respawned.emit()
+	SfxManager.play("player_respawn")
 	var energy_penalty: int = int(current_energy * ENERGY_DEATH_PENALTY)
 	current_energy = max(current_energy - energy_penalty, 0)
 	energy_changed.emit(current_energy, max_energy)
@@ -440,6 +444,7 @@ func _respawn() -> void:
 
 func _start_invincibility() -> void:
 	is_invincible = true
+	SfxManager.play("player_invincibility")
 	_blink_tween = create_tween().set_loops()
 	_blink_tween.tween_property(_sprite, "modulate:a", 0.4, 0.15)
 	_blink_tween.tween_property(_sprite, "modulate:a", 1.0, 0.15)
@@ -485,6 +490,8 @@ func _attack_melee_sword() -> void:
 	print("DEBUG: Attack! Damage: %d, Direction: %s" % [_current_weapon.damage, last_direction])
 	if _sword_sfx.stream != null:
 		_sword_sfx.play()
+	var _swing_sfx: String = "blazeblade_swing" if _current_weapon.weapon_id == "blazeblade" else "thorn_sword_swing"
+	SfxManager.play(_swing_sfx, 0.05)
 	var effective_cd: float = _current_weapon.cooldown * (1.0 - attack_speed_bonus)
 	await get_tree().create_timer(effective_cd * 0.25).timeout
 	if is_dead:
@@ -521,6 +528,8 @@ func _attack_vine_whip() -> void:
 		_current_weapon.damage + bonus_melee_damage, _current_weapon.attack_range, last_direction])
 	if _sword_sfx.stream != null:
 		_sword_sfx.play()
+	var _whip_sfx: String = "crystal_lash_crack" if _current_weapon.weapon_id == "crystal_lash" else "vine_whip_crack"
+	SfxManager.play(_whip_sfx, 0.05)
 	var effective_cd: float = _current_weapon.cooldown * (1.0 - attack_speed_bonus)
 	await get_tree().create_timer(effective_cd * 0.25).timeout
 	if is_dead:
@@ -539,6 +548,7 @@ func _attack_vine_whip() -> void:
 func _attack_spore_bomb() -> void:
 	is_attacking = true
 	_state_machine.travel("attack")
+	SfxManager.play("spore_bomb_throw")
 	var target: Vector2 = get_global_mouse_position()
 	var dir: Vector2 = target - global_position
 	if dir.length() > _current_weapon.attack_range:
@@ -576,6 +586,8 @@ func _raise_block() -> void:
 	_saved_damage_reduction = damage_reduction
 	damage_reduction = max(damage_reduction, PETAL_SHIELD_DR)
 	_sprite.modulate = Color(0.8, 0.9, 1.0)
+	var _raise_sfx: String = "iron_bloom_shield_raise" if _current_weapon.weapon_id == "iron_bloom_shield" else "petal_shield_raise"
+	SfxManager.play(_raise_sfx)
 	print("[Player] Block raised (%s)" % _current_weapon.weapon_id)
 
 
@@ -588,6 +600,7 @@ func _drop_block() -> void:
 
 
 func _trigger_petal_counter() -> void:
+	SfxManager.play("petal_shield_counter")
 	var radius: float = _current_weapon.attack_range
 	var dmg: int = _current_weapon.damage
 	for body in get_tree().get_nodes_in_group(&"enemies"):
@@ -680,6 +693,7 @@ func select_weapon_slot(index: int) -> void:
 		_current_weapon = null
 	else:
 		_current_weapon = CraftingManager.get_weapon_data(wid)
+	SfxManager.play("weapon_equipped")
 	loadout_changed.emit(weapon_slots, active_skill_id, selected_weapon_slot)
 	print("[Player] Selected weapon slot %d: %s" % [index, wid if not wid.is_empty() else "[Empty]"])
 
@@ -790,7 +804,10 @@ func _on_sword_hitbox_body_entered(body: Node2D) -> void:
 	attack_hit.emit(body, total_damage)
 	print("DEBUG: Hit %s for %d damage" % [body.name, total_damage])
 	add_energy(ENERGY_PER_HIT)
+	var _hit_sfx: String = "blazeblade_hit" if (_current_weapon != null and _current_weapon.weapon_id == "blazeblade") else "thorn_sword_hit"
+	SfxManager.play_at(_hit_sfx, body.global_position, 0.05)
 	if _current_weapon != null and (_current_weapon.weapon_id == "vine_whip" or _current_weapon.weapon_id == "crystal_lash"):
+		SfxManager.play_at("vine_whip_pull", body.global_position)
 		if body.has_method("apply_pull"):
 			body.apply_pull(global_position, 0.25, 24.0)
 	# TODO (VFX-05): Add impact particles on hit.

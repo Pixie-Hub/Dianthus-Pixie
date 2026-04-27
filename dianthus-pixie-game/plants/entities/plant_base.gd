@@ -34,6 +34,7 @@ func destroy() -> void:
 	if is_destroyed:
 		return
 	is_destroyed = true
+	SfxManager.play_at("plant_destroyed", global_position)
 	plant_destroyed.emit(self)
 	_play_wither_animation()
 

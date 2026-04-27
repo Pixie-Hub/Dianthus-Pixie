@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bbv1ab5n8wfok"
+path="res://.godot/imported/Swarm Larva Group Skitter.wav-6b06bc43b428df17b061077ca2d7aa99.sample"
+
+[deps]
+
+source_file="res://audio/sfx/enemies/Swarm Larva Group Skitter.wav"
+dest_files=["res://.godot/imported/Swarm Larva Group Skitter.wav-6b06bc43b428df17b061077ca2d7aa99.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

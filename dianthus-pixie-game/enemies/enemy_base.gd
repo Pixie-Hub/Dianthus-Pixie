@@ -38,6 +38,8 @@ func take_damage(amount: int) -> void:
 	current_hp = max(current_hp - amount, 0)
 	hp_changed.emit(current_hp, max_hp)
 	_flash_damage()
+	SfxManager.play_at("enemy_hit", global_position, 0.1)
+	damage_dealt.emit(self, amount)
 	if current_hp <= 0:
 		die()
 
@@ -46,6 +48,7 @@ func die() -> void:
 	if is_dead:
 		return
 	is_dead = true
+	SfxManager.play_at(_get_death_sfx_id(), global_position)
 	velocity = Vector2.ZERO
 	var fsm: Node = get_node_or_null("StateMachine")
 	if fsm != null:
@@ -147,6 +150,10 @@ func _physics_process(_delta: float) -> void:
 func should_retreat() -> bool:
 	# TODO (CORE-07): Revisit ally threshold once Wave Spawner guarantees group spawns.
 	return current_hp < max_hp * 0.2 and count_nearby_allies(ally_proximity_radius) < 2
+
+
+func _get_death_sfx_id() -> String:
+	return "enemy_hit"
 
 
 func play_animation(anim_name: StringName) -> void:

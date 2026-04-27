@@ -27,6 +27,7 @@ func _do_teleport(e: PhantomWeaver) -> void:
 	var destination: Vector2 = e.pick_teleport_destination()
 	print("[PhantomWeaver] Teleport %s -> %s" % [e.global_position, destination])
 
+	SfxManager.play_at("phantom_weaver_teleport", e.global_position)
 	# TODO (VFX-03): Replace alpha tween with real teleport particle/shader effect.
 	# Fade out.
 	if is_instance_valid(sprite):

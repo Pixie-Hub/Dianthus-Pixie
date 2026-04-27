@@ -17,6 +17,10 @@ func should_retreat() -> bool:
 	return false
 
 
+func _get_death_sfx_id() -> String:
+	return "stonehusk_death"
+
+
 # Override: Stonehusk resists pull — halve the pull distance.
 # TODO: ENEMY-WEAKNESS — replace with pull_resistance: float export for a generic system.
 func apply_pull(toward: Vector2, duration: float, distance: float) -> void:

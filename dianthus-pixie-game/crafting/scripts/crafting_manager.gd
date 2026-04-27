@@ -53,6 +53,7 @@ func craft(recipe_id: String) -> bool:
 		owned_weapons.erase(base)
 	var result_id: String = str(recipe.get("result_id", ""))
 	owned_weapons[result_id] = true
+	SfxManager.play("crafting_success")
 	print("[CraftingManager] Crafted: %s" % result_id)
 	weapon_crafted.emit(result_id)
 	return true
