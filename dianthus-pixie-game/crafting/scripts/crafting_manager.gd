@@ -23,6 +23,9 @@ func can_craft(recipe_id: String) -> bool:
 	var recipe: Dictionary = RecipeDatabase.get_recipe(recipe_id)
 	if recipe.is_empty():
 		return false
+	var required_flag: String = RecipeDatabase.get_required_flag(recipe_id)
+	if not required_flag.is_empty() and not UnlockFlags.has_flag(required_flag):
+		return false
 	var result_id: String = str(recipe.get("result_id", ""))
 	if owned_weapons.get(result_id, false):
 		return false
@@ -94,6 +97,9 @@ func _craft_fail_reason(recipe_id: String) -> String:
 	var recipe: Dictionary = RecipeDatabase.get_recipe(recipe_id)
 	if recipe.is_empty():
 		return "Unknown recipe."
+	var required_flag: String = RecipeDatabase.get_required_flag(recipe_id)
+	if not required_flag.is_empty() and not UnlockFlags.has_flag(required_flag):
+		return "Locked. Complete a discovery quest to unlock."
 	var result_id: String = str(recipe.get("result_id", ""))
 	if owned_weapons.get(result_id, false):
 		return "Already owned."

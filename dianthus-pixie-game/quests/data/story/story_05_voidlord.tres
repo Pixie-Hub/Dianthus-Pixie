@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="QuestData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://quests/data/quest_data.gd" id="1_qdata"]
+[ext_resource type="Script" path="res://quests/data/quest_objective.gd" id="2_qobj"]
+
+[sub_resource type="Resource" id="Resource_obj1"]
+script = ExtResource("2_qobj")
+objective_id = &"defeat_voidlord"
+description = "Defeat the Voidlord"
+event_id = &"voidlord_defeated"
+target_count = 1
+filter = {}
+
+[resource]
+script = ExtResource("1_qdata")
+quest_id = &"story_05_voidlord"
+display_name = "The Voidlord Stirs"
+description = "On the twenty-first night the Voidlord himself descends. Fell this precursor of the Devourer before it is too late."
+quest_type = 3
+objectives = Array[ExtResource("2_qobj")]([SubResource("Resource_obj1")])
+reward_items = {}
+reward_weapons = []
+reward_unlock_flags = ["flag_story_voidlord_slain"]
+time_limit_days = 3
+dialogic_timeline_on_complete = "res://addons/dialogic/timelines/story_05_complete.dtl"
+dialogic_timeline_on_fail = "res://addons/dialogic/timelines/story_05_fail.dtl"
+next_quest_id = &"story_06_pollen"
+auto_start = false
+failure_unlock_flags = ["flag_story_failed_voidlord"]
+failure_next_quest_id = &"story_alt_voidlord_loss"

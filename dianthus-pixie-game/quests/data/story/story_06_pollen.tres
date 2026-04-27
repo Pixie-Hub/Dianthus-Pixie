@@ -1,0 +1,38 @@
+[gd_resource type="Resource" script_class="QuestData" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://quests/data/quest_data.gd" id="1_qdata"]
+[ext_resource type="Script" path="res://quests/data/quest_objective.gd" id="2_qobj"]
+
+[sub_resource type="Resource" id="Resource_obj1"]
+script = ExtResource("2_qobj")
+objective_id = &"acquire_dianthus_pollen"
+description = "Acquire Dianthus Pollen"
+event_id = &"item_collected"
+target_count = 1
+filter = {"item_id": "dianthus_pollen"}
+
+[sub_resource type="Resource" id="Resource_obj2"]
+script = ExtResource("2_qobj")
+objective_id = &"craft_blazeblade"
+description = "Craft a Blazeblade"
+event_id = &"weapon_crafted"
+target_count = 1
+filter = {"weapon_id": "blazeblade"}
+
+[resource]
+script = ExtResource("1_qdata")
+quest_id = &"story_06_pollen"
+display_name = "Petals of Power"
+description = "The Dianthus Core pulses with latent energy. Harvest its pollen and forge a weapon worthy of what comes — the final bloom approaches."
+quest_type = 3
+objectives = Array[ExtResource("2_qobj")]([SubResource("Resource_obj1"), SubResource("Resource_obj2")])
+reward_items = {}
+reward_weapons = []
+reward_unlock_flags = ["unlock_zone_core_sanctum"]
+time_limit_days = 0
+dialogic_timeline_on_complete = "res://addons/dialogic/timelines/story_06_complete.dtl"
+dialogic_timeline_on_fail = ""
+next_quest_id = &"story_07_devourer"
+auto_start = false
+failure_unlock_flags = []
+failure_next_quest_id = &""

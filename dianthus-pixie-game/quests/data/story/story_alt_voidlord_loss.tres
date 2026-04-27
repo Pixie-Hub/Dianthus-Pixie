@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="QuestData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://quests/data/quest_data.gd" id="1_qdata"]
+[ext_resource type="Script" path="res://quests/data/quest_objective.gd" id="2_qobj"]
+
+[sub_resource type="Resource" id="Resource_obj1"]
+script = ExtResource("2_qobj")
+objective_id = &"survive_3_days_shadow"
+description = "Survive 3 more days"
+event_id = &"day_survived"
+target_count = 3
+filter = {}
+
+[resource]
+script = ExtResource("1_qdata")
+quest_id = &"story_alt_voidlord_loss"
+display_name = "Shadow Triumphant"
+description = "The Voidlord has risen unchallenged. The shadows grow deeper. Hold on as long as you can."
+quest_type = 3
+objectives = Array[ExtResource("2_qobj")]([SubResource("Resource_obj1")])
+reward_items = {}
+reward_weapons = []
+reward_unlock_flags = ["flag_alt_ending_shadow"]
+time_limit_days = 0
+dialogic_timeline_on_complete = ""
+dialogic_timeline_on_fail = ""
+next_quest_id = &""
+auto_start = false
+failure_unlock_flags = []
+failure_next_quest_id = &""

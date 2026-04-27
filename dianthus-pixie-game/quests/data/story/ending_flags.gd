@@ -1,0 +1,16 @@
+class_name StoryEndingFlags
+
+const flag_story_chain_started: String = "flag_story_chain_started"
+const flag_story_complete: String = "flag_story_complete"
+const flag_story_failed_omen: String = "flag_story_failed_omen"
+const flag_story_failed_ruins: String = "flag_story_failed_ruins"
+const flag_story_failed_voidlord: String = "flag_story_failed_voidlord"
+const flag_story_devourer_summoned: String = "flag_story_devourer_summoned"
+const flag_story_devourer_defeated: String = "flag_story_devourer_defeated"
+const flag_story_voidlord_slain: String = "flag_story_voidlord_slain"
+const flag_alt_ending_lost: String = "flag_alt_ending_lost"
+const flag_alt_ending_shadow: String = "flag_alt_ending_shadow"
+const flag_alt_ending_lingering: String = "flag_alt_ending_lingering"
+const unlock_zone_ruins: String = "unlock_zone_ruins"
+const unlock_zone_core_sanctum: String = "unlock_zone_core_sanctum"
+const unlock_recipe_void_grenade: String = "unlock_recipe_void_grenade"

@@ -1,7 +1,7 @@
 # Dianthus Pixie — Per-Person Task Breakdown
 
 **Sprint:** 2-Week Vertical Slice  
-**Last Updated:** 2026-04-26  
+**Last Updated:** 2026-04-27  
 **Source:** `PROMPT_CORE_08.md`, `PROMPT_CROSSBREEDING.md`
 
 > Status legend: ✅ Done · 🔧 In Progress · ⬜ Not Started
@@ -334,8 +334,15 @@ FOUND-01..06 (Done)
 | 1 | Select weapon slot 1 | PLANT-08 |
 | 2 | Select weapon slot 2 | PLANT-08 |
 | Q | Toggle Quest Log screen (pauses game; Active/Completed/Failed tabs with progress bars) | UI-03 |
+| Shift+Q | Force-reroll daily quests (`DailyQuestRoller.force_reroll()`) | QUEST-02 |
+| Ctrl+Shift+Q | Print full quest summary (active quests + objectives + unlock flags) to Output | QUEST-02 |
 | F | Activate equipped skill (costs 30 energy) | QUEST-01 |
 | Shift+K | Print all active quest progress to Output log | QUEST-01 |
 | Shift+Alt+K | Force-complete the first active quest (grants rewards) | QUEST-01 |
 | (DayNightCycle.debug_skip_phase via console / F7) | Force phase change | UI-01: Time-of-Day color/label flips, minimap arrows toggle on night |
+| Shift+5 | Emit `zone_entered{zone_id=ruins_of_veld}` — advances story_03_journey objective | QUEST-05 |
+| Shift+6 | Emit `voidlord_defeated` — satisfies story_05_voidlord objective | QUEST-05 |
+| Shift+7 | Emit `devourer_defeated` — satisfies story_07_devourer objective; prints flag confirmation | QUEST-05 |
+| Ctrl+Shift+5 | Force-start `story_01_whispers` (skips Day 2 wait) | QUEST-05 |
+| Ctrl+Shift+F | Force-fail the current active story quest with `time_limit` (tests alt-ending branch) | QUEST-05 |
 | `Dialogic.start("res://...")` via console | Trigger a Dialogic timeline directly for testing | DIALOG-01 |

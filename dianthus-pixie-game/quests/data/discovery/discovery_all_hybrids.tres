@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="QuestData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://quests/data/quest_data.gd" id="1_qdata"]
+[ext_resource type="Script" path="res://quests/data/quest_objective.gd" id="2_qobj"]
+
+[sub_resource type="Resource" id="Resource_obj1"]
+script = ExtResource("2_qobj")
+objective_id = &"discover_all_varieties"
+description = "Discover all remaining plant varieties (10 total)"
+event_id = &"plant_discovered"
+target_count = 10
+filter = {}
+
+[resource]
+script = ExtResource("1_qdata")
+quest_id = &"discovery_all_hybrids"
+display_name = "Living Encyclopaedia"
+description = "Complete the garden journal. Discover all 11 plant varieties including the four rare hybrids."
+quest_type = 2
+objectives = Array[ExtResource("2_qobj")]([SubResource("Resource_obj1")])
+reward_items = {"aether_bloom": 3}
+reward_weapons = []
+reward_unlock_flags = ["discovery_complete"]
+time_limit_days = 0
+dialogic_timeline_on_complete = ""
+dialogic_timeline_on_fail = ""
+next_quest_id = &""
+auto_start = true

@@ -3,6 +3,7 @@ extends Node
 signal breed_succeeded(combo_id: String, result_item_id: String)
 signal breed_failed(reason: String)
 signal combo_discovered(combo_id: String)
+signal combo_attempted(combo_id: String, success: bool)
 
 const COMBOS: Dictionary = {
 	"bunga_api": {
@@ -63,6 +64,7 @@ func can_breed(item_a: String, item_b: String) -> bool:
 
 func breed(item_a: String, item_b: String) -> bool:
 	if not can_breed(item_a, item_b):
+		combo_attempted.emit("", false)
 		breed_failed.emit("Not enough materials.")
 		return false
 	# Consume inputs
@@ -71,6 +73,7 @@ func breed(item_a: String, item_b: String) -> bool:
 	var combo_id: String = find_combo(item_a, item_b)
 	if combo_id.is_empty():
 		print("[BreedingManager] Unknown combination — resources lost.")
+		combo_attempted.emit("", false)
 		breed_failed.emit("Unknown combination — resources lost.")
 		return true  # Resources still consumed per GDD §7.2
 	# TODO: MINI-01 — minigame score determines quality tier; always Biasa for now
@@ -80,6 +83,7 @@ func breed(item_a: String, item_b: String) -> bool:
 	discovered_combos[combo_id] = true
 	if first_discovery:
 		combo_discovered.emit(combo_id)
+	combo_attempted.emit(combo_id, true)
 	breed_succeeded.emit(combo_id, result_item)
 	print("[BreedingManager] Bred: %s → %s" % [combo_id, result_item])
 	return true

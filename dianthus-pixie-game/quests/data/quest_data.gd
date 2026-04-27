@@ -16,3 +16,5 @@ enum Type { DAILY, PROGRESS, DISCOVERY, STORY }
 @export var dialogic_timeline_on_fail: String = ""
 @export var next_quest_id: StringName = &""
 @export var auto_start: bool = false
+@export var failure_unlock_flags: Array[String] = []
+@export var failure_next_quest_id: StringName = &""

@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="QuestData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://quests/data/quest_data.gd" id="1_qdata"]
+[ext_resource type="Script" path="res://quests/data/quest_objective.gd" id="2_qobj"]
+
+[sub_resource type="Resource" id="Resource_obj1"]
+script = ExtResource("2_qobj")
+objective_id = &"breed_bunga_api"
+description = "Breed Bunga Api (Fire Flower)"
+event_id = &"plant_bred"
+target_count = 1
+filter = {"plant_id": "bunga_api_seed"}
+
+[resource]
+script = ExtResource("1_qdata")
+quest_id = &"discovery_breed_bunga_api"
+display_name = "Fire Bloom"
+description = "Combine Bougainvillea and Kecombrang essences to forge the legendary Bunga Api — the Fire Flower."
+quest_type = 2
+objectives = Array[ExtResource("2_qobj")]([SubResource("Resource_obj1")])
+reward_items = {"kunyit_seed": 2}
+reward_weapons = []
+reward_unlock_flags = []
+time_limit_days = 0
+dialogic_timeline_on_complete = ""
+dialogic_timeline_on_fail = ""
+next_quest_id = &""
+auto_start = true

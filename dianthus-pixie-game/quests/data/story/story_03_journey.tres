@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="QuestData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://quests/data/quest_data.gd" id="1_qdata"]
+[ext_resource type="Script" path="res://quests/data/quest_objective.gd" id="2_qobj"]
+
+[sub_resource type="Resource" id="Resource_obj1"]
+script = ExtResource("2_qobj")
+objective_id = &"travel_to_ruins"
+description = "Travel to the Ruins of Veld"
+event_id = &"zone_entered"
+target_count = 1
+filter = {"zone_id": "ruins_of_veld"}
+
+[resource]
+script = ExtResource("1_qdata")
+quest_id = &"story_03_journey"
+display_name = "The Long Road"
+description = "Whispers speak of ancient ruins beyond the meadow — the Ruins of Veld. Find them before the darkness solidifies its foothold."
+quest_type = 3
+objectives = Array[ExtResource("2_qobj")]([SubResource("Resource_obj1")])
+reward_items = {}
+reward_weapons = []
+reward_unlock_flags = ["unlock_zone_ruins"]
+time_limit_days = 4
+dialogic_timeline_on_complete = "res://addons/dialogic/timelines/story_03_complete.dtl"
+dialogic_timeline_on_fail = "res://addons/dialogic/timelines/story_03_fail.dtl"
+next_quest_id = &"story_04_ruins"
+auto_start = false
+failure_unlock_flags = ["flag_story_failed_ruins"]
+failure_next_quest_id = &"story_alt_lost"

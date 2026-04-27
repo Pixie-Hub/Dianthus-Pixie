@@ -56,6 +56,7 @@ const RECIPES: Dictionary = {
 		"result_id": "crystal_lash",
 		"upgrade_of": "vine_whip",
 		"description": "Vine Whip crystallised with Kunyit. Greater reach and damage.",
+		"required_flag": "recipe_crystal_lash",
 	},
 	"iron_bloom_shield": {
 		"display_name": "Iron Bloom Shield",
@@ -90,3 +91,7 @@ static func is_upgrade(recipe_id: String) -> bool:
 
 static func get_upgrade_base(recipe_id: String) -> String:
 	return RECIPES.get(recipe_id, {}).get("upgrade_of", "")
+
+
+static func get_required_flag(recipe_id: String) -> String:
+	return RECIPES.get(recipe_id, {}).get("required_flag", "")

@@ -4,7 +4,7 @@ signal save_completed(success: bool, manual: bool)
 signal load_completed(success: bool)
 
 const SAVE_PATH: String = "user://savegame.json"
-const SCHEMA_VERSION: int = 6
+const SCHEMA_VERSION: int = 8
 const GAME_VERSION: String = "0.1.0"
 
 const PLANT_TYPE_TO_SCENE: Dictionary = {
@@ -218,8 +218,11 @@ func _gather_state(manual: bool) -> Dictionary:
 		})
 	state["garden"] = {"plants": plants_arr}
 
-	# Reserved stubs — populated by their owning tasks.
+	# Quest system.
 	state["quests"] = QuestManager.serialize()
+	state["quest_daily"] = DailyQuestRoller.serialize()
+	state["unlock_flags"] = UnlockFlags.serialize()
+	state["codex"] = CodexManager.serialize()
 	state["unlocks"] = []       # TODO (END-01, END-04)
 	state["difficulty"] = {"tier": DifficultyManager.get_tier_label().to_lower()}
 
@@ -297,6 +300,11 @@ func _apply_state(state: Dictionary) -> void:
 	var weapon_data: WeaponData = CraftingManager.get_weapon_data(equipped_id)
 	if weapon_data != null and is_instance_valid(GameManager.player):
 		GameManager.player._current_weapon = weapon_data
+
+	# 5.9 Codex, daily quest roller, unlock flags.
+	CodexManager.deserialize(state.get("codex", {}))
+	DailyQuestRoller.deserialize(state.get("quest_daily", {}))
+	UnlockFlags.deserialize(state.get("unlock_flags", {}))
 
 	# 5.5 Difficulty tier.
 	var diff_tier: String = state.get("difficulty", {}).get("tier", "normal")
@@ -404,4 +412,18 @@ func _migrate(data: Dictionary) -> Dictionary:
 		if not data.has("quests"):
 			data["quests"] = {"active": {}, "completed": {}, "failed": {}}
 		data["schema_version"] = 6
+	# v6 → v7: codex discovery tracking added.
+	if version < 7:
+		print("[SaveManager] Migrating save from v%d to v7." % version)
+		if not data.has("codex"):
+			data["codex"] = {"discovered_plants": {}}
+		data["schema_version"] = 7
+	# v7 → v8: daily quest roller and unlock flags added.
+	if version < 8:
+		print("[SaveManager] Migrating save from v%d to v8." % version)
+		if not data.has("quest_daily"):
+			data["quest_daily"] = {"last_rolled_day": 0, "current_daily_ids": []}
+		if not data.has("unlock_flags"):
+			data["unlock_flags"] = {}
+		data["schema_version"] = 8
 	return data

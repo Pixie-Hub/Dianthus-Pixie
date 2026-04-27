@@ -1,0 +1,38 @@
+[gd_resource type="Resource" script_class="QuestData" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://quests/data/quest_data.gd" id="1_qdata"]
+[ext_resource type="Script" path="res://quests/data/quest_objective.gd" id="2_qobj"]
+
+[sub_resource type="Resource" id="Resource_obj1"]
+script = ExtResource("2_qobj")
+objective_id = &"collect_shadow_resin"
+description = "Collect 3 Shadow Resin in the Ruins"
+event_id = &"item_collected"
+target_count = 3
+filter = {"item_id": "shadow_resin"}
+
+[sub_resource type="Resource" id="Resource_obj2"]
+script = ExtResource("2_qobj")
+objective_id = &"kill_phantom_weavers"
+description = "Defeat 5 Phantom Weavers"
+event_id = &"enemy_killed"
+target_count = 5
+filter = {"enemy_type": "phantom_weaver"}
+
+[resource]
+script = ExtResource("1_qdata")
+quest_id = &"story_04_ruins"
+display_name = "Echoes Beneath the Stones"
+description = "The Ruins of Veld reek of void corruption. Gather Shadow Resin and drive back the Phantom Weavers infesting the ancient stones."
+quest_type = 3
+objectives = Array[ExtResource("2_qobj")]([SubResource("Resource_obj1"), SubResource("Resource_obj2")])
+reward_items = {}
+reward_weapons = []
+reward_unlock_flags = ["unlock_recipe_void_grenade"]
+time_limit_days = 5
+dialogic_timeline_on_complete = "res://addons/dialogic/timelines/story_04_complete.dtl"
+dialogic_timeline_on_fail = "res://addons/dialogic/timelines/story_04_fail.dtl"
+next_quest_id = &"story_05_voidlord"
+auto_start = false
+failure_unlock_flags = ["flag_story_failed_ruins"]
+failure_next_quest_id = &"story_alt_lost"

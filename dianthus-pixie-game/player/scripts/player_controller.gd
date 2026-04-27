@@ -150,6 +150,22 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 	if Input.is_action_just_pressed("quest_log_toggle"):
+		if Input.is_key_pressed(KEY_CTRL) and Input.is_key_pressed(KEY_SHIFT):
+			var active: Array[QuestData] = QuestManager.get_active_quests()
+			print("=== QUEST SUMMARY (%d active) ===" % active.size())
+			for q: QuestData in active:
+				var prog: Dictionary = QuestManager.get_progress(q.quest_id)
+				print("  [%s] %s" % [QuestData.Type.keys()[q.quest_type], q.display_name])
+				for obj_id: StringName in prog:
+					var info: Dictionary = prog[obj_id]
+					print("    %s: %d/%d" % [info.get("description", obj_id), info.get("current", 0), info.get("target", 1)])
+			print("  Unlock flags: %s" % str(UnlockFlags.serialize()))
+			get_viewport().set_input_as_handled()
+			return
+		elif Input.is_key_pressed(KEY_SHIFT):
+			DailyQuestRoller.force_reroll()
+			get_viewport().set_input_as_handled()
+			return
 		var screen: Node = get_tree().current_scene.find_child("QuestLogScreen", true, false)
 		if screen != null and screen.has_method("toggle"):
 			screen.toggle()
@@ -276,6 +292,30 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_3 and event.shift_pressed:
 			equip_weapon(0, "petal_shield")
 			print("DEBUG: Shift+3 — Equip Petal Shield to slot 1.")
+		elif event.keycode == KEY_5 and event.shift_pressed and not event.ctrl_pressed:
+			ZoneTracker.enter_zone("ruins_of_veld")
+			print("DEBUG: Shift+5 — Emitted zone_entered{zone_id=ruins_of_veld}.")
+		elif event.keycode == KEY_6 and event.shift_pressed:
+			QuestManager._on_voidlord_defeated()
+			print("DEBUG: Shift+6 — Emitted voidlord_defeated.")
+		elif event.keycode == KEY_7 and event.shift_pressed:
+			QuestManager._on_devourer_defeated()
+			print("DEBUG: Shift+7 — Emitted devourer_defeated.")
+			print("DEBUG: flag_story_devourer_defeated == %s" % str(UnlockFlags.has_flag("flag_story_devourer_defeated")))
+		elif event.keycode == KEY_5 and event.ctrl_pressed and event.shift_pressed:
+			QuestManager.start_quest(&"story_01_whispers")
+			print("DEBUG: Ctrl+Shift+5 — Force-started story_01_whispers.")
+		elif event.keycode == KEY_F and event.ctrl_pressed and event.shift_pressed:
+			var story_active: Array[QuestData] = QuestManager.get_active_quests()
+			var found_story: bool = false
+			for q: QuestData in story_active:
+				if q.quest_type == QuestData.Type.STORY:
+					print("DEBUG: Ctrl+Shift+F — Force-failing story quest: %s" % q.quest_id)
+					QuestManager.fail_quest(q.quest_id, "time_limit")
+					found_story = true
+					break
+			if not found_story:
+				print("DEBUG: Ctrl+Shift+F — No active story quest to fail.")
 		if event.keycode == KEY_K and event.shift_pressed and not event.alt_pressed:
 			var active: Array[QuestData] = QuestManager.get_active_quests()
 			if active.is_empty():

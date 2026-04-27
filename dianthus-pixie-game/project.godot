@@ -27,6 +27,9 @@ CraftingManager="*res://crafting/scripts/crafting_manager.gd"
 BreedingManager="*res://crafting/breeding/breeding_manager.gd"
 CodexManager="*res://ui/codex/codex_manager.gd"
 QuestManager="*res://quests/scripts/quest_manager.gd"
+ZoneTracker="*res://world/scripts/zone_tracker.gd"
+UnlockFlags="*res://shared/autoloads/unlock_flags.gd"
+DailyQuestRoller="*res://quests/scripts/daily_quest_roller.gd"
 
 [display]
 

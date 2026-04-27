@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="QuestData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://quests/data/quest_data.gd" id="1_qdata"]
+[ext_resource type="Script" path="res://quests/data/quest_objective.gd" id="2_qobj"]
+
+[sub_resource type="Resource" id="Resource_obj1"]
+script = ExtResource("2_qobj")
+objective_id = &"craft_3_weapons"
+description = "Craft 3 weapons total"
+event_id = &"weapon_crafted"
+target_count = 3
+filter = {}
+
+[resource]
+script = ExtResource("1_qdata")
+quest_id = &"progress_craft_3_weapons"
+display_name = "Master Crafter"
+description = "The bench holds the knowledge of all flora. Craft 3 weapons to unlock its secrets."
+quest_type = 1
+objectives = Array[ExtResource("2_qobj")]([SubResource("Resource_obj1")])
+reward_items = {"aether_bloom": 1}
+reward_weapons = []
+reward_unlock_flags = []
+time_limit_days = 0
+dialogic_timeline_on_complete = ""
+dialogic_timeline_on_fail = ""
+next_quest_id = &""
+auto_start = true

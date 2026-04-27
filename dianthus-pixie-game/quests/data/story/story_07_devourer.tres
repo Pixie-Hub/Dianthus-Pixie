@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="QuestData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://quests/data/quest_data.gd" id="1_qdata"]
+[ext_resource type="Script" path="res://quests/data/quest_objective.gd" id="2_qobj"]
+
+[sub_resource type="Resource" id="Resource_obj1"]
+script = ExtResource("2_qobj")
+objective_id = &"defeat_devourer"
+description = "Defeat the Devourer"
+event_id = &"devourer_defeated"
+target_count = 1
+filter = {}
+
+[resource]
+script = ExtResource("1_qdata")
+quest_id = &"story_07_devourer"
+display_name = "The Final Bloom"
+description = "The Devourer has manifested. Stand firm — this is the hour the Dianthus Core was born for. Let it bloom one last time."
+quest_type = 3
+objectives = Array[ExtResource("2_qobj")]([SubResource("Resource_obj1")])
+reward_items = {}
+reward_weapons = []
+reward_unlock_flags = ["flag_story_devourer_defeated", "flag_story_complete"]
+time_limit_days = 0
+dialogic_timeline_on_complete = "res://addons/dialogic/timelines/story_07_complete.dtl"
+dialogic_timeline_on_fail = "res://addons/dialogic/timelines/story_07_fail.dtl"
+next_quest_id = &""
+auto_start = false
+failure_unlock_flags = ["flag_story_devourer_summoned"]
+failure_next_quest_id = &"story_alt_devourer_loss"

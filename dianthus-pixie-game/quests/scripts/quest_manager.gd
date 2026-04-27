@@ -55,21 +55,32 @@ func complete_quest(id: StringName) -> void:
 	var dialogic: Node = get_node_or_null("/root/Dialogic")
 	if dialogic != null and q.dialogic_timeline_on_complete != "":
 		dialogic.start(q.dialogic_timeline_on_complete)
+	if q.next_quest_id != &"" and _registry.has(q.next_quest_id):
+		start_quest(q.next_quest_id)
 
 
 func fail_quest(id: StringName, reason: String) -> void:
 	if not _active.has(id):
 		return
+	var q: QuestData = _registry.get(id)
+	var is_story_timeout: bool = q != null \
+		and q.quest_type == QuestData.Type.STORY \
+		and reason == "time_limit"
+	if is_story_timeout:
+		for flag: String in q.failure_unlock_flags:
+			UnlockFlags.set_flag(flag)
+		print("[QuestManager] Story-quest soft-fail: %s — alt-ending flags set" % id)
 	_active.erase(id)
 	_failed[id] = reason
 	quest_failed.emit(id, reason)
 	print("[QuestManager] Failed: %s  reason: %s" % [id, reason])
-	var q: QuestData = _registry.get(id)
 	if q == null:
 		return
 	var dialogic: Node = get_node_or_null("/root/Dialogic")
 	if dialogic != null and q.dialogic_timeline_on_fail != "":
 		dialogic.start(q.dialogic_timeline_on_fail)
+	if is_story_timeout and q.failure_next_quest_id != &"" and _registry.has(q.failure_next_quest_id):
+		start_quest(q.failure_next_quest_id)
 
 
 func is_active(id: StringName) -> bool:
@@ -123,6 +134,35 @@ func get_failed_quests() -> Array[Dictionary]:
 		if _registry.has(id):
 			out.append({"quest": _registry[id], "reason": _failed[id]})
 	return out
+
+
+func get_active_quest_ids() -> Array[StringName]:
+	var result: Array[StringName] = []
+	for id: StringName in _active:
+		result.append(id)
+	return result
+
+
+func get_quest_type(id: StringName) -> QuestData.Type:
+	var q: QuestData = _registry.get(id)
+	if q == null:
+		return QuestData.Type.DAILY
+	return q.quest_type
+
+
+func get_quests_by_type(type: QuestData.Type) -> Array[QuestData]:
+	var result: Array[QuestData] = []
+	for q: QuestData in _registry.values():
+		if q.quest_type == type:
+			result.append(q)
+	return result
+
+
+func silent_drop_quest(id: StringName) -> void:
+	if not _active.has(id):
+		return
+	_active.erase(id)
+	print("[QuestManager] Silently dropped daily quest: %s" % id)
 
 
 func report_event(event_id: StringName, amount: int = 1, context: Dictionary = {}) -> void:
@@ -231,6 +271,7 @@ func _connect_event_sources() -> void:
 	InventoryManager.item_added.connect(_on_item_added)
 	DayNightCycle.phase_changed.connect(_on_phase_changed)
 	BreedingManager.breed_succeeded.connect(_on_breed_succeeded)
+	BreedingManager.combo_attempted.connect(_on_combo_attempted)
 	CodexManager.plant_discovered.connect(_on_plant_discovered)
 	CraftingManager.weapon_crafted.connect(_on_weapon_crafted)
 	call_deferred("_connect_scene_nodes")
@@ -292,10 +333,11 @@ func _grant_rewards(q: QuestData) -> void:
 			InventoryManager.add_item(item_id, amount)
 	for weapon_id: String in q.reward_weapons:
 		CraftingManager.owned_weapons[weapon_id] = true
-	# TODO: QUEST-03 — process reward_unlock_flags
+	for flag: String in q.reward_unlock_flags:
+		UnlockFlags.set_flag(flag)
 	quest_rewards_granted.emit(q.quest_id, q.reward_items, q.reward_weapons)
-	print("[QuestManager] Rewards granted for %s — items=%s  weapons=%s" % [
-		q.quest_id, q.reward_items, q.reward_weapons])
+	print("[QuestManager] Rewards granted for %s — items=%s  weapons=%s  flags=%s" % [
+		q.quest_id, q.reward_items, q.reward_weapons, q.reward_unlock_flags])
 
 
 func _matches_filter(filter: Dictionary, context: Dictionary) -> bool:
@@ -312,16 +354,19 @@ func _on_item_added(item_id: String, amount: int) -> void:
 
 
 func _on_phase_changed(phase: String) -> void:
-	# TODO: QUEST-02 — daily quest reroll on day start
 	if phase == "DAY":
+		DailyQuestRoller.roll_for_day(DayNightCycle.day_count)
 		report_event(&"day_survived", 1, {"day": DayNightCycle.day_count})
 		_check_time_limits()
+		_maybe_start_story_chain()
 
 
 func _check_time_limits() -> void:
 	for quest_id: StringName in _active.keys():
 		var q: QuestData = _registry.get(quest_id)
 		if q == null or q.time_limit_days <= 0:
+			continue
+		if q.quest_type == QuestData.Type.DAILY:
 			continue
 		var started_day: int = _active[quest_id].get("started_day", DayNightCycle.day_count)
 		var elapsed_days: int = DayNightCycle.day_count - started_day
@@ -339,3 +384,26 @@ func _on_plant_discovered(plant_id: String) -> void:
 
 func _on_weapon_crafted(weapon_id: String) -> void:
 	report_event(&"weapon_crafted", 1, {"weapon_id": weapon_id})
+
+
+func _on_combo_attempted(combo_id: String, success: bool) -> void:
+	report_event(&"combo_attempted", 1, {"combo_id": combo_id, "success": str(success)})
+
+
+func _maybe_start_story_chain() -> void:
+	if UnlockFlags.has_flag(StoryEndingFlags.flag_story_chain_started):
+		return
+	if DayNightCycle.day_count < 2:
+		return
+	if _registry.has(&"story_01_whispers"):
+		start_quest(&"story_01_whispers")
+
+
+func _on_voidlord_defeated() -> void:
+	# TODO: DIFF-03 — call this from Voidlord boss _die()
+	report_event(&"voidlord_defeated", 1, {})
+
+
+func _on_devourer_defeated() -> void:
+	# TODO: ENEMY-05 — call this from Devourer boss _die()
+	report_event(&"devourer_defeated", 1, {})
