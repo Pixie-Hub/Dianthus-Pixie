@@ -2,6 +2,6 @@
 .godot/
 /android/
 
-# Ignore PROMPT_ markdown files in docs/design
+# Ignore PROMPT_ and GEMINI_ markdown files in docs/design
 docs/design/PROMPT_*.md
 docs/design/GEMINI_*.md
