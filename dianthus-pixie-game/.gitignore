@@ -4,3 +4,6 @@
 
 # Ignore PROMPT_ markdown files in docs/design
 docs/design/PROMPT_*.md
+
+# Ignore GEMINI_ files in docs/design
+docs/design/GEMINI_*
