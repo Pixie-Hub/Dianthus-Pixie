@@ -55,6 +55,7 @@ func _fire(ending_id: String) -> void:
 	print("[EndingManager] Ending fired: %s" % ending_id)
 	ending_triggered.emit(ending_id)
 	GameManager.ending_triggered.emit(ending_id)
+	MusicManager.play_end(ending_id)
 
 
 func _resolve_ending() -> String:

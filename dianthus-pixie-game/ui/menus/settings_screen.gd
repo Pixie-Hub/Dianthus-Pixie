@@ -1,6 +1,7 @@
 extends Control
 
 const SETTINGS_PATH: String = "user://settings.cfg"
+const AUDIO_BUSES: Array[String] = ["Music", "SFX"]
 
 @onready var _master_slider: HSlider = %MasterSlider
 @onready var _music_slider: HSlider = %MusicSlider
@@ -12,6 +13,7 @@ const SETTINGS_PATH: String = "user://settings.cfg"
 
 func _ready() -> void:
 	visible = false
+	_ensure_audio_buses()
 	_text_speed_option.add_item("Slow", 0)
 	_text_speed_option.add_item("Normal", 1)
 	_text_speed_option.add_item("Fast", 2)
@@ -24,6 +26,7 @@ func _ready() -> void:
 	_fullscreen_toggle.toggled.connect(_on_fullscreen_toggled)
 	_colorblind_toggle.toggled.connect(_on_colorblind_toggled)
 	_text_speed_option.item_selected.connect(_on_text_speed_changed)
+	_apply_audio_settings()
 
 
 func open() -> void:
@@ -59,6 +62,22 @@ func _set_bus_volume(bus_name: String, percent: float) -> void:
 	else:
 		AudioServer.set_bus_mute(idx, false)
 		AudioServer.set_bus_volume_db(idx, linear_to_db(percent / 100.0))
+
+
+func _ensure_audio_buses() -> void:
+	for bus_name: String in AUDIO_BUSES:
+		if AudioServer.get_bus_index(bus_name) >= 0:
+			continue
+		AudioServer.add_bus()
+		var idx: int = AudioServer.get_bus_count() - 1
+		AudioServer.set_bus_name(idx, bus_name)
+		AudioServer.set_bus_send(idx, "Master")
+
+
+func _apply_audio_settings() -> void:
+	_on_master_changed(_master_slider.value)
+	_on_music_changed(_music_slider.value)
+	_on_sfx_changed(_sfx_slider.value)
 
 
 # --- Fullscreen ---
@@ -108,9 +127,6 @@ func _load_settings() -> void:
 	_fullscreen_toggle.button_pressed = config.get_value("display", "fullscreen", false)
 	_colorblind_toggle.button_pressed = config.get_value("accessibility", "colorblind", false)
 	_text_speed_option.selected = config.get_value("accessibility", "text_speed", 1)
-	_on_master_changed(_master_slider.value)
-	_on_music_changed(_music_slider.value)
-	_on_sfx_changed(_sfx_slider.value)
 	_on_fullscreen_toggled(_fullscreen_toggle.button_pressed)
 	GameManager.set_colorblind_mode(_colorblind_toggle.button_pressed)
 	print("[Settings] Settings loaded.")

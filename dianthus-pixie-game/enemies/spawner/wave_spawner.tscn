@@ -2,17 +2,17 @@
 
 [ext_resource type="Script" uid="uid://cwavespawner1" path="res://enemies/spawner/wave_spawner.gd" id="1_wvsp"]
 
-[node name="WaveSpawner" type="Node"]
+[node name="WaveSpawner" type="Node" unique_id=1294949628 groups=["wave_spawners"]]
 script = ExtResource("1_wvsp")
 
-[node name="SpawnNorth" type="Marker2D" parent="."]
+[node name="SpawnNorth" type="Marker2D" parent="." unique_id=611031472]
 position = Vector2(320, -16)
 
-[node name="SpawnSouth" type="Marker2D" parent="."]
+[node name="SpawnSouth" type="Marker2D" parent="." unique_id=1370820617]
 position = Vector2(320, 496)
 
-[node name="SpawnEast" type="Marker2D" parent="."]
+[node name="SpawnEast" type="Marker2D" parent="." unique_id=710428321]
 position = Vector2(656, 240)
 
-[node name="SpawnWest" type="Marker2D" parent="."]
+[node name="SpawnWest" type="Marker2D" parent="." unique_id=575008252]
 position = Vector2(-16, 240)
