@@ -33,7 +33,7 @@ func _process(delta: float) -> void:
 		if _regen_accumulator >= 1.0:
 			var amount: int = int(_regen_accumulator)
 			_regen_accumulator -= float(amount)
-			heal(amount)
+			heal(amount, false)
 
 
 func take_damage(amount: int) -> void:
@@ -53,11 +53,12 @@ func take_damage(amount: int) -> void:
 		core_destroyed.emit()
 
 
-func heal(amount: int) -> void:
+func heal(amount: int, play_sfx: bool = true) -> void:
 	current_hp = min(current_hp + amount, MAX_HP)
 	hp_changed.emit(current_hp, MAX_HP)
 	_update_aura()
-	SfxManager.play("core_heal")
+	if play_sfx:
+		SfxManager.play("core_heal")
 
 
 func _update_aura() -> void:

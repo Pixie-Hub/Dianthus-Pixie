@@ -29,16 +29,16 @@ const LOOPING_TRACKS: Dictionary = {
 }
 
 const BGM_VOLUME_DB: Dictionary = {
-	"main_menu": 0.0,
-	"exploration_day": 0.0,
-	"preparation_phase": 0.0,
-	"night_combat_base": 0.0,
-	"night_combat_intense": 0.0,
-	"surge_night": 0.0,
-	"devourer_boss": 0.0,
-	"ending_true": 0.0,
-	"ending_survival": 0.0,
-	"ending_discovery": 0.0,
+	"main_menu": -20.0,
+	"exploration_day": -20.0,
+	"preparation_phase": -20.0,
+	"night_combat_base": -20.0,
+	"night_combat_intense": -20.0,
+	"surge_night": -20.0,
+	"devourer_boss": -20.0,
+	"ending_true": -20.0,
+	"ending_survival": -20.0,
+	"ending_discovery": -20.0,
 }
 
 const PREPARATION_THRESHOLD: float = 30.0

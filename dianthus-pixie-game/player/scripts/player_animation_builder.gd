@@ -1,8 +1,8 @@
 @tool
 class_name PlayerAnimationBuilder
 
-const FRAME_W: int = 64
-const FRAME_H: int = 80
+const UNARMED_FRAME_SIZE: Vector2i = Vector2i(64, 80)
+const WEAPON_FRAME_SIZE: Vector2i = Vector2i(80, 96)
 
 const DIR_DOWN: int = 0
 const DIR_LEFT: int = 1
@@ -46,11 +46,12 @@ const ANIM_DEFS: Array[Dictionary] = [
 	},
 	{
 		"prefix": "attack",
-		"sheet": "res://player/sprites/PNG/Sword_attack/Sword_attack_full.png",
+		"sheet": "res://player/sprites/PNG/Sword_attack/player_sword_attack_full.png",
 		"columns": 8,
 		"frames": [8, 8, 8, 8],
 		"loop": false,
 		"duration": 0.4,
+		"frame_size": WEAPON_FRAME_SIZE,
 	},
 ]
 
@@ -72,6 +73,7 @@ static func build(anim_player: AnimationPlayer, sprite_path: String) -> void:
 			var frame_count: int = def["frames"][dir_idx]
 			var total_time: float = def["duration"]
 			var frame_dur: float = total_time / float(frame_count)
+			var frame_size: Vector2i = def["frame_size"] if def.has("frame_size") else UNARMED_FRAME_SIZE
 
 			var anim: Animation = Animation.new()
 			anim.length = total_time
@@ -95,10 +97,10 @@ static func build(anim_player: AnimationPlayer, sprite_path: String) -> void:
 
 			for f: int in frame_count:
 				var rect: Rect2 = Rect2(
-					f * FRAME_W,
-					dir_idx * FRAME_H,
-					FRAME_W,
-					FRAME_H
+					f * frame_size.x,
+					dir_idx * frame_size.y,
+					frame_size.x,
+					frame_size.y
 				)
 				anim.track_insert_key(t_rect, f * frame_dur, rect)
 
@@ -109,7 +111,7 @@ static func build(anim_player: AnimationPlayer, sprite_path: String) -> void:
 	var rt: int = reset.add_track(Animation.TYPE_VALUE)
 	reset.track_set_path(rt, "%s:region_rect" % sprite_path)
 	reset.value_track_set_update_mode(rt, Animation.UPDATE_DISCRETE)
-	reset.track_insert_key(rt, 0.0, Rect2(0, 0, FRAME_W, FRAME_H))
+	reset.track_insert_key(rt, 0.0, Rect2(0, 0, UNARMED_FRAME_SIZE.x, UNARMED_FRAME_SIZE.y))
 	lib.add_animation("RESET", reset)
 
 	if anim_player.has_animation_library(""):
@@ -154,6 +156,7 @@ static func build_tree(anim_tree: AnimationTree) -> void:
 
 	var attack_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
 	attack_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
+	attack_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
 	sm.add_transition("attack", "idle", attack_to_idle)
 
 	sm.set_graph_offset(Vector2(0, 0))
