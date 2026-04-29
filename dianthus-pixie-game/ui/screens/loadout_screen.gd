@@ -28,7 +28,7 @@ func _ready() -> void:
 func open() -> void:
 	SfxManager.play("screen_open")
 	visible = true
-	get_tree().paused = true
+	PauseManager.request_pause(self)
 	_is_night = DayNightCycle.is_night()
 	_refresh()
 
@@ -36,7 +36,7 @@ func open() -> void:
 func close() -> void:
 	SfxManager.play("screen_close")
 	visible = false
-	get_tree().paused = false
+	PauseManager.release_pause(self)
 	_pending_assign_slot = -1
 
 

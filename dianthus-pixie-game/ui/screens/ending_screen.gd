@@ -56,19 +56,19 @@ func _on_ending(ending_id: String) -> void:
 	_credits_label.text = CREDITS_TEXT
 	_endless_button.visible = UnlockFlags.has_flag(StoryEndingFlags.unlock_endless_mode)
 	SfxManager.play("ending_screen")
-	get_tree().paused = true
+	PauseManager.request_pause(self)
 	visible = true
 
 
 func _on_continue() -> void:
 	SfxManager.play("ui_button_click")
-	get_tree().paused = false
+	PauseManager.release_pause(self)
 	visible = false
 
 
 func _on_main_menu() -> void:
 	SfxManager.play("ui_button_click")
-	get_tree().paused = false
+	PauseManager.clear_all()
 	visible = false
 	get_tree().change_scene_to_file("res://ui/menus/main_menu.tscn")
 
@@ -77,6 +77,6 @@ func _on_endless() -> void:
 	SfxManager.play("ui_button_click")
 	SfxManager.play("endless_mode_activate")
 	GameManager.endless_mode = true
-	get_tree().paused = false
+	PauseManager.release_pause(self)
 	visible = false
 	print("[EndingScreen] Endless Mode activated.")

@@ -50,14 +50,14 @@ func open() -> void:
 	visible = true
 	_refresh_slots()
 	_refresh_combo_list()
-	get_tree().paused = true
+	PauseManager.request_pause(self)
 
 
 func close() -> void:
 	SfxManager.play("screen_close")
 	visible = false
 	_item_picker_panel.visible = false
-	get_tree().paused = false
+	PauseManager.release_pause(self)
 
 
 func _on_slot_a_clicked(event: InputEvent) -> void:

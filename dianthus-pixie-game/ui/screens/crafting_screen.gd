@@ -38,13 +38,13 @@ func open() -> void:
 	SfxManager.play("screen_open")
 	visible = true
 	_build_recipe_list()
-	get_tree().paused = true
+	PauseManager.request_pause(self)
 
 
 func close() -> void:
 	SfxManager.play("screen_close")
 	visible = false
-	get_tree().paused = false
+	PauseManager.release_pause(self)
 	_selected_recipe_id = ""
 
 

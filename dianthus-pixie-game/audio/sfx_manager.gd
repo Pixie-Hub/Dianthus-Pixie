@@ -1,6 +1,8 @@
 extends Node
 
 const POOL_SIZE: int = 16
+const SAME_SFX_MIN_INTERVAL_MS: int = 35
+const SAME_SFX_MAX_PER_FRAME: int = 1
 
 const SFX: Dictionary = {
 	# Combat — Player Attacks
@@ -100,11 +102,21 @@ const SFX: Dictionary = {
 	"harvest_qte_fail":          "res://audio/sfx/minigames/Harvest QTE Fail.wav",
 }
 
+const SFX_VOLUME_DB: Dictionary = {
+	"thorn_sword_swing": -10.0,
+	"screen_open": -4.0,
+	"screen_close": -4.0,
+	"plant_placed": 10.0,
+}
+
 var _pool: Array[AudioStreamPlayer] = []
 var _pool_2d: Array[AudioStreamPlayer2D] = []
 var _cache: Dictionary = {}
 var _pool_index: int = 0
 var _pool_2d_index: int = 0
+var _last_play_msec_by_id: Dictionary = {}
+var _last_play_frame_by_id: Dictionary = {}
+var _plays_this_frame_by_id: Dictionary = {}
 
 
 func _ready() -> void:
@@ -124,6 +136,8 @@ func _ready() -> void:
 
 
 func play(sfx_id: String, pitch_rand: float = 0.0) -> void:
+	if not _can_play_now(sfx_id):
+		return
 	var stream: AudioStream = _get_stream(sfx_id)
 	if stream == null:
 		return
@@ -135,10 +149,13 @@ func play(sfx_id: String, pitch_rand: float = 0.0) -> void:
 		player.pitch_scale = 1.0 + randf_range(-pitch_rand, pitch_rand)
 	else:
 		player.pitch_scale = 1.0
+	player.volume_db = SFX_VOLUME_DB.get(sfx_id, 0.0)
 	player.play()
 
 
 func play_at(sfx_id: String, world_position: Vector2, pitch_rand: float = 0.0) -> void:
+	if not _can_play_now(sfx_id):
+		return
 	var stream: AudioStream = _get_stream(sfx_id)
 	if stream == null:
 		return
@@ -151,7 +168,28 @@ func play_at(sfx_id: String, world_position: Vector2, pitch_rand: float = 0.0) -
 		player.pitch_scale = 1.0 + randf_range(-pitch_rand, pitch_rand)
 	else:
 		player.pitch_scale = 1.0
+	player.volume_db = SFX_VOLUME_DB.get(sfx_id, 0.0)
 	player.play()
+
+
+func _can_play_now(sfx_id: String) -> bool:
+	var frame: int = Engine.get_process_frames()
+	var last_frame: int = int(_last_play_frame_by_id.get(sfx_id, -1))
+	var plays_this_frame: int = 0
+	if last_frame == frame:
+		plays_this_frame = int(_plays_this_frame_by_id.get(sfx_id, 0))
+	if plays_this_frame >= SAME_SFX_MAX_PER_FRAME:
+		return false
+
+	var now_msec: int = Time.get_ticks_msec()
+	var last_msec: int = int(_last_play_msec_by_id.get(sfx_id, -SAME_SFX_MIN_INTERVAL_MS))
+	if now_msec - last_msec < SAME_SFX_MIN_INTERVAL_MS:
+		return false
+
+	_last_play_frame_by_id[sfx_id] = frame
+	_plays_this_frame_by_id[sfx_id] = plays_this_frame + 1
+	_last_play_msec_by_id[sfx_id] = now_msec
+	return true
 
 
 func _get_stream(sfx_id: String) -> AudioStream:

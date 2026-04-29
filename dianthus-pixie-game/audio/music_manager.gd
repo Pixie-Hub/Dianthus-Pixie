@@ -28,6 +28,19 @@ const LOOPING_TRACKS: Dictionary = {
 	"ending_discovery": false,
 }
 
+const BGM_VOLUME_DB: Dictionary = {
+	"main_menu": 0.0,
+	"exploration_day": 0.0,
+	"preparation_phase": 0.0,
+	"night_combat_base": 0.0,
+	"night_combat_intense": 0.0,
+	"surge_night": 0.0,
+	"devourer_boss": 0.0,
+	"ending_true": 0.0,
+	"ending_survival": 0.0,
+	"ending_discovery": 0.0,
+}
+
 const PREPARATION_THRESHOLD: float = 30.0
 const FADE_DURATION: float = 1.5
 const INTENSE_THRESHOLD: float = 0.5
@@ -78,7 +91,7 @@ func play_track(track_id: String, loop: Variant = null) -> void:
 		return
 	_current_track = track_id
 	var should_loop: bool = LOOPING_TRACKS.get(track_id, true) if loop == null else bool(loop)
-	_crossfade_to(stream, should_loop)
+	_crossfade_to(track_id, stream, should_loop)
 
 
 func play_music(track_id: String) -> void:
@@ -200,11 +213,12 @@ func _set_intense(on: bool, fade: bool = true) -> void:
 		_intense_tween = create_tween()
 		_intense_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 		var target_db: float = 0.0 if on else -80.0
+		target_db = _get_track_volume_db("night_combat_intense") if on else target_db
 		_intense_tween.tween_property(_player_intense, "volume_db", target_db, FADE_DURATION)
 		if not on:
 			_intense_tween.tween_callback(_player_intense.stop)
 	else:
-		_player_intense.volume_db = 0.0 if on else -80.0
+		_player_intense.volume_db = _get_track_volume_db("night_combat_intense") if on else -80.0
 		if not on:
 			_player_intense.stop()
 
@@ -235,7 +249,7 @@ func _on_scene_changed(node: Node) -> void:
 		_play_current_phase_music()
 
 
-func _crossfade_to(stream: AudioStream, loop: bool) -> void:
+func _crossfade_to(track_id: String, stream: AudioStream, loop: bool) -> void:
 	var incoming: AudioStreamPlayer = _player_b if _active_player == _player_a else _player_a
 	var outgoing: AudioStreamPlayer = _active_player
 
@@ -250,7 +264,7 @@ func _crossfade_to(stream: AudioStream, loop: bool) -> void:
 	_fade_tween = create_tween()
 	_fade_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	_fade_tween.set_parallel(true)
-	_fade_tween.tween_property(incoming, "volume_db", 0.0, FADE_DURATION)
+	_fade_tween.tween_property(incoming, "volume_db", _get_track_volume_db(track_id), FADE_DURATION)
 	if is_instance_valid(outgoing):
 		_fade_tween.tween_property(outgoing, "volume_db", -80.0, FADE_DURATION)
 		_fade_tween.chain().tween_callback(outgoing.stop)
@@ -295,6 +309,10 @@ func _get_stream(track_id: String) -> AudioStream:
 		return null
 	_cache[track_id] = stream
 	return stream
+
+
+func _get_track_volume_db(track_id: String) -> float:
+	return float(BGM_VOLUME_DB.get(track_id, 0.0))
 
 
 func _apply_loop(stream: AudioStream, loop: bool) -> void:

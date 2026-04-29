@@ -14,7 +14,7 @@ func _ready() -> void:
 
 
 func _on_game_over() -> void:
-	get_tree().paused = true
+	PauseManager.request_pause(self)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	if GameManager.endless_mode:
 		var day: int = DayNightCycle.day_count
@@ -61,7 +61,7 @@ func _clear_leaderboard() -> void:
 
 func _on_restart() -> void:
 	SfxManager.play("ui_button_click")
-	get_tree().paused = false
+	PauseManager.clear_all()
 	visible = false
 	GameManager.endless_mode = false
 	DayNightCycle.day_count = 1
@@ -75,6 +75,6 @@ func _on_main_menu() -> void:
 	if GameManager.endless_mode:
 		EndlessLeaderboard.submit_score(DayNightCycle.day_count)
 	GameManager.endless_mode = false
-	get_tree().paused = false
+	PauseManager.clear_all()
 	visible = false
 	get_tree().change_scene_to_file("res://ui/menus/main_menu.tscn")

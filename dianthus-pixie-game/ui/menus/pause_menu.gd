@@ -43,7 +43,7 @@ func _open() -> void:
 	SfxManager.play("screen_open")
 	_is_open = true
 	visible = true
-	get_tree().paused = true
+	PauseManager.request_pause(self)
 	_save_btn.disabled = GameManager.current_state != GameManager.GameState.EXPLORATION
 	paused.emit()
 
@@ -53,7 +53,7 @@ func _close() -> void:
 	_is_open = false
 	visible = false
 	_save_feedback.visible = false
-	get_tree().paused = false
+	PauseManager.release_pause(self)
 	resumed.emit()
 
 
@@ -92,6 +92,6 @@ func _on_main_menu_confirmed() -> void:
 	SfxManager.play("ui_button_click")
 	_is_open = false
 	visible = false
-	get_tree().paused = false
+	PauseManager.clear_all()
 	print("[PauseMenu] Returning to main menu.")
 	get_tree().change_scene_to_file("res://ui/menus/main_menu.tscn")

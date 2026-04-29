@@ -54,7 +54,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func open() -> void:
 	SfxManager.play("screen_open")
 	visible = true
-	get_tree().paused = true
+	PauseManager.request_pause(self)
 	_update_tab_counts()
 	_refresh()
 
@@ -62,7 +62,7 @@ func open() -> void:
 func close() -> void:
 	SfxManager.play("screen_close")
 	visible = false
-	get_tree().paused = false
+	PauseManager.release_pause(self)
 
 
 func toggle() -> void:

@@ -17,7 +17,7 @@ func _on_night_survived(day: int) -> void:
 	if not is_inside_tree():
 		return
 	SfxManager.play("night_survived")
-	get_tree().paused = true
+	PauseManager.request_pause(self)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_day_label.text = "Day %d Complete" % day
 	_rewards_label.text = _generate_rewards_text()
@@ -36,7 +36,7 @@ func _generate_rewards_text() -> String:
 
 func _on_continue() -> void:
 	SfxManager.play("ui_button_click")
-	get_tree().paused = false
+	PauseManager.release_pause(self)
 	visible = false
 	continue_pressed.emit()
 	if DayNightCycle.is_night():

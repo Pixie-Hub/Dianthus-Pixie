@@ -39,13 +39,13 @@ func open() -> void:
 	SfxManager.play("screen_open")
 	visible = true
 	_build_plant_list()
-	get_tree().paused = true
+	PauseManager.request_pause(self)
 
 
 func close() -> void:
 	SfxManager.play("screen_close")
 	visible = false
-	get_tree().paused = false
+	PauseManager.release_pause(self)
 	_selected_plant_id = ""
 
 
