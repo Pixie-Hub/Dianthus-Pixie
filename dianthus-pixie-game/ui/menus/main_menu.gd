@@ -58,6 +58,7 @@ func _start_new_game() -> void:
 	DayNightCycle.day_count = 1
 	DayNightCycle.current_phase = DayNightCycle.Phase.DAY
 	DayNightCycle._phase_timer = DayNightCycle.PHASE_DURATIONS[DayNightCycle.Phase.DAY]
+	TutorialManager.reset_progress_for_new_game()
 	InventoryManager.clear_all()
 	CraftingManager.deserialize({})
 	BreedingManager.deserialize({})

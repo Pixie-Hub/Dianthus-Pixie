@@ -37,6 +37,9 @@ func _toggle() -> void:
 	if visible:
 		SfxManager.play("inventory_open")
 		_refresh()
+		var tutorial_manager: Node = get_node_or_null("/root/TutorialManager")
+		if tutorial_manager != null and tutorial_manager.has_method("report_inventory_opened"):
+			tutorial_manager.report_inventory_opened()
 	else:
 		SfxManager.play("inventory_close")
 

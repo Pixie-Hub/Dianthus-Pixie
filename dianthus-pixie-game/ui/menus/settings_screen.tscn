@@ -170,6 +170,22 @@ text = "Colorblind Mode"
 unique_name_in_owner = true
 layout_mode = 2
 
+[node name="TutorialRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TutorialLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TutorialRow"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.941, 0.902, 0.824, 1)
+theme_override_font_sizes/font_size = 10
+text = "Tutorial Guidance"
+
+[node name="TutorialToggle" type="CheckButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TutorialRow"]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+
 [node name="TextSpeedRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1576225129]
 layout_mode = 2
 theme_override_constants/separation = 8

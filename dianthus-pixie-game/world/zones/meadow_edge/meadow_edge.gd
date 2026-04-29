@@ -23,6 +23,7 @@ func _ready() -> void:
 		GameManager.register_core(core)
 	if is_instance_valid(_player):
 		GameManager.register_player(_player)
+	TutorialManager.notify_scene_ready()
 	_wave_spawner = get_node_or_null("WaveSpawner") as WaveSpawner
 	if is_instance_valid(_wave_spawner):
 		_wave_spawner.wave_started.connect(_on_wave_started)

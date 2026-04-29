@@ -4,12 +4,16 @@ extends Area2D
 @export var amount: int = 1
 
 var _color_rect: ColorRect = null
+var _tutorial_hint: Node2D = null
+var _tutorial_hint_tween: Tween = null
 
 
 func _ready() -> void:
 	add_to_group("pickups")
 	body_entered.connect(_on_body_entered)
 	_create_visual()
+	if TutorialManager.is_phase_1_active():
+		set_tutorial_hint_active(true)
 
 
 func _create_visual() -> void:
@@ -39,7 +43,44 @@ func _on_body_entered(body: Node2D) -> void:
 	else:
 		var display: String = ItemDatabase.get_display_name(item_id)
 		_show_popup("+%d %s" % [amount, display], Color(1.0, 1.0, 0.6))
+		set_tutorial_hint_active(false)
 		queue_free()
+
+
+func set_tutorial_hint_active(active: bool) -> void:
+	if active:
+		if is_instance_valid(_tutorial_hint):
+			return
+		_tutorial_hint = Node2D.new()
+		_tutorial_hint.name = "TutorialHint"
+		add_child(_tutorial_hint)
+
+		var ring: Line2D = Line2D.new()
+		ring.width = 1.5
+		ring.default_color = Color(1.0, 0.9, 0.25, 0.9)
+		ring.closed = true
+		for i: int in range(18):
+			var angle: float = TAU * float(i) / 18.0
+			ring.add_point(Vector2(cos(angle), sin(angle)) * 12.0)
+		_tutorial_hint.add_child(ring)
+
+		var arrow: Label = Label.new()
+		arrow.text = "^"
+		arrow.position = Vector2(-3.0, -24.0)
+		arrow.add_theme_color_override("font_color", Color(1.0, 0.9, 0.25, 1.0))
+		arrow.add_theme_font_size_override("font_size", 10)
+		_tutorial_hint.add_child(arrow)
+
+		_tutorial_hint_tween = create_tween().set_loops()
+		_tutorial_hint_tween.tween_property(_tutorial_hint, "position:y", -3.0, 0.45)
+		_tutorial_hint_tween.tween_property(_tutorial_hint, "position:y", 1.0, 0.45)
+		return
+	if is_instance_valid(_tutorial_hint_tween):
+		_tutorial_hint_tween.kill()
+	_tutorial_hint_tween = null
+	if is_instance_valid(_tutorial_hint):
+		_tutorial_hint.queue_free()
+	_tutorial_hint = null
 
 
 func _show_popup(text: String, color: Color) -> void:

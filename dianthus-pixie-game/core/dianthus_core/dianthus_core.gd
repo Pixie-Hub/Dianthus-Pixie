@@ -16,6 +16,8 @@ var _base_aura_energy: float = 1.5
 var _regen_accumulator: float = 0.0
 var _base_sprite_scale: Vector2
 var _breathe_tween: Tween = null
+var _tutorial_glow_tween: Tween = null
+var _tutorial_glow_active: bool = false
 
 
 func _ready() -> void:
@@ -74,6 +76,23 @@ func _on_enemy_entered(body: Node2D) -> void:
 
 func get_hp_ratio() -> float:
 	return float(current_hp) / float(MAX_HP)
+
+
+func set_tutorial_glow_active(active: bool) -> void:
+	if _tutorial_glow_active == active:
+		return
+	_tutorial_glow_active = active
+	if is_instance_valid(_tutorial_glow_tween):
+		_tutorial_glow_tween.kill()
+	if active:
+		_tutorial_glow_tween = create_tween().set_loops()
+		_tutorial_glow_tween.tween_property(_aura_light, "energy", _base_aura_energy * 1.6, 0.55)
+		_tutorial_glow_tween.parallel().tween_property(_sprite, "self_modulate", Color(1.0, 0.92, 1.0, 1.0), 0.55)
+		_tutorial_glow_tween.tween_property(_aura_light, "energy", _base_aura_energy * 1.15, 0.55)
+		_tutorial_glow_tween.parallel().tween_property(_sprite, "self_modulate", Color(1.0, 0.8, 0.9, 1.0), 0.55)
+	else:
+		_update_aura()
+		_sprite.self_modulate = Color(1.0, 0.8, 0.9, 1.0)
 
 
 func _emit_initial_hp() -> void:

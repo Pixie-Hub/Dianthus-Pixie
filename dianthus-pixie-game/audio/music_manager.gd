@@ -239,7 +239,9 @@ func _update_day_layers() -> void:
 func _on_scene_changed(node: Node) -> void:
 	await get_tree().process_frame
 	var scene: Node = get_tree().current_scene
-	var target_scene: Node = scene if node == scene and scene != null else node
+	var target_scene: Node = scene
+	if target_scene == null and is_instance_valid(node):
+		target_scene = node
 	if _is_main_menu_scene(target_scene):
 		stop_music(false)
 		_current_track = ""
@@ -320,14 +322,14 @@ func _apply_loop(stream: AudioStream, loop: bool) -> void:
 		(stream as AudioStreamMP3).loop = loop
 
 
-func _is_main_menu_scene(node: Node) -> bool:
-	if node == null:
+func _is_main_menu_scene(node: Variant) -> bool:
+	if node == null or not is_instance_valid(node):
 		return false
 	return node.name == "MainMenu" or node.scene_file_path.ends_with("main_menu.tscn")
 
 
-func _is_gameplay_scene(node: Node) -> bool:
-	if node == null:
+func _is_gameplay_scene(node: Variant) -> bool:
+	if node == null or not is_instance_valid(node):
 		return false
 	return node.scene_file_path.begins_with("res://world/zones/")
 

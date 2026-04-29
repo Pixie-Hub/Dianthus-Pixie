@@ -1,0 +1,46 @@
+[gd_resource type="Resource" script_class="QuestData" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://quests/data/quest_data.gd" id="1_qdata"]
+[ext_resource type="Script" path="res://quests/data/quest_objective.gd" id="2_qobj"]
+
+[sub_resource type="Resource" id="Resource_move"]
+script = ExtResource("2_qobj")
+objective_id = &"move_5_seconds"
+description = "Move for 5 seconds"
+event_id = &"tutorial_movement_complete"
+target_count = 1
+filter = {}
+
+[sub_resource type="Resource" id="Resource_inventory"]
+script = ExtResource("2_qobj")
+objective_id = &"open_inventory"
+description = "Open your inventory"
+event_id = &"inventory_opened"
+target_count = 1
+filter = {}
+
+[sub_resource type="Resource" id="Resource_collect"]
+script = ExtResource("2_qobj")
+objective_id = &"collect_resource"
+description = "Collect your first resource"
+event_id = &"item_collected"
+target_count = 1
+filter = {}
+
+[resource]
+script = ExtResource("1_qdata")
+quest_id = &"tutorial_day1_movement"
+display_name = "First Steps"
+description = "Explore the garden and collect resources."
+quest_type = 3
+objectives = Array[ExtResource("2_qobj")]([SubResource("Resource_move"), SubResource("Resource_inventory"), SubResource("Resource_collect")])
+reward_items = {}
+reward_weapons = []
+reward_unlock_flags = []
+time_limit_days = 0
+dialogic_timeline_on_complete = ""
+dialogic_timeline_on_fail = ""
+next_quest_id = &""
+auto_start = false
+failure_unlock_flags = []
+failure_next_quest_id = &""

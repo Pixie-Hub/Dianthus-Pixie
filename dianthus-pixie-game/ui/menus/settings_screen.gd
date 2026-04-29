@@ -8,6 +8,7 @@ const AUDIO_BUSES: Array[String] = ["Music", "SFX"]
 @onready var _sfx_slider: HSlider = %SFXSlider
 @onready var _fullscreen_toggle: CheckButton = %FullscreenToggle
 @onready var _colorblind_toggle: CheckButton = %ColorblindToggle
+@onready var _tutorial_toggle: CheckButton = %TutorialToggle
 @onready var _text_speed_option: OptionButton = %TextSpeedOption
 
 
@@ -20,11 +21,13 @@ func _ready() -> void:
 	_text_speed_option.add_item("Instant", 3)
 	_text_speed_option.selected = 1
 	_load_settings()
+	_tutorial_toggle.button_pressed = TutorialManager.tutorial_enabled
 	_master_slider.value_changed.connect(_on_master_changed)
 	_music_slider.value_changed.connect(_on_music_changed)
 	_sfx_slider.value_changed.connect(_on_sfx_changed)
 	_fullscreen_toggle.toggled.connect(_on_fullscreen_toggled)
 	_colorblind_toggle.toggled.connect(_on_colorblind_toggled)
+	_tutorial_toggle.toggled.connect(_on_tutorial_toggled)
 	_text_speed_option.item_selected.connect(_on_text_speed_changed)
 	_apply_audio_settings()
 
@@ -99,6 +102,11 @@ func _on_colorblind_toggled(enabled: bool) -> void:
 	GameManager.set_colorblind_mode(enabled)
 
 
+func _on_tutorial_toggled(enabled: bool) -> void:
+	SfxManager.play("ui_button_click")
+	TutorialManager.set_tutorial_enabled(enabled)
+
+
 func _on_text_speed_changed(_index: int) -> void:
 	pass  # TODO (ACCESS-04): Set dialogue system text speed.
 
@@ -112,6 +120,7 @@ func _save_settings() -> void:
 	config.set_value("audio", "sfx", _sfx_slider.value)
 	config.set_value("display", "fullscreen", _fullscreen_toggle.button_pressed)
 	config.set_value("accessibility", "colorblind", _colorblind_toggle.button_pressed)
+	config.set_value("accessibility", "tutorial", _tutorial_toggle.button_pressed)
 	config.set_value("accessibility", "text_speed", _text_speed_option.selected)
 	config.save(SETTINGS_PATH)
 	print("[Settings] Settings saved.")
@@ -126,7 +135,9 @@ func _load_settings() -> void:
 	_sfx_slider.value = config.get_value("audio", "sfx", 100.0)
 	_fullscreen_toggle.button_pressed = config.get_value("display", "fullscreen", false)
 	_colorblind_toggle.button_pressed = config.get_value("accessibility", "colorblind", false)
+	_tutorial_toggle.button_pressed = config.get_value("accessibility", "tutorial", true)
 	_text_speed_option.selected = config.get_value("accessibility", "text_speed", 1)
 	_on_fullscreen_toggled(_fullscreen_toggle.button_pressed)
 	GameManager.set_colorblind_mode(_colorblind_toggle.button_pressed)
+	TutorialManager.set_tutorial_enabled(_tutorial_toggle.button_pressed)
 	print("[Settings] Settings loaded.")
