@@ -1,0 +1,55 @@
+# ACCESS-03 Interactive Tutorial
+# Covers the first three in-game days: movement, crafting, combat, and garden defense.
+# The first label is also the completion dialog used by TutorialManager when it calls Dialogic.start("tutorial_complete").
+# Start labels directly when a tutorial stage begins, e.g. Dialogic.start("access_03_tutorial", "day_1_movement").
+
+label tutorial_complete (ACCESS-03 Complete)
+"Dianthus Core": The garden breathes easier now.
+"Dianthus Core": You have walked its paths, shaped thorns into tools, faced the first shadow, and planted guardians around my heart.
+"Dianthus Core": From here, listen to the light in the leaves. Gather in the day, prepare before dusk, and defend when the dark arrives.
+"Dianthus Core": I will keep glowing as long as you keep choosing to return.
+[signal arg="quest_complete:tutorial_day3_defense"]
+[end_timeline]
+
+label day_1_movement (Day 1 Morning - Movement)
+[signal arg="quest_start:tutorial_day1_movement"]
+"Dianthus Core": Wake, little alchemist.
+"Dianthus Core": The meadow is safe while the sun is high, but safety is something we cultivate before night tests it.
+"Dianthus Core": Move with [color=#F0DD4C]WASD[/color] or the arrow keys. Feel the edges of the garden, then gather anything that catches the light.
+"Dianthus Core": Open your pack with [color=#F0DD4C]I[/color] when you want to check what you have found.
+"Dianthus Core": Goal: move around, open the inventory, and collect your first resource.
+[end_timeline]
+
+label day_1_crafting (Day 1 Afternoon - Crafting)
+[signal arg="quest_start:tutorial_day1_crafting"]
+"Dianthus Core": The sun leans west. This is preparation time.
+"Dianthus Core": Raw petals and sap are only promises until your hands give them shape.
+"Dianthus Core": Stand near the Breeding Bench and press [color=#F0DD4C]E[/color]. Craft a weapon before the first night settles in.
+"Dianthus Core": Thorn Sword is enough for tonight. Simple tools can still save a living garden.
+"Dianthus Core": Goal: open the crafting bench and craft your first weapon.
+[end_timeline]
+
+label night_1_combat (Night 1 - First Defense)
+[signal arg="quest_start:tutorial_day1_combat"]
+"Dianthus Core": The dark has found us.
+"Dianthus Core": Shadowlings will seek the Core before they understand you. Do not let them touch the heart of the garden.
+"Dianthus Core": Strike with [color=#F0DD4C]SPACE[/color] or the attack button. Stay close enough to protect me, but move before they surround you.
+"Dianthus Core": If your strength breaks, you will return near me after a breath. If my light breaks, the garden ends.
+"Dianthus Core": Goal: hit a shadow creature and survive Night 1.
+[end_timeline]
+
+label day_3_garden_defense (Day 3 Afternoon - Garden Defense)
+[signal arg="quest_start:tutorial_day3_defense"]
+"Dianthus Core": You have survived more than fear. Now learn to make the garden fight beside you.
+"Dianthus Core": Place a plant with [color=#F0DD4C]P[/color] during preparation. Each root, thorn, and bloom changes the shape of the night.
+"Dianthus Core": Bougainvillea wounds enemies that come too close. Rafflesia slows their rush. Melati steadies your energy when you fight nearby.
+"Dianthus Core": At night, pull enemies through a plant's radius and its roots will answer when the wave presses hard.
+"Dianthus Core": Goal: place a plant, trigger a plant ability at night, and survive through Night 3.
+[end_timeline]
+
+label skip_tutorial (Skip ACCESS-03)
+"Dianthus Core": Tutorial guidance can be disabled in Settings.
+"Dianthus Core": If you already know how to tend a dangerous garden, I will not hold your hand.
+"Dianthus Core": The day is yours. Use it well.
+do TutorialManager.skip_tutorial()
+[end_timeline]
