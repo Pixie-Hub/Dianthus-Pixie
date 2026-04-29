@@ -35,7 +35,10 @@ func _unhandled_input(event: InputEvent) -> void:
 func _toggle() -> void:
 	visible = not visible
 	if visible:
+		SfxManager.play("inventory_open")
 		_refresh()
+	else:
+		SfxManager.play("inventory_close")
 
 
 func _build_grid() -> void:

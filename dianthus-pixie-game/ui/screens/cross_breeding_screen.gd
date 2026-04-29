@@ -46,6 +46,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func open() -> void:
+	SfxManager.play("screen_open")
 	visible = true
 	_refresh_slots()
 	_refresh_combo_list()
@@ -53,6 +54,7 @@ func open() -> void:
 
 
 func close() -> void:
+	SfxManager.play("screen_close")
 	visible = false
 	_item_picker_panel.visible = false
 	get_tree().paused = false
@@ -71,6 +73,7 @@ func _on_slot_b_clicked(event: InputEvent) -> void:
 
 
 func _open_item_picker() -> void:
+	SfxManager.play("screen_open")
 	for child in _item_picker_list.get_children():
 		child.queue_free()
 	var has_items: bool = false
@@ -98,6 +101,7 @@ func _open_item_picker() -> void:
 
 
 func _select_item(item_id: String) -> void:
+	SfxManager.play("ui_button_click")
 	if _picking_for_slot == "a":
 		_slot_a_item = item_id
 	else:

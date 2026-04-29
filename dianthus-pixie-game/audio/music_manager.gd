@@ -50,6 +50,7 @@ var _wave_spawner: Node = null
 
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_player_a = _make_player("MusicA")
 	_player_b = _make_player("MusicB")
 	_player_intense = _make_player("MusicIntense")
@@ -123,9 +124,16 @@ func _sync_to_current_context() -> void:
 	var scene: Node = get_tree().current_scene
 	if _is_main_menu_scene(scene):
 		play_track("main_menu")
-	elif DayNightCycle.is_night():
+	elif _is_gameplay_scene(scene):
+		_play_current_phase_music()
+
+
+func _play_current_phase_music() -> void:
+	if DayNightCycle.is_night():
 		_start_night_music()
 	else:
+		_set_intense(false, false)
+		_in_prep_phase = false
 		play_track("exploration_day")
 
 
@@ -190,6 +198,7 @@ func _set_intense(on: bool, fade: bool = true) -> void:
 		_start_intense_player()
 	if fade:
 		_intense_tween = create_tween()
+		_intense_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 		var target_db: float = 0.0 if on else -80.0
 		_intense_tween.tween_property(_player_intense, "volume_db", target_db, FADE_DURATION)
 		if not on:
@@ -215,11 +224,15 @@ func _update_day_layers() -> void:
 
 func _on_scene_changed(node: Node) -> void:
 	await get_tree().process_frame
-	if _is_main_menu_scene(node):
+	var scene: Node = get_tree().current_scene
+	var target_scene: Node = scene if node == scene and scene != null else node
+	if _is_main_menu_scene(target_scene):
 		stop_music(false)
 		_current_track = ""
 		_in_prep_phase = false
 		play_track("main_menu")
+	elif _is_gameplay_scene(target_scene):
+		_play_current_phase_music()
 
 
 func _crossfade_to(stream: AudioStream, loop: bool) -> void:
@@ -235,6 +248,7 @@ func _crossfade_to(stream: AudioStream, loop: bool) -> void:
 	if _fade_tween:
 		_fade_tween.kill()
 	_fade_tween = create_tween()
+	_fade_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	_fade_tween.set_parallel(true)
 	_fade_tween.tween_property(incoming, "volume_db", 0.0, FADE_DURATION)
 	if is_instance_valid(outgoing):
@@ -246,6 +260,7 @@ func _fade_out_player(player: AudioStreamPlayer) -> void:
 	if not is_instance_valid(player) or not player.playing:
 		return
 	var t: Tween = create_tween()
+	t.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	t.tween_property(player, "volume_db", -80.0, FADE_DURATION)
 	t.tween_callback(player.stop)
 
@@ -260,6 +275,7 @@ func _stop_player(player: AudioStreamPlayer) -> void:
 func _make_player(player_name: String) -> AudioStreamPlayer:
 	var p: AudioStreamPlayer = AudioStreamPlayer.new()
 	p.name = player_name
+	p.process_mode = Node.PROCESS_MODE_ALWAYS
 	p.bus = &"Music"
 	p.volume_db = -80.0
 	add_child(p)
@@ -290,6 +306,12 @@ func _is_main_menu_scene(node: Node) -> bool:
 	if node == null:
 		return false
 	return node.name == "MainMenu" or node.scene_file_path.ends_with("main_menu.tscn")
+
+
+func _is_gameplay_scene(node: Node) -> bool:
+	if node == null:
+		return false
+	return node.scene_file_path.begins_with("res://world/zones/")
 
 
 func _get_wave_spawner() -> Node:

@@ -26,6 +26,7 @@ func _ready() -> void:
 
 
 func open() -> void:
+	SfxManager.play("screen_open")
 	visible = true
 	get_tree().paused = true
 	_is_night = DayNightCycle.is_night()
@@ -33,6 +34,7 @@ func open() -> void:
 
 
 func close() -> void:
+	SfxManager.play("screen_close")
 	visible = false
 	get_tree().paused = false
 	_pending_assign_slot = -1
@@ -98,6 +100,7 @@ func _assign_weapon(slot: int, weapon_id: String) -> void:
 	if _is_night:
 		print("[LoadoutScreen] Loadout locked during Night.")
 		return
+	SfxManager.play("ui_button_click")
 	if is_instance_valid(GameManager.player):
 		GameManager.player.equip_weapon(slot, weapon_id)
 	_refresh()

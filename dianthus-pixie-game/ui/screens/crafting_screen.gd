@@ -35,12 +35,14 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func open() -> void:
+	SfxManager.play("screen_open")
 	visible = true
 	_build_recipe_list()
 	get_tree().paused = true
 
 
 func close() -> void:
+	SfxManager.play("screen_close")
 	visible = false
 	get_tree().paused = false
 	_selected_recipe_id = ""
@@ -112,6 +114,7 @@ func _build_recipe_list() -> void:
 
 
 func _select_recipe(recipe_id: String) -> void:
+	SfxManager.play("ui_button_click")
 	_selected_recipe_id = recipe_id
 	_update_selection_highlight()
 	_update_description()

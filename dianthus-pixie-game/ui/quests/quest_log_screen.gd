@@ -52,6 +52,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func open() -> void:
+	SfxManager.play("screen_open")
 	visible = true
 	get_tree().paused = true
 	_update_tab_counts()
@@ -59,6 +60,7 @@ func open() -> void:
 
 
 func close() -> void:
+	SfxManager.play("screen_close")
 	visible = false
 	get_tree().paused = false
 
@@ -88,18 +90,21 @@ func _on_progress_updated(_quest_id: StringName, _obj_id: StringName, _current: 
 
 
 func _on_tab_active() -> void:
+	SfxManager.play("ui_button_click")
 	_current_tab = "active"
 	_update_tab_highlight()
 	_refresh()
 
 
 func _on_tab_completed() -> void:
+	SfxManager.play("ui_button_click")
 	_current_tab = "completed"
 	_update_tab_highlight()
 	_refresh()
 
 
 func _on_tab_failed() -> void:
+	SfxManager.play("ui_button_click")
 	_current_tab = "failed"
 	_update_tab_highlight()
 	_refresh()

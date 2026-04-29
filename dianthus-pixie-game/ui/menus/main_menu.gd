@@ -39,6 +39,7 @@ func _on_continue_pressed() -> void:
 func _on_new_game_pressed() -> void:
 	SfxManager.play("ui_button_click")
 	if SaveManager.has_save():
+		SfxManager.play("screen_open")
 		_overwrite_dialog.popup_centered()
 	else:
 		_difficulty_selection.open()

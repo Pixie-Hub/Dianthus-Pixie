@@ -40,6 +40,7 @@ func _toggle() -> void:
 func _open() -> void:
 	if GameManager.current_state == GameManager.GameState.GAME_OVER:
 		return
+	SfxManager.play("screen_open")
 	_is_open = true
 	visible = true
 	get_tree().paused = true
@@ -48,7 +49,7 @@ func _open() -> void:
 
 
 func _close() -> void:
-	SfxManager.play("ui_button_click")
+	SfxManager.play("screen_close")
 	_is_open = false
 	visible = false
 	_save_feedback.visible = false
@@ -57,7 +58,6 @@ func _close() -> void:
 
 
 func _on_resume_pressed() -> void:
-	SfxManager.play("ui_button_click")
 	_close()
 
 
@@ -84,6 +84,7 @@ func _on_settings_pressed() -> void:
 
 func _on_main_menu_pressed() -> void:
 	SfxManager.play("ui_button_click")
+	SfxManager.play("screen_open")
 	_main_menu_dialog.popup_centered()
 
 

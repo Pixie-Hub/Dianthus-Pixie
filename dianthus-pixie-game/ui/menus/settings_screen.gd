@@ -30,11 +30,12 @@ func _ready() -> void:
 
 
 func open() -> void:
+	SfxManager.play("screen_open")
 	visible = true
 
 
 func close() -> void:
-	SfxManager.play("ui_button_click")
+	SfxManager.play("screen_close")
 	visible = false
 	_save_settings()
 

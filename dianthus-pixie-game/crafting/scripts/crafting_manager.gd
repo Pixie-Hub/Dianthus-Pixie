@@ -42,6 +42,7 @@ func can_craft(recipe_id: String) -> bool:
 func craft(recipe_id: String) -> bool:
 	if not can_craft(recipe_id):
 		var reason: String = _craft_fail_reason(recipe_id)
+		SfxManager.play("crafting_fail")
 		craft_failed.emit(reason)
 		return false
 	var recipe: Dictionary = RecipeDatabase.get_recipe(recipe_id)

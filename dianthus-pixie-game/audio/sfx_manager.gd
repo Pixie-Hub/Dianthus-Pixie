@@ -66,6 +66,7 @@ const SFX: Dictionary = {
 	"weapon_equipped":           "res://audio/sfx/crafting_ui/Weapon Equipped.wav",
 	"inventory_open":            "res://audio/sfx/crafting_ui/Inventory Open.wav",
 	"inventory_close":           "res://audio/sfx/crafting_ui/Inventory Close.wav",
+	"screen_close":              "res://audio/sfx/crafting_ui/Screen Close.wav",
 	"item_pickup":               "res://audio/sfx/crafting_ui/Item Pickup.wav",
 	"item_stack":                "res://audio/sfx/crafting_ui/Item Add to Inventory (Stack).wav",
 	"inventory_full":            "res://audio/sfx/crafting_ui/Inventory Full.wav",
@@ -107,13 +108,16 @@ var _pool_2d_index: int = 0
 
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	for i: int in range(POOL_SIZE):
 		var p: AudioStreamPlayer = AudioStreamPlayer.new()
+		p.process_mode = Node.PROCESS_MODE_ALWAYS
 		p.bus = &"SFX"
 		add_child(p)
 		_pool.append(p)
 	for i: int in range(POOL_SIZE):
 		var p2: AudioStreamPlayer2D = AudioStreamPlayer2D.new()
+		p2.process_mode = Node.PROCESS_MODE_ALWAYS
 		p2.bus = &"SFX"
 		add_child(p2)
 		_pool_2d.append(p2)

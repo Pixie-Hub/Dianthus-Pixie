@@ -35,6 +35,7 @@ func _generate_rewards_text() -> String:
 
 
 func _on_continue() -> void:
+	SfxManager.play("ui_button_click")
 	get_tree().paused = false
 	visible = false
 	continue_pressed.emit()

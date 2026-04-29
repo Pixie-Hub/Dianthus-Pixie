@@ -60,6 +60,7 @@ func _clear_leaderboard() -> void:
 
 
 func _on_restart() -> void:
+	SfxManager.play("ui_button_click")
 	get_tree().paused = false
 	visible = false
 	GameManager.endless_mode = false
@@ -70,6 +71,7 @@ func _on_restart() -> void:
 
 
 func _on_main_menu() -> void:
+	SfxManager.play("ui_button_click")
 	if GameManager.endless_mode:
 		EndlessLeaderboard.submit_score(DayNightCycle.day_count)
 	GameManager.endless_mode = false

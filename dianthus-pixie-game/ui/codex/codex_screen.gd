@@ -36,12 +36,14 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func open() -> void:
+	SfxManager.play("screen_open")
 	visible = true
 	_build_plant_list()
 	get_tree().paused = true
 
 
 func close() -> void:
+	SfxManager.play("screen_close")
 	visible = false
 	get_tree().paused = false
 	_selected_plant_id = ""
@@ -114,6 +116,7 @@ func _add_plant_row(plant_id: String) -> void:
 
 
 func _select_plant(plant_id: String) -> void:
+	SfxManager.play("ui_button_click")
 	_selected_plant_id = plant_id
 	_update_selection_highlight()
 	_update_detail(plant_id)
