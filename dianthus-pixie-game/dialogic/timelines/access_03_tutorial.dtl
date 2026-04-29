@@ -1,8 +1,3 @@
-# ACCESS-03 Interactive Tutorial
-# Covers the first three in-game days: movement, crafting, combat, and garden defense.
-# The first label is also the completion dialog used by TutorialManager when it calls Dialogic.start("tutorial_complete").
-# Start labels directly when a tutorial stage begins, e.g. Dialogic.start("access_03_tutorial", "day_1_movement").
-
 label tutorial_complete (ACCESS-03 Complete)
 "Dianthus Core": The garden breathes easier now.
 "Dianthus Core": You have walked its paths, shaped thorns into tools, faced the first shadow, and planted guardians around my heart.
