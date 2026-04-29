@@ -107,6 +107,9 @@ const SFX_VOLUME_DB: Dictionary = {
 	"screen_open": -4.0,
 	"screen_close": -4.0,
 	"plant_placed": 10.0,
+	"core_energy_tick": 0.0,
+	"weapon_equipped": -6.0,
+	"player_take_damage": -10.0,
 }
 
 var _pool: Array[AudioStreamPlayer] = []

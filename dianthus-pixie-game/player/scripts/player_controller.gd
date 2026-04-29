@@ -664,7 +664,10 @@ func _update_core_energy_regen(delta: float) -> void:
 	if _energy_regen_accumulator >= 1.0:
 		var amount: int = int(_energy_regen_accumulator)
 		_energy_regen_accumulator -= float(amount)
+		var energy_before: int = current_energy
 		add_energy(amount)
+		if current_energy > energy_before:
+			SfxManager.play_at("core_energy_tick", GameManager.dianthus_core.global_position)
 
 
 func add_energy(amount: int) -> void:
