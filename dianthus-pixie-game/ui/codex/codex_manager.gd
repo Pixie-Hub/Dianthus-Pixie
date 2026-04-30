@@ -6,16 +6,17 @@ var discovered_plants: Dictionary = {}
 
 
 func _ready() -> void:
-	discover_plant("bougainvillea")
+	discover_plant("bougainvillea", false)
 	BreedingManager.breed_succeeded.connect(_on_breed_succeeded)
 	InventoryManager.item_added.connect(_on_item_added)
 
 
-func discover_plant(plant_id: String) -> void:
+func discover_plant(plant_id: String, play_sfx: bool = true) -> void:
 	if plant_id.is_empty() or discovered_plants.has(plant_id):
 		return
 	discovered_plants[plant_id] = true
-	SfxManager.play("codex_unlocked")
+	if play_sfx:
+		SfxManager.play("codex_unlocked")
 	plant_discovered.emit(plant_id)
 	print("[CodexManager] Discovered: %s" % plant_id)
 
@@ -43,7 +44,7 @@ func deserialize(data: Dictionary) -> void:
 		for pid: String in (disc as Dictionary):
 			if (disc as Dictionary)[pid]:
 				discovered_plants[pid] = true
-	discover_plant("bougainvillea")
+	discover_plant("bougainvillea", false)
 
 
 func _on_breed_succeeded(combo_id: String, _result_item_id: String) -> void:

@@ -23,12 +23,12 @@ func _ready() -> void:
 	_connect_dialogic()
 	for q: QuestData in _registry.values():
 		if q.auto_start and not is_completed(q.quest_id):
-			start_quest(q.quest_id)
+			start_quest(q.quest_id, false)
 
 
 # ── Public API ────────────────────────────────────────────────────────────────
 
-func start_quest(id: StringName) -> bool:
+func start_quest(id: StringName, play_sfx: bool = true) -> bool:
 	if not _registry.has(id):
 		push_warning("[QuestManager] Unknown quest id: %s" % id)
 		return false
@@ -40,7 +40,8 @@ func start_quest(id: StringName) -> bool:
 		prog[obj.objective_id] = 0
 	_active[id] = {"progress": prog, "started_day": DayNightCycle.day_count}
 	quest_started.emit(id)
-	SfxManager.play("quest_accepted")
+	if play_sfx:
+		SfxManager.play("quest_accepted")
 	print("[QuestManager] Started: %s" % id)
 	return true
 
