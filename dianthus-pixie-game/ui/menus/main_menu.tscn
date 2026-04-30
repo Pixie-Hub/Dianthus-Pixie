@@ -4,10 +4,10 @@
 [ext_resource type="Texture2D" uid="uid://dmmfrkvdcmfjr" path="res://assets/aseprite/main_menu_bg.png" id="2_1njj5"]
 [ext_resource type="PackedScene" uid="uid://csettgscrn01" path="res://ui/menus/settings_screen.tscn" id="2_settings"]
 [ext_resource type="PackedScene" uid="uid://b6klecxivbfx8" path="res://ui/menus/difficulty_selection.tscn" id="3_difficulty"]
-[ext_resource type="Texture2D" uid="uid://q1l4rm7g7n5v" path="res://ui/button_disabled.PNG" id="4_tex_d"]
-[ext_resource type="Texture2D" uid="uid://cqusvsxabv117" path="res://ui/button_hover.PNG" id="5_tex_h"]
-[ext_resource type="Texture2D" uid="uid://rp34un8vaa4b" path="res://ui/button_normal.PNG" id="6_tex_n"]
-[ext_resource type="Texture2D" uid="uid://e7ljxebw851a" path="res://ui/button_pressed.PNG" id="7_tex_p"]
+[ext_resource type="Texture2D" uid="uid://rp34un8vaa4b" path="res://ui/button_normal.PNG" id="TEX_BTN_NORMAL"]
+[ext_resource type="Texture2D" uid="uid://e7ljxebw851a" path="res://ui/button_pressed.PNG" id="TEX_BTN_PRESSED"]
+[ext_resource type="Texture2D" uid="uid://cqusvsxabv117" path="res://ui/button_hover.PNG" id="TEX_BTN_HOVER"]
+[ext_resource type="Texture2D" uid="uid://q1l4rm7g7n5v" path="res://ui/button_disabled.PNG" id="TEX_BTN_DISABLED"]
 
 [sub_resource type="Gradient" id="Gradient_top"]
 colors = PackedColorArray(0.047, 0.058, 0.043, 0.8, 0.047, 0.058, 0.043, 0)
@@ -31,33 +31,49 @@ border_width_right = 3
 border_width_bottom = 3
 border_color = Color(0.364, 0.25, 0.215, 1)
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_n"]
-texture = ExtResource("6_tex_n")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_h"]
-texture = ExtResource("5_tex_h")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_continue_n"]
+texture = ExtResource("TEX_BTN_NORMAL")
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 16.0
+modulate_color = Color(0.8, 1, 0.8, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_p"]
-texture = ExtResource("7_tex_p")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("TEX_BTN_PRESSED")
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_continue_h"]
+texture = ExtResource("TEX_BTN_HOVER")
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 16.0
+modulate_color = Color(0.8, 1, 0.8, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_d"]
-texture = ExtResource("4_tex_d")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("TEX_BTN_DISABLED")
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_n"]
+texture = ExtResource("TEX_BTN_NORMAL")
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_h"]
+texture = ExtResource("TEX_BTN_HOVER")
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 16.0
 
 [node name="MainMenu" type="Control" unique_id=1284738585]
 layout_mode = 3
@@ -144,6 +160,7 @@ theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
 [node name="ButtonContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/PanelContainer/MarginContainer" unique_id=1090584303]
+texture_filter = 2
 layout_mode = 2
 theme_override_constants/separation = 8
 
@@ -154,9 +171,9 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.976, 0.792, 0.141, 1)
 theme_override_colors/font_disabled_color = Color(0.42, 0.353, 0.282, 1)
 theme_override_font_sizes/font_size = 13
-theme_override_styles/normal = SubResource("StyleBoxTexture_btn_n")
+theme_override_styles/normal = SubResource("StyleBoxTexture_btn_continue_n")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_p")
-theme_override_styles/hover = SubResource("StyleBoxTexture_btn_h")
+theme_override_styles/hover = SubResource("StyleBoxTexture_btn_continue_h")
 theme_override_styles/disabled = SubResource("StyleBoxTexture_btn_d")
 disabled = true
 text = "CONTINUE"
@@ -192,7 +209,7 @@ theme_override_colors/font_hover_color = Color(1, 0.706, 0.671, 1)
 theme_override_font_sizes/font_size = 13
 theme_override_styles/normal = SubResource("StyleBoxTexture_btn_n")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_p")
-theme_override_styles/hover = SubResource("StyleBoxTexture_btn_h")
+theme_override_styles/hover = SubResource("StyleBoxTexture_btn_n")
 text = "Quit"
 
 [node name="VersionLabel" type="Label" parent="." unique_id=1601691489]
