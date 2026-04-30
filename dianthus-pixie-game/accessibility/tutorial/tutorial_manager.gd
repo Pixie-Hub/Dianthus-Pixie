@@ -54,20 +54,12 @@ var plant_ability_triggered: bool = false
 var night_3_survived: bool = false
 var night_3_failed: bool = false
 
-var _reported_movement: bool = false
-var _combat_signal_player: Node = null
-var _placement_manager: Node = null
-var _hud_layer: CanvasLayer = null
-var _panel: PanelContainer = null
-var _phase_label: Label = null
-var _move_label: Label = null
-var _inventory_label: Label = null
-var _resource_label: Label = null
-var _craft_label: Label = null
-var _progress_bar: ProgressBar = null
 var _core_glow_active: bool = false
 var _bench_hint_active: bool = false
 var _progress_save_timer: float = 0.0
+var _reported_movement: bool = false
+var _combat_signal_player: Node = null
+var _placement_manager: Node = null
 
 
 func _ready() -> void:
@@ -706,63 +698,17 @@ func _complete_tutorial() -> void:
 
 
 func _show_hud() -> void:
-	if is_instance_valid(_hud_layer):
-		_hud_layer.visible = true
-		_refresh_current_ui()
-		return
-	_hud_layer = CanvasLayer.new()
-	_hud_layer.name = "TutorialHUD"
-	_hud_layer.layer = 89
-	_hud_layer.process_mode = Node.PROCESS_MODE_ALWAYS
-	add_child(_hud_layer)
-
-	_panel = PanelContainer.new()
-	_panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	_panel.offset_left = 8.0
-	_panel.offset_top = 8.0
-	_panel.offset_right = 218.0
-	_panel.offset_bottom = 128.0
-	_panel.add_theme_stylebox_override("panel", _make_panel_style(Color(0.9, 0.75, 0.2, 1.0)))
-	_hud_layer.add_child(_panel)
-
-	var margin: MarginContainer = MarginContainer.new()
-	margin.add_theme_constant_override("margin_left", 8)
-	margin.add_theme_constant_override("margin_right", 8)
-	margin.add_theme_constant_override("margin_top", 6)
-	margin.add_theme_constant_override("margin_bottom", 6)
-	_panel.add_child(margin)
-
-	var vbox: VBoxContainer = VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 4)
-	margin.add_child(vbox)
-
-	_phase_label = Label.new()
-	_phase_label.text = "First Steps"
-	_phase_label.add_theme_font_size_override("font_size", 10)
-	_phase_label.add_theme_color_override("font_color", Color(0.95, 0.9, 0.78, 1.0))
-	vbox.add_child(_phase_label)
-
-	_move_label = _make_objective_label()
-	_inventory_label = _make_objective_label()
-	_resource_label = _make_objective_label()
-	_craft_label = _make_objective_label()
-	vbox.add_child(_move_label)
-	vbox.add_child(_inventory_label)
-	vbox.add_child(_resource_label)
-	vbox.add_child(_craft_label)
-
-	_progress_bar = ProgressBar.new()
-	_progress_bar.min_value = 0.0
-	_progress_bar.max_value = 1.0
-	_progress_bar.show_percentage = false
-	_progress_bar.custom_minimum_size = Vector2(0.0, 6.0)
-	vbox.add_child(_progress_bar)
 	_refresh_current_ui()
 
 
 func _hide_hud() -> void:
-	if is_instance_valid(_hud_layer):
-		_hud_layer.visible = false
+	_call_hud("hide_tutorial_mode")
+
+
+func _call_hud(method: StringName) -> void:
+	var hud: Node = get_node_or_null("/root/HUD")
+	if hud != null and hud.has_method(method):
+		hud.call(method)
 
 
 func _refresh_current_ui() -> void:
@@ -781,93 +727,64 @@ func _refresh_current_ui() -> void:
 		_refresh_phase_1_ui()
 
 
-func _make_objective_label() -> Label:
-	var label: Label = Label.new()
-	label.add_theme_font_size_override("font_size", 8)
-	label.add_theme_color_override("font_color", Color(0.85, 0.84, 0.78, 1.0))
-	return label
-
-
 func _refresh_phase_1_ui() -> void:
-	if not is_instance_valid(_hud_layer):
-		return
-	_move_label.visible = true
-	_inventory_label.visible = true
-	_resource_label.visible = true
-	_craft_label.visible = false
-	_move_label.text = "%s Move for %.0fs" % [_checkmark(moved_enough), MOVEMENT_REQUIRED_SECONDS]
-	_inventory_label.text = "%s Open inventory [I]" % _checkmark(inventory_opened)
-	_resource_label.text = "%s Collect a resource" % _checkmark(resource_collected)
-	var completed_count: int = (1 if moved_enough else 0) \
-		+ (1 if inventory_opened else 0) \
-		+ (1 if resource_collected else 0)
-	_progress_bar.value = float(completed_count) / 3.0
+	var phase_name: String = "First Steps"
 	if current_state == TutorialState.DAY_1_MOVEMENT_COMPLETE:
-		_phase_label.text = "First Steps Complete"
-	else:
-		_phase_label.text = "First Steps"
+		phase_name = "First Steps Complete"
+	var objectives: Array[String] = [
+		"Move for %.0fs" % MOVEMENT_REQUIRED_SECONDS,
+		"Open inventory [I]",
+		"Collect a resource"
+	]
+	var completed: Array[bool] = [moved_enough, inventory_opened, resource_collected]
+	_show_tutorial_on_hud(phase_name, objectives, completed)
 
 
 func _refresh_phase_2_ui() -> void:
-	if not is_instance_valid(_hud_layer):
-		return
-	_move_label.visible = true
-	_inventory_label.visible = true
-	_resource_label.visible = true
-	_craft_label.visible = true
-	_move_label.text = "%s Stand near Breeding Bench" % _checkmark(bench_reached)
-	_inventory_label.text = "%s Open bench with [E]" % _checkmark(crafting_opened)
-	_resource_label.text = "%s Select Thorn Sword recipe" % _checkmark(thorn_sword_selected)
-	_craft_label.text = "%s Craft Thorn Sword" % _checkmark(thorn_sword_crafted)
-	var completed_count: int = (1 if bench_reached else 0) \
-		+ (1 if crafting_opened else 0) \
-		+ (1 if thorn_sword_selected else 0) \
-		+ (1 if thorn_sword_crafted else 0)
-	_progress_bar.value = float(completed_count) / 4.0
+	var phase_name: String = "Shape Your Tool"
 	if current_state == TutorialState.DAY_1_CRAFTING_COMPLETE:
-		_phase_label.text = "Shape Your Tool Complete"
-	else:
-		_phase_label.text = "Shape Your Tool"
+		phase_name = "Shape Your Tool Complete"
+	var objectives: Array[String] = [
+		"Stand near Breeding Bench",
+		"Open bench with [E]",
+		"Select Thorn Sword recipe",
+		"Craft Thorn Sword"
+	]
+	var completed: Array[bool] = [bench_reached, crafting_opened, thorn_sword_selected, thorn_sword_crafted]
+	_show_tutorial_on_hud(phase_name, objectives, completed)
 
 
 func _refresh_phase_3_ui() -> void:
-	if not is_instance_valid(_hud_layer):
-		return
-	_move_label.visible = true
-	_inventory_label.visible = true
-	_resource_label.visible = false
-	_craft_label.visible = false
-	_move_label.text = "%s Hit a shadow creature" % _checkmark(combat_enemy_hit)
-	_inventory_label.text = "%s Survive Night 1" % _checkmark(night_1_survived)
-	var completed_count: int = (1 if combat_enemy_hit else 0) \
-		+ (1 if night_1_survived else 0)
-	_progress_bar.value = float(completed_count) / 2.0
+	var phase_name: String = "Defend the Heart"
 	if current_state == TutorialState.DAY_1_COMBAT_COMPLETE:
-		_phase_label.text = "Defend the Heart Complete"
-	else:
-		_phase_label.text = "Defend the Heart"
+		phase_name = "Defend the Heart Complete"
+	var objectives: Array[String] = [
+		"Hit a shadow creature",
+		"Survive Night 1"
+	]
+	var completed: Array[bool] = [combat_enemy_hit, night_1_survived]
+	_show_tutorial_on_hud(phase_name, objectives, completed)
 
 
 func _refresh_phase_4_ui() -> void:
-	if not is_instance_valid(_hud_layer):
-		return
-	_move_label.visible = true
-	_inventory_label.visible = true
-	_resource_label.visible = true
-	_craft_label.visible = true
-	_move_label.text = "%s Enter plant mode [P]" % _checkmark(plant_placement_mode_entered)
-	_inventory_label.text = "%s Place a plant" % _checkmark(tutorial_plant_placed)
-	_resource_label.text = "%s Trigger plant ability" % _checkmark(plant_ability_triggered)
-	_craft_label.text = "%s Survive Night 3" % _checkmark(night_3_survived)
-	var completed_count: int = (1 if plant_placement_mode_entered else 0) \
-		+ (1 if tutorial_plant_placed else 0) \
-		+ (1 if plant_ability_triggered else 0) \
-		+ (1 if night_3_survived else 0)
-	_progress_bar.value = float(completed_count) / 4.0
+	var phase_name: String = "Garden Defense"
 	if current_state == TutorialState.DAY_3_DEFENSE_COMPLETE:
-		_phase_label.text = "Garden Defense Complete"
-	else:
-		_phase_label.text = "Garden Defense"
+		phase_name = "Garden Defense Complete"
+	var objectives: Array[String] = [
+		"Enter plant mode [P]",
+		"Place a plant",
+		"Trigger plant ability",
+		"Survive Night 3"
+	]
+	var completed: Array[bool] = [plant_placement_mode_entered, tutorial_plant_placed, plant_ability_triggered, night_3_survived]
+	_show_tutorial_on_hud(phase_name, objectives, completed)
+
+
+func _show_tutorial_on_hud(phase_name: String, objectives: Array[String], completed: Array[bool]) -> void:
+	var hud: Node = get_node_or_null("/root/HUD")
+	if hud == null or not hud.has_method("show_tutorial_mode"):
+		return
+	hud.show_tutorial_mode(phase_name, objectives, completed)
 
 
 func _checkmark(done: bool) -> String:

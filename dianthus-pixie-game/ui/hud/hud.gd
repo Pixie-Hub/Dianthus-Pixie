@@ -16,6 +16,7 @@ extends CanvasLayer
 @onready var _slot1_name: Label = %Slot1NameLabel
 @onready var _slot2_name: Label = %Slot2NameLabel
 @onready var _skill_name: Label = %SkillNameLabel
+@onready var _tracked_quest_panel: TrackedQuestHUD = %TrackedQuestPanel
 
 const HOTBAR_SELECTED_COLOR: Color = Color(0.9, 0.75, 0.2, 1)
 const HOTBAR_NORMAL_COLOR: Color = Color(0.3, 0.3, 0.3, 1)
@@ -45,6 +46,7 @@ func _ready() -> void:
 	GameManager.game_state_changed.connect(_on_game_state_changed)
 	_setup_endless_label()
 	_refresh_endless_label()
+	QuestManager.quest_completed.connect(_on_quest_completed_hud)
 
 
 func _on_player_hp_changed(current_hp: int, max_hp: int) -> void:
@@ -181,6 +183,13 @@ func _on_game_state_changed(_state: String) -> void:
 	_refresh_endless_label()
 
 
+func _on_quest_completed_hud(quest_id: StringName) -> void:
+	if is_instance_valid(_tracked_quest_panel) \
+			and not _tracked_quest_panel.get("_tutorial_mode") \
+			and _tracked_quest_panel.get_tracked_quest_id() == quest_id:
+		_tracked_quest_panel.untrack_quest()
+
+
 func _setup_endless_label() -> void:
 	_endless_label = Label.new()
 	_endless_label.name = "EndlessLabel"
@@ -213,3 +222,38 @@ func _shake(node: Control) -> void:
 	tween.tween_property(node, "position", original_pos + Vector2(0, 2), 0.03)
 	tween.tween_property(node, "position", original_pos + Vector2(-1, -1), 0.03)
 	tween.tween_property(node, "position", original_pos, 0.03)
+
+
+# ── Public: tracked quest API ─────────────────────────────────────────────────
+
+func track_quest(quest_id: StringName) -> void:
+	if is_instance_valid(_tracked_quest_panel):
+		_tracked_quest_panel.track_quest(quest_id)
+
+
+func untrack_quest() -> void:
+	if is_instance_valid(_tracked_quest_panel):
+		_tracked_quest_panel.untrack_quest()
+
+
+func get_tracked_quest() -> StringName:
+	if is_instance_valid(_tracked_quest_panel):
+		return _tracked_quest_panel.get_tracked_quest_id()
+	return &""
+
+
+func is_tracking_quest() -> bool:
+	if is_instance_valid(_tracked_quest_panel):
+		return _tracked_quest_panel.is_tracking()
+	return false
+
+
+func show_tutorial_mode(phase_name: String, objectives: Array[String], completed: Array[bool]) -> void:
+	if is_instance_valid(_tracked_quest_panel):
+		_tracked_quest_panel.set_tutorial_mode(true)
+		_tracked_quest_panel.set_tutorial_phase(phase_name, objectives, completed)
+
+
+func hide_tutorial_mode() -> void:
+	if is_instance_valid(_tracked_quest_panel):
+		_tracked_quest_panel.set_tutorial_mode(false)

@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://c0sg7ynup6dgi" path="res://ui/hud/minimap.gd" id="3_minimap_script"]
 [ext_resource type="Script" uid="uid://dcea8ljris45v" path="res://ui/hud/wave_counter.gd" id="4_wavecounter_script"]
 [ext_resource type="Texture2D" uid="uid://bnpfpreensksj" path="res://ui/hud/sun.png" id="5_sun"]
+[ext_resource type="Script" uid="uid://v8sgrsegq6p2" path="res://ui/hud/tracked_quest_hud.gd" id="6_trackedquest_script"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wood"]
 bg_color = Color(0.3, 0.22, 0.15, 0.85)
@@ -101,6 +102,8 @@ corner_radius_bottom_left = 2
 [node name="HUD" type="CanvasLayer" unique_id=416668404]
 layer = 10
 script = ExtResource("1_script")
+metadata/_edit_horizontal_guides_ = [356.0, 360.0, 356.0]
+metadata/_edit_vertical_guides_ = [442.0, 438.0, 96.0, 96.0, 100.0, 438.0]
 
 [node name="PlayerVitalsPanel" type="PanelContainer" parent="." unique_id=570046399]
 unique_name_in_owner = true
@@ -499,3 +502,67 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
 theme_override_font_sizes/font_size = 5
 text = "[L] Loadout"
+
+[node name="TrackedQuestPanel" type="PanelContainer" parent="." unique_id=916283741]
+unique_name_in_owner = true
+visible = false
+offset_left = 4.0
+offset_top = 80.0
+offset_right = 152.0
+offset_bottom = 192.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_wood")
+script = ExtResource("6_trackedquest_script")
+
+[node name="MarginContainer" type="MarginContainer" parent="TrackedQuestPanel" unique_id=916283742]
+layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TrackedQuestPanel/MarginContainer" unique_id=916283743]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="QuestTitleLabel" type="Label" parent="TrackedQuestPanel/MarginContainer/VBoxContainer" unique_id=916283744]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.78, 1)
+theme_override_font_sizes/font_size = 9
+text = "Quest Title"
+autowrap_mode = 3
+
+[node name="Objective1Label" type="Label" parent="TrackedQuestPanel/MarginContainer/VBoxContainer" unique_id=916283745]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 7
+text = "[ ] Objective 1"
+autowrap_mode = 3
+
+[node name="Objective2Label" type="Label" parent="TrackedQuestPanel/MarginContainer/VBoxContainer" unique_id=916283746]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 7
+text = "[ ] Objective 2"
+autowrap_mode = 3
+
+[node name="Objective3Label" type="Label" parent="TrackedQuestPanel/MarginContainer/VBoxContainer" unique_id=916283747]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 7
+text = "[ ] Objective 3"
+autowrap_mode = 3
+
+[node name="Objective4Label" type="Label" parent="TrackedQuestPanel/MarginContainer/VBoxContainer" unique_id=916283748]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 7
+text = "[ ] Objective 4"
+autowrap_mode = 3
+
+[node name="QuestProgressBar" type="ProgressBar" parent="TrackedQuestPanel/MarginContainer/VBoxContainer" unique_id=916283749]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+max_value = 1.0
+show_percentage = false

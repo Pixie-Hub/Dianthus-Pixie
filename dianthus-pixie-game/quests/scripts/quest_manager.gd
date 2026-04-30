@@ -7,11 +7,14 @@ signal quest_progress_updated(quest_id: StringName, objective_id: StringName, cu
 signal quest_completed(quest_id: StringName)
 signal quest_failed(quest_id: StringName, reason: String)
 signal quest_rewards_granted(quest_id: StringName, items: Dictionary, weapons: Array)
+signal quest_tracked(quest_id: StringName)
+signal quest_untracked()
 
 var _registry: Dictionary = {}
 var _active: Dictionary = {}
 var _completed: Dictionary = {}
 var _failed: Dictionary = {}
+var _tracked_quest_id: StringName = &""
 
 
 func _ready() -> void:
@@ -45,6 +48,8 @@ func start_quest(id: StringName) -> bool:
 func complete_quest(id: StringName) -> void:
 	if not _active.has(id):
 		return
+	if id == _tracked_quest_id:
+		untrack_quest()
 	var q: QuestData = _registry.get(id)
 	if q == null:
 		return
@@ -168,6 +173,38 @@ func silent_drop_quest(id: StringName) -> void:
 	print("[QuestManager] Silently dropped daily quest: %s" % id)
 
 
+func track_quest(quest_id: StringName) -> void:
+	if not _registry.has(quest_id):
+		push_warning("[QuestManager] Unknown quest to track: %s" % quest_id)
+		return
+	if _tracked_quest_id == quest_id:
+		return
+	_tracked_quest_id = quest_id
+	quest_tracked.emit(quest_id)
+	print("[QuestManager] Tracking quest: %s" % quest_id)
+
+
+func untrack_quest() -> void:
+	if _tracked_quest_id == &"":
+		return
+	var previous_id: StringName = _tracked_quest_id
+	_tracked_quest_id = &""
+	quest_untracked.emit()
+	print("[QuestManager] Untracked quest: %s" % previous_id)
+
+
+func get_tracked_quest() -> StringName:
+	return _tracked_quest_id
+
+
+func is_tracking(quest_id: StringName) -> bool:
+	return _tracked_quest_id == quest_id
+
+
+func is_tracking_any() -> bool:
+	return _tracked_quest_id != &""
+
+
 func report_event(event_id: StringName, amount: int = 1, context: Dictionary = {}) -> void:
 	for quest_id: StringName in _active.keys():
 		var q: QuestData = _registry.get(quest_id)
@@ -210,6 +247,7 @@ func serialize() -> Dictionary:
 		"active": active_data,
 		"completed": completed_data,
 		"failed": failed_data,
+		"tracked": str(_tracked_quest_id),
 	}
 
 
@@ -241,6 +279,17 @@ func deserialize(data: Dictionary) -> void:
 			_failed[StringName(id_str)] = str((failed_raw as Dictionary)[id_str])
 	print("[QuestManager] Deserialized: %d active, %d completed, %d failed" % [
 		_active.size(), _completed.size(), _failed.size()])
+	# Restore tracked quest
+	var tracked_raw: Variant = data.get("tracked", "")
+	if tracked_raw is String and not (tracked_raw as String).is_empty():
+		var tid: StringName = StringName(tracked_raw as String)
+		if _active.has(tid):
+			_tracked_quest_id = tid
+			quest_tracked.emit(tid)
+		else:
+			_tracked_quest_id = &""
+	else:
+		_tracked_quest_id = &""
 
 
 # ── Internal ──────────────────────────────────────────────────────────────────

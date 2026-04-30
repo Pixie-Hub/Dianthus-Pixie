@@ -34,6 +34,8 @@ func _ready() -> void:
 	QuestManager.quest_completed.connect(_refresh.unbind(1))
 	QuestManager.quest_failed.connect(_refresh.unbind(2))
 	QuestManager.quest_rewards_granted.connect(_refresh.unbind(3))
+	QuestManager.quest_tracked.connect(_refresh.unbind(1))
+	QuestManager.quest_untracked.connect(_refresh)
 	_active_btn.pressed.connect(_on_tab_active)
 	_completed_btn.pressed.connect(_on_tab_completed)
 	_failed_btn.pressed.connect(_on_tab_failed)
@@ -175,8 +177,19 @@ func _add_active_row(q: QuestData) -> void:
 	type_lbl.add_theme_font_size_override("font_size", 7)
 	type_lbl.modulate = TYPE_COLOR.get(q.quest_type, Color.WHITE)
 
+	# Track button
+	var is_tracked: bool = QuestManager.is_tracking(q.quest_id)
+	var track_btn: Button = Button.new()
+	track_btn.text = "📌 Tracked" if is_tracked else "📌 Track"
+	track_btn.add_theme_font_size_override("font_size", 7)
+	track_btn.flat = not is_tracked
+	track_btn.modulate = Color(0.95, 0.85, 0.3, 1.0) if is_tracked else Color.WHITE
+	track_btn.pressed.connect(_on_track_button_pressed.bind(q.quest_id, panel))
+	track_btn.name = "TrackButton_%s" % q.quest_id
+
 	header.add_child(name_lbl)
 	header.add_child(type_lbl)
+	header.add_child(track_btn)
 
 	# Time-limit countdown
 	if q.time_limit_days > 0:
@@ -263,6 +276,15 @@ func _add_active_row(q: QuestData) -> void:
 	panel.add_child(vbox)
 	_quest_list.add_child(panel)
 	_add_separator()
+
+
+func _on_track_button_pressed(quest_id: StringName, _panel: PanelContainer) -> void:
+	SfxManager.play("ui_button_click")
+	if QuestManager.is_tracking(quest_id):
+		QuestManager.untrack_quest()
+	else:
+		QuestManager.track_quest(quest_id)
+	_refresh()
 
 
 func _build_completed() -> void:

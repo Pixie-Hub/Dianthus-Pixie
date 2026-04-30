@@ -41,8 +41,7 @@ TutorialManager="*res://accessibility/tutorial/tutorial_manager.gd"
 [dialogic]
 
 directories/dtl_directory={
-"access_03_tutorial": "res://dialogic/timelines/access_03_tutorial.dtl",
-"tutorial_complete": "res://dialogic/timelines/access_03_tutorial.dtl"
+"interactive_tutorial": "res://dialogic/timelines/interactive_tutorial.dtl"
 }
 directories/dch_directory={
 "Dianthus Core": "res://dialogic/characters/Dianthus Core.dch"
