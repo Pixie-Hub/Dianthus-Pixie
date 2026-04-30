@@ -1,0 +1,54 @@
+[gd_resource type="Resource" script_class="QuestData" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://quests/data/quest_data.gd" id="1_qdata"]
+[ext_resource type="Script" path="res://quests/data/quest_objective.gd" id="2_qobj"]
+
+[sub_resource type="Resource" id="Resource_bench"]
+script = ExtResource("2_qobj")
+objective_id = &"find_breeding_bench"
+description = "Stand near the Breeding Bench"
+event_id = &"breeding_bench_reached"
+target_count = 1
+filter = {}
+
+[sub_resource type="Resource" id="Resource_open"]
+script = ExtResource("2_qobj")
+objective_id = &"open_crafting_bench"
+description = "Open the bench with E"
+event_id = &"crafting_opened"
+target_count = 1
+filter = {}
+
+[sub_resource type="Resource" id="Resource_select"]
+script = ExtResource("2_qobj")
+objective_id = &"select_thorn_sword"
+description = "Select the Thorn Sword recipe"
+event_id = &"recipe_selected"
+target_count = 1
+filter = {"recipe_id": "thorn_sword"}
+
+[sub_resource type="Resource" id="Resource_craft"]
+script = ExtResource("2_qobj")
+objective_id = &"craft_thorn_sword"
+description = "Craft the Thorn Sword"
+event_id = &"weapon_crafted"
+target_count = 1
+filter = {"weapon_id": "thorn_sword"}
+
+[resource]
+script = ExtResource("1_qdata")
+quest_id = &"tutorial_day1_crafting"
+display_name = "Shape Your Tool"
+description = "Open the Breeding Bench and craft your first weapon."
+quest_type = 3
+objectives = Array[ExtResource("2_qobj")]([SubResource("Resource_bench"), SubResource("Resource_open"), SubResource("Resource_select"), SubResource("Resource_craft")])
+reward_items = {}
+reward_weapons = []
+reward_unlock_flags = []
+time_limit_days = 0
+dialogic_timeline_on_complete = ""
+dialogic_timeline_on_fail = ""
+next_quest_id = &""
+auto_start = false
+failure_unlock_flags = []
+failure_next_quest_id = &""

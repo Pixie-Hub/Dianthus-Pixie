@@ -14,7 +14,7 @@ const WEAPON_DATA_PATHS: Dictionary = {
 	"iron_bloom_shield": "res://combat/weapons/petal_shield/iron_bloom_shield_data.tres",
 }
 
-var owned_weapons: Dictionary = {"thorn_sword": true}
+var owned_weapons: Dictionary = {}
 
 
 # --- Public API ---
@@ -87,7 +87,7 @@ func serialize() -> Dictionary:
 
 
 func deserialize(data: Dictionary) -> void:
-	owned_weapons = {"thorn_sword": true}
+	owned_weapons = {}
 	for wid: String in data:
 		if data[wid]:
 			owned_weapons[wid] = true

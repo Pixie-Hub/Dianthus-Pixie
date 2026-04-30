@@ -6,17 +6,23 @@ signal objective_updated(objective_id: StringName, completed: bool)
 signal tutorial_visibility_changed(enabled: bool)
 
 enum TutorialState {
-	NOT_STARTED,
-	DAY_1_MOVEMENT,
-	DAY_1_MOVEMENT_COMPLETE,
-	DISABLED,
+	NOT_STARTED = 0,
+	DAY_1_MOVEMENT = 1,
+	DAY_1_MOVEMENT_COMPLETE = 2,
+	DISABLED = 3,
+	DAY_1_CRAFTING = 4,
+	DAY_1_CRAFTING_COMPLETE = 5,
 }
 
 const PROGRESS_PATH: String = "user://tutorial_progress.cfg"
 const PHASE_DAY_1_MOVEMENT: StringName = &"tutorial_day1_movement"
+const PHASE_DAY_1_CRAFTING: StringName = &"tutorial_day1_crafting"
 const MOVEMENT_REQUIRED_SECONDS: float = 5.0
 const TIMELINE_ACCESS_03: String = "access_03_tutorial"
 const LABEL_DAY_1_MOVEMENT: String = "day_1_movement"
+const LABEL_DAY_1_CRAFTING: String = "day_1_crafting"
+const TARGET_CRAFTING_RECIPE: String = "thorn_sword"
+const TARGET_CRAFTING_WEAPON: String = "thorn_sword"
 
 var tutorial_enabled: bool = true
 var current_state: int = TutorialState.NOT_STARTED
@@ -24,6 +30,10 @@ var movement_seconds: float = 0.0
 var moved_enough: bool = false
 var inventory_opened: bool = false
 var resource_collected: bool = false
+var bench_reached: bool = false
+var crafting_opened: bool = false
+var thorn_sword_selected: bool = false
+var thorn_sword_crafted: bool = false
 
 var _reported_movement: bool = false
 var _hud_layer: CanvasLayer = null
@@ -32,8 +42,10 @@ var _phase_label: Label = null
 var _move_label: Label = null
 var _inventory_label: Label = null
 var _resource_label: Label = null
+var _craft_label: Label = null
 var _progress_bar: ProgressBar = null
 var _core_glow_active: bool = false
+var _bench_hint_active: bool = false
 var _progress_save_timer: float = 0.0
 
 
@@ -41,6 +53,7 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_load_progress()
 	InventoryManager.item_added.connect(_on_item_added)
+	CraftingManager.weapon_crafted.connect(_on_weapon_crafted)
 	SaveManager.load_completed.connect(_on_load_completed)
 	call_deferred("_sync_active_phase_with_scene")
 
@@ -56,6 +69,15 @@ func _process(delta: float) -> void:
 			_save_progress()
 		_refresh_phase_1_ui()
 		_check_phase_1_complete()
+	elif current_state == TutorialState.DAY_1_MOVEMENT_COMPLETE:
+		_try_start_day_1_crafting()
+	elif current_state == TutorialState.DAY_1_CRAFTING:
+		_progress_save_timer += delta
+		if _progress_save_timer >= 1.0:
+			_progress_save_timer = 0.0
+			_save_progress()
+		_refresh_phase_2_ui()
+		_check_phase_2_complete()
 
 
 func reset_progress_for_new_game() -> void:
@@ -66,11 +88,16 @@ func reset_progress_for_new_game() -> void:
 	moved_enough = false
 	inventory_opened = false
 	resource_collected = false
+	bench_reached = false
+	crafting_opened = false
+	thorn_sword_selected = false
+	thorn_sword_crafted = false
 	_reported_movement = false
 	_save_progress()
 	_hide_hud()
 	_set_core_tutorial_glow(false)
 	_set_pickup_hints(false)
+	_set_bench_hints(false)
 	call_deferred("_sync_active_phase_with_scene")
 
 
@@ -83,6 +110,7 @@ func set_tutorial_enabled(enabled: bool) -> void:
 		_hide_hud()
 		_set_core_tutorial_glow(false)
 		_set_pickup_hints(false)
+		_set_bench_hints(false)
 	elif current_state == TutorialState.DISABLED:
 		current_state = TutorialState.NOT_STARTED
 		call_deferred("_sync_active_phase_with_scene")
@@ -93,6 +121,7 @@ func set_tutorial_enabled(enabled: bool) -> void:
 func skip_tutorial() -> void:
 	set_tutorial_enabled(false)
 	phase_completed.emit(PHASE_DAY_1_MOVEMENT)
+	phase_completed.emit(PHASE_DAY_1_CRAFTING)
 
 
 func is_phase_1_active() -> bool:
@@ -100,7 +129,17 @@ func is_phase_1_active() -> bool:
 
 
 func is_phase_1_complete() -> bool:
-	return current_state == TutorialState.DAY_1_MOVEMENT_COMPLETE
+	return current_state == TutorialState.DAY_1_MOVEMENT_COMPLETE \
+		or current_state == TutorialState.DAY_1_CRAFTING \
+		or current_state == TutorialState.DAY_1_CRAFTING_COMPLETE
+
+
+func is_phase_2_active() -> bool:
+	return current_state == TutorialState.DAY_1_CRAFTING
+
+
+func is_phase_2_complete() -> bool:
+	return current_state == TutorialState.DAY_1_CRAFTING_COMPLETE
 
 
 func report_inventory_opened() -> void:
@@ -115,6 +154,45 @@ func report_inventory_opened() -> void:
 	_save_progress()
 	_refresh_phase_1_ui()
 	_check_phase_1_complete()
+
+
+func report_breeding_bench_range_changed(in_range: bool) -> void:
+	if current_state != TutorialState.DAY_1_CRAFTING:
+		return
+	if bench_reached or not in_range:
+		return
+	bench_reached = true
+	QuestManager.report_event(&"breeding_bench_reached", 1, {})
+	objective_updated.emit(&"find_breeding_bench", true)
+	_save_progress()
+	_refresh_phase_2_ui()
+
+
+func report_crafting_bench_opened() -> void:
+	if current_state != TutorialState.DAY_1_CRAFTING:
+		return
+	if crafting_opened:
+		return
+	crafting_opened = true
+	QuestManager.report_event(&"crafting_opened", 1, {})
+	objective_updated.emit(&"open_crafting_bench", true)
+	_save_progress()
+	_refresh_phase_2_ui()
+
+
+func report_recipe_selected(recipe_id: String) -> void:
+	if current_state != TutorialState.DAY_1_CRAFTING:
+		return
+	if recipe_id != TARGET_CRAFTING_RECIPE:
+		return
+	if thorn_sword_selected:
+		return
+	thorn_sword_selected = true
+	QuestManager.report_event(&"recipe_selected", 1, {"recipe_id": recipe_id})
+	objective_updated.emit(&"select_thorn_sword", true)
+	_save_progress()
+	_refresh_phase_2_ui()
+	_check_phase_2_complete()
 
 
 func notify_scene_ready() -> void:
@@ -132,6 +210,18 @@ func _sync_active_phase_with_scene() -> void:
 		_set_pickup_hints(true)
 		if not QuestManager.is_active(PHASE_DAY_1_MOVEMENT) and not QuestManager.is_completed(PHASE_DAY_1_MOVEMENT):
 			QuestManager.start_quest(PHASE_DAY_1_MOVEMENT)
+		return
+	if current_state == TutorialState.DAY_1_CRAFTING:
+		if not is_instance_valid(GameManager.player):
+			return
+		_show_hud()
+		_set_core_tutorial_glow(true)
+		_set_bench_hints(true)
+		if not QuestManager.is_active(PHASE_DAY_1_CRAFTING) and not QuestManager.is_completed(PHASE_DAY_1_CRAFTING):
+			QuestManager.start_quest(PHASE_DAY_1_CRAFTING)
+		return
+	if current_state == TutorialState.DAY_1_MOVEMENT_COMPLETE:
+		_try_start_day_1_crafting()
 		return
 	_try_start_day_1_movement()
 
@@ -153,6 +243,27 @@ func _try_start_day_1_movement() -> void:
 	phase_started.emit(PHASE_DAY_1_MOVEMENT)
 	QuestManager.start_quest(PHASE_DAY_1_MOVEMENT)
 	_start_dialogic_label(LABEL_DAY_1_MOVEMENT)
+
+
+func _try_start_day_1_crafting() -> void:
+	if not tutorial_enabled:
+		return
+	if current_state != TutorialState.DAY_1_MOVEMENT_COMPLETE:
+		return
+	if DayNightCycle.day_count != 1 or DayNightCycle.is_night():
+		return
+	if not is_instance_valid(GameManager.player):
+		return
+	current_state = TutorialState.DAY_1_CRAFTING
+	_progress_save_timer = 0.0
+	_save_progress()
+	_show_hud()
+	_set_core_tutorial_glow(true)
+	_set_pickup_hints(false)
+	_set_bench_hints(true)
+	phase_started.emit(PHASE_DAY_1_CRAFTING)
+	QuestManager.start_quest(PHASE_DAY_1_CRAFTING)
+	_start_dialogic_label(LABEL_DAY_1_CRAFTING)
 
 
 func _start_dialogic_label(label_name: String) -> void:
@@ -188,6 +299,8 @@ func _update_movement_progress(delta: float) -> void:
 
 func _on_item_added(_item_id: String, _amount: int) -> void:
 	if current_state != TutorialState.DAY_1_MOVEMENT:
+		if current_state == TutorialState.DAY_1_CRAFTING:
+			_refresh_phase_2_ui()
 		return
 	if resource_collected:
 		return
@@ -196,6 +309,20 @@ func _on_item_added(_item_id: String, _amount: int) -> void:
 	_save_progress()
 	_refresh_phase_1_ui()
 	_check_phase_1_complete()
+
+
+func _on_weapon_crafted(weapon_id: String) -> void:
+	if current_state != TutorialState.DAY_1_CRAFTING:
+		return
+	if weapon_id != TARGET_CRAFTING_WEAPON:
+		return
+	if thorn_sword_crafted:
+		return
+	thorn_sword_crafted = true
+	objective_updated.emit(&"craft_thorn_sword", true)
+	_save_progress()
+	_refresh_phase_2_ui()
+	_check_phase_2_complete()
 
 
 func _check_phase_1_complete() -> void:
@@ -213,13 +340,31 @@ func _check_phase_1_complete() -> void:
 		QuestManager.complete_quest(PHASE_DAY_1_MOVEMENT)
 	await get_tree().create_timer(1.5).timeout
 	if current_state == TutorialState.DAY_1_MOVEMENT_COMPLETE:
+		_try_start_day_1_crafting()
+
+
+func _check_phase_2_complete() -> void:
+	if current_state != TutorialState.DAY_1_CRAFTING:
+		return
+	if not (bench_reached and crafting_opened and thorn_sword_selected and thorn_sword_crafted):
+		return
+	current_state = TutorialState.DAY_1_CRAFTING_COMPLETE
+	_set_core_tutorial_glow(false)
+	_set_bench_hints(false)
+	_save_progress()
+	_refresh_phase_2_ui()
+	phase_completed.emit(PHASE_DAY_1_CRAFTING)
+	if QuestManager.is_active(PHASE_DAY_1_CRAFTING):
+		QuestManager.complete_quest(PHASE_DAY_1_CRAFTING)
+	await get_tree().create_timer(1.5).timeout
+	if current_state == TutorialState.DAY_1_CRAFTING_COMPLETE:
 		_hide_hud()
 
 
 func _show_hud() -> void:
 	if is_instance_valid(_hud_layer):
 		_hud_layer.visible = true
-		_refresh_phase_1_ui()
+		_refresh_current_ui()
 		return
 	_hud_layer = CanvasLayer.new()
 	_hud_layer.name = "TutorialHUD"
@@ -232,7 +377,7 @@ func _show_hud() -> void:
 	_panel.offset_left = 8.0
 	_panel.offset_top = 8.0
 	_panel.offset_right = 218.0
-	_panel.offset_bottom = 108.0
+	_panel.offset_bottom = 128.0
 	_panel.add_theme_stylebox_override("panel", _make_panel_style(Color(0.9, 0.75, 0.2, 1.0)))
 	_hud_layer.add_child(_panel)
 
@@ -256,9 +401,11 @@ func _show_hud() -> void:
 	_move_label = _make_objective_label()
 	_inventory_label = _make_objective_label()
 	_resource_label = _make_objective_label()
+	_craft_label = _make_objective_label()
 	vbox.add_child(_move_label)
 	vbox.add_child(_inventory_label)
 	vbox.add_child(_resource_label)
+	vbox.add_child(_craft_label)
 
 	_progress_bar = ProgressBar.new()
 	_progress_bar.min_value = 0.0
@@ -266,12 +413,20 @@ func _show_hud() -> void:
 	_progress_bar.show_percentage = false
 	_progress_bar.custom_minimum_size = Vector2(0.0, 6.0)
 	vbox.add_child(_progress_bar)
-	_refresh_phase_1_ui()
+	_refresh_current_ui()
 
 
 func _hide_hud() -> void:
 	if is_instance_valid(_hud_layer):
 		_hud_layer.visible = false
+
+
+func _refresh_current_ui() -> void:
+	if current_state == TutorialState.DAY_1_CRAFTING \
+			or current_state == TutorialState.DAY_1_CRAFTING_COMPLETE:
+		_refresh_phase_2_ui()
+	else:
+		_refresh_phase_1_ui()
 
 
 func _make_objective_label() -> Label:
@@ -284,6 +439,7 @@ func _make_objective_label() -> Label:
 func _refresh_phase_1_ui() -> void:
 	if not is_instance_valid(_hud_layer):
 		return
+	_craft_label.visible = false
 	_move_label.text = "%s Move for %.0fs" % [_checkmark(moved_enough), MOVEMENT_REQUIRED_SECONDS]
 	_inventory_label.text = "%s Open inventory [I]" % _checkmark(inventory_opened)
 	_resource_label.text = "%s Collect a resource" % _checkmark(resource_collected)
@@ -295,6 +451,25 @@ func _refresh_phase_1_ui() -> void:
 		_phase_label.text = "First Steps Complete"
 	else:
 		_phase_label.text = "First Steps"
+
+
+func _refresh_phase_2_ui() -> void:
+	if not is_instance_valid(_hud_layer):
+		return
+	_craft_label.visible = true
+	_move_label.text = "%s Stand near Breeding Bench" % _checkmark(bench_reached)
+	_inventory_label.text = "%s Open bench with [E]" % _checkmark(crafting_opened)
+	_resource_label.text = "%s Select Thorn Sword recipe" % _checkmark(thorn_sword_selected)
+	_craft_label.text = "%s Craft Thorn Sword" % _checkmark(thorn_sword_crafted)
+	var completed_count: int = (1 if bench_reached else 0) \
+		+ (1 if crafting_opened else 0) \
+		+ (1 if thorn_sword_selected else 0) \
+		+ (1 if thorn_sword_crafted else 0)
+	_progress_bar.value = float(completed_count) / 4.0
+	if current_state == TutorialState.DAY_1_CRAFTING_COMPLETE:
+		_phase_label.text = "Shape Your Tool Complete"
+	else:
+		_phase_label.text = "Shape Your Tool"
 
 
 func _checkmark(done: bool) -> String:
@@ -350,6 +525,13 @@ func _set_pickup_hints(enabled: bool) -> void:
 			pickup.set_tutorial_hint_active(enabled)
 
 
+func _set_bench_hints(enabled: bool) -> void:
+	_bench_hint_active = enabled
+	for bench: Node in get_tree().get_nodes_in_group(&"breeding_benches"):
+		if bench.has_method("set_tutorial_hint_active"):
+			bench.set_tutorial_hint_active(enabled)
+
+
 func _on_load_completed(_success: bool) -> void:
 	_load_progress()
 	call_deferred("_sync_active_phase_with_scene")
@@ -363,6 +545,10 @@ func _save_progress() -> void:
 	config.set_value("phase_1", "moved_enough", moved_enough)
 	config.set_value("phase_1", "inventory_opened", inventory_opened)
 	config.set_value("phase_1", "resource_collected", resource_collected)
+	config.set_value("phase_2", "bench_reached", bench_reached)
+	config.set_value("phase_2", "crafting_opened", crafting_opened)
+	config.set_value("phase_2", "thorn_sword_selected", thorn_sword_selected)
+	config.set_value("phase_2", "thorn_sword_crafted", thorn_sword_crafted)
 	config.save(PROGRESS_PATH)
 
 
@@ -376,6 +562,10 @@ func _load_progress() -> void:
 	moved_enough = bool(config.get_value("phase_1", "moved_enough", false))
 	inventory_opened = bool(config.get_value("phase_1", "inventory_opened", false))
 	resource_collected = bool(config.get_value("phase_1", "resource_collected", false))
+	bench_reached = bool(config.get_value("phase_2", "bench_reached", false))
+	crafting_opened = bool(config.get_value("phase_2", "crafting_opened", false))
+	thorn_sword_selected = bool(config.get_value("phase_2", "thorn_sword_selected", false))
+	thorn_sword_crafted = bool(config.get_value("phase_2", "thorn_sword_crafted", false))
 	_reported_movement = moved_enough
 	if not tutorial_enabled:
 		current_state = TutorialState.DISABLED

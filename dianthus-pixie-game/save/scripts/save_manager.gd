@@ -188,7 +188,7 @@ func _gather_state(manual: bool) -> Dictionary:
 
 	# Breeding
 	state["breeding"] = BreedingManager.serialize()
-	var equipped_id: String = "thorn_sword"
+	var equipped_id: String = ""
 	if is_instance_valid(GameManager.player) and GameManager.player._current_weapon != null:
 		equipped_id = GameManager.player._current_weapon.weapon_id
 	state["player"]["equipped_weapon"] = equipped_id
@@ -296,10 +296,23 @@ func _apply_state(state: Dictionary) -> void:
 
 	# 5.8 Quests.
 	QuestManager.deserialize(state.get("quests", {}))
-	var equipped_id: String = state.get("player", {}).get("equipped_weapon", "thorn_sword")
-	var weapon_data: WeaponData = CraftingManager.get_weapon_data(equipped_id)
-	if weapon_data != null and is_instance_valid(GameManager.player):
-		GameManager.player._current_weapon = weapon_data
+	var equipped_id: String = state.get("player", {}).get("equipped_weapon", "")
+	if is_instance_valid(GameManager.player):
+		if not equipped_id.is_empty():
+			var weapon_data: WeaponData = CraftingManager.get_weapon_data(equipped_id)
+			if weapon_data != null:
+				GameManager.player.weapon_slots[0] = equipped_id
+				GameManager.player.selected_weapon_slot = 0
+				GameManager.player._current_weapon = weapon_data
+		else:
+			GameManager.player.weapon_slots[0] = ""
+			GameManager.player.selected_weapon_slot = 0
+			GameManager.player._current_weapon = null
+		GameManager.player.loadout_changed.emit(
+			GameManager.player.weapon_slots,
+			GameManager.player.active_skill_id,
+			GameManager.player.selected_weapon_slot
+		)
 
 	# 5.9 Codex, daily quest roller, unlock flags.
 	CodexManager.deserialize(state.get("codex", {}))

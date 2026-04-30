@@ -22,7 +22,7 @@ label day_1_crafting (Day 1 Afternoon - Crafting)
 [signal arg="quest_start:tutorial_day1_crafting"]
 "Dianthus Core": The sun leans west. This is preparation time.
 "Dianthus Core": Raw petals and sap are only promises until your hands give them shape.
-"Dianthus Core": Stand near the Breeding Bench and press [color=#F0DD4C]E[/color]. Craft a weapon before the first night settles in.
+"Dianthus Core": Stand near the Breeding Bench and press [color=#F0DD4C]E[/color], then switch to Crafting.
 "Dianthus Core": Thorn Sword is enough for tonight. Simple tools can still save a living garden.
 "Dianthus Core": Goal\: open the crafting bench and craft your first weapon.
 [end_timeline]

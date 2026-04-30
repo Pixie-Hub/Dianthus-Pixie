@@ -71,7 +71,7 @@ func _build_recipe_list() -> void:
 		style.border_width_right = 1
 		style.border_width_top = 1
 		style.border_width_bottom = 1
-		style.border_color = Color(0.3, 0.3, 0.3, 1.0)
+		style.border_color = ACCENT_COLOR if _is_tutorial_target_recipe(recipe_id) else Color(0.3, 0.3, 0.3, 1.0)
 		row.add_theme_stylebox_override("panel", style)
 		row.custom_minimum_size = Vector2(0, 24)
 
@@ -82,7 +82,10 @@ func _build_recipe_list() -> void:
 		name_label.text = RecipeDatabase.get_display_name(recipe_id)
 		name_label.add_theme_font_size_override("font_size", 8)
 		name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		name_label.modulate = CRAFTABLE_COLOR if craftable else UNCRAFTABLE_COLOR
+		if _is_tutorial_target_recipe(recipe_id):
+			name_label.modulate = ACCENT_COLOR
+		else:
+			name_label.modulate = CRAFTABLE_COLOR if craftable else UNCRAFTABLE_COLOR
 
 		var mat_label: Label = Label.new()
 		mat_label.text = _build_material_summary(recipe_id)
@@ -116,6 +119,7 @@ func _build_recipe_list() -> void:
 func _select_recipe(recipe_id: String) -> void:
 	SfxManager.play("ui_button_click")
 	_selected_recipe_id = recipe_id
+	TutorialManager.report_recipe_selected(recipe_id)
 	_update_selection_highlight()
 	_update_description()
 	_craft_button.disabled = not CraftingManager.can_craft(recipe_id)
@@ -131,6 +135,12 @@ func _update_selection_highlight() -> void:
 			style.border_width_right = 2
 			style.border_width_top = 2
 			style.border_width_bottom = 2
+		elif _is_tutorial_target_recipe(rid):
+			style.border_color = ACCENT_COLOR
+			style.border_width_left = 1
+			style.border_width_right = 1
+			style.border_width_top = 1
+			style.border_width_bottom = 1
 		else:
 			style.border_color = Color(0.3, 0.3, 0.3, 1.0)
 			style.border_width_left = 1
@@ -164,7 +174,10 @@ func _refresh_availability() -> void:
 		var hbox: HBoxContainer = row.get_child(0) as HBoxContainer
 		var name_label: Label = hbox.get_child(0) as Label
 		var craftable: bool = CraftingManager.can_craft(recipe_id)
-		name_label.modulate = CRAFTABLE_COLOR if craftable else UNCRAFTABLE_COLOR
+		if _is_tutorial_target_recipe(recipe_id):
+			name_label.modulate = ACCENT_COLOR
+		else:
+			name_label.modulate = CRAFTABLE_COLOR if craftable else UNCRAFTABLE_COLOR
 	if not _selected_recipe_id.is_empty():
 		_update_description()
 		_craft_button.disabled = not CraftingManager.can_craft(_selected_recipe_id)
@@ -176,6 +189,10 @@ func _build_material_summary(recipe_id: String) -> String:
 	for item_id: String in materials:
 		parts.append("%dx %s" % [int(materials[item_id]), ItemDatabase.get_display_name(item_id)])
 	return ", ".join(parts)
+
+
+func _is_tutorial_target_recipe(recipe_id: String) -> bool:
+	return recipe_id == "thorn_sword" and TutorialManager.is_phase_2_active()
 
 
 func _on_craft_pressed() -> void:

@@ -77,3 +77,7 @@ func register_player(p: Node) -> void:
 	if p.has_signal("loadout_changed"):
 		p.loadout_changed.connect(
 			func(slots: Array, sid: String, sel: int) -> void: loadout_changed.emit(slots, sid, sel))
+		var slots: Array = p.get("weapon_slots") as Array
+		var skill_id: String = str(p.get("active_skill_id"))
+		var selected_slot: int = int(p.get("selected_weapon_slot"))
+		loadout_changed.emit(slots, skill_id, selected_slot)

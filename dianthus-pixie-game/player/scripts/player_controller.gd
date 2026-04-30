@@ -37,7 +37,7 @@ var _blink_tween: Tween = null
 var is_attacking: bool = false
 var _attack_cooldown_timer: float = 0.0
 var _hit_bodies: Array[Node2D] = []
-var weapon_slots: Array[String] = ["thorn_sword", ""]
+var weapon_slots: Array[String] = ["", ""]
 var active_skill_id: String = ""
 var selected_weapon_slot: int = 0
 var _current_weapon: WeaponData = null
@@ -73,7 +73,8 @@ func _ready() -> void:
 	_update_blend_position()
 	hp_changed.emit(current_hp, MAX_HP)
 	energy_changed.emit(current_energy, max_energy)
-	_current_weapon = CraftingManager.get_weapon_data(weapon_slots[0])
+	if not weapon_slots[0].is_empty():
+		_current_weapon = CraftingManager.get_weapon_data(weapon_slots[0])
 	_sword_hitbox.body_entered.connect(_on_sword_hitbox_body_entered)
 	CraftingManager.weapon_crafted.connect(_on_weapon_crafted)
 	loadout_changed.emit(weapon_slots, active_skill_id, selected_weapon_slot)
