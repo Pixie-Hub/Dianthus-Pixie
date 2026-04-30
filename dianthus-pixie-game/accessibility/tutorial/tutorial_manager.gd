@@ -16,6 +16,7 @@ enum TutorialState {
 	DAY_1_COMBAT_COMPLETE = 7,
 	DAY_3_DEFENSE = 8,
 	DAY_3_DEFENSE_COMPLETE = 9,
+	TUTORIAL_COMPLETE = 10,
 }
 
 const PROGRESS_PATH: String = "user://tutorial_progress.cfg"
@@ -23,12 +24,14 @@ const PHASE_DAY_1_MOVEMENT: StringName = &"tutorial_day1_movement"
 const PHASE_DAY_1_CRAFTING: StringName = &"tutorial_day1_crafting"
 const PHASE_DAY_1_COMBAT: StringName = &"tutorial_day1_combat"
 const PHASE_DAY_3_DEFENSE: StringName = &"tutorial_day3_defense"
+const PHASE_TUTORIAL_COMPLETE: StringName = &"tutorial_complete"
 const MOVEMENT_REQUIRED_SECONDS: float = 5.0
 const INTERACTIVE_TUTORIAL: String = "interactive_tutorial"
 const LABEL_DAY_1_MOVEMENT: String = "day_1_movement"
 const LABEL_DAY_1_CRAFTING: String = "day_1_crafting"
 const LABEL_NIGHT_1_COMBAT: String = "night_1_combat"
 const LABEL_DAY_3_DEFENSE: String = "day_3_garden_defense"
+const LABEL_TUTORIAL_COMPLETE: String = "tutorial_complete"
 const TARGET_CRAFTING_RECIPE: String = "thorn_sword"
 const TARGET_CRAFTING_WEAPON: String = "thorn_sword"
 
@@ -75,6 +78,7 @@ func _ready() -> void:
 	SaveManager.load_completed.connect(_on_load_completed)
 	DayNightCycle.phase_changed.connect(_on_day_night_phase_changed)
 	GameManager.game_over_triggered.connect(_on_game_over_triggered)
+	call_deferred("_connect_dialogic_signal")
 	call_deferred("_sync_active_phase_with_scene")
 	call_deferred("_connect_scene_tutorial_hooks")
 
@@ -117,6 +121,8 @@ func _process(delta: float) -> void:
 			_save_progress()
 		_refresh_phase_4_ui()
 		_check_phase_4_complete()
+	elif current_state == TutorialState.DAY_3_DEFENSE_COMPLETE:
+		_try_start_tutorial_complete()
 
 
 func reset_progress_for_new_game() -> void:
@@ -206,7 +212,12 @@ func is_phase_4_active() -> bool:
 
 
 func is_phase_4_complete() -> bool:
-	return current_state == TutorialState.DAY_3_DEFENSE_COMPLETE
+	return current_state == TutorialState.DAY_3_DEFENSE_COMPLETE \
+		or current_state == TutorialState.TUTORIAL_COMPLETE
+
+
+func is_tutorial_complete() -> bool:
+	return current_state == TutorialState.TUTORIAL_COMPLETE
 
 
 func report_inventory_opened() -> void:
@@ -314,6 +325,15 @@ func _sync_active_phase_with_scene() -> void:
 	if current_state == TutorialState.DAY_1_COMBAT_COMPLETE:
 		_try_start_day_3_defense()
 		return
+	if current_state == TutorialState.DAY_3_DEFENSE_COMPLETE:
+		_try_start_tutorial_complete()
+		return
+	if current_state == TutorialState.TUTORIAL_COMPLETE:
+		_hide_hud()
+		_set_core_tutorial_glow(false)
+		_set_pickup_hints(false)
+		_set_bench_hints(false)
+		return
 	_try_start_day_1_movement()
 
 
@@ -397,19 +417,47 @@ func _try_start_day_3_defense() -> void:
 	_start_dialogic_label(LABEL_DAY_3_DEFENSE)
 
 
+func _try_start_tutorial_complete() -> void:
+	if not tutorial_enabled:
+		return
+	if current_state != TutorialState.DAY_3_DEFENSE_COMPLETE:
+		return
+	if not _is_day_4_tutorial_complete_window():
+		return
+	if not is_instance_valid(GameManager.player):
+		return
+	_hide_hud()
+	_set_core_tutorial_glow(false)
+	_set_pickup_hints(false)
+	_set_bench_hints(false)
+	if not QuestManager.is_active(PHASE_TUTORIAL_COMPLETE) and not QuestManager.is_completed(PHASE_TUTORIAL_COMPLETE):
+		QuestManager.start_quest(PHASE_TUTORIAL_COMPLETE)
+	if _start_dialogic_label(LABEL_TUTORIAL_COMPLETE):
+		return
+	var dialogic: Node = get_node_or_null("/root/Dialogic")
+	if dialogic == null:
+		_complete_tutorial()
+
+
 func _is_day_3_defense_window() -> bool:
 	return DayNightCycle.day_count >= 3 \
 		and DayNightCycle.is_day()
 
 
-func _start_dialogic_label(label_name: String) -> void:
+func _is_day_4_tutorial_complete_window() -> bool:
+	return DayNightCycle.day_count >= 4 \
+		and DayNightCycle.is_day()
+
+
+func _start_dialogic_label(label_name: String) -> bool:
 	var dialogic: Node = get_node_or_null("/root/Dialogic")
 	if dialogic == null:
 		push_warning("[TutorialManager] Dialogic singleton not found.")
-		return
+		return false
 	if dialogic.get("current_timeline") != null:
-		return
+		return false
 	dialogic.start(INTERACTIVE_TUTORIAL, label_name)
+	return true
 
 
 func _update_movement_progress(delta: float) -> void:
@@ -550,6 +598,9 @@ func _on_day_night_phase_changed(phase: String) -> void:
 		_save_progress()
 		_refresh_phase_4_ui()
 		_check_phase_4_complete()
+		return
+	if current_state == TutorialState.DAY_3_DEFENSE_COMPLETE:
+		_try_start_tutorial_complete()
 
 
 func _on_game_over_triggered() -> void:
@@ -632,6 +683,26 @@ func _check_phase_4_complete() -> void:
 	await get_tree().create_timer(1.5).timeout
 	if current_state == TutorialState.DAY_3_DEFENSE_COMPLETE:
 		_hide_hud()
+		_try_start_tutorial_complete()
+
+
+func _complete_tutorial() -> void:
+	if current_state == TutorialState.TUTORIAL_COMPLETE:
+		return
+	if QuestManager.is_active(PHASE_TUTORIAL_COMPLETE):
+		QuestManager.complete_quest(PHASE_TUTORIAL_COMPLETE)
+	elif not QuestManager.is_completed(PHASE_TUTORIAL_COMPLETE):
+		if QuestManager.start_quest(PHASE_TUTORIAL_COMPLETE):
+			QuestManager.complete_quest(PHASE_TUTORIAL_COMPLETE)
+	UnlockFlags.set_flag("achievement_gardens_guardian")
+	UnlockFlags.set_flag("flag_tutorial_complete")
+	current_state = TutorialState.TUTORIAL_COMPLETE
+	_save_progress()
+	_hide_hud()
+	_set_core_tutorial_glow(false)
+	_set_pickup_hints(false)
+	_set_bench_hints(false)
+	phase_completed.emit(PHASE_TUTORIAL_COMPLETE)
 
 
 func _show_hud() -> void:
@@ -870,6 +941,21 @@ func _connect_player_combat_signal() -> void:
 	_combat_signal_player = player
 	if player.has_signal("attack_hit") and not player.is_connected("attack_hit", _on_player_attack_hit):
 		player.connect("attack_hit", _on_player_attack_hit)
+
+
+func _connect_dialogic_signal() -> void:
+	var dialogic: Node = get_node_or_null("/root/Dialogic")
+	if dialogic == null or not dialogic.has_signal("signal_event"):
+		return
+	var callback: Callable = Callable(self, "_on_dialogic_signal")
+	if not dialogic.is_connected("signal_event", callback):
+		dialogic.connect("signal_event", callback)
+
+
+func _on_dialogic_signal(arg: Variant) -> void:
+	if str(arg) != "tutorial_complete":
+		return
+	_complete_tutorial()
 
 
 func _connect_scene_tutorial_hooks() -> void:

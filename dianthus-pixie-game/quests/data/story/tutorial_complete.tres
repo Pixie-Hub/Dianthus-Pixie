@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="QuestData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://quests/data/quest_data.gd" id="1_qdata"]
+[ext_resource type="Script" path="res://quests/data/quest_objective.gd" id="2_qobj"]
+
+[resource]
+script = ExtResource("1_qdata")
+quest_id = &"tutorial_complete"
+display_name = "Garden's Guardian"
+description = "Complete the guided tutorial and tend the garden independently."
+quest_type = 3
+objectives = Array[ExtResource("2_qobj")]([])
+reward_items = {}
+reward_weapons = []
+reward_unlock_flags = ["achievement_gardens_guardian", "flag_tutorial_complete"]
+time_limit_days = 0
+dialogic_timeline_on_complete = ""
+dialogic_timeline_on_fail = ""
+next_quest_id = &""
+auto_start = false
+failure_unlock_flags = []
+failure_next_quest_id = &""

@@ -4,7 +4,8 @@ label tutorial_complete (ACCESS-03 Complete)
 "Dianthus Core": You have walked its paths, shaped thorns into tools, faced the first shadow, and planted guardians around my heart.
 "Dianthus Core": From here, listen to the light in the leaves. Gather in the day, prepare before dusk, and defend when the dark arrives.
 "Dianthus Core": I will keep glowing as long as you keep choosing to return.
-[signal arg="quest_complete:tutorial_day3_defense"]
+[signal arg="quest_complete:tutorial_complete"]
+[signal arg="tutorial_complete"]
 [end_timeline]
 
 label day_1_movement (Day 1 Morning - Movement)
