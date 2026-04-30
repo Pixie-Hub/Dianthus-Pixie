@@ -13,7 +13,7 @@ Dokumen ini menjelaskan alur tutorial interaktif yang dipandu oleh **Dianthus Co
 | **Fase 1** | Pagi Hari Ke-1 | ~3-5 menit | Movement & Exploration |
 | **Fase 2** | Langsung setelah Fase 1 | ~3-5 menit | Crafting (Thorn Sword) |
 | **Fase 3** | Malam Hari Ke-1 | ~5-7 menit | Combat (Survive Night 1) |
-| **Fase 4** | Sore & Malam Hari Ke-3 | ~5-8 menit | Plant Defense |
+| **Fase 4** | Pagi & Malam Hari Ke-3 | ~5-8 menit | Plant Defense |
 | **Fase 5** | Fajar Hari Ke-4 | Penutup | Tutorial Complete |
 
 > **Catatan:** Hari ke-2 dibiarkan bebas untuk eksplorasi mandiri tanpa panduan.
@@ -194,10 +194,10 @@ Morning arrives (5 minutes elapsed) dengan Core masih hidup
 
 ---
 
-## Fase 4: Sore & Malam Hari Ke-3 — Pertahanan Kebun
+## Fase 4: Pagi & Malam Hari Ke-3 — Pertahanan Kebun
 
 ### Trigger
-Masuk sore hari ke-3 (Day count = 3, time > noon)
+Masuk pagi hari ke-3 (Day count = 3, Day phase dimulai)
 
 ### Catatan
 Hari ke-2 adalah **free play day** - pemain bisa eksplorasi tanpa tutorial guidance.
@@ -205,7 +205,7 @@ Hari ke-2 adalah **free play day** - pemain bisa eksplorasi tanpa tutorial guida
 ### Dialog dari Dianthus Core
 
 ```
-[Day 3 Afternoon - triggered by Day 3 + afternoon time]
+[Day 3 Morning - triggered by Day 3 + Day phase]
 
 Dianthus Core: You have survived more than fear.
 Dianthus Core: Now learn to make the garden fight beside you.
@@ -354,7 +354,7 @@ label night_1_combat (Night 1 - First Defense)
 "Dianthus Core": Goal: hit a shadow creature and survive Night 1.
 [end_timeline]
 
-label day_3_garden_defense (Day 3 Afternoon - Garden Defense)
+label day_3_garden_defense (Day 3 Morning - Garden Defense)
 [signal arg="quest_start:tutorial_day3_defense"]
 "Dianthus Core": You have survived more than fear.
 "Dianthus Core": Now learn to make the garden fight beside you.
@@ -403,9 +403,9 @@ label day_3_garden_defense (Day 3 Afternoon - Garden Defense)
      ├─ Wait: hit_enemy + survive_5min
      │
      ▼
-[FASE 4: DAY 3 + NIGHT 3]
+[FASE 4: DAY 3 MORNING + NIGHT 3]
      │
-     ├─ Time trigger (Day 3 afternoon)
+     ├─ Time trigger (Day 3 morning)
      ├─ TutorialManager.start("tutorial_defense")
      ├─ Wait: place_plant + trigger_ability + survive_night
      │
@@ -467,7 +467,7 @@ objectives:
   - "Place a protective plant"
   - "Activate plant ability"
   - "Survive Night 3"
-trigger: "time:afternoon_day3"
+trigger: "time:morning_day3"
 reward: { xp: 100, items: ["seed_bougainvillea", "seed_rafflesia"] }
 ```
 
@@ -512,7 +512,7 @@ reward: { xp: 100, items: ["seed_bougainvillea", "seed_rafflesia"] }
 | `day_1_movement` | `GameManager.game_started == true` | `tutorial_movement` |
 | `day_1_crafting` | Phase 1 complete (movement + inventory + collect) | `tutorial_crafting` |
 | `night_1_combat` | `DayNightCycle.is_night == true` | `tutorial_combat` |
-| `day_3_garden_defense` | `DayNightCycle.day >= 3 && hour >= 12` | `tutorial_defense` |
+| `day_3_garden_defense` | `DayNightCycle.day >= 3 && DayNightCycle.is_day() == true` | `tutorial_defense` |
 | `tutorial_complete` | `DayNightCycle.day >= 4 && is_morning` | (end state) |
 
 ---
@@ -523,3 +523,4 @@ reward: { xp: 100, items: ["seed_bougainvillea", "seed_rafflesia"] }
 |---------|------|---------|
 | 1.0 | 2026-04-29 | Initial document created |
 | 1.1 | 2026-04-29 | Merged Phase 1 (Movement) and Phase 2 (Crafting) - crafting tutorial now triggers immediately after Phase 1 completion, no separate Sore/Day phase |
+| 1.2 | 2026-04-30 | Changed Phase 4 from Sore & Malam to Pagi & Malam; Day 3 defense now starts at the Day phase instead of afternoon |

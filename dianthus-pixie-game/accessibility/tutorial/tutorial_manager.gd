@@ -24,7 +24,6 @@ const PHASE_DAY_1_CRAFTING: StringName = &"tutorial_day1_crafting"
 const PHASE_DAY_1_COMBAT: StringName = &"tutorial_day1_combat"
 const PHASE_DAY_3_DEFENSE: StringName = &"tutorial_day3_defense"
 const MOVEMENT_REQUIRED_SECONDS: float = 5.0
-const DAY_3_DEFENSE_START_PROGRESS: float = 0.5
 const INTERACTIVE_TUTORIAL: String = "interactive_tutorial"
 const LABEL_DAY_1_MOVEMENT: String = "day_1_movement"
 const LABEL_DAY_1_CRAFTING: String = "day_1_crafting"
@@ -400,8 +399,7 @@ func _try_start_day_3_defense() -> void:
 
 func _is_day_3_defense_window() -> bool:
 	return DayNightCycle.day_count >= 3 \
-		and DayNightCycle.is_day() \
-		and DayNightCycle.get_phase_progress() >= DAY_3_DEFENSE_START_PROGRESS
+		and DayNightCycle.is_day()
 
 
 func _start_dialogic_label(label_name: String) -> void:
