@@ -33,47 +33,23 @@ border_color = Color(0.364, 0.25, 0.215, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_continue_n"]
 texture = ExtResource("TEX_BTN_NORMAL")
-texture_margin_left = 16.0
-texture_margin_top = 16.0
-texture_margin_right = 16.0
-texture_margin_bottom = 16.0
 modulate_color = Color(0.8, 1, 0.8, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_p"]
 texture = ExtResource("TEX_BTN_PRESSED")
-texture_margin_left = 16.0
-texture_margin_top = 16.0
-texture_margin_right = 16.0
-texture_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_continue_h"]
 texture = ExtResource("TEX_BTN_HOVER")
-texture_margin_left = 16.0
-texture_margin_top = 16.0
-texture_margin_right = 16.0
-texture_margin_bottom = 16.0
 modulate_color = Color(0.8, 1, 0.8, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_d"]
 texture = ExtResource("TEX_BTN_DISABLED")
-texture_margin_left = 16.0
-texture_margin_top = 16.0
-texture_margin_right = 16.0
-texture_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_n"]
 texture = ExtResource("TEX_BTN_NORMAL")
-texture_margin_left = 16.0
-texture_margin_top = 16.0
-texture_margin_right = 16.0
-texture_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_h"]
 texture = ExtResource("TEX_BTN_HOVER")
-texture_margin_left = 16.0
-texture_margin_top = 16.0
-texture_margin_right = 16.0
-texture_margin_bottom = 16.0
 
 [node name="MainMenu" type="Control" unique_id=1284738585]
 layout_mode = 3
