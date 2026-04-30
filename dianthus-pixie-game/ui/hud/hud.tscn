@@ -102,8 +102,6 @@ corner_radius_bottom_left = 2
 [node name="HUD" type="CanvasLayer" unique_id=416668404]
 layer = 10
 script = ExtResource("1_script")
-metadata/_edit_horizontal_guides_ = [356.0, 360.0, 356.0]
-metadata/_edit_vertical_guides_ = [442.0, 438.0, 96.0, 96.0, 100.0, 438.0]
 
 [node name="PlayerVitalsPanel" type="PanelContainer" parent="." unique_id=570046399]
 unique_name_in_owner = true
@@ -505,11 +503,14 @@ text = "[L] Loadout"
 
 [node name="TrackedQuestPanel" type="PanelContainer" parent="." unique_id=916283741]
 unique_name_in_owner = true
-visible = false
-offset_left = 4.0
-offset_top = 80.0
-offset_right = 152.0
-offset_bottom = 192.0
+modulate = Color(1, 1, 1, 0.63529414)
+anchors_preset = -1
+anchor_top = 0.43300003
+anchor_bottom = 0.43300003
+offset_top = -55.880005
+offset_right = 132.0
+offset_bottom = 56.119995
+grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_wood")
 script = ExtResource("6_trackedquest_script")
 
