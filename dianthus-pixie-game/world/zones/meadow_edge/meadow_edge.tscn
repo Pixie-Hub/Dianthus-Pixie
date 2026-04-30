@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" path="res://ui/codex/codex_screen.tscn" id="16_codex"]
 [ext_resource type="PackedScene" uid="uid://0bemb33ejawu" path="res://ui/screens/loadout_screen.tscn" id="17_loadout"]
 [ext_resource type="PackedScene" path="res://ui/quests/quest_log_screen.tscn" id="18_questlog"]
+[ext_resource type="PackedScene" path="res://world/obstacles/bramble_patch.tscn" id="19_bramble"]
 [ext_resource type="PackedScene" path="res://ui/screens/ending_screen.tscn" id="19_ending"]
 [ext_resource type="PackedScene" path="res://ui/screens/full_map_screen.tscn" id="20_fullmap"]
 
@@ -950,6 +951,32 @@ item_id = "verdant_sap"
 [node name="RuinGlimmerAetherBloom" parent="YSortLayer/PickupContainer" instance=ExtResource("11_pickup")]
 position = Vector2(736, 208)
 item_id = "aether_bloom"
+
+[node name="SapGroveBougainvilleaExtract" parent="YSortLayer/PickupContainer" instance=ExtResource("11_pickup")]
+position = Vector2(1360, 432)
+item_id = "bougainvillea_extract"
+
+[node name="OldRootBeringinRoot" parent="YSortLayer/PickupContainer" instance=ExtResource("11_pickup")]
+position = Vector2(720, 344)
+item_id = "beringin_root"
+
+[node name="ObstacleContainer" type="Node2D" parent="YSortLayer"]
+y_sort_enabled = true
+
+[node name="SapGrovePocketBramble" parent="YSortLayer/ObstacleContainer" instance=ExtResource("19_bramble")]
+position = Vector2(1260, 540)
+rotation = -0.42
+bramble_id = &"sap_grove_pocket"
+
+[node name="OldRootHollowBramble" parent="YSortLayer/ObstacleContainer" instance=ExtResource("19_bramble")]
+position = Vector2(760, 346)
+rotation = 1.5708
+bramble_id = &"old_root_hollow_pocket"
+
+[node name="SouthReturnShortcutBramble" parent="YSortLayer/ObstacleContainer" instance=ExtResource("19_bramble")]
+position = Vector2(1006, 800)
+rotation = 0.34
+bramble_id = &"south_return_shortcut"
 
 [node name="BreedingBench" parent="YSortLayer" unique_id=62907201 instance=ExtResource("12_bench")]
 position = Vector2(832, 848)

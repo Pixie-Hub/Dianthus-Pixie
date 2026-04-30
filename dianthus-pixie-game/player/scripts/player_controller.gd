@@ -851,7 +851,8 @@ func _on_sword_hitbox_body_entered(body: Node2D) -> void:
 		body.take_damage(total_damage)
 	attack_hit.emit(body, total_damage)
 	print("DEBUG: Hit %s for %d damage" % [body.name, total_damage])
-	add_energy(ENERGY_PER_HIT)
+	if body is EnemyBase:
+		add_energy(ENERGY_PER_HIT)
 	var _hit_sfx: String = "blazeblade_hit" if (_current_weapon != null and _current_weapon.weapon_id == "blazeblade") else "thorn_sword_hit"
 	SfxManager.play_at(_hit_sfx, body.global_position, 0.05)
 	if _current_weapon != null and (_current_weapon.weapon_id == "vine_whip" or _current_weapon.weapon_id == "crystal_lash"):
