@@ -12,15 +12,19 @@ enum TutorialState {
 	DISABLED = 3,
 	DAY_1_CRAFTING = 4,
 	DAY_1_CRAFTING_COMPLETE = 5,
+	DAY_1_COMBAT = 6,
+	DAY_1_COMBAT_COMPLETE = 7,
 }
 
 const PROGRESS_PATH: String = "user://tutorial_progress.cfg"
 const PHASE_DAY_1_MOVEMENT: StringName = &"tutorial_day1_movement"
 const PHASE_DAY_1_CRAFTING: StringName = &"tutorial_day1_crafting"
+const PHASE_DAY_1_COMBAT: StringName = &"tutorial_day1_combat"
 const MOVEMENT_REQUIRED_SECONDS: float = 5.0
 const TIMELINE_ACCESS_03: String = "access_03_tutorial"
 const LABEL_DAY_1_MOVEMENT: String = "day_1_movement"
 const LABEL_DAY_1_CRAFTING: String = "day_1_crafting"
+const LABEL_NIGHT_1_COMBAT: String = "night_1_combat"
 const TARGET_CRAFTING_RECIPE: String = "thorn_sword"
 const TARGET_CRAFTING_WEAPON: String = "thorn_sword"
 
@@ -34,8 +38,12 @@ var bench_reached: bool = false
 var crafting_opened: bool = false
 var thorn_sword_selected: bool = false
 var thorn_sword_crafted: bool = false
+var combat_enemy_hit: bool = false
+var night_1_survived: bool = false
+var night_1_failed: bool = false
 
 var _reported_movement: bool = false
+var _combat_signal_player: Node = null
 var _hud_layer: CanvasLayer = null
 var _panel: PanelContainer = null
 var _phase_label: Label = null
@@ -55,6 +63,8 @@ func _ready() -> void:
 	InventoryManager.item_added.connect(_on_item_added)
 	CraftingManager.weapon_crafted.connect(_on_weapon_crafted)
 	SaveManager.load_completed.connect(_on_load_completed)
+	DayNightCycle.phase_changed.connect(_on_day_night_phase_changed)
+	GameManager.game_over_triggered.connect(_on_game_over_triggered)
 	call_deferred("_sync_active_phase_with_scene")
 
 
@@ -78,6 +88,15 @@ func _process(delta: float) -> void:
 			_save_progress()
 		_refresh_phase_2_ui()
 		_check_phase_2_complete()
+	elif current_state == TutorialState.DAY_1_CRAFTING_COMPLETE:
+		_try_start_day_1_combat()
+	elif current_state == TutorialState.DAY_1_COMBAT:
+		_progress_save_timer += delta
+		if _progress_save_timer >= 1.0:
+			_progress_save_timer = 0.0
+			_save_progress()
+		_refresh_phase_3_ui()
+		_check_phase_3_complete()
 
 
 func reset_progress_for_new_game() -> void:
@@ -92,6 +111,9 @@ func reset_progress_for_new_game() -> void:
 	crafting_opened = false
 	thorn_sword_selected = false
 	thorn_sword_crafted = false
+	combat_enemy_hit = false
+	night_1_survived = false
+	night_1_failed = false
 	_reported_movement = false
 	_save_progress()
 	_hide_hud()
@@ -122,6 +144,7 @@ func skip_tutorial() -> void:
 	set_tutorial_enabled(false)
 	phase_completed.emit(PHASE_DAY_1_MOVEMENT)
 	phase_completed.emit(PHASE_DAY_1_CRAFTING)
+	phase_completed.emit(PHASE_DAY_1_COMBAT)
 
 
 func is_phase_1_active() -> bool:
@@ -139,7 +162,17 @@ func is_phase_2_active() -> bool:
 
 
 func is_phase_2_complete() -> bool:
-	return current_state == TutorialState.DAY_1_CRAFTING_COMPLETE
+	return current_state == TutorialState.DAY_1_CRAFTING_COMPLETE \
+		or current_state == TutorialState.DAY_1_COMBAT \
+		or current_state == TutorialState.DAY_1_COMBAT_COMPLETE
+
+
+func is_phase_3_active() -> bool:
+	return current_state == TutorialState.DAY_1_COMBAT
+
+
+func is_phase_3_complete() -> bool:
+	return current_state == TutorialState.DAY_1_COMBAT_COMPLETE
 
 
 func report_inventory_opened() -> void:
@@ -220,8 +253,20 @@ func _sync_active_phase_with_scene() -> void:
 		if not QuestManager.is_active(PHASE_DAY_1_CRAFTING) and not QuestManager.is_completed(PHASE_DAY_1_CRAFTING):
 			QuestManager.start_quest(PHASE_DAY_1_CRAFTING)
 		return
+	if current_state == TutorialState.DAY_1_COMBAT:
+		if not is_instance_valid(GameManager.player):
+			return
+		_show_hud()
+		_set_core_tutorial_glow(true)
+		_connect_player_combat_signal()
+		if not QuestManager.is_active(PHASE_DAY_1_COMBAT) and not QuestManager.is_completed(PHASE_DAY_1_COMBAT):
+			QuestManager.start_quest(PHASE_DAY_1_COMBAT)
+		return
 	if current_state == TutorialState.DAY_1_MOVEMENT_COMPLETE:
 		_try_start_day_1_crafting()
+		return
+	if current_state == TutorialState.DAY_1_CRAFTING_COMPLETE:
+		_try_start_day_1_combat()
 		return
 	_try_start_day_1_movement()
 
@@ -264,6 +309,26 @@ func _try_start_day_1_crafting() -> void:
 	phase_started.emit(PHASE_DAY_1_CRAFTING)
 	QuestManager.start_quest(PHASE_DAY_1_CRAFTING)
 	_start_dialogic_label(LABEL_DAY_1_CRAFTING)
+
+
+func _try_start_day_1_combat() -> void:
+	if not tutorial_enabled:
+		return
+	if current_state != TutorialState.DAY_1_CRAFTING_COMPLETE:
+		return
+	if DayNightCycle.day_count != 1 or not DayNightCycle.is_night():
+		return
+	if not is_instance_valid(GameManager.player):
+		return
+	current_state = TutorialState.DAY_1_COMBAT
+	_progress_save_timer = 0.0
+	_save_progress()
+	_show_hud()
+	_set_core_tutorial_glow(true)
+	_connect_player_combat_signal()
+	phase_started.emit(PHASE_DAY_1_COMBAT)
+	QuestManager.start_quest(PHASE_DAY_1_COMBAT)
+	_start_dialogic_label(LABEL_NIGHT_1_COMBAT)
 
 
 func _start_dialogic_label(label_name: String) -> void:
@@ -325,6 +390,57 @@ func _on_weapon_crafted(weapon_id: String) -> void:
 	_check_phase_2_complete()
 
 
+func _on_player_attack_hit(target: Node, _damage: int) -> void:
+	if current_state != TutorialState.DAY_1_COMBAT:
+		return
+	if combat_enemy_hit:
+		return
+	if not _is_enemy_target(target):
+		return
+	combat_enemy_hit = true
+	QuestManager.report_event(&"tutorial_enemy_hit", 1, {"enemy_type": _get_enemy_type(target)})
+	objective_updated.emit(&"hit_shadow_creature", true)
+	_save_progress()
+	_refresh_phase_3_ui()
+	_check_phase_3_complete()
+
+
+func _on_day_night_phase_changed(phase: String) -> void:
+	if phase == "NIGHT":
+		_try_start_day_1_combat()
+		return
+	if phase != "DAY":
+		return
+	if current_state != TutorialState.DAY_1_COMBAT:
+		return
+	if DayNightCycle.day_count != 2:
+		return
+	if night_1_failed:
+		return
+	if GameManager.current_state == GameManager.GameState.GAME_OVER:
+		return
+	var player_alive: bool = true
+	if is_instance_valid(GameManager.player):
+		player_alive = not bool(GameManager.player.get("is_dead"))
+	if not player_alive:
+		return
+	night_1_survived = true
+	QuestManager.report_event(&"tutorial_night1_survived", 1, {"night": 1})
+	objective_updated.emit(&"survive_night_1", true)
+	_save_progress()
+	_refresh_phase_3_ui()
+	_check_phase_3_complete()
+
+
+func _on_game_over_triggered() -> void:
+	if current_state != TutorialState.DAY_1_COMBAT:
+		return
+	night_1_failed = true
+	if QuestManager.is_active(PHASE_DAY_1_COMBAT):
+		QuestManager.fail_quest(PHASE_DAY_1_COMBAT, "core_destroyed")
+	_save_progress()
+
+
 func _check_phase_1_complete() -> void:
 	if current_state != TutorialState.DAY_1_MOVEMENT:
 		return
@@ -358,6 +474,23 @@ func _check_phase_2_complete() -> void:
 		QuestManager.complete_quest(PHASE_DAY_1_CRAFTING)
 	await get_tree().create_timer(1.5).timeout
 	if current_state == TutorialState.DAY_1_CRAFTING_COMPLETE:
+		_hide_hud()
+
+
+func _check_phase_3_complete() -> void:
+	if current_state != TutorialState.DAY_1_COMBAT:
+		return
+	if night_1_failed or not (combat_enemy_hit and night_1_survived):
+		return
+	current_state = TutorialState.DAY_1_COMBAT_COMPLETE
+	_set_core_tutorial_glow(false)
+	_save_progress()
+	_refresh_phase_3_ui()
+	phase_completed.emit(PHASE_DAY_1_COMBAT)
+	if QuestManager.is_active(PHASE_DAY_1_COMBAT):
+		QuestManager.complete_quest(PHASE_DAY_1_COMBAT)
+	await get_tree().create_timer(1.5).timeout
+	if current_state == TutorialState.DAY_1_COMBAT_COMPLETE:
 		_hide_hud()
 
 
@@ -422,6 +555,10 @@ func _hide_hud() -> void:
 
 
 func _refresh_current_ui() -> void:
+	if current_state == TutorialState.DAY_1_COMBAT \
+			or current_state == TutorialState.DAY_1_COMBAT_COMPLETE:
+		_refresh_phase_3_ui()
+		return
 	if current_state == TutorialState.DAY_1_CRAFTING \
 			or current_state == TutorialState.DAY_1_CRAFTING_COMPLETE:
 		_refresh_phase_2_ui()
@@ -439,6 +576,9 @@ func _make_objective_label() -> Label:
 func _refresh_phase_1_ui() -> void:
 	if not is_instance_valid(_hud_layer):
 		return
+	_move_label.visible = true
+	_inventory_label.visible = true
+	_resource_label.visible = true
 	_craft_label.visible = false
 	_move_label.text = "%s Move for %.0fs" % [_checkmark(moved_enough), MOVEMENT_REQUIRED_SECONDS]
 	_inventory_label.text = "%s Open inventory [I]" % _checkmark(inventory_opened)
@@ -456,6 +596,9 @@ func _refresh_phase_1_ui() -> void:
 func _refresh_phase_2_ui() -> void:
 	if not is_instance_valid(_hud_layer):
 		return
+	_move_label.visible = true
+	_inventory_label.visible = true
+	_resource_label.visible = true
 	_craft_label.visible = true
 	_move_label.text = "%s Stand near Breeding Bench" % _checkmark(bench_reached)
 	_inventory_label.text = "%s Open bench with [E]" % _checkmark(crafting_opened)
@@ -470,6 +613,24 @@ func _refresh_phase_2_ui() -> void:
 		_phase_label.text = "Shape Your Tool Complete"
 	else:
 		_phase_label.text = "Shape Your Tool"
+
+
+func _refresh_phase_3_ui() -> void:
+	if not is_instance_valid(_hud_layer):
+		return
+	_move_label.visible = true
+	_inventory_label.visible = true
+	_resource_label.visible = false
+	_craft_label.visible = false
+	_move_label.text = "%s Hit a shadow creature" % _checkmark(combat_enemy_hit)
+	_inventory_label.text = "%s Survive Night 1" % _checkmark(night_1_survived)
+	var completed_count: int = (1 if combat_enemy_hit else 0) \
+		+ (1 if night_1_survived else 0)
+	_progress_bar.value = float(completed_count) / 2.0
+	if current_state == TutorialState.DAY_1_COMBAT_COMPLETE:
+		_phase_label.text = "Defend the Heart Complete"
+	else:
+		_phase_label.text = "Defend the Heart"
 
 
 func _checkmark(done: bool) -> String:
@@ -532,6 +693,30 @@ func _set_bench_hints(enabled: bool) -> void:
 			bench.set_tutorial_hint_active(enabled)
 
 
+func _connect_player_combat_signal() -> void:
+	if not is_instance_valid(GameManager.player):
+		return
+	var player: Node = GameManager.player
+	if _combat_signal_player == player and player.is_connected("attack_hit", _on_player_attack_hit):
+		return
+	if is_instance_valid(_combat_signal_player) and _combat_signal_player.is_connected("attack_hit", _on_player_attack_hit):
+		_combat_signal_player.disconnect("attack_hit", _on_player_attack_hit)
+	_combat_signal_player = player
+	if player.has_signal("attack_hit") and not player.is_connected("attack_hit", _on_player_attack_hit):
+		player.connect("attack_hit", _on_player_attack_hit)
+
+
+func _is_enemy_target(target: Node) -> bool:
+	return is_instance_valid(target) and (target is EnemyBase or target.is_in_group(&"enemies"))
+
+
+func _get_enemy_type(enemy: Node) -> String:
+	var scr: Script = enemy.get_script() as Script
+	if scr != null:
+		return scr.resource_path.get_file().get_basename()
+	return str(enemy.name).to_snake_case()
+
+
 func _on_load_completed(_success: bool) -> void:
 	_load_progress()
 	call_deferred("_sync_active_phase_with_scene")
@@ -549,6 +734,9 @@ func _save_progress() -> void:
 	config.set_value("phase_2", "crafting_opened", crafting_opened)
 	config.set_value("phase_2", "thorn_sword_selected", thorn_sword_selected)
 	config.set_value("phase_2", "thorn_sword_crafted", thorn_sword_crafted)
+	config.set_value("phase_3", "combat_enemy_hit", combat_enemy_hit)
+	config.set_value("phase_3", "night_1_survived", night_1_survived)
+	config.set_value("phase_3", "night_1_failed", night_1_failed)
 	config.save(PROGRESS_PATH)
 
 
@@ -566,6 +754,9 @@ func _load_progress() -> void:
 	crafting_opened = bool(config.get_value("phase_2", "crafting_opened", false))
 	thorn_sword_selected = bool(config.get_value("phase_2", "thorn_sword_selected", false))
 	thorn_sword_crafted = bool(config.get_value("phase_2", "thorn_sword_crafted", false))
+	combat_enemy_hit = bool(config.get_value("phase_3", "combat_enemy_hit", false))
+	night_1_survived = bool(config.get_value("phase_3", "night_1_survived", false))
+	night_1_failed = bool(config.get_value("phase_3", "night_1_failed", false))
 	_reported_movement = moved_enough
 	if not tutorial_enabled:
 		current_state = TutorialState.DISABLED
