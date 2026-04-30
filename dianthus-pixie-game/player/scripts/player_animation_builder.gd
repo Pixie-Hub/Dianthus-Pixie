@@ -45,8 +45,26 @@ const ANIM_DEFS: Array[Dictionary] = [
 		"duration": 0.7,
 	},
 	{
-		"prefix": "attack",
-		"sheet": "res://player/sprites/PNG/Sword_attack/player_sword_attack_full.png",
+		"prefix": "thornsword_idle",
+		"sheet": "res://player/sprites/PNG/Sword_Idle/thornsword_idle_full.png",
+		"columns": 6,
+		"frames": [6, 6, 6, 6],
+		"loop": true,
+		"duration": 0.6,
+		"frame_size": WEAPON_FRAME_SIZE,
+	},
+	{
+		"prefix": "thornsword_walk",
+		"sheet": "res://player/sprites/PNG/Sword_Walk/thornsword_walk_full.png",
+		"columns": 6,
+		"frames": [6, 6, 6, 6],
+		"loop": true,
+		"duration": 0.6,
+		"frame_size": WEAPON_FRAME_SIZE,
+	},
+	{
+		"prefix": "thornsword_attack",
+		"sheet": "res://player/sprites/PNG/Sword_Attack/thornsword_attack_full.png",
 		"columns": 8,
 		"frames": [8, 8, 8, 8],
 		"loop": false,
@@ -139,25 +157,33 @@ static func build_tree(anim_tree: AnimationTree) -> void:
 	sm.add_transition("idle", "walk", AnimationNodeStateMachineTransition.new())
 	sm.add_transition("walk", "idle", AnimationNodeStateMachineTransition.new())
 
-	for src: String in ["idle", "walk"]:
+	sm.add_transition("thornsword_idle", "thornsword_walk", AnimationNodeStateMachineTransition.new())
+	sm.add_transition("thornsword_walk", "thornsword_idle", AnimationNodeStateMachineTransition.new())
+
+	sm.add_transition("idle", "thornsword_idle", AnimationNodeStateMachineTransition.new())
+	sm.add_transition("thornsword_idle", "idle", AnimationNodeStateMachineTransition.new())
+	sm.add_transition("walk", "thornsword_walk", AnimationNodeStateMachineTransition.new())
+	sm.add_transition("thornsword_walk", "walk", AnimationNodeStateMachineTransition.new())
+
+	for src: String in ["idle", "walk", "thornsword_idle", "thornsword_walk"]:
 		sm.add_transition(src, "hurt", AnimationNodeStateMachineTransition.new())
 
 	var hurt_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
 	hurt_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
 	sm.add_transition("hurt", "idle", hurt_to_idle)
 
-	for src: String in ["idle", "walk", "hurt"]:
+	for src: String in ["idle", "walk", "hurt", "thornsword_idle", "thornsword_walk"]:
 		sm.add_transition(src, "death", AnimationNodeStateMachineTransition.new())
 
 	sm.add_transition("death", "idle", AnimationNodeStateMachineTransition.new())
 
-	for src: String in ["idle", "walk"]:
-		sm.add_transition(src, "attack", AnimationNodeStateMachineTransition.new())
+	for src: String in ["thornsword_idle", "thornsword_walk"]:
+		sm.add_transition(src, "thornsword_attack", AnimationNodeStateMachineTransition.new())
 
-	var attack_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
-	attack_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
-	attack_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
-	sm.add_transition("attack", "idle", attack_to_idle)
+	var ts_attack_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
+	ts_attack_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
+	ts_attack_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
+	sm.add_transition("thornsword_attack", "thornsword_idle", ts_attack_to_idle)
 
 	sm.set_graph_offset(Vector2(0, 0))
 	anim_tree.tree_root = sm

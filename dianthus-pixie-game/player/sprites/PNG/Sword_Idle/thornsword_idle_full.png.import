@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cxxknxfqf6n2g"
-path="res://.godot/imported/player_sword_walk_full.png-9fd0d3c91fbae07009c103dd4f4046f6.ctex"
+uid="uid://kcvcydou8e6m"
+path="res://.godot/imported/thornsword_idle_full.png-5e029d02de4aeb85d6de6b3e53ea0986.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://player/sprites/PNG/Sword_Walk/player_sword_walk_full.png"
-dest_files=["res://.godot/imported/player_sword_walk_full.png-9fd0d3c91fbae07009c103dd4f4046f6.ctex"]
+source_file="res://player/sprites/PNG/Sword_Idle/thornsword_idle_full.png"
+dest_files=["res://.godot/imported/thornsword_idle_full.png-5e029d02de4aeb85d6de6b3e53ea0986.ctex"]
 
 [params]
 

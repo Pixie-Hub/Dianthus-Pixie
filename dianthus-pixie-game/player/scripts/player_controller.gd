@@ -116,13 +116,23 @@ func _dominant_direction(dir: Vector2) -> Vector2:
 		return Vector2.RIGHT if dir.x > 0.0 else Vector2.LEFT
 	return Vector2.DOWN if dir.y > 0.0 else Vector2.UP
 
-func _travel(state: String) -> void:
+func _travel(state: String, force: bool = false) -> void:
+	var prefix: String = ""
+	if _current_weapon != null and _current_weapon.weapon_id in ["thorn_sword", "blazeblade"]:
+		prefix = "thornsword_"
+
+	var target_state: StringName = StringName(prefix + state)
+	var root: AnimationNodeStateMachine = _anim_tree.tree_root as AnimationNodeStateMachine
+	if root != null and not root.has_node(target_state):
+		target_state = StringName(state)
+
 	var current: StringName = _state_machine.get_current_node()
-	if current == state:
+	if current == target_state:
 		return
-	if current == &"hurt" or current == &"death" or current == &"attack":
-		return
-	_state_machine.travel(state)
+	if not force:
+		if current == &"hurt" or current == &"death" or current == &"attack" or current == &"thornsword_attack":
+			return
+	_state_machine.travel(target_state)
 
 func _direction_to_blend() -> Vector2:
 	if last_direction == Vector2.DOWN:
@@ -135,13 +145,27 @@ func _direction_to_blend() -> Vector2:
 
 func _update_blend_position() -> void:
 	var blend: Vector2 = _direction_to_blend()
-	_anim_tree["parameters/idle/blend_position"] = blend
-	_anim_tree["parameters/walk/blend_position"] = blend
-	_anim_tree["parameters/run/blend_position"] = blend
-	_anim_tree["parameters/hurt/blend_position"] = blend
-	_anim_tree["parameters/death/blend_position"] = blend
-	if (_anim_tree.tree_root as AnimationNodeStateMachine).has_node(&"attack"):
+	var root: AnimationNodeStateMachine = _anim_tree.tree_root as AnimationNodeStateMachine
+	if root == null:
+		return
+	if root.has_node(&"idle"):
+		_anim_tree["parameters/idle/blend_position"] = blend
+	if root.has_node(&"walk"):
+		_anim_tree["parameters/walk/blend_position"] = blend
+	if root.has_node(&"run"):
+		_anim_tree["parameters/run/blend_position"] = blend
+	if root.has_node(&"hurt"):
+		_anim_tree["parameters/hurt/blend_position"] = blend
+	if root.has_node(&"death"):
+		_anim_tree["parameters/death/blend_position"] = blend
+	if root.has_node(&"attack"):
 		_anim_tree["parameters/attack/blend_position"] = blend
+	if root.has_node(&"thornsword_idle"):
+		_anim_tree["parameters/thornsword_idle/blend_position"] = blend
+	if root.has_node(&"thornsword_walk"):
+		_anim_tree["parameters/thornsword_walk/blend_position"] = blend
+	if root.has_node(&"thornsword_attack"):
+		_anim_tree["parameters/thornsword_attack/blend_position"] = blend
 
 func set_camera_limits(left: int, top: int, right: int, bottom: int) -> void:
 	_camera.limit_left = left
@@ -448,7 +472,7 @@ func _respawn() -> void:
 	var energy_penalty: int = int(current_energy * ENERGY_DEATH_PENALTY)
 	current_energy = max(current_energy - energy_penalty, 0)
 	energy_changed.emit(current_energy, max_energy)
-	_state_machine.travel("idle")
+	_travel("idle", true)
 	_update_blend_position()
 	_start_invincibility()
 
@@ -484,7 +508,7 @@ func _attack_melee_sword() -> void:
 	is_attacking = true
 	velocity = Vector2.ZERO
 	_hit_bodies.clear()
-	_state_machine.travel("attack")
+	_travel("attack", true)
 	_update_blend_position()
 	var hitbox_offset: Vector2
 	if last_direction == Vector2.DOWN:
@@ -519,7 +543,7 @@ func _attack_vine_whip() -> void:
 	is_attacking = true
 	velocity = Vector2.ZERO
 	_hit_bodies.clear()
-	_state_machine.travel("attack")
+	_travel("attack", true)
 	_update_blend_position()
 	var hitbox_offset: Vector2
 	if last_direction == Vector2.DOWN:
@@ -553,7 +577,7 @@ func _attack_vine_whip() -> void:
 
 func _attack_spore_bomb() -> void:
 	is_attacking = true
-	_state_machine.travel("attack")
+	_travel("attack", true)
 	SfxManager.play("spore_bomb_throw")
 	var target: Vector2 = get_global_mouse_position()
 	var dir: Vector2 = target - global_position
@@ -575,7 +599,7 @@ func _attack_spore_bomb() -> void:
 	if is_dead:
 		return
 	_attack_cooldown_timer = _current_weapon.cooldown * (1.0 - attack_speed_bonus)
-	_state_machine.travel("idle")
+	_travel("idle", true)
 
 
 func _attack_petal_shield() -> void:
@@ -640,7 +664,7 @@ func _end_attack() -> void:
 	_attack_cooldown_timer = _current_weapon.cooldown * (1.0 - attack_speed_bonus)
 	var hitbox_shape: CollisionShape2D = _sword_hitbox.get_child(0)
 	hitbox_shape.disabled = true
-	_state_machine.travel("idle")
+	_travel("idle", true)
 
 func _on_weapon_crafted(weapon_id: String) -> void:
 	if DayNightCycle.is_night():
