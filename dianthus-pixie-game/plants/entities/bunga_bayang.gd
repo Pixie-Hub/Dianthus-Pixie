@@ -99,6 +99,7 @@ func _fire_projectile() -> void:
 	proj.global_position = global_position
 	get_tree().current_scene.add_child(proj)
 	_active_projectiles.append(proj)
+	_report_ability_triggered(&"shadow_projectile")
 
 
 func _on_effect_area_body_entered(body: Node2D) -> void:
@@ -124,6 +125,7 @@ func _on_tracked_enemy_died(_enemy: EnemyBase, body: EnemyBase) -> void:
 
 func _apply_slow(enemy: EnemyBase) -> void:
 	enemy.speed_modifier = min(enemy.speed_modifier, slow_multiplier)
+	_report_ability_triggered(&"shadow_slow")
 
 
 func _recalculate_slow(enemy: EnemyBase) -> void:

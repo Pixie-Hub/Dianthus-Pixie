@@ -22,6 +22,7 @@ func _on_effect_area_body_entered(body: Node2D) -> void:
 		_player_in_range = true
 		SfxManager.play_at("kecombrang_speed_boost", global_position)
 		_recalculate_player_attack_speed()
+		_report_ability_triggered(&"attack_speed_boost")
 
 
 func _on_effect_area_body_exited(body: Node2D) -> void:

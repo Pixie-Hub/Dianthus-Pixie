@@ -29,10 +29,14 @@ func _process(delta: float) -> void:
 		_tick_timer += delta
 		if _tick_timer >= tick_interval:
 			_tick_timer -= tick_interval
+			var triggered: bool = false
 			for enemy in _enemies_in_range.duplicate():
 				if is_instance_valid(enemy) and not enemy.is_dead:
 					enemy.take_damage(damage_per_tick)
 					_start_burn(enemy)
+					triggered = true
+			if triggered:
+				_report_ability_triggered(&"fire_thorn_tick")
 	# Burn processing
 	var to_remove: Array = []
 	for enemy: Variant in _burn_timers.keys():

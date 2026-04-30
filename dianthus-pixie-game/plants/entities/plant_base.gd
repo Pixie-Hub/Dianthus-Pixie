@@ -3,6 +3,7 @@ extends StaticBody2D
 
 signal plant_destroyed(plant: PlantBase)
 signal hp_changed(current_hp: int, max_hp: int)
+signal ability_triggered(plant: PlantBase, trigger_id: StringName)
 
 @export var max_hp: int = 30
 @export var effect_radius: float = 24.0
@@ -37,6 +38,12 @@ func destroy() -> void:
 	SfxManager.play_at("plant_destroyed", global_position)
 	plant_destroyed.emit(self)
 	_play_wither_animation()
+
+
+func _report_ability_triggered(trigger_id: StringName) -> void:
+	if is_destroyed:
+		return
+	ability_triggered.emit(self, trigger_id)
 
 
 func _flash_damage() -> void:

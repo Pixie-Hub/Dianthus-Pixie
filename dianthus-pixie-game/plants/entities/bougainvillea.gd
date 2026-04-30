@@ -26,9 +26,13 @@ func _process(delta: float) -> void:
 	if _tick_timer >= tick_interval:
 		_tick_timer -= tick_interval
 		SfxManager.play_at("bougainvillea_thorn_tick", global_position)
+		var triggered: bool = false
 		for enemy in _enemies_in_range.duplicate():
 			if is_instance_valid(enemy) and not enemy.is_dead:
 				enemy.take_damage(damage_per_tick)
+				triggered = true
+		if triggered:
+			_report_ability_triggered(&"thorn_tick")
 
 
 func _on_effect_area_body_entered(body: Node2D) -> void:

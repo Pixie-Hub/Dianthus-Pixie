@@ -14,17 +14,22 @@ enum TutorialState {
 	DAY_1_CRAFTING_COMPLETE = 5,
 	DAY_1_COMBAT = 6,
 	DAY_1_COMBAT_COMPLETE = 7,
+	DAY_3_DEFENSE = 8,
+	DAY_3_DEFENSE_COMPLETE = 9,
 }
 
 const PROGRESS_PATH: String = "user://tutorial_progress.cfg"
 const PHASE_DAY_1_MOVEMENT: StringName = &"tutorial_day1_movement"
 const PHASE_DAY_1_CRAFTING: StringName = &"tutorial_day1_crafting"
 const PHASE_DAY_1_COMBAT: StringName = &"tutorial_day1_combat"
+const PHASE_DAY_3_DEFENSE: StringName = &"tutorial_day3_defense"
 const MOVEMENT_REQUIRED_SECONDS: float = 5.0
-const TIMELINE_ACCESS_03: String = "access_03_tutorial"
+const DAY_3_DEFENSE_START_PROGRESS: float = 0.5
+const INTERACTIVE_TUTORIAL: String = "interactive_tutorial"
 const LABEL_DAY_1_MOVEMENT: String = "day_1_movement"
 const LABEL_DAY_1_CRAFTING: String = "day_1_crafting"
 const LABEL_NIGHT_1_COMBAT: String = "night_1_combat"
+const LABEL_DAY_3_DEFENSE: String = "day_3_garden_defense"
 const TARGET_CRAFTING_RECIPE: String = "thorn_sword"
 const TARGET_CRAFTING_WEAPON: String = "thorn_sword"
 
@@ -41,9 +46,15 @@ var thorn_sword_crafted: bool = false
 var combat_enemy_hit: bool = false
 var night_1_survived: bool = false
 var night_1_failed: bool = false
+var plant_placement_mode_entered: bool = false
+var tutorial_plant_placed: bool = false
+var plant_ability_triggered: bool = false
+var night_3_survived: bool = false
+var night_3_failed: bool = false
 
 var _reported_movement: bool = false
 var _combat_signal_player: Node = null
+var _placement_manager: Node = null
 var _hud_layer: CanvasLayer = null
 var _panel: PanelContainer = null
 var _phase_label: Label = null
@@ -66,6 +77,7 @@ func _ready() -> void:
 	DayNightCycle.phase_changed.connect(_on_day_night_phase_changed)
 	GameManager.game_over_triggered.connect(_on_game_over_triggered)
 	call_deferred("_sync_active_phase_with_scene")
+	call_deferred("_connect_scene_tutorial_hooks")
 
 
 func _process(delta: float) -> void:
@@ -97,6 +109,15 @@ func _process(delta: float) -> void:
 			_save_progress()
 		_refresh_phase_3_ui()
 		_check_phase_3_complete()
+	elif current_state == TutorialState.DAY_1_COMBAT_COMPLETE:
+		_try_start_day_3_defense()
+	elif current_state == TutorialState.DAY_3_DEFENSE:
+		_progress_save_timer += delta
+		if _progress_save_timer >= 1.0:
+			_progress_save_timer = 0.0
+			_save_progress()
+		_refresh_phase_4_ui()
+		_check_phase_4_complete()
 
 
 func reset_progress_for_new_game() -> void:
@@ -114,6 +135,11 @@ func reset_progress_for_new_game() -> void:
 	combat_enemy_hit = false
 	night_1_survived = false
 	night_1_failed = false
+	plant_placement_mode_entered = false
+	tutorial_plant_placed = false
+	plant_ability_triggered = false
+	night_3_survived = false
+	night_3_failed = false
 	_reported_movement = false
 	_save_progress()
 	_hide_hud()
@@ -145,6 +171,7 @@ func skip_tutorial() -> void:
 	phase_completed.emit(PHASE_DAY_1_MOVEMENT)
 	phase_completed.emit(PHASE_DAY_1_CRAFTING)
 	phase_completed.emit(PHASE_DAY_1_COMBAT)
+	phase_completed.emit(PHASE_DAY_3_DEFENSE)
 
 
 func is_phase_1_active() -> bool:
@@ -173,6 +200,14 @@ func is_phase_3_active() -> bool:
 
 func is_phase_3_complete() -> bool:
 	return current_state == TutorialState.DAY_1_COMBAT_COMPLETE
+
+
+func is_phase_4_active() -> bool:
+	return current_state == TutorialState.DAY_3_DEFENSE
+
+
+func is_phase_4_complete() -> bool:
+	return current_state == TutorialState.DAY_3_DEFENSE_COMPLETE
 
 
 func report_inventory_opened() -> void:
@@ -262,11 +297,23 @@ func _sync_active_phase_with_scene() -> void:
 		if not QuestManager.is_active(PHASE_DAY_1_COMBAT) and not QuestManager.is_completed(PHASE_DAY_1_COMBAT):
 			QuestManager.start_quest(PHASE_DAY_1_COMBAT)
 		return
+	if current_state == TutorialState.DAY_3_DEFENSE:
+		if not is_instance_valid(GameManager.player):
+			return
+		_show_hud()
+		_set_core_tutorial_glow(true)
+		_connect_scene_tutorial_hooks()
+		if not QuestManager.is_active(PHASE_DAY_3_DEFENSE) and not QuestManager.is_completed(PHASE_DAY_3_DEFENSE):
+			QuestManager.start_quest(PHASE_DAY_3_DEFENSE)
+		return
 	if current_state == TutorialState.DAY_1_MOVEMENT_COMPLETE:
 		_try_start_day_1_crafting()
 		return
 	if current_state == TutorialState.DAY_1_CRAFTING_COMPLETE:
 		_try_start_day_1_combat()
+		return
+	if current_state == TutorialState.DAY_1_COMBAT_COMPLETE:
+		_try_start_day_3_defense()
 		return
 	_try_start_day_1_movement()
 
@@ -331,6 +378,32 @@ func _try_start_day_1_combat() -> void:
 	_start_dialogic_label(LABEL_NIGHT_1_COMBAT)
 
 
+func _try_start_day_3_defense() -> void:
+	if not tutorial_enabled:
+		return
+	if current_state != TutorialState.DAY_1_COMBAT_COMPLETE:
+		return
+	if not _is_day_3_defense_window():
+		return
+	if not is_instance_valid(GameManager.player):
+		return
+	current_state = TutorialState.DAY_3_DEFENSE
+	_progress_save_timer = 0.0
+	_save_progress()
+	_show_hud()
+	_set_core_tutorial_glow(true)
+	_connect_scene_tutorial_hooks()
+	phase_started.emit(PHASE_DAY_3_DEFENSE)
+	QuestManager.start_quest(PHASE_DAY_3_DEFENSE)
+	_start_dialogic_label(LABEL_DAY_3_DEFENSE)
+
+
+func _is_day_3_defense_window() -> bool:
+	return DayNightCycle.day_count >= 3 \
+		and DayNightCycle.is_day() \
+		and DayNightCycle.get_phase_progress() >= DAY_3_DEFENSE_START_PROGRESS
+
+
 func _start_dialogic_label(label_name: String) -> void:
 	var dialogic: Node = get_node_or_null("/root/Dialogic")
 	if dialogic == null:
@@ -338,7 +411,7 @@ func _start_dialogic_label(label_name: String) -> void:
 		return
 	if dialogic.get("current_timeline") != null:
 		return
-	dialogic.start(TIMELINE_ACCESS_03, label_name)
+	dialogic.start(INTERACTIVE_TUTORIAL, label_name)
 
 
 func _update_movement_progress(delta: float) -> void:
@@ -405,39 +478,91 @@ func _on_player_attack_hit(target: Node, _damage: int) -> void:
 	_check_phase_3_complete()
 
 
+func _on_plant_placement_mode_changed(active: bool) -> void:
+	if current_state != TutorialState.DAY_3_DEFENSE:
+		return
+	if not active or plant_placement_mode_entered:
+		return
+	plant_placement_mode_entered = true
+	QuestManager.report_event(&"tutorial_plant_placement_mode_entered", 1, {})
+	objective_updated.emit(&"enter_plant_placement_mode", true)
+	_save_progress()
+	_refresh_phase_4_ui()
+	_check_phase_4_complete()
+
+
+func _on_plant_placed(seed_id: String, _grid_pos: Vector2i) -> void:
+	if current_state != TutorialState.DAY_3_DEFENSE:
+		return
+	if tutorial_plant_placed:
+		return
+	tutorial_plant_placed = true
+	QuestManager.report_event(&"tutorial_plant_placed", 1, {
+		"seed_id": seed_id,
+		"plant_id": seed_id.trim_suffix("_seed"),
+	})
+	objective_updated.emit(&"place_tutorial_plant", true)
+	_save_progress()
+	_refresh_phase_4_ui()
+	_check_phase_4_complete()
+
+
+func _on_plant_ability_triggered(plant: PlantBase, trigger_id: StringName) -> void:
+	if current_state != TutorialState.DAY_3_DEFENSE:
+		return
+	if plant_ability_triggered:
+		return
+	plant_ability_triggered = true
+	QuestManager.report_event(&"tutorial_plant_ability_triggered", 1, {
+		"plant_id": _get_plant_id(plant),
+		"trigger_id": str(trigger_id),
+	})
+	objective_updated.emit(&"trigger_plant_ability", true)
+	_save_progress()
+	_refresh_phase_4_ui()
+	_check_phase_4_complete()
+
+
 func _on_day_night_phase_changed(phase: String) -> void:
 	if phase == "NIGHT":
 		_try_start_day_1_combat()
 		return
 	if phase != "DAY":
 		return
-	if current_state != TutorialState.DAY_1_COMBAT:
+	if current_state == TutorialState.DAY_1_COMBAT:
+		if DayNightCycle.day_count != 2:
+			return
+		if night_1_failed or not _is_player_alive_for_tutorial():
+			return
+		night_1_survived = true
+		QuestManager.report_event(&"tutorial_night1_survived", 1, {"night": 1})
+		objective_updated.emit(&"survive_night_1", true)
+		_save_progress()
+		_refresh_phase_3_ui()
+		_check_phase_3_complete()
 		return
-	if DayNightCycle.day_count != 2:
-		return
-	if night_1_failed:
-		return
-	if GameManager.current_state == GameManager.GameState.GAME_OVER:
-		return
-	var player_alive: bool = true
-	if is_instance_valid(GameManager.player):
-		player_alive = not bool(GameManager.player.get("is_dead"))
-	if not player_alive:
-		return
-	night_1_survived = true
-	QuestManager.report_event(&"tutorial_night1_survived", 1, {"night": 1})
-	objective_updated.emit(&"survive_night_1", true)
-	_save_progress()
-	_refresh_phase_3_ui()
-	_check_phase_3_complete()
+	if current_state == TutorialState.DAY_3_DEFENSE:
+		if DayNightCycle.day_count != 4:
+			return
+		if night_3_failed or not _is_player_alive_for_tutorial():
+			return
+		night_3_survived = true
+		QuestManager.report_event(&"tutorial_night3_survived", 1, {"night": 3})
+		objective_updated.emit(&"survive_night_3", true)
+		_save_progress()
+		_refresh_phase_4_ui()
+		_check_phase_4_complete()
 
 
 func _on_game_over_triggered() -> void:
-	if current_state != TutorialState.DAY_1_COMBAT:
-		return
-	night_1_failed = true
-	if QuestManager.is_active(PHASE_DAY_1_COMBAT):
-		QuestManager.fail_quest(PHASE_DAY_1_COMBAT, "core_destroyed")
+	if current_state == TutorialState.DAY_1_COMBAT:
+		night_1_failed = true
+		if QuestManager.is_active(PHASE_DAY_1_COMBAT):
+			QuestManager.fail_quest(PHASE_DAY_1_COMBAT, "core_destroyed")
+	elif current_state == TutorialState.DAY_3_DEFENSE:
+		night_3_failed = true
+		if QuestManager.is_active(PHASE_DAY_3_DEFENSE):
+			QuestManager.fail_quest(PHASE_DAY_3_DEFENSE, "core_destroyed")
 	_save_progress()
 
 
@@ -491,6 +616,23 @@ func _check_phase_3_complete() -> void:
 		QuestManager.complete_quest(PHASE_DAY_1_COMBAT)
 	await get_tree().create_timer(1.5).timeout
 	if current_state == TutorialState.DAY_1_COMBAT_COMPLETE:
+		_hide_hud()
+
+
+func _check_phase_4_complete() -> void:
+	if current_state != TutorialState.DAY_3_DEFENSE:
+		return
+	if night_3_failed or not (plant_placement_mode_entered and tutorial_plant_placed and plant_ability_triggered and night_3_survived):
+		return
+	current_state = TutorialState.DAY_3_DEFENSE_COMPLETE
+	_set_core_tutorial_glow(false)
+	_save_progress()
+	_refresh_phase_4_ui()
+	phase_completed.emit(PHASE_DAY_3_DEFENSE)
+	if QuestManager.is_active(PHASE_DAY_3_DEFENSE):
+		QuestManager.complete_quest(PHASE_DAY_3_DEFENSE)
+	await get_tree().create_timer(1.5).timeout
+	if current_state == TutorialState.DAY_3_DEFENSE_COMPLETE:
 		_hide_hud()
 
 
@@ -555,6 +697,10 @@ func _hide_hud() -> void:
 
 
 func _refresh_current_ui() -> void:
+	if current_state == TutorialState.DAY_3_DEFENSE \
+			or current_state == TutorialState.DAY_3_DEFENSE_COMPLETE:
+		_refresh_phase_4_ui()
+		return
 	if current_state == TutorialState.DAY_1_COMBAT \
 			or current_state == TutorialState.DAY_1_COMBAT_COMPLETE:
 		_refresh_phase_3_ui()
@@ -633,6 +779,28 @@ func _refresh_phase_3_ui() -> void:
 		_phase_label.text = "Defend the Heart"
 
 
+func _refresh_phase_4_ui() -> void:
+	if not is_instance_valid(_hud_layer):
+		return
+	_move_label.visible = true
+	_inventory_label.visible = true
+	_resource_label.visible = true
+	_craft_label.visible = true
+	_move_label.text = "%s Enter plant mode [P]" % _checkmark(plant_placement_mode_entered)
+	_inventory_label.text = "%s Place a plant" % _checkmark(tutorial_plant_placed)
+	_resource_label.text = "%s Trigger plant ability" % _checkmark(plant_ability_triggered)
+	_craft_label.text = "%s Survive Night 3" % _checkmark(night_3_survived)
+	var completed_count: int = (1 if plant_placement_mode_entered else 0) \
+		+ (1 if tutorial_plant_placed else 0) \
+		+ (1 if plant_ability_triggered else 0) \
+		+ (1 if night_3_survived else 0)
+	_progress_bar.value = float(completed_count) / 4.0
+	if current_state == TutorialState.DAY_3_DEFENSE_COMPLETE:
+		_phase_label.text = "Garden Defense Complete"
+	else:
+		_phase_label.text = "Garden Defense"
+
+
 func _checkmark(done: bool) -> String:
 	return "[x]" if done else "[ ]"
 
@@ -706,6 +874,66 @@ func _connect_player_combat_signal() -> void:
 		player.connect("attack_hit", _on_player_attack_hit)
 
 
+func _connect_scene_tutorial_hooks() -> void:
+	if not get_tree().node_added.is_connected(_on_scene_node_added):
+		get_tree().node_added.connect(_on_scene_node_added)
+	var scene_root: Node = get_tree().current_scene
+	if scene_root != null:
+		var manager: Node = scene_root.find_child("PlantPlacementManager", true, false)
+		if manager != null:
+			_connect_placement_manager(manager)
+	for plant: Node in get_tree().get_nodes_in_group(&"plants"):
+		_connect_plant_ability_signal(plant)
+
+
+func _on_scene_node_added(node: Node) -> void:
+	if _is_dialogic_node(node):
+		return
+	if node.name == "PlantPlacementManager" or (node.has_signal("plant_placed") and node.has_signal("placement_mode_changed")):
+		call_deferred("_connect_placement_manager", node)
+	if node.has_signal("ability_triggered"):
+		call_deferred("_connect_plant_ability_signal", node)
+
+
+func _connect_placement_manager(manager: Node) -> void:
+	if not is_instance_valid(manager):
+		return
+	if is_instance_valid(_placement_manager) and _placement_manager != manager:
+		if _placement_manager.has_signal("placement_mode_changed") and _placement_manager.is_connected("placement_mode_changed", _on_plant_placement_mode_changed):
+			_placement_manager.disconnect("placement_mode_changed", _on_plant_placement_mode_changed)
+		if _placement_manager.has_signal("plant_placed") and _placement_manager.is_connected("plant_placed", _on_plant_placed):
+			_placement_manager.disconnect("plant_placed", _on_plant_placed)
+	_placement_manager = manager
+	if manager.has_signal("placement_mode_changed") and not manager.is_connected("placement_mode_changed", _on_plant_placement_mode_changed):
+		manager.connect("placement_mode_changed", _on_plant_placement_mode_changed)
+	if manager.has_signal("plant_placed") and not manager.is_connected("plant_placed", _on_plant_placed):
+		manager.connect("plant_placed", _on_plant_placed)
+
+
+func _connect_plant_ability_signal(plant: Node) -> void:
+	if not is_instance_valid(plant) or not plant.has_signal("ability_triggered"):
+		return
+	if not plant.is_connected("ability_triggered", _on_plant_ability_triggered):
+		plant.connect("ability_triggered", _on_plant_ability_triggered)
+
+
+func _is_dialogic_node(node: Node) -> bool:
+	var current: Node = node
+	while current != null:
+		if current.name == "Dialogic":
+			return true
+		current = current.get_parent()
+	return false
+
+
+func _is_player_alive_for_tutorial() -> bool:
+	if GameManager.current_state == GameManager.GameState.GAME_OVER:
+		return false
+	if is_instance_valid(GameManager.player):
+		return not bool(GameManager.player.get("is_dead"))
+	return true
+
+
 func _is_enemy_target(target: Node) -> bool:
 	return is_instance_valid(target) and (target is EnemyBase or target.is_in_group(&"enemies"))
 
@@ -717,9 +945,19 @@ func _get_enemy_type(enemy: Node) -> String:
 	return str(enemy.name).to_snake_case()
 
 
+func _get_plant_id(plant: PlantBase) -> String:
+	if not is_instance_valid(plant):
+		return ""
+	var script: Script = plant.get_script() as Script
+	if script != null and not script.resource_path.is_empty():
+		return script.resource_path.get_file().get_basename()
+	return str(plant.name).to_snake_case()
+
+
 func _on_load_completed(_success: bool) -> void:
 	_load_progress()
 	call_deferred("_sync_active_phase_with_scene")
+	call_deferred("_connect_scene_tutorial_hooks")
 
 
 func _save_progress() -> void:
@@ -737,6 +975,11 @@ func _save_progress() -> void:
 	config.set_value("phase_3", "combat_enemy_hit", combat_enemy_hit)
 	config.set_value("phase_3", "night_1_survived", night_1_survived)
 	config.set_value("phase_3", "night_1_failed", night_1_failed)
+	config.set_value("phase_4", "plant_placement_mode_entered", plant_placement_mode_entered)
+	config.set_value("phase_4", "tutorial_plant_placed", tutorial_plant_placed)
+	config.set_value("phase_4", "plant_ability_triggered", plant_ability_triggered)
+	config.set_value("phase_4", "night_3_survived", night_3_survived)
+	config.set_value("phase_4", "night_3_failed", night_3_failed)
 	config.save(PROGRESS_PATH)
 
 
@@ -757,6 +1000,11 @@ func _load_progress() -> void:
 	combat_enemy_hit = bool(config.get_value("phase_3", "combat_enemy_hit", false))
 	night_1_survived = bool(config.get_value("phase_3", "night_1_survived", false))
 	night_1_failed = bool(config.get_value("phase_3", "night_1_failed", false))
+	plant_placement_mode_entered = bool(config.get_value("phase_4", "plant_placement_mode_entered", false))
+	tutorial_plant_placed = bool(config.get_value("phase_4", "tutorial_plant_placed", false))
+	plant_ability_triggered = bool(config.get_value("phase_4", "plant_ability_triggered", false))
+	night_3_survived = bool(config.get_value("phase_4", "night_3_survived", false))
+	night_3_failed = bool(config.get_value("phase_4", "night_3_failed", false))
 	_reported_movement = moved_enough
 	if not tutorial_enabled:
 		current_state = TutorialState.DISABLED

@@ -92,6 +92,7 @@ func _fire_projectile() -> void:
 	proj.global_position = global_position
 	get_tree().current_scene.add_child(proj)
 	_active_projectiles.append(proj)
+	_report_ability_triggered(&"night_projectile")
 
 
 func destroy() -> void:

@@ -1,0 +1,54 @@
+[gd_resource type="Resource" script_class="QuestData" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://quests/data/quest_data.gd" id="1_qdata"]
+[ext_resource type="Script" path="res://quests/data/quest_objective.gd" id="2_qobj"]
+
+[sub_resource type="Resource" id="Resource_enter_placement"]
+script = ExtResource("2_qobj")
+objective_id = &"enter_plant_placement_mode"
+description = "Enter plant placement mode with P"
+event_id = &"tutorial_plant_placement_mode_entered"
+target_count = 1
+filter = {}
+
+[sub_resource type="Resource" id="Resource_place_plant"]
+script = ExtResource("2_qobj")
+objective_id = &"place_tutorial_plant"
+description = "Place a plant in the garden"
+event_id = &"tutorial_plant_placed"
+target_count = 1
+filter = {}
+
+[sub_resource type="Resource" id="Resource_trigger_ability"]
+script = ExtResource("2_qobj")
+objective_id = &"trigger_plant_ability"
+description = "Trigger a plant ability at night"
+event_id = &"tutorial_plant_ability_triggered"
+target_count = 1
+filter = {}
+
+[sub_resource type="Resource" id="Resource_survive_night"]
+script = ExtResource("2_qobj")
+objective_id = &"survive_night_3"
+description = "Survive Night 3 with the Core intact"
+event_id = &"tutorial_night3_survived"
+target_count = 1
+filter = {"night": 3}
+
+[resource]
+script = ExtResource("1_qdata")
+quest_id = &"tutorial_day3_defense"
+display_name = "Garden Defense"
+description = "Place a plant, trigger its ability, and survive Night 3."
+quest_type = 3
+objectives = Array[ExtResource("2_qobj")]([SubResource("Resource_enter_placement"), SubResource("Resource_place_plant"), SubResource("Resource_trigger_ability"), SubResource("Resource_survive_night")])
+reward_items = {}
+reward_weapons = []
+reward_unlock_flags = []
+time_limit_days = 0
+dialogic_timeline_on_complete = ""
+dialogic_timeline_on_fail = ""
+next_quest_id = &""
+auto_start = false
+failure_unlock_flags = []
+failure_next_quest_id = &""

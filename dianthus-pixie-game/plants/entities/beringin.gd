@@ -100,6 +100,7 @@ func _spawn_wall(toward_enemy: EnemyBase) -> void:
 	_wall_dmg_accumulator = 0.0
 	_wall_enemies.clear()
 	SfxManager.play_at("beringin_wall_spawn", wall_pos)
+	_report_ability_triggered(&"root_wall")
 
 
 func _on_wall_body_entered(body: Node2D) -> void:

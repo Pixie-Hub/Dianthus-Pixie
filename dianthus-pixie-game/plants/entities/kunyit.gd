@@ -22,6 +22,7 @@ func _on_effect_area_body_entered(body: Node2D) -> void:
 		_player_in_range = true
 		SfxManager.play_at("kunyit_melee_buff", global_position)
 		_recalculate_player_bonus_damage()
+		_report_ability_triggered(&"melee_damage_boost")
 
 
 func _on_effect_area_body_exited(body: Node2D) -> void:

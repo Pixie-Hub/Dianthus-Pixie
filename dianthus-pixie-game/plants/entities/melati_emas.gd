@@ -32,12 +32,14 @@ func _process(delta: float) -> void:
 		_hp_accumulator -= float(amount)
 		if player.has_method("heal"):
 			player.heal(amount)
+			_report_ability_triggered(&"hp_regen")
 	_energy_accumulator += energy_regen_per_sec * delta
 	if _energy_accumulator >= 1.0:
 		var amount: int = int(_energy_accumulator)
 		_energy_accumulator -= float(amount)
 		if player.has_method("add_energy"):
 			player.add_energy(amount)
+			_report_ability_triggered(&"energy_regen")
 
 
 func _on_effect_area_body_entered(body: Node2D) -> void:

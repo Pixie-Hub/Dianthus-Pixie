@@ -30,6 +30,7 @@ func _process(delta: float) -> void:
 		_energy_accumulator -= float(amount)
 		if player.has_method("add_energy"):
 			player.add_energy(amount)
+			_report_ability_triggered(&"energy_regen")
 
 
 func _on_effect_area_body_entered(body: Node2D) -> void:

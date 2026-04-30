@@ -39,6 +39,7 @@ func _on_tracked_enemy_died(_enemy: EnemyBase, body: EnemyBase) -> void:
 
 func _apply_slow(enemy: EnemyBase) -> void:
 	enemy.speed_modifier = min(enemy.speed_modifier, slow_multiplier)
+	_report_ability_triggered(&"slow")
 
 
 func _recalculate_slow(enemy: EnemyBase) -> void:
