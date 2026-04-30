@@ -3,7 +3,7 @@
 **Project:** Dianthus Pixie  
 **Engine:** Godot 4.x  
 **Art:** Aseprite (16×16 tiles, 16×24 characters)  
-**Last Updated:** 2026-04-26  
+**Last Updated:** 2026-05-01\
 **GDD Reference:** `Dianthus Pixie GDD.md` (v1.1)
 
 > **Legend — Effort:** XS < 2 h · S < 1 d · M 1–3 d · L 3–7 d · XL > 1 wk  
@@ -27,6 +27,8 @@
 
 ## Phase 1 — Core Loop (Vertical Slice)
 
+> Daytime overhaul tasks `DAY-01` through `DAY-06` come from `docs/design/DAYTIME_PHASE_OVERHAUL_PLAN.md`.
+
 | Task ID | Title | Category | Priority | Status | Dependencies | Assignee | Effort | Acceptance Criteria |
 |---------|-------|----------|----------|--------|--------------|----------|--------|---------------------|
 | CORE-01 | Meadow Edge Exploration Zone | World & Map | Critical | Not Started | FOUND-02 | [Unassigned] | M | • Zone tilemap renders with warm/vibrant daytime palette per GDD §12.1; • player walks entire zone without clipping; • Petal Shard and Verdant Sap pickup nodes placed |
@@ -39,6 +41,12 @@
 | CORE-08 | Player Death & Respawn | Player | Critical | Done | CORE-03 | [Unassigned] | S | • Player respawns near Core after 5 s per GDD §5.1; • -25% stored energy applied on respawn; • 3 s invincibility window after respawn; equipped items are retained |
 | CORE-09 | Win Condition: Survive Night | Core Mechanics | Critical | Done | CORE-07 | [Unassigned] | S | • All waves defeated before dawn triggers "Night Survived" result screen with 3–5 Common + 1 Uncommon resource reward per GDD §6.3; • transitions to next day Morning phase |
 | CORE-10 | Basic HUD (Player HP + Core HP) | UI/HUD | High | Done | CORE-03 | [Unassigned] | S | • Player HP bar (red, top-left) and Core HP bar (green, top-center) per GDD §11.1; • both bars update in real time; • bar shakes briefly on damage received per GDD §12.2 |
+| DAY-01 | Meadow Edge Route Relayout | World & Map | Critical | Done | CORE-01 | [Unassigned] | M | • Meadow Edge expanded into 3 distinct route arms from Garden Gate; • Petal Field, Sap Grove, Old Root Hollow, and Ruin Glimmer have readable landmarks and side pockets; • traversal, camera limits, spawn anchors, and direct scene load validate without clipping |
+| DAY-02 | Bramble Obstacles & Optional Pockets | World & Map | High | Not Started | DAY-01, CORE-05 | [Unassigned] | M | • Bramble obstacles block optional shortcuts or reward pockets, not mandatory paths; • brambles can be cleared with existing attack/collision/HP patterns; • cleared pockets reward uncommon resources or faster return routes |
+| DAY-03 | Rare Harvest Node & QTE Hook | Minigames | High | Not Started | DAY-01, CORE-02, MINI-03 | [Unassigned] | M | • At least one rare resource node triggers the Harvest QTE; • success grants full or bonus yield; • failure grants 50% yield and communicates the reduced reward clearly |
+| DAY-04 | Scout Tracks Night Intel | Core Mechanics | High | Not Started | DAY-01, CORE-07, UI-01 | [Unassigned] | M | • Optional daytime Scout Tracks interaction reveals one likely active night spawn direction; • the reveal appears on HUD, minimap, or preparation UI; • interaction costs enough daytime to compete with gathering |
+| DAY-05 | Daytime Resource Placement Rules | Resource & Inventory | High | Not Started | DAY-01, CORE-02, RES-01 | [Unassigned] | M | • Common resources sit near safe main paths; • uncommon resources appear at side-pocket ends or behind obstacles; • rare and discovery nodes are far from base, tied to landmarks, or gated by risk/time cost |
+| DAY-06 | Return Pressure & 3-Minute Tuning | Core Mechanics | Medium | Not Started | DAY-02, DAY-03, DAY-04, DAY-05, FOUND-05 | [Unassigned] | S | • Player cannot collect everything in one 3-minute daytime phase; • final 30 seconds have clear audio/visual pressure; • route timing supports one main route plus at most one side stop |
 
 ---
 
