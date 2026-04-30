@@ -18,6 +18,7 @@ const ENERGY_PER_HIT: int = 3
 const ENERGY_PER_KILL: int = 10
 const ENERGY_NEAR_CORE_RATE: float = 2.0
 const CORE_PROXIMITY_RADIUS: float = 64.0
+const CORE_ENERGY_TICK_INTERVAL: float = 0.5
 const WEAPON_SLOT_COUNT: int = 2
 const SKILL_ENERGY_COST: int = 30
 
@@ -53,6 +54,7 @@ var current_energy: int = 0
 var max_energy: int = BASE_MAX_ENERGY
 var _energy_regen_accumulator: float = 0.0
 var _core_energy_tick_active: bool = false
+var _core_energy_tick_timer: Timer = null
 var damage_reduction: float = 0.0
 var attack_speed_bonus: float = 0.0
 var bonus_melee_damage: int = 0
@@ -77,6 +79,7 @@ func _ready() -> void:
 		_current_weapon = CraftingManager.get_weapon_data(weapon_slots[0])
 	_sword_hitbox.body_entered.connect(_on_sword_hitbox_body_entered)
 	CraftingManager.weapon_crafted.connect(_on_weapon_crafted)
+	_setup_core_energy_tick_timer()
 	loadout_changed.emit(weapon_slots, active_skill_id, selected_weapon_slot)
 
 
@@ -675,15 +678,41 @@ func _update_core_energy_regen(delta: float) -> void:
 
 
 func _play_core_energy_tick_loop() -> void:
+	if _core_energy_tick_active:
+		return
 	_core_energy_tick_active = true
-	SfxManager.play_loop_at("core_energy_tick", GameManager.dianthus_core.global_position)
+	_play_core_energy_tick()
+	if _core_energy_tick_timer != null:
+		_core_energy_tick_timer.start()
 
 
 func _stop_core_energy_tick_loop() -> void:
 	if not _core_energy_tick_active:
 		return
 	_core_energy_tick_active = false
-	SfxManager.stop_loop_at("core_energy_tick")
+	if _core_energy_tick_timer != null:
+		_core_energy_tick_timer.stop()
+
+
+func _setup_core_energy_tick_timer() -> void:
+	_core_energy_tick_timer = Timer.new()
+	_core_energy_tick_timer.wait_time = CORE_ENERGY_TICK_INTERVAL
+	_core_energy_tick_timer.one_shot = false
+	_core_energy_tick_timer.timeout.connect(_on_core_energy_tick_timer_timeout)
+	add_child(_core_energy_tick_timer)
+
+
+func _on_core_energy_tick_timer_timeout() -> void:
+	if not _core_energy_tick_active:
+		return
+	_play_core_energy_tick()
+
+
+func _play_core_energy_tick() -> void:
+	if not is_instance_valid(GameManager.dianthus_core):
+		_stop_core_energy_tick_loop()
+		return
+	SfxManager.play_at("core_energy_tick", GameManager.dianthus_core.global_position)
 
 
 func add_energy(amount: int) -> void:
