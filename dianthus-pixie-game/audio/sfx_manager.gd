@@ -106,12 +106,38 @@ const SFX: Dictionary = {
 
 const SFX_VOLUME_DB: Dictionary = {
 	"thorn_sword_swing": -10.0,
+	"blazeblade_swing": -10.0,
+	"blazeblade_hit": -2.0,
 	"screen_open": -4.0,
 	"screen_close": -4.0,
 	"plant_placed": 10.0,
 	"core_energy_tick": 0.0,
 	"weapon_equipped": -6.0,
 	"player_take_damage": -10.0,
+	"void_grenade_detonate": 16.0,
+	"vine_whip_pull": -14.0,
+	"crystal_lash_crack": 6.0,
+	"petal_shield_raise": 4.0,
+	"petal_shield_block": 16.0,
+	"petal_shield_counter": -4.0,
+	"iron_bloom_shield_raise": 6.0,
+	"player_death": -4.0,
+	"player_respawn": -4.0,
+	"rafflesia_miasma_hun": -14.0,
+	"wijaya_kusuma_attack": 6.0,
+	"beringin_wall_spawn": -12.0,
+	"beringin_wall_break": -6.0,
+	"kecombrang_speed_boost": -6.0,
+	"kunyit_melee_buff": -10.0,
+	"baja_kuning_armor_buff": -4.0,
+	"enemy_hit": 4.0,
+	"stonehusk_attack": -8.0,
+	"stonehusk_death": -4.0,
+	"phantom_weaver_attack": -12.0,
+	"phantom_weaver_death": -10.0,
+	"swarm_larva_skitter": -6.0,
+	"core_take_damage": 8.0,
+
 }
 
 const SFX_PITCH_RANDOMIZATION: Dictionary = {

@@ -18,7 +18,7 @@ const ENERGY_PER_HIT: int = 3
 const ENERGY_PER_KILL: int = 10
 const ENERGY_NEAR_CORE_RATE: float = 2.0
 const CORE_PROXIMITY_RADIUS: float = 64.0
-const CORE_ENERGY_TICK_INTERVAL: float = 0.5
+const CORE_ENERGY_TICK_INTERVAL: float = 1.2
 const WEAPON_SLOT_COUNT: int = 2
 const SKILL_ENERGY_COST: int = 30
 
