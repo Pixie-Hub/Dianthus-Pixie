@@ -4,10 +4,10 @@
 [ext_resource type="Texture2D" uid="uid://dmmfrkvdcmfjr" path="res://assets/aseprite/main_menu_bg.png" id="2_1njj5"]
 [ext_resource type="PackedScene" uid="uid://csettgscrn01" path="res://ui/menus/settings_screen.tscn" id="2_settings"]
 [ext_resource type="PackedScene" uid="uid://b6klecxivbfx8" path="res://ui/menus/difficulty_selection.tscn" id="3_difficulty"]
+[ext_resource type="Texture2D" uid="uid://dflw82edy8jes" path="res://ui/menu_panel.png" id="3_vuv8w"]
+[ext_resource type="Texture2D" uid="uid://cf2gcfb0vnb7c" path="res://ui/button_disabled.PNG" id="TEX_BTN_DISABLED"]
 [ext_resource type="Texture2D" uid="uid://rp34un8vaa4b" path="res://ui/button_normal.PNG" id="TEX_BTN_NORMAL"]
-[ext_resource type="Texture2D" uid="uid://e7ljxebw851a" path="res://ui/button_pressed.PNG" id="TEX_BTN_PRESSED"]
-[ext_resource type="Texture2D" uid="uid://cqusvsxabv117" path="res://ui/button_hover.PNG" id="TEX_BTN_HOVER"]
-[ext_resource type="Texture2D" uid="uid://q1l4rm7g7n5v" path="res://ui/button_disabled.PNG" id="TEX_BTN_DISABLED"]
+[ext_resource type="Texture2D" uid="uid://cxif4jr5gfaif" path="res://ui/button_pressed.PNG" id="TEX_BTN_PRESSED"]
 
 [sub_resource type="Gradient" id="Gradient_top"]
 colors = PackedColorArray(0.047, 0.058, 0.043, 0.8, 0.047, 0.058, 0.043, 0)
@@ -23,33 +23,24 @@ colors = PackedColorArray(0.047, 0.058, 0.043, 0, 0.047, 0.058, 0.043, 0.8)
 gradient = SubResource("Gradient_bottom")
 fill_to = Vector2(0, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-bg_color = Color(0.176, 0.203, 0.211, 0.85)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.364, 0.25, 0.215, 1)
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_g305v"]
+texture = ExtResource("3_vuv8w")
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_continue_n"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_h223f"]
 texture = ExtResource("TEX_BTN_NORMAL")
-modulate_color = Color(0.8, 1, 0.8, 1)
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_p"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vuv8w"]
 texture = ExtResource("TEX_BTN_PRESSED")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_continue_h"]
-texture = ExtResource("TEX_BTN_HOVER")
-modulate_color = Color(0.8, 1, 0.8, 1)
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_u0fm7"]
+texture = ExtResource("3_vuv8w")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_d"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tg3eq"]
 texture = ExtResource("TEX_BTN_DISABLED")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_n"]
-texture = ExtResource("TEX_BTN_NORMAL")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_h"]
-texture = ExtResource("TEX_BTN_HOVER")
 
 [node name="MainMenu" type="Control" unique_id=1284738585]
 layout_mode = 3
@@ -126,19 +117,18 @@ vertical_alignment = 1
 
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer/VBoxContainer" unique_id=1554052238]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+theme_override_styles/panel = SubResource("StyleBoxTexture_g305v")
 
 [node name="MarginContainer" type="MarginContainer" parent="CenterContainer/VBoxContainer/PanelContainer" unique_id=1594618014]
 layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
 
 [node name="ButtonContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/PanelContainer/MarginContainer" unique_id=1090584303]
-texture_filter = 2
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 4
 
 [node name="ContinueButton" type="Button" parent="CenterContainer/VBoxContainer/PanelContainer/MarginContainer/ButtonContainer" unique_id=1090584302]
 unique_name_in_owner = true
@@ -147,22 +137,22 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.976, 0.792, 0.141, 1)
 theme_override_colors/font_disabled_color = Color(0.42, 0.353, 0.282, 1)
 theme_override_font_sizes/font_size = 13
-theme_override_styles/normal = SubResource("StyleBoxTexture_btn_continue_n")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_p")
-theme_override_styles/hover = SubResource("StyleBoxTexture_btn_continue_h")
-theme_override_styles/disabled = SubResource("StyleBoxTexture_btn_d")
+theme_override_styles/normal = SubResource("StyleBoxTexture_h223f")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_vuv8w")
+theme_override_styles/hover = SubResource("StyleBoxTexture_u0fm7")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_tg3eq")
 disabled = true
 text = "CONTINUE"
 
 [node name="NewGameButton" type="Button" parent="CenterContainer/VBoxContainer/PanelContainer/MarginContainer/ButtonContainer" unique_id=1875012140]
-custom_minimum_size = Vector2(200, 34)
+custom_minimum_size = Vector2(210, 34)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.882, 0.89, 0.859, 1)
 theme_override_colors/font_hover_color = Color(0.976, 0.792, 0.141, 1)
 theme_override_font_sizes/font_size = 13
-theme_override_styles/normal = SubResource("StyleBoxTexture_btn_n")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_p")
-theme_override_styles/hover = SubResource("StyleBoxTexture_btn_h")
+theme_override_styles/normal = SubResource("StyleBoxTexture_h223f")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_vuv8w")
+theme_override_styles/hover = SubResource("StyleBoxTexture_u0fm7")
 text = "New Game
 "
 
@@ -172,9 +162,9 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.882, 0.89, 0.859, 1)
 theme_override_colors/font_hover_color = Color(0.976, 0.792, 0.141, 1)
 theme_override_font_sizes/font_size = 13
-theme_override_styles/normal = SubResource("StyleBoxTexture_btn_n")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_p")
-theme_override_styles/hover = SubResource("StyleBoxTexture_btn_h")
+theme_override_styles/normal = SubResource("StyleBoxTexture_h223f")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_vuv8w")
+theme_override_styles/hover = SubResource("StyleBoxTexture_u0fm7")
 text = "Settings"
 
 [node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer/PanelContainer/MarginContainer/ButtonContainer" unique_id=1542137201]
@@ -183,9 +173,9 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.761, 0.788, 0.733, 1)
 theme_override_colors/font_hover_color = Color(1, 0.706, 0.671, 1)
 theme_override_font_sizes/font_size = 13
-theme_override_styles/normal = SubResource("StyleBoxTexture_btn_n")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_p")
-theme_override_styles/hover = SubResource("StyleBoxTexture_btn_n")
+theme_override_styles/normal = SubResource("StyleBoxTexture_h223f")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_vuv8w")
+theme_override_styles/hover = SubResource("StyleBoxTexture_u0fm7")
 text = "Quit"
 
 [node name="VersionLabel" type="Label" parent="." unique_id=1601691489]
