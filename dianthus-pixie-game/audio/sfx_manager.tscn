@@ -1,74 +1,945 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=87 format=3]
 
 [ext_resource type="Script" path="res://audio/sfx_manager.gd" id="1_sfx_manager"]
+[ext_resource type="AudioStream" path="res://audio/sfx/combat/player_attack/Thorn Sword swing.wav" id="sfx_thorn_sword_swing"]
+[ext_resource type="AudioStream" path="res://audio/sfx/combat/player_attack/Thorn Sword hit (flesh).wav" id="sfx_thorn_sword_hit"]
+[ext_resource type="AudioStream" path="res://audio/sfx/combat/player_attack/Blazeblade swing.wav" id="sfx_blazeblade_swing"]
+[ext_resource type="AudioStream" path="res://audio/sfx/combat/player_attack/Blazeblade hit.wav" id="sfx_blazeblade_hit"]
+[ext_resource type="AudioStream" path="res://audio/sfx/combat/player_attack/Vine Whip crack.wav" id="sfx_vine_whip_crack"]
+[ext_resource type="AudioStream" path="res://audio/sfx/combat/player_attack/Vine Whip pull.wav" id="sfx_vine_whip_pull"]
+[ext_resource type="AudioStream" path="res://audio/sfx/combat/player_attack/Crystal Lash crack.wav" id="sfx_crystal_lash_crack"]
+[ext_resource type="AudioStream" path="res://audio/sfx/combat/player_attack/Spore Bomb throw.wav" id="sfx_spore_bomb_throw"]
+[ext_resource type="AudioStream" path="res://audio/sfx/combat/player_attack/Spore Bomb detonate.wav" id="sfx_spore_bomb_detonate"]
+[ext_resource type="AudioStream" path="res://audio/sfx/combat/player_attack/Void Grenade detonate.wav" id="sfx_void_grenade_detonate"]
+[ext_resource type="AudioStream" path="res://audio/sfx/combat/player_attack/Petal Shield raise.wav" id="sfx_petal_shield_raise"]
+[ext_resource type="AudioStream" path="res://audio/sfx/combat/player_attack/Petal Shield block.wav" id="sfx_petal_shield_block"]
+[ext_resource type="AudioStream" path="res://audio/sfx/combat/player_attack/Petal Shield perfect counter.wav" id="sfx_petal_shield_counter"]
+[ext_resource type="AudioStream" path="res://audio/sfx/combat/player_attack/Iron Bloom Shield raise.wav" id="sfx_iron_bloom_shield_raise"]
+[ext_resource type="AudioStream" path="res://audio/sfx/combat/player_state/player_take_damage.wav" id="sfx_player_take_damage"]
+[ext_resource type="AudioStream" path="res://audio/sfx/combat/player_state/player_death.wav" id="sfx_player_death"]
+[ext_resource type="AudioStream" path="res://audio/sfx/combat/player_state/player_respawn.wav" id="sfx_player_respawn"]
+[ext_resource type="AudioStream" path="res://audio/sfx/combat/player_state/player_invincibility_active.wav" id="sfx_player_invincibility"]
+[ext_resource type="AudioStream" path="res://audio/sfx/plants/plant_placed.wav" id="sfx_plant_placed"]
+[ext_resource type="AudioStream" path="res://audio/sfx/plants/Plant Destroyed (Wither).wav" id="sfx_plant_destroyed"]
+[ext_resource type="AudioStream" path="res://audio/sfx/plants/bougainvillea_thorn_tick.wav" id="sfx_bougainvillea_thorn_tick"]
+[ext_resource type="AudioStream" path="res://audio/sfx/plants/rafflesia_miasma_hum.wav" id="sfx_rafflesia_miasma_hum"]
+[ext_resource type="AudioStream" path="res://audio/sfx/plants/melati_energy_regen_pulse.wav" id="sfx_melati_energy_pulse"]
+[ext_resource type="AudioStream" path="res://audio/sfx/plants/wijaya_kusuma_auto-attack_fire.wav" id="sfx_wijaya_kusuma_attack"]
+[ext_resource type="AudioStream" path="res://audio/sfx/plants/beringin_root_wall_spawn.wav" id="sfx_beringin_wall_spawn"]
+[ext_resource type="AudioStream" path="res://audio/sfx/plants/beringin_root_wall_break.wav" id="sfx_beringin_wall_break"]
+[ext_resource type="AudioStream" path="res://audio/sfx/plants/Kecombrang Attack Speed Boost.wav" id="sfx_kecombrang_speed_boost"]
+[ext_resource type="AudioStream" path="res://audio/sfx/plants/Kunyit Melee Buff Active.wav" id="sfx_kunyit_melee_buff"]
+[ext_resource type="AudioStream" path="res://audio/sfx/plants/Bunga Api Burn Tick.wav" id="sfx_bunga_api_burn_tick"]
+[ext_resource type="AudioStream" path="res://audio/sfx/plants/Bunga Bayang Auto-Attack.wav" id="sfx_bunga_bayang_attack"]
+[ext_resource type="AudioStream" path="res://audio/sfx/plants/Melati Emas Regen Pulse.wav" id="sfx_melati_emas_regen_pulse"]
+[ext_resource type="AudioStream" path="res://audio/sfx/plants/Baja Kuning Armor Buff.wav" id="sfx_baja_kuning_armor_buff"]
+[ext_resource type="AudioStream" path="res://audio/sfx/enemies/Enemy Hit (Generic).wav" id="sfx_enemy_hit"]
+[ext_resource type="AudioStream" path="res://audio/sfx/enemies/Shadowling Footstep.wav" id="sfx_shadowling_footstep"]
+[ext_resource type="AudioStream" path="res://audio/sfx/enemies/Shadowling Attack.wav" id="sfx_shadowling_attack"]
+[ext_resource type="AudioStream" path="res://audio/sfx/enemies/Shadowling Retreat.wav" id="sfx_shadowling_retreat"]
+[ext_resource type="AudioStream" path="res://audio/sfx/enemies/Shadowling Death.wav" id="sfx_shadowling_death"]
+[ext_resource type="AudioStream" path="res://audio/sfx/enemies/Voidrunner Charge (Spawn).wav" id="sfx_voidrunner_charge"]
+[ext_resource type="AudioStream" path="res://audio/sfx/enemies/Voidrunner Death.wav" id="sfx_voidrunner_death"]
+[ext_resource type="AudioStream" path="res://audio/sfx/enemies/Stonehusk Footstep.wav" id="sfx_stonehusk_footstep"]
+[ext_resource type="AudioStream" path="res://audio/sfx/enemies/Stonehusk Attack.wav" id="sfx_stonehusk_attack"]
+[ext_resource type="AudioStream" path="res://audio/sfx/enemies/Stonehusk Death.wav" id="sfx_stonehusk_death"]
+[ext_resource type="AudioStream" path="res://audio/sfx/enemies/Phantom Weaver Teleport.wav" id="sfx_phantom_weaver_teleport"]
+[ext_resource type="AudioStream" path="res://audio/sfx/enemies/Phantom Weaver Attack.wav" id="sfx_phantom_weaver_attack"]
+[ext_resource type="AudioStream" path="res://audio/sfx/enemies/Phantom Weaver Death.wav" id="sfx_phantom_weaver_death"]
+[ext_resource type="AudioStream" path="res://audio/sfx/enemies/Swarm Larva Group Skitter.wav" id="sfx_swarm_larva_skitter"]
+[ext_resource type="AudioStream" path="res://audio/sfx/enemies/Swarm Larva Individual Death.wav" id="sfx_swarm_larva_death"]
+[ext_resource type="AudioStream" path="res://audio/sfx/core/Core Take Damage.wav" id="sfx_core_take_damage"]
+[ext_resource type="AudioStream" path="res://audio/sfx/core/Core Low HP Warning.wav" id="sfx_core_low_hp"]
+[ext_resource type="AudioStream" path="res://audio/sfx/core/Core Destroyed (Game Over).wav" id="sfx_core_destroyed"]
+[ext_resource type="AudioStream" path="res://audio/sfx/core/Core Heal.wav" id="sfx_core_heal"]
+[ext_resource type="AudioStream" path="res://audio/sfx/core/Core Energy Passive Tick.wav" id="sfx_core_energy_tick"]
+[ext_resource type="AudioStream" path="res://audio/sfx/crafting_ui/Crafting Success.wav" id="sfx_crafting_success"]
+[ext_resource type="AudioStream" path="res://audio/sfx/crafting_ui/Crafting Fail.wav" id="sfx_crafting_fail"]
+[ext_resource type="AudioStream" path="res://audio/sfx/crafting_ui/Weapon Equipped.wav" id="sfx_weapon_equipped"]
+[ext_resource type="AudioStream" path="res://audio/sfx/crafting_ui/Inventory Open.wav" id="sfx_inventory_open"]
+[ext_resource type="AudioStream" path="res://audio/sfx/crafting_ui/Inventory Close.wav" id="sfx_inventory_close"]
+[ext_resource type="AudioStream" path="res://audio/sfx/crafting_ui/Screen Close.wav" id="sfx_screen_close"]
+[ext_resource type="AudioStream" path="res://audio/sfx/crafting_ui/Item Pickup.wav" id="sfx_item_pickup"]
+[ext_resource type="AudioStream" path="res://audio/sfx/crafting_ui/Item Add to Inventory (Stack).wav" id="sfx_item_stack"]
+[ext_resource type="AudioStream" path="res://audio/sfx/crafting_ui/Inventory Full.wav" id="sfx_inventory_full"]
+[ext_resource type="AudioStream" path="res://audio/sfx/crafting_ui/UI Button Click.wav" id="sfx_ui_button_click"]
+[ext_resource type="AudioStream" path="res://audio/sfx/crafting_ui/Screen Open.wav" id="sfx_screen_open"]
+[ext_resource type="AudioStream" path="res://audio/sfx/crossbreeding/Breeding Start.wav" id="sfx_breeding_start"]
+[ext_resource type="AudioStream" path="res://audio/sfx/crossbreeding/Breeding Success.wav" id="sfx_breeding_success"]
+[ext_resource type="AudioStream" path="res://audio/sfx/crossbreeding/Breeding Fail.wav" id="sfx_breeding_fail"]
+[ext_resource type="AudioStream" path="res://audio/sfx/crossbreeding/Breeding Critical Fail.wav" id="sfx_breeding_critical_fail"]
+[ext_resource type="AudioStream" path="res://audio/sfx/crossbreeding/New Combo Discovered.wav" id="sfx_combo_discovered"]
+[ext_resource type="AudioStream" path="res://audio/sfx/night_wave_events/Night Transition.wav" id="sfx_night_transition"]
+[ext_resource type="AudioStream" path="res://audio/sfx/night_wave_events/Wave Start.wav" id="sfx_wave_start"]
+[ext_resource type="AudioStream" path="res://audio/sfx/night_wave_events/Wave Cleared.wav" id="sfx_wave_cleared"]
+[ext_resource type="AudioStream" path="res://audio/sfx/night_wave_events/Surge Night Warning.wav" id="sfx_surge_night_warning"]
+[ext_resource type="AudioStream" path="res://audio/sfx/night_wave_events/Dawn Transition.wav" id="sfx_dawn_transition"]
+[ext_resource type="AudioStream" path="res://audio/sfx/night_wave_events/Night Survived Screen Appear.wav" id="sfx_night_survived"]
+[ext_resource type="AudioStream" path="res://audio/sfx/quest_story/quest_accepted.wav" id="sfx_quest_accepted"]
+[ext_resource type="AudioStream" path="res://audio/sfx/quest_story/quest_completed.wav" id="sfx_quest_completed"]
+[ext_resource type="AudioStream" path="res://audio/sfx/quest_story/quest_failed.wav" id="sfx_quest_failed"]
+[ext_resource type="AudioStream" path="res://audio/sfx/quest_story/codex_entry_unlocked.wav" id="sfx_codex_unlocked"]
+[ext_resource type="AudioStream" path="res://audio/sfx/quest_story/ending_screen.wav" id="sfx_ending_screen"]
+[ext_resource type="AudioStream" path="res://audio/sfx/quest_story/endless_mode_activate.wav" id="sfx_endless_mode_activate"]
+[ext_resource type="AudioStream" path="res://audio/sfx/minigames/Minigame Rhythm Tap (Correct).wav" id="sfx_minigame_tap_correct"]
+[ext_resource type="AudioStream" path="res://audio/sfx/minigames/Minigame Rhythm Tap (Miss).wav" id="sfx_minigame_tap_miss"]
+[ext_resource type="AudioStream" path="res://audio/sfx/minigames/Harvest QTE Prompt.wav" id="sfx_harvest_qte_prompt"]
+[ext_resource type="AudioStream" path="res://audio/sfx/minigames/Harvest QTE Success.wav" id="sfx_harvest_qte_success"]
+[ext_resource type="AudioStream" path="res://audio/sfx/minigames/Harvest QTE Fail.wav" id="sfx_harvest_qte_fail"]
 
 [node name="SfxManager" type="Node"]
 script = ExtResource("1_sfx_manager")
 
 [node name="GlobalPlayers" type="Node" parent="."]
 
-[node name="GlobalPlayer01" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+[node name="thorn_sword_swing" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_thorn_sword_swing")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
 
-[node name="GlobalPlayer02" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+[node name="thorn_sword_hit" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_thorn_sword_hit")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
 
-[node name="GlobalPlayer03" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+[node name="blazeblade_swing" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_blazeblade_swing")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
 
-[node name="GlobalPlayer04" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+[node name="blazeblade_hit" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_blazeblade_hit")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
 
-[node name="GlobalPlayer05" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+[node name="vine_whip_crack" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_vine_whip_crack")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
 
-[node name="GlobalPlayer06" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+[node name="vine_whip_pull" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_vine_whip_pull")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
 
-[node name="GlobalPlayer07" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+[node name="crystal_lash_crack" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_crystal_lash_crack")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
 
-[node name="GlobalPlayer08" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+[node name="spore_bomb_throw" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_spore_bomb_throw")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
 
-[node name="GlobalPlayer09" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+[node name="spore_bomb_detonate" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_spore_bomb_detonate")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
 
-[node name="GlobalPlayer10" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+[node name="void_grenade_detonate" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_void_grenade_detonate")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
 
-[node name="GlobalPlayer11" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+[node name="petal_shield_raise" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_petal_shield_raise")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
 
-[node name="GlobalPlayer12" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+[node name="petal_shield_block" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_petal_shield_block")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
 
-[node name="GlobalPlayer13" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+[node name="petal_shield_counter" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_petal_shield_counter")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
 
-[node name="GlobalPlayer14" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+[node name="iron_bloom_shield_raise" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_iron_bloom_shield_raise")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
 
-[node name="GlobalPlayer15" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+[node name="player_take_damage" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_player_take_damage")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
 
-[node name="GlobalPlayer16" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+[node name="player_death" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_player_death")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="player_respawn" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_player_respawn")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="player_invincibility" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_player_invincibility")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="plant_placed" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_plant_placed")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="plant_destroyed" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_plant_destroyed")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="bougainvillea_thorn_tick" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_bougainvillea_thorn_tick")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="rafflesia_miasma_hum" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_rafflesia_miasma_hum")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="melati_energy_pulse" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_melati_energy_pulse")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="wijaya_kusuma_attack" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_wijaya_kusuma_attack")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="beringin_wall_spawn" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_beringin_wall_spawn")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="beringin_wall_break" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_beringin_wall_break")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="kecombrang_speed_boost" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_kecombrang_speed_boost")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="kunyit_melee_buff" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_kunyit_melee_buff")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="bunga_api_burn_tick" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_bunga_api_burn_tick")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="bunga_bayang_attack" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_bunga_bayang_attack")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="melati_emas_regen_pulse" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_melati_emas_regen_pulse")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="baja_kuning_armor_buff" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_baja_kuning_armor_buff")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="enemy_hit" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_enemy_hit")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="shadowling_footstep" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_shadowling_footstep")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="shadowling_attack" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_shadowling_attack")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="shadowling_retreat" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_shadowling_retreat")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="shadowling_death" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_shadowling_death")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="voidrunner_charge" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_voidrunner_charge")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="voidrunner_death" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_voidrunner_death")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="stonehusk_footstep" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_stonehusk_footstep")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="stonehusk_attack" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_stonehusk_attack")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="stonehusk_death" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_stonehusk_death")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="phantom_weaver_teleport" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_phantom_weaver_teleport")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="phantom_weaver_attack" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_phantom_weaver_attack")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="phantom_weaver_death" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_phantom_weaver_death")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="swarm_larva_skitter" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_swarm_larva_skitter")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="swarm_larva_death" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_swarm_larva_death")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="core_take_damage" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_core_take_damage")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="core_low_hp" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_core_low_hp")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="core_destroyed" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_core_destroyed")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="core_heal" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_core_heal")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="core_energy_tick" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_core_energy_tick")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="crafting_success" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_crafting_success")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="crafting_fail" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_crafting_fail")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="weapon_equipped" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_weapon_equipped")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="inventory_open" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_inventory_open")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="inventory_close" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_inventory_close")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="screen_close" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_screen_close")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="item_pickup" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_item_pickup")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="item_stack" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_item_stack")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="inventory_full" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_inventory_full")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="ui_button_click" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_ui_button_click")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="screen_open" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_screen_open")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="breeding_start" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_breeding_start")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="breeding_success" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_breeding_success")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="breeding_fail" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_breeding_fail")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="breeding_critical_fail" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_breeding_critical_fail")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="combo_discovered" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_combo_discovered")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="night_transition" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_night_transition")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="wave_start" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_wave_start")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="wave_cleared" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_wave_cleared")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="surge_night_warning" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_surge_night_warning")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="dawn_transition" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_dawn_transition")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="night_survived" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_night_survived")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="quest_accepted" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_quest_accepted")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="quest_completed" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_quest_completed")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="quest_failed" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_quest_failed")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="codex_unlocked" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_codex_unlocked")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="ending_screen" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_ending_screen")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="endless_mode_activate" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_endless_mode_activate")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="minigame_tap_correct" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_minigame_tap_correct")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="minigame_tap_miss" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_minigame_tap_miss")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="harvest_qte_prompt" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_harvest_qte_prompt")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="harvest_qte_success" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_harvest_qte_success")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
+
+[node name="harvest_qte_fail" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+stream = ExtResource("sfx_harvest_qte_fail")
+bus = &"SFX"
+panning_strength = 0.0
+max_distance = 1000000.0
 
 [node name="SpatialPlayers" type="Node" parent="."]
 
-[node name="SpatialPlayer01" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+[node name="thorn_sword_swing" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_thorn_sword_swing")
+bus = &"SFX"
 
-[node name="SpatialPlayer02" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+[node name="thorn_sword_hit" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_thorn_sword_hit")
+bus = &"SFX"
 
-[node name="SpatialPlayer03" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+[node name="blazeblade_swing" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_blazeblade_swing")
+bus = &"SFX"
 
-[node name="SpatialPlayer04" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+[node name="blazeblade_hit" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_blazeblade_hit")
+bus = &"SFX"
 
-[node name="SpatialPlayer05" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+[node name="vine_whip_crack" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_vine_whip_crack")
+bus = &"SFX"
 
-[node name="SpatialPlayer06" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+[node name="vine_whip_pull" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_vine_whip_pull")
+bus = &"SFX"
 
-[node name="SpatialPlayer07" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+[node name="crystal_lash_crack" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_crystal_lash_crack")
+bus = &"SFX"
 
-[node name="SpatialPlayer08" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+[node name="spore_bomb_throw" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_spore_bomb_throw")
+bus = &"SFX"
 
-[node name="SpatialPlayer09" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+[node name="spore_bomb_detonate" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_spore_bomb_detonate")
+bus = &"SFX"
 
-[node name="SpatialPlayer10" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+[node name="void_grenade_detonate" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_void_grenade_detonate")
+bus = &"SFX"
 
-[node name="SpatialPlayer11" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+[node name="petal_shield_raise" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_petal_shield_raise")
+bus = &"SFX"
 
-[node name="SpatialPlayer12" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+[node name="petal_shield_block" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_petal_shield_block")
+bus = &"SFX"
 
-[node name="SpatialPlayer13" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+[node name="petal_shield_counter" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_petal_shield_counter")
+bus = &"SFX"
 
-[node name="SpatialPlayer14" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+[node name="iron_bloom_shield_raise" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_iron_bloom_shield_raise")
+bus = &"SFX"
 
-[node name="SpatialPlayer15" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+[node name="player_take_damage" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_player_take_damage")
+bus = &"SFX"
 
-[node name="SpatialPlayer16" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+[node name="player_death" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_player_death")
+bus = &"SFX"
+
+[node name="player_respawn" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_player_respawn")
+bus = &"SFX"
+
+[node name="player_invincibility" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_player_invincibility")
+bus = &"SFX"
+
+[node name="plant_placed" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_plant_placed")
+bus = &"SFX"
+
+[node name="plant_destroyed" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_plant_destroyed")
+bus = &"SFX"
+
+[node name="bougainvillea_thorn_tick" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_bougainvillea_thorn_tick")
+bus = &"SFX"
+
+[node name="rafflesia_miasma_hum" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_rafflesia_miasma_hum")
+bus = &"SFX"
+
+[node name="melati_energy_pulse" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_melati_energy_pulse")
+bus = &"SFX"
+
+[node name="wijaya_kusuma_attack" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_wijaya_kusuma_attack")
+bus = &"SFX"
+
+[node name="beringin_wall_spawn" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_beringin_wall_spawn")
+bus = &"SFX"
+
+[node name="beringin_wall_break" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_beringin_wall_break")
+bus = &"SFX"
+
+[node name="kecombrang_speed_boost" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_kecombrang_speed_boost")
+bus = &"SFX"
+
+[node name="kunyit_melee_buff" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_kunyit_melee_buff")
+bus = &"SFX"
+
+[node name="bunga_api_burn_tick" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_bunga_api_burn_tick")
+bus = &"SFX"
+
+[node name="bunga_bayang_attack" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_bunga_bayang_attack")
+bus = &"SFX"
+
+[node name="melati_emas_regen_pulse" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_melati_emas_regen_pulse")
+bus = &"SFX"
+
+[node name="baja_kuning_armor_buff" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_baja_kuning_armor_buff")
+bus = &"SFX"
+
+[node name="enemy_hit" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_enemy_hit")
+bus = &"SFX"
+
+[node name="shadowling_footstep" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_shadowling_footstep")
+bus = &"SFX"
+
+[node name="shadowling_attack" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_shadowling_attack")
+bus = &"SFX"
+
+[node name="shadowling_retreat" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_shadowling_retreat")
+bus = &"SFX"
+
+[node name="shadowling_death" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_shadowling_death")
+bus = &"SFX"
+
+[node name="voidrunner_charge" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_voidrunner_charge")
+bus = &"SFX"
+
+[node name="voidrunner_death" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_voidrunner_death")
+bus = &"SFX"
+
+[node name="stonehusk_footstep" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_stonehusk_footstep")
+bus = &"SFX"
+
+[node name="stonehusk_attack" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_stonehusk_attack")
+bus = &"SFX"
+
+[node name="stonehusk_death" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_stonehusk_death")
+bus = &"SFX"
+
+[node name="phantom_weaver_teleport" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_phantom_weaver_teleport")
+bus = &"SFX"
+
+[node name="phantom_weaver_attack" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_phantom_weaver_attack")
+bus = &"SFX"
+
+[node name="phantom_weaver_death" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_phantom_weaver_death")
+bus = &"SFX"
+
+[node name="swarm_larva_skitter" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_swarm_larva_skitter")
+bus = &"SFX"
+
+[node name="swarm_larva_death" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_swarm_larva_death")
+bus = &"SFX"
+
+[node name="core_take_damage" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_core_take_damage")
+bus = &"SFX"
+
+[node name="core_low_hp" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_core_low_hp")
+bus = &"SFX"
+
+[node name="core_destroyed" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_core_destroyed")
+bus = &"SFX"
+
+[node name="core_heal" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_core_heal")
+bus = &"SFX"
+
+[node name="core_energy_tick" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_core_energy_tick")
+bus = &"SFX"
+
+[node name="crafting_success" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_crafting_success")
+bus = &"SFX"
+
+[node name="crafting_fail" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_crafting_fail")
+bus = &"SFX"
+
+[node name="weapon_equipped" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_weapon_equipped")
+bus = &"SFX"
+
+[node name="inventory_open" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_inventory_open")
+bus = &"SFX"
+
+[node name="inventory_close" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_inventory_close")
+bus = &"SFX"
+
+[node name="screen_close" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_screen_close")
+bus = &"SFX"
+
+[node name="item_pickup" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_item_pickup")
+bus = &"SFX"
+
+[node name="item_stack" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_item_stack")
+bus = &"SFX"
+
+[node name="inventory_full" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_inventory_full")
+bus = &"SFX"
+
+[node name="ui_button_click" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_ui_button_click")
+bus = &"SFX"
+
+[node name="screen_open" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_screen_open")
+bus = &"SFX"
+
+[node name="breeding_start" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_breeding_start")
+bus = &"SFX"
+
+[node name="breeding_success" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_breeding_success")
+bus = &"SFX"
+
+[node name="breeding_fail" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_breeding_fail")
+bus = &"SFX"
+
+[node name="breeding_critical_fail" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_breeding_critical_fail")
+bus = &"SFX"
+
+[node name="combo_discovered" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_combo_discovered")
+bus = &"SFX"
+
+[node name="night_transition" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_night_transition")
+bus = &"SFX"
+
+[node name="wave_start" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_wave_start")
+bus = &"SFX"
+
+[node name="wave_cleared" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_wave_cleared")
+bus = &"SFX"
+
+[node name="surge_night_warning" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_surge_night_warning")
+bus = &"SFX"
+
+[node name="dawn_transition" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_dawn_transition")
+bus = &"SFX"
+
+[node name="night_survived" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_night_survived")
+bus = &"SFX"
+
+[node name="quest_accepted" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_quest_accepted")
+bus = &"SFX"
+
+[node name="quest_completed" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_quest_completed")
+bus = &"SFX"
+
+[node name="quest_failed" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_quest_failed")
+bus = &"SFX"
+
+[node name="codex_unlocked" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_codex_unlocked")
+bus = &"SFX"
+
+[node name="ending_screen" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_ending_screen")
+bus = &"SFX"
+
+[node name="endless_mode_activate" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_endless_mode_activate")
+bus = &"SFX"
+
+[node name="minigame_tap_correct" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_minigame_tap_correct")
+bus = &"SFX"
+
+[node name="minigame_tap_miss" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_minigame_tap_miss")
+bus = &"SFX"
+
+[node name="harvest_qte_prompt" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_harvest_qte_prompt")
+bus = &"SFX"
+
+[node name="harvest_qte_success" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_harvest_qte_success")
+bus = &"SFX"
+
+[node name="harvest_qte_fail" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+stream = ExtResource("sfx_harvest_qte_fail")
+bus = &"SFX"

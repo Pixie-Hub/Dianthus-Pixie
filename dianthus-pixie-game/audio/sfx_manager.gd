@@ -1,6 +1,5 @@
 extends Node
 
-const POOL_SIZE: int = 16
 const SAME_SFX_MIN_INTERVAL_MS: int = 35
 const SAME_SFX_MAX_PER_FRAME: int = 1
 const GLOBAL_PLAYERS_PATH: NodePath = ^"GlobalPlayers"
@@ -115,60 +114,41 @@ const SFX_VOLUME_DB: Dictionary = {
 	"player_take_damage": -10.0,
 }
 
-var _global_pool: Array[AudioStreamPlayer2D] = []
-var _spatial_pool: Array[AudioStreamPlayer2D] = []
+var _global_players_by_id: Dictionary = {}
+var _spatial_players_by_id: Dictionary = {}
 var _cache: Dictionary = {}
-var _global_pool_index: int = 0
-var _spatial_pool_index: int = 0
+var _players_ready: bool = false
 var _last_play_msec_by_id: Dictionary = {}
 var _last_play_frame_by_id: Dictionary = {}
 var _plays_this_frame_by_id: Dictionary = {}
 
 
 func _ready() -> void:
-	process_mode = Node.PROCESS_MODE_ALWAYS
-	_global_pool = _collect_pool(GLOBAL_PLAYERS_PATH, true)
-	_spatial_pool = _collect_pool(SPATIAL_PLAYERS_PATH, false)
-	if _global_pool.size() != POOL_SIZE:
-		push_warning("[SfxManager] Expected %d global SFX players, found %d." % [POOL_SIZE, _global_pool.size()])
-	if _spatial_pool.size() != POOL_SIZE:
-		push_warning("[SfxManager] Expected %d spatial SFX players, found %d." % [POOL_SIZE, _spatial_pool.size()])
+	_ensure_players_ready()
 
 
 func play(sfx_id: String, pitch_rand: float = 0.0) -> void:
+	_ensure_players_ready()
 	if not _can_play_now(sfx_id):
 		return
-	var stream: AudioStream = _get_stream(sfx_id)
-	if stream == null:
+	var player: AudioStreamPlayer2D = _get_named_player(_global_players_by_id, sfx_id, "global")
+	if player == null or not _prepare_player(player, sfx_id):
 		return
-	var player: AudioStreamPlayer2D = _next_global_player()
-	if player == null:
-		return
-	player.stream = stream
 	player.global_position = _global_playback_position()
-	if pitch_rand > 0.0:
-		player.pitch_scale = 1.0 + randf_range(-pitch_rand, pitch_rand)
-	else:
-		player.pitch_scale = 1.0
+	_apply_pitch(player, pitch_rand)
 	player.volume_db = SFX_VOLUME_DB.get(sfx_id, 0.0)
 	player.play()
 
 
 func play_at(sfx_id: String, world_position: Vector2, pitch_rand: float = 0.0) -> void:
+	_ensure_players_ready()
 	if not _can_play_now(sfx_id):
 		return
-	var stream: AudioStream = _get_stream(sfx_id)
-	if stream == null:
+	var player: AudioStreamPlayer2D = _get_named_player(_spatial_players_by_id, sfx_id, "spatial")
+	if player == null or not _prepare_player(player, sfx_id):
 		return
-	var player: AudioStreamPlayer2D = _next_spatial_player()
-	if player == null:
-		return
-	player.stream = stream
 	player.global_position = world_position
-	if pitch_rand > 0.0:
-		player.pitch_scale = 1.0 + randf_range(-pitch_rand, pitch_rand)
-	else:
-		player.pitch_scale = 1.0
+	_apply_pitch(player, pitch_rand)
 	player.volume_db = SFX_VOLUME_DB.get(sfx_id, 0.0)
 	player.play()
 
@@ -208,8 +188,19 @@ func _get_stream(sfx_id: String) -> AudioStream:
 	return stream
 
 
-func _collect_pool(pool_path: NodePath, neutral_positioning: bool) -> Array[AudioStreamPlayer2D]:
-	var result: Array[AudioStreamPlayer2D] = []
+func _ensure_players_ready() -> void:
+	if _players_ready:
+		return
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	_global_players_by_id = _collect_named_players(GLOBAL_PLAYERS_PATH, true)
+	_spatial_players_by_id = _collect_named_players(SPATIAL_PLAYERS_PATH, false)
+	_warn_missing_players("global", _global_players_by_id)
+	_warn_missing_players("spatial", _spatial_players_by_id)
+	_players_ready = true
+
+
+func _collect_named_players(pool_path: NodePath, neutral_positioning: bool) -> Dictionary:
+	var result: Dictionary = {}
 	var parent: Node = get_node_or_null(pool_path)
 	if parent == null:
 		push_warning("[SfxManager] Missing SFX player pool: %s" % pool_path)
@@ -220,8 +211,42 @@ func _collect_pool(pool_path: NodePath, neutral_positioning: bool) -> Array[Audi
 		if player == null:
 			continue
 		_configure_player(player, neutral_positioning)
-		result.append(player)
+		var sfx_id: String = String(player.name)
+		if not SFX.has(sfx_id):
+			push_warning("[SfxManager] Scene player node is not a registered sfx_id: %s" % sfx_id)
+			continue
+		result[sfx_id] = player
 	return result
+
+
+func _warn_missing_players(pool_label: String, players_by_id: Dictionary) -> void:
+	for sfx_id: String in SFX.keys():
+		if not players_by_id.has(sfx_id):
+			push_warning("[SfxManager] Missing %s player node for sfx_id: %s" % [pool_label, sfx_id])
+
+
+func _get_named_player(players_by_id: Dictionary, sfx_id: String, pool_label: String) -> AudioStreamPlayer2D:
+	if not SFX.has(sfx_id):
+		push_warning("[SfxManager] Unknown sfx_id: %s" % sfx_id)
+		return null
+	var player: AudioStreamPlayer2D = players_by_id.get(sfx_id, null) as AudioStreamPlayer2D
+	if player == null:
+		push_warning("[SfxManager] Missing %s player node for sfx_id: %s" % [pool_label, sfx_id])
+	return player
+
+
+func _prepare_player(player: AudioStreamPlayer2D, sfx_id: String) -> bool:
+	if player.stream != null:
+		return true
+	player.stream = _get_stream(sfx_id)
+	return player.stream != null
+
+
+func _apply_pitch(player: AudioStreamPlayer2D, pitch_rand: float) -> void:
+	if pitch_rand > 0.0:
+		player.pitch_scale = 1.0 + randf_range(-pitch_rand, pitch_rand)
+	else:
+		player.pitch_scale = 1.0
 
 
 func _configure_player(player: AudioStreamPlayer2D, neutral_positioning: bool) -> void:
@@ -240,19 +265,3 @@ func _global_playback_position() -> Vector2:
 	if camera == null:
 		return Vector2.ZERO
 	return camera.global_position
-
-
-func _next_global_player() -> AudioStreamPlayer2D:
-	if _global_pool.is_empty():
-		return null
-	var player: AudioStreamPlayer2D = _global_pool[_global_pool_index]
-	_global_pool_index = (_global_pool_index + 1) % _global_pool.size()
-	return player
-
-
-func _next_spatial_player() -> AudioStreamPlayer2D:
-	if _spatial_pool.is_empty():
-		return null
-	var player: AudioStreamPlayer2D = _spatial_pool[_spatial_pool_index]
-	_spatial_pool_index = (_spatial_pool_index + 1) % _spatial_pool.size()
-	return player
