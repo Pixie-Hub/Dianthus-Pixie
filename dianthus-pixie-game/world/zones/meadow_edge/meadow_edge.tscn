@@ -912,42 +912,46 @@ tile_set = SubResource("TileSet_g467q")
 y_sort_enabled = true
 
 [node name="Player" parent="YSortLayer" unique_id=210958404 instance=ExtResource("2_player")]
-position = Vector2(160, 120)
+position = Vector2(720, 880)
 
 [node name="DianthusCore" parent="YSortLayer" unique_id=426663777 instance=ExtResource("4_core")]
-position = Vector2(320, 240)
+position = Vector2(768, 832)
 
 [node name="PickupContainer" type="Node2D" parent="YSortLayer" unique_id=300000001]
 
 [node name="PetalShard1" parent="YSortLayer/PickupContainer" unique_id=199055112 instance=ExtResource("11_pickup")]
-position = Vector2(80, 80)
+position = Vector2(704, 864)
 
 [node name="PetalShard2" parent="YSortLayer/PickupContainer" unique_id=801379154 instance=ExtResource("11_pickup")]
-position = Vector2(200, 96)
+position = Vector2(592, 800)
 
 [node name="PetalShard3" parent="YSortLayer/PickupContainer" unique_id=314202946 instance=ExtResource("11_pickup")]
-position = Vector2(304, 176)
+position = Vector2(456, 704)
 
 [node name="PetalShard4" parent="YSortLayer/PickupContainer" unique_id=614922142 instance=ExtResource("11_pickup")]
-position = Vector2(128, 208)
+position = Vector2(336, 600)
 
 [node name="PetalShard5" parent="YSortLayer/PickupContainer" unique_id=171399498 instance=ExtResource("11_pickup")]
-position = Vector2(400, 144)
+position = Vector2(520, 520)
 
 [node name="VerdantSap1" parent="YSortLayer/PickupContainer" unique_id=668465924 instance=ExtResource("11_pickup")]
-position = Vector2(480, 80)
+position = Vector2(1008, 712)
 item_id = "verdant_sap"
 
 [node name="VerdantSap2" parent="YSortLayer/PickupContainer" unique_id=1323902522 instance=ExtResource("11_pickup")]
-position = Vector2(560, 192)
+position = Vector2(1176, 592)
 item_id = "verdant_sap"
 
 [node name="VerdantSap3" parent="YSortLayer/PickupContainer" unique_id=1113036243 instance=ExtResource("11_pickup")]
-position = Vector2(448, 256)
+position = Vector2(1304, 472)
 item_id = "verdant_sap"
 
+[node name="RuinGlimmerAetherBloom" parent="YSortLayer/PickupContainer" instance=ExtResource("11_pickup")]
+position = Vector2(736, 208)
+item_id = "aether_bloom"
+
 [node name="BreedingBench" parent="YSortLayer" unique_id=62907201 instance=ExtResource("12_bench")]
-position = Vector2(384, 208)
+position = Vector2(832, 848)
 
 [node name="DebugOverlay" type="CanvasLayer" parent="." unique_id=674103109]
 layer = 10
@@ -999,6 +1003,18 @@ horizontal_alignment = 2
 
 [node name="WaveSpawner" parent="." unique_id=1111111111 instance=ExtResource("8_wavespawner")]
 enemy_container_path = NodePath("../YSortLayer")
+
+[node name="SpawnNorth" parent="WaveSpawner"]
+position = Vector2(768, -32)
+
+[node name="SpawnSouth" parent="WaveSpawner"]
+position = Vector2(768, 1184)
+
+[node name="SpawnEast" parent="WaveSpawner"]
+position = Vector2(1568, 832)
+
+[node name="SpawnWest" parent="WaveSpawner"]
+position = Vector2(-32, 832)
 
 [node name="PauseMenu" parent="." unique_id=2093541853 instance=ExtResource("9_pausemenu")]
 
