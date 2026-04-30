@@ -489,7 +489,7 @@ func _attack_melee_sword() -> void:
 	var hitbox_shape: CollisionShape2D = _sword_hitbox.get_child(0)
 	print("DEBUG: Attack! Damage: %d, Direction: %s" % [_current_weapon.damage, last_direction])
 	var _swing_sfx: String = "blazeblade_swing" if _current_weapon.weapon_id == "blazeblade" else "thorn_sword_swing"
-	SfxManager.play(_swing_sfx, 0.05)
+	SfxManager.play(_swing_sfx)
 	var effective_cd: float = _current_weapon.cooldown * (1.0 - attack_speed_bonus)
 	await get_tree().create_timer(effective_cd * 0.25).timeout
 	if is_dead:

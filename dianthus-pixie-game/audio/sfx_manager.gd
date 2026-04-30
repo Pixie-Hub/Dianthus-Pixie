@@ -114,6 +114,11 @@ const SFX_VOLUME_DB: Dictionary = {
 	"player_take_damage": -10.0,
 }
 
+const SFX_PITCH_RANDOMIZATION: Dictionary = {
+	"thorn_sword_swing": 0.08,
+	"blazeblade_swing": 0.05,
+}
+
 var _global_players_by_id: Dictionary = {}
 var _spatial_players_by_id: Dictionary = {}
 var _cache: Dictionary = {}
@@ -135,7 +140,7 @@ func play(sfx_id: String, pitch_rand: float = 0.0) -> void:
 	if player == null or not _prepare_player(player, sfx_id):
 		return
 	player.global_position = _global_playback_position()
-	_apply_pitch(player, pitch_rand)
+	_apply_pitch(player, _pitch_randomization_for(sfx_id, pitch_rand))
 	player.volume_db = SFX_VOLUME_DB.get(sfx_id, 0.0)
 	player.play()
 
@@ -148,7 +153,7 @@ func play_at(sfx_id: String, world_position: Vector2, pitch_rand: float = 0.0) -
 	if player == null or not _prepare_player(player, sfx_id):
 		return
 	player.global_position = world_position
-	_apply_pitch(player, pitch_rand)
+	_apply_pitch(player, _pitch_randomization_for(sfx_id, pitch_rand))
 	player.volume_db = SFX_VOLUME_DB.get(sfx_id, 0.0)
 	player.play()
 
@@ -247,6 +252,12 @@ func _apply_pitch(player: AudioStreamPlayer2D, pitch_rand: float) -> void:
 		player.pitch_scale = 1.0 + randf_range(-pitch_rand, pitch_rand)
 	else:
 		player.pitch_scale = 1.0
+
+
+func _pitch_randomization_for(sfx_id: String, explicit_pitch_rand: float) -> float:
+	if explicit_pitch_rand > 0.0:
+		return explicit_pitch_rand
+	return SFX_PITCH_RANDOMIZATION.get(sfx_id, 0.0)
 
 
 func _configure_player(player: AudioStreamPlayer2D, neutral_positioning: bool) -> void:
