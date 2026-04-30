@@ -2,51 +2,97 @@
 
 [ext_resource type="Script" uid="uid://cmaingd000001" path="res://ui/menus/main_menu.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://csettgscrn01" path="res://ui/menus/settings_screen.tscn" id="2_settings"]
-[ext_resource type="PackedScene" uid="uid://diff_sel_01" path="res://ui/menus/difficulty_selection.tscn" id="3_difficulty"]
+[ext_resource type="PackedScene" uid="uid://b6klecxivbfx8" path="res://ui/menus/difficulty_selection.tscn" id="3_difficulty"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_n"]
-bg_color = Color(0.227, 0.165, 0.094, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.545, 0.416, 0.239, 1)
+[sub_resource type="Gradient" id="Gradient_top"]
+colors = PackedColorArray(0.047, 0.058, 0.043, 0.8, 0.047, 0.058, 0.043, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_top"]
+gradient = SubResource("Gradient_top")
+fill_to = Vector2(0, 1)
+
+[sub_resource type="Gradient" id="Gradient_bottom"]
+colors = PackedColorArray(0.047, 0.058, 0.043, 0, 0.047, 0.058, 0.043, 0.8)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_bottom"]
+gradient = SubResource("Gradient_bottom")
+fill_to = Vector2(0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.176, 0.203, 0.211, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.364, 0.25, 0.215, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_continue_n"]
+bg_color = Color(0.29, 0.478, 0.247, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.976, 0.792, 0.141, 1)
 corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_p"]
-bg_color = Color(0.137, 0.102, 0.055, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.545, 0.416, 0.239, 1)
+bg_color = Color(0.11, 0.12, 0.1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.364, 0.25, 0.215, 1)
 corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_h"]
-bg_color = Color(0.29, 0.227, 0.157, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.686, 0.635, 0.533, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_continue_h"]
+bg_color = Color(0.498, 0.69, 0.254, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.976, 0.792, 0.141, 1)
 corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_d"]
-bg_color = Color(0.118, 0.094, 0.059, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.227, 0.165, 0.094, 1)
+bg_color = Color(0.11, 0.12, 0.1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.364, 0.25, 0.215, 0.5)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_n"]
+bg_color = Color(0.156, 0.168, 0.149, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.364, 0.25, 0.215, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_h"]
+bg_color = Color(0.2, 0.211, 0.188, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.976, 0.792, 0.141, 1)
 corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
@@ -61,55 +107,34 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_script")
 
-[node name="Background" type="ColorRect" parent="." unique_id=1767372851]
+[node name="Background" type="TextureRect" parent="." unique_id=305006356]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.055, 0.039, 0.024, 1)
+expand_mode = 1
+stretch_mode = 6
 
-[node name="VinePattern" type="ColorRect" parent="." unique_id=1767372852]
+[node name="TopVignette" type="TextureRect" parent="." unique_id=1788028584]
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 1.0
+offset_bottom = 120.0
 grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.545, 0.416, 0.239, 0.06)
-mouse_filter = 2
+texture = SubResource("GradientTexture2D_top")
 
-[node name="LeftBorder" type="ColorRect" parent="." unique_id=1767372853]
+[node name="BottomVignette" type="TextureRect" parent="." unique_id=53542628]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 1.0
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 18.0
-offset_bottom = 0.0
-grow_vertical = 2
-color = Color(0.545, 0.416, 0.239, 0.18)
-mouse_filter = 2
-
-[node name="RightBorder" type="ColorRect" parent="." unique_id=1767372854]
-layout_mode = 1
-anchors_preset = 9
-anchor_left = 1.0
-anchor_top = 0.0
+anchors_preset = 12
+anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -18.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
-grow_horizontal = 0
-grow_vertical = 2
-color = Color(0.545, 0.416, 0.239, 0.18)
-mouse_filter = 2
+offset_top = -120.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = SubResource("GradientTexture2D_bottom")
 
 [node name="CenterContainer" type="MarginContainer" parent="." unique_id=1408663552]
 layout_mode = 1
@@ -124,106 +149,116 @@ theme_override_constants/margin_right = 200
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=808256130]
 layout_mode = 2
 theme_override_constants/separation = 12
-theme_override_constants/margin_top = 60
 alignment = 1
 
 [node name="TitleContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer" unique_id=2132266585]
 layout_mode = 2
 theme_override_constants/separation = 14
+alignment = 1
 
 [node name="LeftFlower" type="ColorRect" parent="CenterContainer/VBoxContainer/TitleContainer" unique_id=2132266586]
-layout_mode = 2
 custom_minimum_size = Vector2(20, 20)
-color = Color(0.831, 0.325, 0.494, 0.7)
+layout_mode = 2
+color = Color(1, 0.686, 0.824, 0.9)
 
 [node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer/TitleContainer" unique_id=2132266584]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.941, 0.902, 0.824, 1)
-theme_override_font_sizes/font_size = 24
-theme_override_fonts/font = null
-theme_override_constants/outline_size = 0
+theme_override_colors/font_color = Color(0.961, 0.961, 0.863, 1)
+theme_override_colors/font_shadow_color = Color(1, 0.82, 0.863, 0.5)
+theme_override_colors/font_outline_color = Color(1, 0.686, 0.824, 0.3)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 0
+theme_override_constants/outline_size = 4
+theme_override_constants/shadow_outline_size = 8
+theme_override_font_sizes/font_size = 28
 text = "DIANTHUS PIXIE"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="RightFlower" type="ColorRect" parent="CenterContainer/VBoxContainer/TitleContainer" unique_id=2132266587]
-layout_mode = 2
 custom_minimum_size = Vector2(20, 20)
-color = Color(0.831, 0.325, 0.494, 0.7)
-
-[node name="SubtitleLabel" type="Label" parent="CenterContainer/VBoxContainer" unique_id=1183003636]
 layout_mode = 2
-theme_override_constants/margin_top = 6
-theme_override_colors/font_color = Color(0.686, 0.635, 0.533, 1)
-theme_override_font_sizes/font_size = 10
-text = "A 2D Survival Crafting Action Game"
-horizontal_alignment = 1
+color = Color(1, 0.686, 0.824, 0.9)
 
-[node name="ButtonContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer" unique_id=1090584303]
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer/VBoxContainer" unique_id=1554052238]
 layout_mode = 2
-theme_override_constants/separation = 12
-theme_override_constants/margin_top = 32
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="ContinueButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonContainer" unique_id=1090584302]
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/VBoxContainer/PanelContainer" unique_id=1594618014]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="ButtonContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/PanelContainer/MarginContainer" unique_id=1090584303]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ContinueButton" type="Button" parent="CenterContainer/VBoxContainer/PanelContainer/MarginContainer/ButtonContainer" unique_id=1090584302]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(240, 32)
+custom_minimum_size = Vector2(200, 34)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.42, 0.353, 0.282, 1)
+theme_override_colors/font_color = Color(0.976, 0.792, 0.141, 1)
 theme_override_colors/font_disabled_color = Color(0.42, 0.353, 0.282, 1)
-theme_override_font_sizes/font_size = 10
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn_n")
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_continue_n")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_p")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_h")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_continue_h")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_btn_d")
 disabled = true
-text = "Continue"
+text = "CONTINUE"
 
-[node name="NewGameButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonContainer" unique_id=1875012140]
-custom_minimum_size = Vector2(240, 32)
+[node name="NewGameButton" type="Button" parent="CenterContainer/VBoxContainer/PanelContainer/MarginContainer/ButtonContainer" unique_id=1875012140]
+custom_minimum_size = Vector2(200, 34)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.941, 0.902, 0.824, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.882, 0.89, 0.859, 1)
+theme_override_colors/font_hover_color = Color(0.976, 0.792, 0.141, 1)
+theme_override_font_sizes/font_size = 13
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_n")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_p")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_h")
-text = "New Game"
+text = "NEW GAME"
 
-[node name="SettingsButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonContainer" unique_id=232083713]
-custom_minimum_size = Vector2(240, 32)
+[node name="SettingsButton" type="Button" parent="CenterContainer/VBoxContainer/PanelContainer/MarginContainer/ButtonContainer" unique_id=232083713]
+custom_minimum_size = Vector2(200, 34)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.941, 0.902, 0.824, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.882, 0.89, 0.859, 1)
+theme_override_colors/font_hover_color = Color(0.976, 0.792, 0.141, 1)
+theme_override_font_sizes/font_size = 13
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_n")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_p")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_h")
-text = "Settings"
+text = "SETTINGS"
 
-[node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonContainer" unique_id=1542137201]
-custom_minimum_size = Vector2(240, 32)
+[node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer/PanelContainer/MarginContainer/ButtonContainer" unique_id=1542137201]
+custom_minimum_size = Vector2(200, 34)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.941, 0.902, 0.824, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.761, 0.788, 0.733, 1)
+theme_override_colors/font_hover_color = Color(1, 0.706, 0.671, 1)
+theme_override_font_sizes/font_size = 13
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_n")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_p")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_h")
-text = "Quit"
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_n")
+text = "QUIT"
 
 [node name="VersionLabel" type="Label" parent="." unique_id=1601691489]
 layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
+anchors_preset = 3
+anchor_left = 1.0
 anchor_top = 1.0
-anchor_right = 0.5
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -100.0
-offset_top = -20.0
-offset_right = 100.0
+offset_left = -150.0
+offset_top = -25.0
+offset_right = -15.0
 offset_bottom = -10.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(0.227, 0.165, 0.094, 1)
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.761, 0.788, 0.733, 0.6)
 theme_override_font_sizes/font_size = 9
-text = "v0.1.0 · Dianthus Pixie"
-horizontal_alignment = 1
+text = "v1.0.4 - Botanical Build"
+horizontal_alignment = 2
 
 [node name="SettingsScreen" parent="." unique_id=371311818 instance=ExtResource("2_settings")]
 unique_name_in_owner = true
@@ -238,7 +273,7 @@ unique_name_in_owner = true
 title = "Overwrite Save?"
 dialog_text = "A save already exists. Overwrite?"
 
-[connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonContainer/ContinueButton" to="." method="_on_continue_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonContainer/NewGameButton" to="." method="_on_new_game_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonContainer/SettingsButton" to="." method="_on_settings_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonContainer/QuitButton" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/PanelContainer/MarginContainer/ButtonContainer/ContinueButton" to="." method="_on_continue_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/PanelContainer/MarginContainer/ButtonContainer/NewGameButton" to="." method="_on_new_game_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/PanelContainer/MarginContainer/ButtonContainer/SettingsButton" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/PanelContainer/MarginContainer/ButtonContainer/QuitButton" to="." method="_on_quit_pressed"]
