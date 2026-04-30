@@ -20,6 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://0bemb33ejawu" path="res://ui/screens/loadout_screen.tscn" id="17_loadout"]
 [ext_resource type="PackedScene" path="res://ui/quests/quest_log_screen.tscn" id="18_questlog"]
 [ext_resource type="PackedScene" path="res://ui/screens/ending_screen.tscn" id="19_ending"]
+[ext_resource type="PackedScene" path="res://ui/screens/full_map_screen.tscn" id="20_fullmap"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_dhprj"]
 texture = ExtResource("2_quyxi")
@@ -1031,5 +1032,7 @@ position = Vector2(-32, 832)
 [node name="LoadoutScreen" parent="." unique_id=1507759462 instance=ExtResource("17_loadout")]
 
 [node name="QuestLogScreen" parent="." unique_id=1607759462 instance=ExtResource("18_questlog")]
+
+[node name="FullMapScreen" parent="." instance=ExtResource("20_fullmap")]
 
 [node name="EndingScreen" parent="." unique_id=1708759462 instance=ExtResource("19_ending")]

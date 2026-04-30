@@ -1,0 +1,165 @@
+[gd_scene format=3 uid="uid://full_map_screen_01"]
+
+[ext_resource type="Script" path="res://ui/screens/full_map_screen.gd" id="1_script"]
+[ext_resource type="Script" path="res://ui/hud/map_view.gd" id="2_map_view"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wood_panel"]
+bg_color = Color(0.27, 0.19, 0.12, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.65, 0.5, 0.25, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color(0, 0, 0, 0.45)
+shadow_size = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_map_frame"]
+bg_color = Color(0.08, 0.08, 0.12, 0.96)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.42, 0.63, 0.36, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[node name="FullMapScreen" type="CanvasLayer"]
+process_mode = 3
+layer = 96
+script = ExtResource("1_script")
+
+[node name="Overlay" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0, 0, 0, 0.7)
+
+[node name="Panel" type="PanelContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 10.0
+offset_right = -12.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wood_panel")
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 7
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 7
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.78, 1)
+theme_override_font_sizes/font_size = 10
+text = "MEADOW EDGE MAP"
+horizontal_alignment = 1
+
+[node name="MapFrame" type="PanelContainer" parent="Panel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 280)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_map_frame")
+
+[node name="MapMargin" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer/MapFrame"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="FullMapView" type="Control" parent="Panel/MarginContainer/VBoxContainer/MapFrame/MapMargin"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(560, 250)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("2_map_view")
+map_size = Vector2(560, 250)
+center_on_player = false
+fit_world_bounds = true
+world_bounds = Rect2(0, 0, 1536, 1152)
+map_padding = 8.0
+marker_scale = 1.7
+show_world_bounds = true
+
+[node name="LegendRow" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="PlayerLegend" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/LegendRow"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="Swatch" type="ColorRect" parent="Panel/MarginContainer/VBoxContainer/LegendRow/PlayerLegend"]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+color = Color(1, 1, 1, 1)
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/LegendRow/PlayerLegend"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 6
+text = "Player"
+
+[node name="CoreLegend" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/LegendRow"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="Swatch" type="ColorRect" parent="Panel/MarginContainer/VBoxContainer/LegendRow/CoreLegend"]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+color = Color(1, 0.4, 0.7, 1)
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/LegendRow/CoreLegend"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 6
+text = "Core"
+
+[node name="PlantLegend" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/LegendRow"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="Swatch" type="ColorRect" parent="Panel/MarginContainer/VBoxContainer/LegendRow/PlantLegend"]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+color = Color(0.3, 0.9, 0.3, 1)
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/LegendRow/PlantLegend"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 6
+text = "Plants"
+
+[node name="EnemyLegend" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/LegendRow"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="Swatch" type="ColorRect" parent="Panel/MarginContainer/VBoxContainer/LegendRow/EnemyLegend"]
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+color = Color(0.95, 0.25, 0.25, 1)
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/LegendRow/EnemyLegend"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 6
+text = "Enemies"

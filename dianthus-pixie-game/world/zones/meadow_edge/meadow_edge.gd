@@ -68,6 +68,14 @@ func _process(_delta: float) -> void:
 	if is_instance_valid(_timer_label):
 		_timer_label.text = "Time: %.1fs" % DayNightCycle.get_time_remaining()
 
+
+func get_map_bounds() -> Rect2:
+	return Rect2(Vector2.ZERO, Vector2(MAP_WIDTH, MAP_HEIGHT))
+
+
+func get_map_display_name() -> String:
+	return "Meadow Edge"
+
 func _setup_camera() -> void:
 	if is_instance_valid(_player) and _player.has_method("set_camera_limits"):
 		_player.set_camera_limits(0, 0, MAP_WIDTH, MAP_HEIGHT)
