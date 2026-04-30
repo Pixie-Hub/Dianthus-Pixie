@@ -213,6 +213,29 @@ func play_at(sfx_id: String, world_position: Vector2, pitch_rand: float = 0.0) -
 	player.play()
 
 
+func play_loop_at(sfx_id: String, world_position: Vector2, pitch_rand: float = 0.0) -> void:
+	_ensure_players_ready()
+	var player: AudioStreamPlayer2D = _get_named_player(_spatial_players_by_id, sfx_id, "spatial")
+	if player == null or not _prepare_player(player, sfx_id):
+		return
+	player.global_position = world_position
+	player.volume_db = SFX_VOLUME_DB.get(sfx_id, 0.0)
+	_apply_stream_loop(player.stream, true)
+	if not player.playing:
+		_apply_pitch(player, _pitch_randomization_for(sfx_id, pitch_rand))
+		player.play()
+
+
+func stop_loop_at(sfx_id: String) -> void:
+	_ensure_players_ready()
+	var player: AudioStreamPlayer2D = _get_named_player(_spatial_players_by_id, sfx_id, "spatial")
+	if player == null:
+		return
+	player.stop()
+	if player.stream != null:
+		_apply_stream_loop(player.stream, false)
+
+
 func _can_play_now(sfx_id: String) -> bool:
 	var frame: int = Engine.get_process_frames()
 	var last_frame: int = int(_last_play_frame_by_id.get(sfx_id, -1))
@@ -313,6 +336,16 @@ func _pitch_randomization_for(sfx_id: String, explicit_pitch_rand: float) -> flo
 	if explicit_pitch_rand > 0.0:
 		return explicit_pitch_rand
 	return SFX_PITCH_RANDOMIZATION.get(sfx_id, 0.0)
+
+
+func _apply_stream_loop(stream: AudioStream, loop: bool) -> void:
+	if stream is AudioStreamMP3:
+		(stream as AudioStreamMP3).loop = loop
+	elif stream is AudioStreamWAV:
+		var wav: AudioStreamWAV = stream as AudioStreamWAV
+		wav.loop_mode = AudioStreamWAV.LOOP_FORWARD if loop else AudioStreamWAV.LOOP_DISABLED
+		wav.loop_begin = 0
+		wav.loop_end = -1
 
 
 func _configure_player(player: AudioStreamPlayer2D, neutral_positioning: bool) -> void:
