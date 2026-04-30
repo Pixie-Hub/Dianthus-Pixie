@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cmaintscn0001"]
 
 [ext_resource type="Script" uid="uid://cmaingd000001" path="res://ui/menus/main_menu.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://dmmfrkvdcmfjr" path="res://assets/aseprite/main_menu_bg.png" id="2_1njj5"]
 [ext_resource type="PackedScene" uid="uid://csettgscrn01" path="res://ui/menus/settings_screen.tscn" id="2_settings"]
 [ext_resource type="PackedScene" uid="uid://b6klecxivbfx8" path="res://ui/menus/difficulty_selection.tscn" id="3_difficulty"]
 
@@ -19,7 +20,7 @@ gradient = SubResource("Gradient_bottom")
 fill_to = Vector2(0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-bg_color = Color(0.176, 0.203, 0.211, 1)
+bg_color = Color(0.176, 0.203, 0.211, 0.85)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
@@ -114,6 +115,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+texture = ExtResource("2_1njj5")
 expand_mode = 1
 stretch_mode = 6
 
@@ -143,8 +145,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 200
-theme_override_constants/margin_right = 200
+theme_override_constants/margin_left = 75
+theme_override_constants/margin_right = 325
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=808256130]
 layout_mode = 2
