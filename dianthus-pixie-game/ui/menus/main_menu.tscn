@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://b6klecxivbfx8" path="res://ui/menus/difficulty_selection.tscn" id="3_difficulty"]
 [ext_resource type="Texture2D" uid="uid://dflw82edy8jes" path="res://ui/menu_panel.png" id="3_vuv8w"]
 [ext_resource type="Texture2D" uid="uid://cf2gcfb0vnb7c" path="res://ui/button_disabled.PNG" id="TEX_BTN_DISABLED"]
+[ext_resource type="Texture2D" uid="uid://bj6grh0kwpfpg" path="res://ui/button_hover.PNG" id="TEX_BTN_HOVER"]
 [ext_resource type="Texture2D" uid="uid://rp34un8vaa4b" path="res://ui/button_normal.PNG" id="TEX_BTN_NORMAL"]
 [ext_resource type="Texture2D" uid="uid://cxif4jr5gfaif" path="res://ui/button_pressed.PNG" id="TEX_BTN_PRESSED"]
 
@@ -37,7 +38,7 @@ texture = ExtResource("TEX_BTN_NORMAL")
 texture = ExtResource("TEX_BTN_PRESSED")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_u0fm7"]
-texture = ExtResource("3_vuv8w")
+texture = ExtResource("TEX_BTN_HOVER")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tg3eq"]
 texture = ExtResource("TEX_BTN_DISABLED")
