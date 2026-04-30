@@ -1242,9 +1242,6 @@ position = Vector2(0, -10)
 zoom = Vector2(1.5, 1.5)
 script = ExtResource("4_cam")
 
-[node name="SwordSFX" type="AudioStreamPlayer2D" parent="." unique_id=789012345]
-unique_name_in_owner = true
-
 [node name="SwordHitbox" type="Area2D" parent="." unique_id=567890123]
 unique_name_in_owner = true
 position = Vector2(0, -10)

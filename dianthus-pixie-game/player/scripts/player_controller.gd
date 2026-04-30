@@ -25,7 +25,6 @@ const SKILL_ENERGY_COST: int = 30
 @onready var _anim_tree: AnimationTree = %AnimationTree
 @onready var _camera: Camera2D = %Camera2D
 @onready var _sword_hitbox: Area2D = %SwordHitbox
-@onready var _sword_sfx: AudioStreamPlayer2D = %SwordSFX
 
 var _state_machine: AnimationNodeStateMachinePlayback
 
@@ -489,8 +488,6 @@ func _attack_melee_sword() -> void:
 	_sword_hitbox.position = hitbox_offset
 	var hitbox_shape: CollisionShape2D = _sword_hitbox.get_child(0)
 	print("DEBUG: Attack! Damage: %d, Direction: %s" % [_current_weapon.damage, last_direction])
-	if _sword_sfx.stream != null:
-		_sword_sfx.play()
 	var _swing_sfx: String = "blazeblade_swing" if _current_weapon.weapon_id == "blazeblade" else "thorn_sword_swing"
 	SfxManager.play(_swing_sfx, 0.05)
 	var effective_cd: float = _current_weapon.cooldown * (1.0 - attack_speed_bonus)
@@ -527,8 +524,6 @@ func _attack_vine_whip() -> void:
 	var hitbox_shape: CollisionShape2D = _sword_hitbox.get_child(0)
 	print("DEBUG: Vine Whip! Damage: %d, Range: %.0f, Direction: %s" % [
 		_current_weapon.damage + bonus_melee_damage, _current_weapon.attack_range, last_direction])
-	if _sword_sfx.stream != null:
-		_sword_sfx.play()
 	var _whip_sfx: String = "crystal_lash_crack" if _current_weapon.weapon_id == "crystal_lash" else "vine_whip_crack"
 	SfxManager.play(_whip_sfx, 0.05)
 	var effective_cd: float = _current_weapon.cooldown * (1.0 - attack_speed_bonus)

@@ -1,0 +1,74 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://audio/sfx_manager.gd" id="1_sfx_manager"]
+
+[node name="SfxManager" type="Node"]
+script = ExtResource("1_sfx_manager")
+
+[node name="GlobalPlayers" type="Node" parent="."]
+
+[node name="GlobalPlayer01" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+
+[node name="GlobalPlayer02" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+
+[node name="GlobalPlayer03" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+
+[node name="GlobalPlayer04" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+
+[node name="GlobalPlayer05" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+
+[node name="GlobalPlayer06" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+
+[node name="GlobalPlayer07" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+
+[node name="GlobalPlayer08" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+
+[node name="GlobalPlayer09" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+
+[node name="GlobalPlayer10" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+
+[node name="GlobalPlayer11" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+
+[node name="GlobalPlayer12" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+
+[node name="GlobalPlayer13" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+
+[node name="GlobalPlayer14" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+
+[node name="GlobalPlayer15" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+
+[node name="GlobalPlayer16" type="AudioStreamPlayer2D" parent="GlobalPlayers"]
+
+[node name="SpatialPlayers" type="Node" parent="."]
+
+[node name="SpatialPlayer01" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+
+[node name="SpatialPlayer02" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+
+[node name="SpatialPlayer03" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+
+[node name="SpatialPlayer04" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+
+[node name="SpatialPlayer05" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+
+[node name="SpatialPlayer06" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+
+[node name="SpatialPlayer07" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+
+[node name="SpatialPlayer08" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+
+[node name="SpatialPlayer09" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+
+[node name="SpatialPlayer10" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+
+[node name="SpatialPlayer11" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+
+[node name="SpatialPlayer12" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+
+[node name="SpatialPlayer13" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+
+[node name="SpatialPlayer14" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+
+[node name="SpatialPlayer15" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
+
+[node name="SpatialPlayer16" type="AudioStreamPlayer2D" parent="SpatialPlayers"]
