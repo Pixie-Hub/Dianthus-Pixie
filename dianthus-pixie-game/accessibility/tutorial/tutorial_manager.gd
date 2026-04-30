@@ -280,6 +280,7 @@ func _sync_active_phase_with_scene() -> void:
 		_set_pickup_hints(true)
 		if not QuestManager.is_active(PHASE_DAY_1_MOVEMENT) and not QuestManager.is_completed(PHASE_DAY_1_MOVEMENT):
 			QuestManager.start_quest(PHASE_DAY_1_MOVEMENT)
+			QuestManager.track_quest(PHASE_DAY_1_MOVEMENT)
 		return
 	if current_state == TutorialState.DAY_1_CRAFTING:
 		if not is_instance_valid(GameManager.player):
@@ -289,6 +290,7 @@ func _sync_active_phase_with_scene() -> void:
 		_set_bench_hints(true)
 		if not QuestManager.is_active(PHASE_DAY_1_CRAFTING) and not QuestManager.is_completed(PHASE_DAY_1_CRAFTING):
 			QuestManager.start_quest(PHASE_DAY_1_CRAFTING)
+			QuestManager.track_quest(PHASE_DAY_1_CRAFTING)
 		return
 	if current_state == TutorialState.DAY_1_COMBAT:
 		if not is_instance_valid(GameManager.player):
@@ -298,6 +300,7 @@ func _sync_active_phase_with_scene() -> void:
 		_connect_player_combat_signal()
 		if not QuestManager.is_active(PHASE_DAY_1_COMBAT) and not QuestManager.is_completed(PHASE_DAY_1_COMBAT):
 			QuestManager.start_quest(PHASE_DAY_1_COMBAT)
+			QuestManager.track_quest(PHASE_DAY_1_COMBAT)
 		return
 	if current_state == TutorialState.DAY_3_DEFENSE:
 		if not is_instance_valid(GameManager.player):
@@ -307,6 +310,7 @@ func _sync_active_phase_with_scene() -> void:
 		_connect_scene_tutorial_hooks()
 		if not QuestManager.is_active(PHASE_DAY_3_DEFENSE) and not QuestManager.is_completed(PHASE_DAY_3_DEFENSE):
 			QuestManager.start_quest(PHASE_DAY_3_DEFENSE)
+			QuestManager.track_quest(PHASE_DAY_3_DEFENSE)
 		return
 	if current_state == TutorialState.DAY_1_MOVEMENT_COMPLETE:
 		_try_start_day_1_crafting()
@@ -345,6 +349,7 @@ func _try_start_day_1_movement() -> void:
 	_set_pickup_hints(true)
 	phase_started.emit(PHASE_DAY_1_MOVEMENT)
 	QuestManager.start_quest(PHASE_DAY_1_MOVEMENT)
+	QuestManager.track_quest(PHASE_DAY_1_MOVEMENT)
 	_start_dialogic_label(LABEL_DAY_1_MOVEMENT)
 
 
@@ -366,6 +371,7 @@ func _try_start_day_1_crafting() -> void:
 	_set_bench_hints(true)
 	phase_started.emit(PHASE_DAY_1_CRAFTING)
 	QuestManager.start_quest(PHASE_DAY_1_CRAFTING)
+	QuestManager.track_quest(PHASE_DAY_1_CRAFTING)
 	_start_dialogic_label(LABEL_DAY_1_CRAFTING)
 
 
@@ -386,6 +392,7 @@ func _try_start_day_1_combat() -> void:
 	_connect_player_combat_signal()
 	phase_started.emit(PHASE_DAY_1_COMBAT)
 	QuestManager.start_quest(PHASE_DAY_1_COMBAT)
+	QuestManager.track_quest(PHASE_DAY_1_COMBAT)
 	_start_dialogic_label(LABEL_NIGHT_1_COMBAT)
 
 
@@ -406,6 +413,7 @@ func _try_start_day_3_defense() -> void:
 	_connect_scene_tutorial_hooks()
 	phase_started.emit(PHASE_DAY_3_DEFENSE)
 	QuestManager.start_quest(PHASE_DAY_3_DEFENSE)
+	QuestManager.track_quest(PHASE_DAY_3_DEFENSE)
 	_start_dialogic_label(LABEL_DAY_3_DEFENSE)
 
 

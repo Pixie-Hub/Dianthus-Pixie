@@ -180,7 +180,7 @@ func _add_active_row(q: QuestData) -> void:
 	# Track button
 	var is_tracked: bool = QuestManager.is_tracking(q.quest_id)
 	var track_btn: Button = Button.new()
-	track_btn.text = "📌 Tracked" if is_tracked else "📌 Track"
+	track_btn.text = "Tracked" if is_tracked else "Track"
 	track_btn.add_theme_font_size_override("font_size", 7)
 	track_btn.flat = not is_tracked
 	track_btn.modulate = Color(0.95, 0.85, 0.3, 1.0) if is_tracked else Color.WHITE
