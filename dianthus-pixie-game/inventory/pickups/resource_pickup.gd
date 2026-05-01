@@ -62,11 +62,21 @@ func _start_harvest_qte() -> void:
 
 
 func _on_harvest_qte_finished(success: bool) -> void:
-	var granted_amount: int = amount if success else int(floor(float(amount) * 0.5))
-	_grant_pickup(granted_amount, not success)
+	var granted_amount: int = _get_harvest_success_amount() if success else _get_reduced_harvest_amount()
+	_grant_pickup(granted_amount, not success, success and granted_amount > amount)
 
 
-func _grant_pickup(granted_amount: int, reduced_reward: bool) -> void:
+func _get_harvest_success_amount() -> int:
+	if ItemDatabase.get_rarity(item_id) == ItemDatabase.Rarity.RARE:
+		return amount + 1
+	return amount
+
+
+func _get_reduced_harvest_amount() -> int:
+	return maxi(1, int(floor(float(amount) * 0.5)))
+
+
+func _grant_pickup(granted_amount: int, reduced_reward: bool, bonus_reward: bool = false) -> void:
 	var overflow: int = InventoryManager.add_item(item_id, granted_amount)
 	if overflow > 0:
 		_show_popup("Inventory Full!", Color(1.0, 0.4, 0.4))
@@ -75,6 +85,8 @@ func _grant_pickup(granted_amount: int, reduced_reward: bool) -> void:
 		var display: String = ItemDatabase.get_display_name(item_id)
 		if reduced_reward:
 			_show_popup("+%d %s (Reduced Harvest)" % [granted_amount, display], Color(1.0, 0.7, 0.25))
+		elif bonus_reward:
+			_show_popup("+%d %s (Careful Harvest Bonus)" % [granted_amount, display], Color(0.8, 1.0, 0.62))
 		else:
 			_show_popup("+%d %s" % [granted_amount, display], Color(1.0, 1.0, 0.6))
 		set_tutorial_hint_active(false)
