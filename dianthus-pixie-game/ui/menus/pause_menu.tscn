@@ -39,7 +39,6 @@ corner_radius_bottom_left = 2
 [node name="PauseMenu" type="CanvasLayer" unique_id=1754209912]
 process_mode = 3
 layer = 100
-visible = false
 script = ExtResource("1_script")
 
 [node name="Overlay" type="ColorRect" parent="." unique_id=150825420]

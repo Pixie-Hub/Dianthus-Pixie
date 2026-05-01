@@ -4,7 +4,6 @@
 
 [node name="InventoryScreen" type="CanvasLayer" unique_id=358813027]
 layer = 90
-visible = false
 script = ExtResource("1_script")
 
 [node name="Overlay" type="ColorRect" parent="." unique_id=1923895194]

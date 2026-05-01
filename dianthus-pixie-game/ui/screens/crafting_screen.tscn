@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://cdqdbd37bmrfb" path="res://ui/screens/crafting_screen.gd" id="1_csscript"]
 
 [node name="CraftingScreen" type="CanvasLayer" unique_id=662045275]
-visible = false
 script = ExtResource("1_csscript")
 
 [node name="Overlay" type="ColorRect" parent="." unique_id=296136202]

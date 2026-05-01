@@ -5,7 +5,6 @@
 [node name="LoadoutScreen" type="CanvasLayer" unique_id=1050054688]
 process_mode = 3
 layer = 94
-visible = false
 script = ExtResource("1_script")
 
 [node name="Overlay" type="ColorRect" parent="." unique_id=1038068571]

@@ -5,7 +5,6 @@
 [node name="QuestLogScreen" type="CanvasLayer" unique_id=1234567891]
 process_mode = 3
 layer = 95
-visible = false
 script = ExtResource("1_script")
 
 [node name="Overlay" type="ColorRect" parent="." unique_id=1234567892]

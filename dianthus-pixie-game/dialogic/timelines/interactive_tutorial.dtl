@@ -16,7 +16,7 @@ label day_1_movement (Day 1 Morning - Movement)
 "Dianthus Core": The meadow is safe while the sun is high, but safety is something we cultivate before night tests it.
 "Dianthus Core": Move with [color=#F0DD4C]WASD[/color] or the arrow keys. Feel the edges of the garden, then gather anything that catches the light.
 "Dianthus Core": Open your pack with [color=#F0DD4C]I[/color] when you want to check what you have found.
-"Dianthus Core": Goal\: move around, open the inventory, and collect your first resource.
+"Dianthus Core": Goal\: move around, open the inventory, and collect 3 Petal Shards and 2 Verdant Sap.
 [end_timeline]
 
 label day_1_crafting (Day 1 Afternoon - Crafting)
@@ -29,6 +29,13 @@ label day_1_crafting (Day 1 Afternoon - Crafting)
 "Dianthus Core": Goal\: open the crafting bench and craft your first weapon.
 [end_timeline]
 
+label day_1_crafting_complete (Day 1 Afternoon - Crafting Complete)
+[style name="Gameplay"]
+"Dianthus Core": You hold thorns that obey your hand. Good.
+"Dianthus Core": The light wanes. Gather more if you wish, but stay close when the sun sinks.
+"Dianthus Core": The shadowlings will come for my light soon.
+[end_timeline]
+
 label night_1_combat (Night 1 - First Defense)
 [signal arg="quest_start:tutorial_day1_combat"]
 [style name="Gameplay"]
@@ -37,6 +44,12 @@ label night_1_combat (Night 1 - First Defense)
 "Dianthus Core": Strike with [color=#F0DD4C]SPACE[/color] or the attack button. Stay close enough to protect me, but move before they surround you.
 "Dianthus Core": If your strength breaks, you will return near me after a breath. If my light breaks, the garden ends.
 "Dianthus Core": Goal\: hit a shadow creature and survive Night 1.
+[end_timeline]
+
+label night_1_combat_complete (Night 1 - Combat Complete)
+[style name="Gameplay"]
+"Dianthus Core": The first dark has broken. You stand, and so do I.
+"Dianthus Core": Rest now. Tomorrow, we must prepare to shape the garden itself.
 [end_timeline]
 
 label day_3_garden_defense (Day 3 Morning - Garden Defense)

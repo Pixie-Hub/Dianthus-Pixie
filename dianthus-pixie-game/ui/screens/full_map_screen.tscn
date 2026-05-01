@@ -32,7 +32,6 @@ corner_radius_bottom_left = 2
 [node name="FullMapScreen" type="CanvasLayer" unique_id=478654682]
 process_mode = 3
 layer = 96
-visible = false
 script = ExtResource("1_script")
 
 [node name="Overlay" type="ColorRect" parent="." unique_id=1383594225]

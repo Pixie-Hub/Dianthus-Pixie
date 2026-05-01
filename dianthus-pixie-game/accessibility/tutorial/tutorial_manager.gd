@@ -29,7 +29,9 @@ const MOVEMENT_REQUIRED_SECONDS: float = 5.0
 const INTERACTIVE_TUTORIAL: String = "interactive_tutorial"
 const LABEL_DAY_1_MOVEMENT: String = "day_1_movement"
 const LABEL_DAY_1_CRAFTING: String = "day_1_crafting"
+const LABEL_DAY_1_CRAFTING_COMPLETE: String = "day_1_crafting_complete"
 const LABEL_NIGHT_1_COMBAT: String = "night_1_combat"
+const LABEL_NIGHT_1_COMBAT_COMPLETE: String = "night_1_combat_complete"
 const LABEL_DAY_3_DEFENSE: String = "day_3_garden_defense"
 const LABEL_TUTORIAL_COMPLETE: String = "tutorial_complete"
 const TARGET_CRAFTING_RECIPE: String = "thorn_sword"
@@ -488,9 +490,12 @@ func _on_item_added(_item_id: String, _amount: int) -> void:
 		return
 	if resource_collected:
 		return
-	resource_collected = true
-	objective_updated.emit(&"collect_resource", true)
-	_save_progress()
+
+	if InventoryManager.has_item("petal_shard", 3) and InventoryManager.has_item("verdant_sap", 2):
+		resource_collected = true
+		objective_updated.emit(&"collect_resource", true)
+		_save_progress()
+
 	_refresh_phase_1_ui()
 	_check_phase_1_complete()
 
@@ -646,6 +651,7 @@ func _check_phase_2_complete() -> void:
 	phase_completed.emit(PHASE_DAY_1_CRAFTING)
 	if QuestManager.is_active(PHASE_DAY_1_CRAFTING):
 		QuestManager.complete_quest(PHASE_DAY_1_CRAFTING)
+	_start_dialogic_label(LABEL_DAY_1_CRAFTING_COMPLETE)
 	await get_tree().create_timer(1.5).timeout
 	if current_state == TutorialState.DAY_1_CRAFTING_COMPLETE:
 		_hide_hud()
@@ -663,6 +669,7 @@ func _check_phase_3_complete() -> void:
 	phase_completed.emit(PHASE_DAY_1_COMBAT)
 	if QuestManager.is_active(PHASE_DAY_1_COMBAT):
 		QuestManager.complete_quest(PHASE_DAY_1_COMBAT)
+	_start_dialogic_label(LABEL_NIGHT_1_COMBAT_COMPLETE)
 	await get_tree().create_timer(1.5).timeout
 	if current_state == TutorialState.DAY_1_COMBAT_COMPLETE:
 		_hide_hud()
@@ -739,12 +746,15 @@ func _refresh_phase_1_ui() -> void:
 	var phase_name: String = "First Steps"
 	if current_state == TutorialState.DAY_1_MOVEMENT_COMPLETE:
 		phase_name = "First Steps Complete"
+	var shards: int = 3 if resource_collected else min(InventoryManager.get_total_count("petal_shard"), 3)
+	var sap: int = 2 if resource_collected else min(InventoryManager.get_total_count("verdant_sap"), 2)
 	var objectives: Array[String] = [
 		"Move for %.0fs" % MOVEMENT_REQUIRED_SECONDS,
 		"Open inventory [I]",
-		"Collect a resource"
+		"Collect Petal Shards (%d/3)" % shards,
+		"Collect Verdant Sap (%d/2)" % sap
 	]
-	var completed: Array[bool] = [moved_enough, inventory_opened, resource_collected]
+	var completed: Array[bool] = [moved_enough, inventory_opened, shards >= 3, sap >= 2]
 	_show_tutorial_on_hud(phase_name, objectives, completed)
 
 
