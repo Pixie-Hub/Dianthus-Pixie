@@ -50,7 +50,8 @@ func _on_body_entered(body: Node2D) -> void:
 
 
 func _should_start_harvest_qte() -> bool:
-	return ItemDatabase.get_rarity(item_id) == ItemDatabase.Rarity.RARE
+	var rarity: int = ItemDatabase.get_rarity(item_id)
+	return rarity == ItemDatabase.Rarity.UNCOMMON or rarity == ItemDatabase.Rarity.RARE
 
 
 func _start_harvest_qte() -> void:

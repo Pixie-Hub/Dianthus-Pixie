@@ -20,6 +20,7 @@ const RESULT_FAIL_COLOR: Color = Color(1.0, 0.25, 0.25, 1.0)
 @export_range(0.1, 2.0, 0.05) var space_pull_speed: float = 0.9
 @export_range(0.1, 2.0, 0.05) var release_slide_speed: float = 0.72
 @export_range(0.1, 2.0, 0.05) var target_move_speed: float = 0.58
+@export_range(0.1, 1.0, 0.05) var uncommon_target_move_speed_multiplier: float = 0.65
 
 @onready var _prompt_label: Label = %PromptLabel
 @onready var _balance_bar: Control = %BalanceBar
@@ -35,6 +36,7 @@ var _remaining: float = 0.0
 var _target_width: float = 0.26
 var _target_left: float = 0.37
 var _target_direction: float = 1.0
+var _current_target_move_speed: float = 0.58
 var _indicator_position: float = STARTING_INDICATOR_POSITION
 var _active: bool = false
 
@@ -57,6 +59,7 @@ func start_qte(item_id: String, amount: int) -> void:
 	_target_width = _get_target_width_for_current_difficulty()
 	_target_left = (1.0 - _target_width) * 0.5
 	_target_direction = 1.0
+	_current_target_move_speed = _get_target_move_speed_for_item(_item_id)
 	_indicator_position = STARTING_INDICATOR_POSITION
 	_active = true
 	visible = true
@@ -110,7 +113,7 @@ func _complete(success: bool) -> void:
 
 func _move_target(delta: float) -> void:
 	var max_left: float = 1.0 - _target_width
-	_target_left += _target_direction * target_move_speed * delta
+	_target_left += _target_direction * _current_target_move_speed * delta
 	if _target_left >= max_left:
 		_target_left = max_left
 		_target_direction = -1.0
@@ -152,6 +155,12 @@ func _get_duration_for_current_difficulty() -> float:
 func _get_target_width_for_current_difficulty() -> float:
 	var tier_id: int = DifficultyManager.get_tier_id()
 	return float(DIFFICULTY_TARGET_WIDTHS.get(tier_id, DIFFICULTY_TARGET_WIDTHS[DifficultyManager.Tier.NORMAL]))
+
+
+func _get_target_move_speed_for_item(item_id: String) -> float:
+	if ItemDatabase.get_rarity(item_id) == ItemDatabase.Rarity.UNCOMMON:
+		return target_move_speed * uncommon_target_move_speed_multiplier
+	return target_move_speed
 
 
 func _ensure_node_refs() -> void:
