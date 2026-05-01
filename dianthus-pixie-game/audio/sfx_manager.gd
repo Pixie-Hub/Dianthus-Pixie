@@ -137,7 +137,9 @@ const SFX_VOLUME_DB: Dictionary = {
 	"phantom_weaver_death": -10.0,
 	"swarm_larva_skitter": -6.0,
 	"core_take_damage": 8.0,
-
+	"harvest_qte_prompt": -4.0,
+	"harvest_qte_success": 12.0,
+	"harvest_qte_fail": 16.0,
 }
 
 const SFX_PITCH_RANDOMIZATION: Dictionary = {
