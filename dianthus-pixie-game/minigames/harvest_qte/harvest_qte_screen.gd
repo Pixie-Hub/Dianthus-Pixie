@@ -14,6 +14,8 @@ const DIFFICULTY_TARGET_WIDTHS: Dictionary = {
 }
 const INDICATOR_WIDTH: float = 4.0
 const STARTING_INDICATOR_POSITION: float = 0.5
+const RESULT_SUCCESS_COLOR: Color = Color(0.8, 1.0, 0.62, 1.0)
+const RESULT_FAIL_COLOR: Color = Color(1.0, 0.25, 0.25, 1.0)
 
 @export_range(0.1, 2.0, 0.05) var space_pull_speed: float = 0.9
 @export_range(0.1, 2.0, 0.05) var release_slide_speed: float = 0.72
@@ -94,9 +96,11 @@ func _complete(success: bool) -> void:
 	set_process(false)
 	if success:
 		_result_label.text = "Harvest secured!"
+		_result_label.add_theme_color_override("font_color", RESULT_SUCCESS_COLOR)
 		SfxManager.play("harvest_qte_success")
 	else:
 		_result_label.text = "Harvest reduced!"
+		_result_label.add_theme_color_override("font_color", RESULT_FAIL_COLOR)
 		SfxManager.play("harvest_qte_fail")
 	PauseManager.release_pause(self)
 	finished.emit(success)
