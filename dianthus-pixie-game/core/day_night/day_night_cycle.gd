@@ -18,6 +18,8 @@ const PHASE_TINTS: Dictionary = {
 }
 
 const TINT_DURATION: float = 3.0
+const DUSK_WARNING_THRESHOLD: float = 30.0
+const DUSK_TINT: Color = Color(1.0, 0.72, 0.45)
 
 var current_phase: Phase = Phase.DAY
 var day_count: int = 1
@@ -33,6 +35,8 @@ func _process(delta: float) -> void:
 	_phase_timer -= delta
 	if _phase_timer <= 0.0:
 		_advance_phase()
+		return
+	_update_dusk_tint()
 
 func _advance_phase() -> void:
 	match current_phase:
@@ -48,6 +52,17 @@ func _advance_phase() -> void:
 	_phase_timer = PHASE_DURATIONS[current_phase]
 	phase_changed.emit(get_phase_name())
 	_apply_tint()
+
+func _update_dusk_tint() -> void:
+	if current_phase != Phase.DAY:
+		return
+	if not is_instance_valid(_canvas_modulate):
+		return
+	if _phase_timer > DUSK_WARNING_THRESHOLD:
+		return
+	var t: float = 1.0 - (_phase_timer / DUSK_WARNING_THRESHOLD)
+	_canvas_modulate.color = PHASE_TINTS[Phase.DAY].lerp(DUSK_TINT, t)
+
 
 func register_canvas_modulate(node: CanvasModulate) -> void:
 	_canvas_modulate = node

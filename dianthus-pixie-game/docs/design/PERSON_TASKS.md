@@ -343,6 +343,8 @@ FOUND-01..06 (Done)
 | Shift+5 | Emit `zone_entered{zone_id=ruins_of_veld}` — advances story_03_journey objective | QUEST-05 |
 | Shift+6 | Emit `voidlord_defeated` — satisfies story_05_voidlord objective | QUEST-05 |
 | Shift+7 | Emit `devourer_defeated` — satisfies story_07_devourer objective; prints flag confirmation | QUEST-05 |
+| Shift+8 | Force scout reveal — calls `WaveSpawner.predict_spawn_direction()` and pushes result to minimap as scouted intel | DAY-04 |
+| Shift+9 | Set DAY phase timer to 35 s remaining — triggers return pressure cues immediately | DAY-06 |
 | Ctrl+Shift+5 | Force-start `story_01_whispers` (skips Day 2 wait) | QUEST-05 |
 | Ctrl+Shift+F | Force-fail the current active story quest with `time_limit` (tests alt-ending branch) | QUEST-05 |
 | Ctrl+1 | Force-trigger True ending (`EndingManager.force_trigger("true")`) | END-01 |

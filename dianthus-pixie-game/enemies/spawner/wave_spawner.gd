@@ -247,4 +247,11 @@ func _pick_enemy_scene() -> PackedScene:
 	return ENEMY_SCENES[pool.back()["type"]]
 
 
+func predict_spawn_direction() -> Vector2:
+	if _spawn_point_markers.is_empty():
+		return Vector2.ZERO
+	var marker: Marker2D = _spawn_point_markers[randi() % _spawn_point_markers.size()]
+	return marker.global_position
+
+
 # TODO (DIFF-02): Add override_entry_point_count(n: int) for Surge Night to force all 4 entry points.

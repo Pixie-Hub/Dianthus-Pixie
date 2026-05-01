@@ -27,12 +27,16 @@ const WOOD_PANEL_BORDER: Color = Color(0.65, 0.50, 0.25, 1.0)
 const WOOD_PANEL_BORDER_DANGER: Color = Color(0.85, 0.20, 0.15, 1.0)
 const LOW_HP_THRESHOLD: float = 0.25
 
+const RETURN_WARNING_THRESHOLD: float = 30.0
+
 var _prev_player_hp: int = -1
 var _prev_core_hp: int = -1
 var _low_hp_tween: Tween = null
 var _core_danger_tween: Tween = null
 var _core_in_danger: bool = false
 var _endless_label: Label = null
+var _return_label: Label = null
+var _return_tween: Tween = null
 
 
 func _ready() -> void:
@@ -47,6 +51,21 @@ func _ready() -> void:
 	_setup_endless_label()
 	_refresh_endless_label()
 	QuestManager.quest_completed.connect(_on_quest_completed_hud)
+	_setup_return_label()
+
+
+func _process(_delta: float) -> void:
+	if _return_label == null:
+		return
+	var is_night: bool = DayNightCycle.is_night()
+	var remaining: float = DayNightCycle.get_time_remaining()
+	var should_show: bool = not is_night and remaining <= RETURN_WARNING_THRESHOLD
+	if should_show and not _return_label.visible:
+		_return_label.visible = true
+		_start_return_pulse()
+	elif not should_show and _return_label.visible:
+		_return_label.visible = false
+		_stop_return_pulse()
 
 
 func _on_player_hp_changed(current_hp: int, max_hp: int) -> void:
@@ -106,6 +125,43 @@ func _on_phase_changed_hud(phase: String) -> void:
 	var tint: Color = HOTBAR_LOCKED_COLOR if is_night else Color.WHITE
 	_slot1_panel.modulate = tint
 	_slot2_panel.modulate = tint
+	if is_night and _return_label != null:
+		_return_label.visible = false
+		_stop_return_pulse()
+
+
+func _setup_return_label() -> void:
+	_return_label = Label.new()
+	_return_label.name = "ReturnWarningLabel"
+	_return_label.text = "Return to Garden!"
+	_return_label.add_theme_color_override("font_color", Color(1.0, 0.55, 0.1, 1.0))
+	_return_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_return_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_return_label.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	_return_label.anchor_left = 0.0
+	_return_label.anchor_top = 0.0
+	_return_label.anchor_right = 1.0
+	_return_label.anchor_bottom = 0.0
+	_return_label.offset_top = 56.0
+	_return_label.offset_bottom = 80.0
+	_return_label.visible = false
+	add_child(_return_label)
+
+
+func _start_return_pulse() -> void:
+	if is_instance_valid(_return_tween):
+		return
+	_return_tween = create_tween().set_loops()
+	_return_tween.tween_property(_return_label, "modulate", Color(1.0, 0.3, 0.0, 1.0), 0.4)
+	_return_tween.tween_property(_return_label, "modulate", Color.WHITE, 0.4)
+
+
+func _stop_return_pulse() -> void:
+	if is_instance_valid(_return_tween):
+		_return_tween.kill()
+	_return_tween = null
+	if _return_label != null:
+		_return_label.modulate = Color.WHITE
 
 
 func _start_low_hp_pulse() -> void:
