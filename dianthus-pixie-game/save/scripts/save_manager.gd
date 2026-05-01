@@ -4,7 +4,7 @@ signal save_completed(success: bool, manual: bool)
 signal load_completed(success: bool)
 
 const SAVE_PATH: String = "user://savegame.json"
-const SCHEMA_VERSION: int = 10
+const SCHEMA_VERSION: int = 11
 const GAME_VERSION: String = "0.1.0"
 
 const PLANT_TYPE_TO_SCENE: Dictionary = {
@@ -214,6 +214,7 @@ func _gather_state(manual: bool) -> Dictionary:
 			"type": plant_type,
 			"position": {"x": pb.global_position.x, "y": pb.global_position.y},
 			"current_hp": pb.current_hp,
+			"vitality": pb.vitality,
 			"is_destroyed": false,
 		})
 	state["garden"] = {"plants": plants_arr}
@@ -354,8 +355,10 @@ func _apply_state(state: Dictionary) -> void:
 			float(entry_pos.get("y", 0.0))
 		)
 		scene_root.add_child(plant)
-		# Set current_hp after _ready() so it is not overwritten by plant init.
+		# Set current_hp and vitality after _ready() so they are not overwritten by plant init.
 		plant.current_hp = int(entry_dict.get("current_hp", plant.max_hp))
+		plant.vitality = float(entry_dict.get("vitality", 100.0))
+		plant._update_vitality_visual()
 
 	# 7. Done.
 	print("[SaveManager] State applied. Day %d, Phase %s, Plants restored: %d" % [
@@ -451,4 +454,8 @@ func _migrate(data: Dictionary) -> Dictionary:
 		print("[SaveManager] Migrating save from v%d to v10." % version)
 		data["endless_mode"] = false
 		data["schema_version"] = 10
+	# v10 → v11: plant vitality added (defaults to 100.0 on load, no data change required).
+	if version < 11:
+		print("[SaveManager] Migrated v10 → v11 (plant vitality)")
+		data["schema_version"] = 11
 	return data

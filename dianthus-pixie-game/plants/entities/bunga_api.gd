@@ -24,6 +24,8 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	if is_wilted:
+		return
 	# Tick damage
 	if not _enemies_in_range.is_empty():
 		_tick_timer += delta

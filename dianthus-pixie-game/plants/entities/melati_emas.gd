@@ -21,6 +21,8 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	if is_wilted:
+		return
 	if not _player_in_range:
 		return
 	if not is_instance_valid(GameManager.player):

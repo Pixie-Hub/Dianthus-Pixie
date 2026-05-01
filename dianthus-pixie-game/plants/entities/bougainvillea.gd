@@ -20,6 +20,8 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	if is_wilted:
+		return
 	if _enemies_in_range.is_empty():
 		return
 	_tick_timer += delta

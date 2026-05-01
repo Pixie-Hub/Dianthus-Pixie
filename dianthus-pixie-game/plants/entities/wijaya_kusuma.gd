@@ -19,6 +19,8 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	if is_wilted:
+		return
 	# Night-only projectile firing
 	if DayNightCycle.is_night():
 		_projectile_timer += delta

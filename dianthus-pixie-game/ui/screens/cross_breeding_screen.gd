@@ -2,6 +2,8 @@ extends CanvasLayer
 
 const SLOT_EMPTY_COLOR: Color = Color(0.15, 0.15, 0.15, 1.0)
 const SLOT_FILLED_COLOR: Color = Color(0.2, 0.3, 0.2, 1.0)
+const BREED_DELAY: float = 4.0
+const MAX_BENCH_DISTANCE: float = 48.0
 
 @onready var _slot_a_label: Label = %SlotALabel
 @onready var _slot_b_label: Label = %SlotBLabel
@@ -16,6 +18,10 @@ const SLOT_FILLED_COLOR: Color = Color(0.2, 0.3, 0.2, 1.0)
 var _slot_a_item: String = ""
 var _slot_b_item: String = ""
 var _picking_for_slot: String = ""
+var _is_breeding: bool = false
+var _breed_timer: float = 0.0
+var _bench_pos: Vector2 = Vector2(-99999.0, -99999.0)
+var _breed_progress: ProgressBar = null
 
 
 func _ready() -> void:
@@ -32,6 +38,23 @@ func _ready() -> void:
 	var switch_btn: Button = find_child("SwitchToCraftingBtn", true, false) as Button
 	if switch_btn != null:
 		switch_btn.pressed.connect(_on_switch_to_crafting)
+	_breed_progress = ProgressBar.new()
+	_breed_progress.min_value = 0.0
+	_breed_progress.max_value = BREED_DELAY
+	_breed_progress.value = 0.0
+	_breed_progress.custom_minimum_size = Vector2(0, 8)
+	_breed_progress.visible = false
+	call_deferred("_insert_breed_progress")
+
+
+func _insert_breed_progress() -> void:
+	if not is_instance_valid(_breed_button) or not is_instance_valid(_breed_progress):
+		return
+	var parent: Control = _breed_button.get_parent() as Control
+	if parent == null:
+		return
+	parent.add_child(_breed_progress)
+	parent.move_child(_breed_progress, _breed_button.get_index() + 1)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -45,19 +68,39 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
+func _process(delta: float) -> void:
+	if not _is_breeding or not visible:
+		return
+	if _bench_pos.x > -99998.0 and is_instance_valid(GameManager.player):
+		var dist: float = GameManager.player.global_position.distance_to(_bench_pos)
+		if dist > MAX_BENCH_DISTANCE:
+			_cancel_breeding()
+			_show_breed_feedback("Too far!")
+			return
+	_breed_timer += delta
+	if is_instance_valid(_breed_progress):
+		_breed_progress.value = _breed_timer
+	if _breed_timer >= BREED_DELAY:
+		_finish_breeding()
+
+
 func open() -> void:
 	SfxManager.play("screen_open")
 	visible = true
+	var bench: Node = get_tree().current_scene.find_child("BreedingBench", true, false)
+	if bench is Node2D:
+		_bench_pos = (bench as Node2D).global_position
+	else:
+		_bench_pos = Vector2(-99999.0, -99999.0)
 	_refresh_slots()
 	_refresh_combo_list()
-	PauseManager.request_pause(self)
 
 
 func close() -> void:
 	SfxManager.play("screen_close")
+	_cancel_breeding()
 	visible = false
 	_item_picker_panel.visible = false
-	PauseManager.release_pause(self)
 
 
 func _on_slot_a_clicked(event: InputEvent) -> void:
@@ -161,6 +204,37 @@ func _refresh_combo_list() -> void:
 func _on_breed_pressed() -> void:
 	if _slot_a_item.is_empty() or _slot_b_item.is_empty():
 		return
+	if _is_breeding:
+		_cancel_breeding()
+		return
+	if not BreedingManager.can_breed(_slot_a_item, _slot_b_item):
+		return
+	_is_breeding = true
+	_breed_timer = 0.0
+	if is_instance_valid(_breed_progress):
+		_breed_progress.value = 0.0
+		_breed_progress.visible = true
+	_breed_button.text = "CANCEL"
+	_breed_button.disabled = false
+
+
+func _cancel_breeding() -> void:
+	if not _is_breeding:
+		return
+	_is_breeding = false
+	_breed_timer = 0.0
+	if is_instance_valid(_breed_progress):
+		_breed_progress.visible = false
+		_breed_progress.value = 0.0
+	_breed_button.text = "BREED"
+	_breed_button.disabled = _slot_a_item.is_empty() or _slot_b_item.is_empty() or not BreedingManager.can_breed(_slot_a_item, _slot_b_item)
+
+
+func _finish_breeding() -> void:
+	_is_breeding = false
+	_breed_timer = 0.0
+	if is_instance_valid(_breed_progress):
+		_breed_progress.visible = false
 	BreedingManager.breed(_slot_a_item, _slot_b_item)
 
 

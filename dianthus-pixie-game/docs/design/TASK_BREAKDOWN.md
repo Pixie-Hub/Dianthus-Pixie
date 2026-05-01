@@ -3,7 +3,7 @@
 **Project:** Dianthus Pixie  
 **Engine:** Godot 4.x  
 **Art:** Aseprite (16×16 tiles, 16×24 characters)  
-**Last Updated:** 2026-05-01
+**Last Updated:** 2026-05-02
 **GDD Reference:** `Dianthus Pixie GDD.md` (v1.1)
 
 > **Legend — Effort:** XS < 2 h · S < 1 d · M 1–3 d · L 3–7 d · XL > 1 wk  
@@ -47,6 +47,8 @@
 | DAY-04 | Scout Tracks Night Intel | Core Mechanics | High | Not Started | DAY-01, CORE-07, UI-01 | [Unassigned] | M | • Optional daytime Scout Tracks interaction reveals one likely active night spawn direction; • the reveal appears on HUD, minimap, or preparation UI; • interaction costs enough daytime to compete with gathering |
 | DAY-05 | Daytime Resource Placement Rules | Resource & Inventory | High | Done | DAY-01, CORE-02, RES-01 | [Unassigned] | M | • Common resources sit near safe main paths; • uncommon resources appear at side-pocket ends or behind obstacles; • rare and discovery nodes are far from base, tied to landmarks, or gated by risk/time cost |
 | DAY-06 | Return Pressure & 3-Minute Tuning | Core Mechanics | Medium | Done | DAY-02, DAY-03, DAY-04, DAY-05, FOUND-05 | [Unassigned] | S | • Player cannot collect everything in one 3-minute daytime phase; • final 30 seconds have clear audio/visual pressure; • route timing supports one main route plus at most one side stop |
+| DAY-07 | Real-Time Crafting & Breeding | Plant & Crafting | High | Done | PLANT-06, PLANT-02 | [Unassigned] | S | • Crafting/breeding no longer pause game clock; • 4 s real-time timer with progress bar before craft/breed executes; • player must stay within 48 px of bench or timer cancels |
+| DAY-08 | Plant Vitality & Tending | Plant & Crafting | High | Done | PLANT-05, CORE-02, SAVE-01 | [Unassigned] | M | • Each plant has vitality 0–100%; • 15–25% overnight decay on phase→DAY (Easy/Normal/Hard); • plants at 0% wilt and disable all effects; • E-hold 2.5 s restores 50% at cost of 1 Petal Shard; • sprite modulate lerps toward desaturated brown as vitality falls; • vitality saved/loaded with schema v11 |
 
 ---
 

@@ -27,6 +27,11 @@ const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
 			Vector2(456, 704),
 			Vector2(336, 600),
 			Vector2(520, 520),
+			Vector2(624, 928),
+			Vector2(480, 848),
+			Vector2(560, 768),
+			Vector2(400, 656),
+			Vector2(664, 720),
 		],
 	},
 	{
@@ -40,6 +45,10 @@ const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
 			Vector2(1176, 592),
 			Vector2(1304, 472),
 			Vector2(1096, 624),
+			Vector2(1152, 680),
+			Vector2(1240, 544),
+			Vector2(1360, 504),
+			Vector2(1064, 560),
 		],
 	},
 	{
@@ -51,6 +60,9 @@ const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
 			Vector2(680, 300),
 			Vector2(760, 380),
 			Vector2(840, 310),
+			Vector2(720, 260),
+			Vector2(800, 352),
+			Vector2(744, 416),
 		],
 	},
 	{
@@ -61,6 +73,8 @@ const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
 		"positions": [
 			Vector2(700, 192),
 			Vector2(820, 192),
+			Vector2(752, 208),
+			Vector2(780, 176),
 		],
 	},
 	{
@@ -71,6 +85,8 @@ const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
 		"positions": [
 			Vector2(300, 548),
 			Vector2(380, 480),
+			Vector2(350, 520),
+			Vector2(296, 448),
 		],
 	},
 	{
@@ -81,6 +97,8 @@ const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
 		"positions": [
 			Vector2(1360, 432),
 			Vector2(1312, 520),
+			Vector2(1400, 464),
+			Vector2(1344, 488),
 		],
 	},
 	{
@@ -91,6 +109,8 @@ const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
 		"positions": [
 			Vector2(720, 344),
 			Vector2(800, 328),
+			Vector2(760, 316),
+			Vector2(680, 360),
 		],
 	},
 	{
@@ -101,6 +121,8 @@ const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
 		"positions": [
 			Vector2(736, 208),
 			Vector2(672, 232),
+			Vector2(700, 196),
+			Vector2(752, 240),
 		],
 	},
 	{
@@ -110,6 +132,7 @@ const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
 		"minimum_count": 0,
 		"positions": [
 			Vector2(800, 880),
+			Vector2(720, 912),
 		],
 	},
 	{
@@ -119,6 +142,7 @@ const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
 		"minimum_count": 0,
 		"positions": [
 			Vector2(1280, 440),
+			Vector2(1320, 456),
 		],
 	},
 	{
@@ -128,6 +152,7 @@ const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
 		"minimum_count": 0,
 		"positions": [
 			Vector2(640, 280),
+			Vector2(600, 296),
 		],
 	},
 ]

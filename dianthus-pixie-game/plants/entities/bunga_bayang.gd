@@ -21,9 +21,12 @@ func _ready() -> void:
 	var effect_area: Area2D = $EffectArea
 	effect_area.body_entered.connect(_on_effect_area_body_entered)
 	effect_area.body_exited.connect(_on_effect_area_body_exited)
+	vitality_changed.connect(_on_vitality_changed)
 
 
 func _process(delta: float) -> void:
+	if is_wilted:
+		return
 	# Night projectile firing
 	if DayNightCycle.is_night():
 		_projectile_timer += delta
@@ -131,15 +134,23 @@ func _apply_slow(enemy: EnemyBase) -> void:
 func _recalculate_slow(enemy: EnemyBase) -> void:
 	var strongest: float = 1.0
 	for plant in get_tree().get_nodes_in_group(&"bunga_bayangs"):
-		if plant is BungaBayang and not plant.is_destroyed:
+		if plant is BungaBayang and not plant.is_destroyed and not plant.is_wilted:
 			if plant._enemies_in_range.has(enemy):
 				strongest = min(strongest, plant.slow_multiplier)
 	# Also account for any Rafflesia still affecting the enemy
 	for plant in get_tree().get_nodes_in_group(&"rafflesias"):
-		if plant is Rafflesia and not plant.is_destroyed:
+		if plant is Rafflesia and not plant.is_destroyed and not plant.is_wilted:
 			if plant._enemies_in_range.has(enemy):
 				strongest = min(strongest, plant.slow_multiplier)
 	enemy.speed_modifier = strongest
+
+
+func _on_vitality_changed(_val: float) -> void:
+	if not is_wilted:
+		return
+	for enemy in _enemies_in_range.duplicate():
+		if is_instance_valid(enemy) and not enemy.is_dead:
+			_recalculate_slow(enemy)
 
 
 func destroy() -> void:

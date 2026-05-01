@@ -5,6 +5,8 @@ const CRAFTABLE_COLOR: Color = Color(1.0, 1.0, 1.0, 1.0)
 const UNCRAFTABLE_COLOR: Color = Color(0.5, 0.5, 0.5, 1.0)
 const HAVE_COLOR: Color = Color(0.4, 0.9, 0.4, 1.0)
 const NEED_COLOR: Color = Color(0.9, 0.3, 0.3, 1.0)
+const CRAFT_DELAY: float = 4.0
+const MAX_BENCH_DISTANCE: float = 48.0
 
 @onready var _recipe_list: VBoxContainer = %RecipeList
 @onready var _description_label: Label = %DescriptionLabel
@@ -12,6 +14,10 @@ const NEED_COLOR: Color = Color(0.9, 0.3, 0.3, 1.0)
 
 var _selected_recipe_id: String = ""
 var _row_panels: Dictionary = {}
+var _is_crafting: bool = false
+var _craft_timer: float = 0.0
+var _bench_pos: Vector2 = Vector2(-99999.0, -99999.0)
+var _craft_progress: ProgressBar = null
 
 
 func _ready() -> void:
@@ -24,6 +30,23 @@ func _ready() -> void:
 	var switch_btn: Button = find_child("SwitchToBreedingBtn", true, false) as Button
 	if switch_btn != null:
 		switch_btn.pressed.connect(_on_switch_to_breeding)
+	_craft_progress = ProgressBar.new()
+	_craft_progress.min_value = 0.0
+	_craft_progress.max_value = CRAFT_DELAY
+	_craft_progress.value = 0.0
+	_craft_progress.custom_minimum_size = Vector2(0, 8)
+	_craft_progress.visible = false
+	call_deferred("_insert_craft_progress")
+
+
+func _insert_craft_progress() -> void:
+	if not is_instance_valid(_craft_button) or not is_instance_valid(_craft_progress):
+		return
+	var parent: Control = _craft_button.get_parent() as Control
+	if parent == null:
+		return
+	parent.add_child(_craft_progress)
+	parent.move_child(_craft_progress, _craft_button.get_index() + 1)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -34,17 +57,37 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
+func _process(delta: float) -> void:
+	if not _is_crafting or not visible:
+		return
+	if _bench_pos.x > -99998.0 and is_instance_valid(GameManager.player):
+		var dist: float = GameManager.player.global_position.distance_to(_bench_pos)
+		if dist > MAX_BENCH_DISTANCE:
+			_cancel_crafting()
+			_show_feedback("Too far!")
+			return
+	_craft_timer += delta
+	if is_instance_valid(_craft_progress):
+		_craft_progress.value = _craft_timer
+	if _craft_timer >= CRAFT_DELAY:
+		_finish_crafting()
+
+
 func open() -> void:
 	SfxManager.play("screen_open")
 	visible = true
+	var bench: Node = get_tree().current_scene.find_child("BreedingBench", true, false)
+	if bench is Node2D:
+		_bench_pos = (bench as Node2D).global_position
+	else:
+		_bench_pos = Vector2(-99999.0, -99999.0)
 	_build_recipe_list()
-	PauseManager.request_pause(self)
 
 
 func close() -> void:
 	SfxManager.play("screen_close")
+	_cancel_crafting()
 	visible = false
-	PauseManager.release_pause(self)
 	_selected_recipe_id = ""
 
 
@@ -198,9 +241,43 @@ func _is_tutorial_target_recipe(recipe_id: String) -> bool:
 func _on_craft_pressed() -> void:
 	if _selected_recipe_id.is_empty():
 		return
+	if _is_crafting:
+		_cancel_crafting()
+		return
+	if not CraftingManager.can_craft(_selected_recipe_id):
+		return
+	_is_crafting = true
+	_craft_timer = 0.0
+	if is_instance_valid(_craft_progress):
+		_craft_progress.value = 0.0
+		_craft_progress.visible = true
+	_craft_button.text = "CANCEL"
+	_craft_button.disabled = false
+
+
+func _cancel_crafting() -> void:
+	if not _is_crafting:
+		return
+	_is_crafting = false
+	_craft_timer = 0.0
+	if is_instance_valid(_craft_progress):
+		_craft_progress.visible = false
+		_craft_progress.value = 0.0
+	_craft_button.text = "CRAFT"
+	_craft_button.disabled = _selected_recipe_id.is_empty() or not CraftingManager.can_craft(_selected_recipe_id)
+
+
+func _finish_crafting() -> void:
+	_is_crafting = false
+	_craft_timer = 0.0
+	if is_instance_valid(_craft_progress):
+		_craft_progress.visible = false
 	var ok: bool = CraftingManager.craft(_selected_recipe_id)
 	if ok:
 		_show_feedback("Crafted!")
+	else:
+		_craft_button.text = "CRAFT"
+		_craft_button.disabled = not CraftingManager.can_craft(_selected_recipe_id)
 	_build_recipe_list()
 	if not _selected_recipe_id.is_empty():
 		_select_recipe(_selected_recipe_id)
@@ -213,9 +290,13 @@ func _on_weapon_crafted(_weapon_id: String) -> void:
 
 func _show_feedback(msg: String) -> void:
 	_craft_button.text = msg
+	_craft_button.disabled = true
 	var tween: Tween = create_tween()
 	tween.tween_interval(0.8)
-	tween.tween_callback(func() -> void: _craft_button.text = "CRAFT")
+	tween.tween_callback(func() -> void:
+		_craft_button.text = "CRAFT"
+		_craft_button.disabled = _selected_recipe_id.is_empty() or not CraftingManager.can_craft(_selected_recipe_id)
+	)
 
 
 func _on_switch_to_breeding() -> void:

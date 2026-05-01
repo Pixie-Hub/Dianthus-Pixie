@@ -15,6 +15,7 @@ func _ready() -> void:
 	var effect_area: Area2D = $EffectArea
 	effect_area.body_entered.connect(_on_effect_area_body_entered)
 	effect_area.body_exited.connect(_on_effect_area_body_exited)
+	vitality_changed.connect(_on_vitality_changed)
 
 
 func _on_effect_area_body_entered(body: Node2D) -> void:
@@ -36,13 +37,18 @@ func _recalculate_player_attack_speed() -> void:
 		return
 	var best: float = 0.0
 	for plant in get_tree().get_nodes_in_group(&"kecombrangs"):
-		if plant is Kecombrang and not plant.is_destroyed and plant._player_in_range:
+		if plant is Kecombrang and not plant.is_destroyed and not plant.is_wilted and plant._player_in_range:
 			best = max(best, plant.attack_speed_bonus)
 	GameManager.player.set("attack_speed_bonus", best)
 
 
-func destroy() -> void:
-	if _player_in_range:
+func _on_vitality_changed(_val: float) -> void:
+	if _player_in_range and is_wilted:
 		_player_in_range = false
 		_recalculate_player_attack_speed()
+
+
+func destroy() -> void:
+	_player_in_range = false
+	_recalculate_player_attack_speed()
 	super.destroy()
