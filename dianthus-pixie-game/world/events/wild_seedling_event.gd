@@ -62,7 +62,7 @@ func _give_reward() -> void:
 	InventoryManager.add_item(seed_id, 1)
 	var item_name: String = ItemDatabase.get_display_name(seed_id)
 	_show_reward_popup("Received: %s" % item_name)
-	QuestManager.report_event(&"item_collected", {item_id = seed_id, amount = 1})
+	QuestManager.report_event(&"item_collected", 1, {item_id = seed_id})
 
 
 func _pick_seed() -> String:

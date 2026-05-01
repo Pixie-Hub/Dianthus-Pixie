@@ -163,7 +163,7 @@ func _give_reward() -> void:
 	InventoryManager.add_item(chosen, 1)
 	var item_name: String = ItemDatabase.get_display_name(chosen)
 	_show_reward_popup("Rare reward: %s!" % item_name)
-	QuestManager.report_event(&"item_collected", {item_id = chosen, amount = 1})
+	QuestManager.report_event(&"item_collected", 1, {item_id = chosen})
 
 
 func _show_reward_popup(text: String) -> void:
