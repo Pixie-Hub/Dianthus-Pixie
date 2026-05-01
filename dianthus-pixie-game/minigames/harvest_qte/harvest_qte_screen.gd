@@ -76,11 +76,8 @@ func _process(delta: float) -> void:
 	_move_target(delta)
 	_move_indicator(delta)
 	_update_balance_bar()
-	if not _is_indicator_in_target():
-		_complete(false)
-		return
 	if _remaining <= 0.0:
-		_complete(true)
+		_complete(_is_indicator_in_target())
 
 
 func _unhandled_input(event: InputEvent) -> void:
