@@ -20,13 +20,16 @@ const PLAYER_DOT_COLOR: Color = Color(1, 1, 1)
 const CORE_DOT_COLOR: Color = Color(1.0, 0.4, 0.7)
 const PLANT_DOT_COLOR: Color = Color(0.3, 0.9, 0.3)
 const ENEMY_DOT_COLOR: Color = Color(0.95, 0.25, 0.25)
-const SPAWN_ARROW_COLOR: Color = Color(0.95, 0.25, 0.25)
+const SCOUT_ARROW_COLOR: Color = Color(1.0, 0.85, 0.2, 1)
+const EVENT_MARKER_COLOR: Color = Color(1.0, 0.85, 0.2, 1.0)
+const EVENT_MARKER_RADIUS: float = 4.0
 const BOUNDS_COLOR: Color = Color(0.65, 0.50, 0.25, 0.9)
 const WORLD_BOUNDS_COLOR: Color = Color(0.45, 0.72, 0.42, 0.85)
 const BG_COLOR: Color = Color(0.08, 0.08, 0.12, 0.85)
 
 var _spawner: WaveSpawner = null
 var _plant_manager: Node = null
+var _event_spawner: Node = null
 
 
 func _ready() -> void:
@@ -42,6 +45,7 @@ func refresh_references() -> void:
 		return
 	_spawner = scene_root.find_child("WaveSpawner", true, false) as WaveSpawner
 	_plant_manager = scene_root.find_child("PlantPlacementManager", true, false)
+	_event_spawner = scene_root.find_child("DaytimeEventSpawner", true, false)
 
 
 func _process(_delta: float) -> void:
@@ -92,6 +96,10 @@ func _draw() -> void:
 		draw_circle(player_mp, PLAYER_DOT_RADIUS * marker_scale, PLAYER_DOT_COLOR)
 
 	if not DayNightCycle.is_night():
+		if is_instance_valid(_event_spawner) and _event_spawner.has_method("has_active_event"):
+			if _event_spawner.has_active_event():
+				var ev_pos: Vector2 = _event_spawner.get_active_event_position()
+				_draw_event_marker(ev_pos, player_pos, draw_size, draw_rect_area)
 		return
 	if _spawner == null or not _spawner.is_wave_active():
 		return
@@ -181,8 +189,20 @@ func _compute_box_edge(center: Vector2, dir: Vector2, box_size: Vector2) -> Vect
 	return center + dir * best_t
 
 
+func _draw_event_marker(world_pos: Vector2, player_pos: Vector2, draw_size: Vector2, draw_rect_area: Rect2) -> void:
+	var mp: Vector2 = _world_to_map(world_pos, player_pos)
+	var t: float = Time.get_ticks_msec() / 1000.0
+	var pulse_alpha: float = 0.6 + 0.4 * sin(t * TAU * 1.5)
+	var color: Color = Color(EVENT_MARKER_COLOR.r, EVENT_MARKER_COLOR.g, EVENT_MARKER_COLOR.b, pulse_alpha)
+	var edge_mp: Vector2 = mp
+	if not draw_rect_area.has_point(mp):
+		var dir: Vector2 = (mp - draw_size * 0.5).normalized()
+		edge_mp = _compute_box_edge(draw_size * 0.5, dir, draw_size)
+	draw_circle(edge_mp, EVENT_MARKER_RADIUS * marker_scale, color)
+
+
 func _draw_arrow(tip: Vector2, dir: Vector2) -> void:
-	_draw_arrow_colored(tip, dir, SPAWN_ARROW_COLOR)
+	_draw_arrow_colored(tip, dir, SCOUT_ARROW_COLOR)
 
 
 func _draw_arrow_colored(tip: Vector2, dir: Vector2, color: Color) -> void:

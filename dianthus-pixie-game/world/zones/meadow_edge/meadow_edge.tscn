@@ -24,6 +24,7 @@
 [ext_resource type="PackedScene" uid="uid://8aecktxeycbs" path="res://world/obstacles/bramble_patch.tscn" id="19_bramble"]
 [ext_resource type="PackedScene" uid="uid://coy6xduda7ul6" path="res://ui/screens/ending_screen.tscn" id="19_ending"]
 [ext_resource type="PackedScene" uid="uid://ckly87alm222s" path="res://ui/screens/full_map_screen.tscn" id="20_fullmap"]
+[ext_resource type="PackedScene" uid="uid://daytime_spawner01" path="res://world/events/daytime_event_spawner.tscn" id="21_events"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cjr1j"]
 texture = ExtResource("2_quyxi")
@@ -1691,3 +1692,5 @@ enemy_container_path = NodePath("../YSortLayer")
 [node name="FullMapScreen" parent="." unique_id=1782765435 instance=ExtResource("20_fullmap")]
 
 [node name="EndingScreen" parent="." unique_id=1708759462 instance=ExtResource("19_ending")]
+
+[node name="DaytimeEventSpawner" parent="." unique_id=1891234567 instance=ExtResource("21_events")]

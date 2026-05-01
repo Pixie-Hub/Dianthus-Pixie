@@ -338,6 +338,20 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_9 and event.shift_pressed:
 			DayNightCycle._phase_timer = 35.0
 			print("DEBUG: Shift+9 — Set DAY timer to 35s remaining.")
+		elif event.keycode == KEY_0 and event.shift_pressed:
+			var _ev_types: Array[StringName] = [
+				&"corrupted_root", &"wild_seedling", &"void_fissure", &"dianthus_resonance"
+			]
+			var ev_spawner: Node = get_tree().current_scene.find_child("DaytimeEventSpawner", true, false)
+			if ev_spawner != null and ev_spawner.has_method("force_spawn_event"):
+				if not ev_spawner.has_meta(&"_dbg_ev_idx"):
+					ev_spawner.set_meta(&"_dbg_ev_idx", 0)
+				var idx: int = int(ev_spawner.get_meta(&"_dbg_ev_idx"))
+				ev_spawner.force_spawn_event(_ev_types[idx])
+				print("DEBUG: Shift+0 — Force-spawned event: %s" % _ev_types[idx])
+				ev_spawner.set_meta(&"_dbg_ev_idx", (idx + 1) % _ev_types.size())
+			else:
+				push_warning("DEBUG: DaytimeEventSpawner not found.")
 		elif event.keycode == KEY_1 and event.ctrl_pressed and not event.shift_pressed:
 			EndingManager.force_trigger("true")
 			print("DEBUG: Ctrl+1 — Force-triggered True ending.")
