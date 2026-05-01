@@ -1,16 +1,85 @@
 extends Node2D
 
+const RESOURCE_PICKUP_SCENE: PackedScene = preload("res://inventory/pickups/resource_pickup.tscn")
 const ZONE_WIDTH: int = 96
 const ZONE_HEIGHT: int = 72
 const TILE_SIZE: int = 16
 const MAP_WIDTH: int = ZONE_WIDTH * TILE_SIZE
 const MAP_HEIGHT: int = ZONE_HEIGHT * TILE_SIZE
+const RESOURCE_RNG_SEED_BASE: int = 17041
+const RESOURCE_RNG_DAY_STEP: int = 7919
+const DAYTIME_RESOURCE_PICKUP_GROUP: StringName = &"daytime_resource_pickups"
+const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
+	{
+		"prefix": "PetalFieldPetalShard",
+		"item_id": "petal_shard",
+		"amount": 1,
+		"spawn_chance": 0.72,
+		"day_one_count": 3,
+		"minimum_count": 2,
+		"positions": [
+			Vector2(704, 864),
+			Vector2(592, 800),
+			Vector2(456, 704),
+			Vector2(336, 600),
+			Vector2(520, 520),
+		],
+	},
+	{
+		"prefix": "SapGroveVerdantSap",
+		"item_id": "verdant_sap",
+		"amount": 1,
+		"spawn_chance": 0.68,
+		"day_one_count": 2,
+		"minimum_count": 1,
+		"positions": [
+			Vector2(1008, 712),
+			Vector2(1176, 592),
+			Vector2(1304, 472),
+		],
+	},
+	{
+		"prefix": "SapGroveBougainvilleaExtract",
+		"item_id": "bougainvillea_extract",
+		"amount": 1,
+		"spawn_chance": 0.55,
+		"minimum_count": 0,
+		"positions": [
+			Vector2(1360, 432),
+			Vector2(1312, 520),
+		],
+	},
+	{
+		"prefix": "OldRootBeringinRoot",
+		"item_id": "beringin_root",
+		"amount": 1,
+		"spawn_chance": 0.5,
+		"minimum_count": 0,
+		"positions": [
+			Vector2(720, 344),
+			Vector2(800, 328),
+		],
+	},
+	{
+		"prefix": "RuinGlimmerAetherBloom",
+		"item_id": "aether_bloom",
+		"amount": 2,
+		"spawn_chance": 0.35,
+		"minimum_count": 1,
+		"positions": [
+			Vector2(736, 208),
+			Vector2(672, 232),
+			Vector2(832, 240),
+		],
+	},
+]
 
 @onready var _canvas_modulate: CanvasModulate = $CanvasModulate
 @onready var _phase_label: Label = $DebugOverlay/PhaseLabel
 @onready var _day_label: Label = $DebugOverlay/DayLabel
 @onready var _timer_label: Label = $DebugOverlay/TimerLabel
 @onready var _player: CharacterBody2D = $YSortLayer/Player
+@onready var _pickup_container: Node2D = $YSortLayer/PickupContainer
 
 var _wave_spawner: WaveSpawner = null
 
@@ -26,6 +95,7 @@ func _ready() -> void:
 	if is_instance_valid(_player):
 		GameManager.register_player(_player)
 	_refresh_placement_bounds()
+	_spawn_daytime_resources()
 	TutorialManager.notify_scene_ready()
 	_wave_spawner = get_node_or_null("WaveSpawner") as WaveSpawner
 	if is_instance_valid(_wave_spawner):
@@ -57,6 +127,8 @@ func _restore_player_position() -> void:
 
 func _on_phase_changed(_phase: String) -> void:
 	_update_debug_labels()
+	if _phase == "DAY":
+		_spawn_daytime_resources()
 
 func _update_debug_labels() -> void:
 	if is_instance_valid(_phase_label):
@@ -97,3 +169,59 @@ func _refresh_placement_bounds() -> void:
 		manager.call("_rebuild_occupied_tiles")
 	if manager.has_method("queue_redraw"):
 		manager.queue_redraw()
+
+func _spawn_daytime_resources() -> void:
+	if not is_instance_valid(_pickup_container):
+		return
+	_clear_daytime_resources()
+	var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+	rng.seed = RESOURCE_RNG_SEED_BASE + (DayNightCycle.day_count * RESOURCE_RNG_DAY_STEP)
+	for rule: Dictionary in DAYTIME_RESOURCE_RULES:
+		_spawn_resource_rule(rule, rng)
+
+func _clear_daytime_resources() -> void:
+	for child: Node in _pickup_container.get_children():
+		if child.is_in_group(DAYTIME_RESOURCE_PICKUP_GROUP):
+			child.free()
+
+func _spawn_resource_rule(rule: Dictionary, rng: RandomNumberGenerator) -> void:
+	var positions: Array[Vector2] = _get_shuffled_positions(rule.get("positions", []), rng)
+	if positions.is_empty():
+		return
+	var required_count: int = int(rule.get("minimum_count", 0))
+	if DayNightCycle.day_count == 1 and rule.has("day_one_count"):
+		required_count = int(rule["day_one_count"])
+	required_count = clampi(required_count, 0, positions.size())
+
+	var spawned_count: int = 0
+	var can_roll_extra: bool = not (DayNightCycle.day_count == 1 and rule.has("day_one_count"))
+	for index: int in range(positions.size()):
+		var should_spawn: bool = spawned_count < required_count
+		if not should_spawn and can_roll_extra:
+			should_spawn = rng.randf() <= float(rule.get("spawn_chance", 1.0))
+		if should_spawn:
+			_spawn_resource_pickup(rule, positions[index], spawned_count + 1)
+			spawned_count += 1
+
+func _get_shuffled_positions(source_positions: Array, rng: RandomNumberGenerator) -> Array[Vector2]:
+	var shuffled: Array[Vector2] = []
+	for source_position: Variant in source_positions:
+		var vector_position: Vector2 = source_position
+		shuffled.append(vector_position)
+	for i: int in range(shuffled.size() - 1, 0, -1):
+		var swap_index: int = rng.randi_range(0, i)
+		var current_position: Vector2 = shuffled[i]
+		shuffled[i] = shuffled[swap_index]
+		shuffled[swap_index] = current_position
+	return shuffled
+
+func _spawn_resource_pickup(rule: Dictionary, pickup_position: Vector2, spawn_number: int) -> void:
+	var pickup: Node2D = RESOURCE_PICKUP_SCENE.instantiate() as Node2D
+	if pickup == null:
+		return
+	pickup.name = "%s%d" % [str(rule.get("prefix", "DaytimeResource")), spawn_number]
+	pickup.position = pickup_position
+	pickup.set("item_id", str(rule.get("item_id", "petal_shard")))
+	pickup.set("amount", int(rule.get("amount", 1)))
+	pickup.add_to_group(DAYTIME_RESOURCE_PICKUP_GROUP)
+	_pickup_container.add_child(pickup)
