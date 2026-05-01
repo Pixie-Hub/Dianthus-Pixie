@@ -9,12 +9,16 @@ const MAP_HEIGHT: int = ZONE_HEIGHT * TILE_SIZE
 const RESOURCE_RNG_SEED_BASE: int = 17041
 const RESOURCE_RNG_DAY_STEP: int = 7919
 const DAYTIME_RESOURCE_PICKUP_GROUP: StringName = &"daytime_resource_pickups"
+const RARITY_SPAWN_CHANCE: Dictionary = {
+	ItemDatabase.Rarity.COMMON:   0.80,
+	ItemDatabase.Rarity.UNCOMMON: 0.45,
+	ItemDatabase.Rarity.RARE:     0.20,
+}
 const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
 	{
 		"prefix": "PetalFieldPetalShard",
 		"item_id": "petal_shard",
 		"amount": 1,
-		"spawn_chance": 0.72,
 		"day_one_count": 3,
 		"minimum_count": 2,
 		"positions": [
@@ -29,20 +33,50 @@ const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
 		"prefix": "SapGroveVerdantSap",
 		"item_id": "verdant_sap",
 		"amount": 1,
-		"spawn_chance": 0.68,
 		"day_one_count": 2,
 		"minimum_count": 1,
 		"positions": [
 			Vector2(1008, 712),
 			Vector2(1176, 592),
 			Vector2(1304, 472),
+			Vector2(1096, 624),
 		],
 	},
 	{
-		"prefix": "SapGroveBougainvilleaExtract",
+		"prefix": "OldRootMoonspore",
+		"item_id": "moonspore",
+		"amount": 1,
+		"minimum_count": 0,
+		"positions": [
+			Vector2(680, 300),
+			Vector2(760, 380),
+			Vector2(840, 310),
+		],
+	},
+	{
+		"prefix": "RuinGlimmerShadowResin",
+		"item_id": "shadow_resin",
+		"amount": 1,
+		"minimum_count": 0,
+		"positions": [
+			Vector2(700, 192),
+			Vector2(820, 192),
+		],
+	},
+	{
+		"prefix": "PetalFieldBougainvilleaExtract",
 		"item_id": "bougainvillea_extract",
 		"amount": 1,
-		"spawn_chance": 0.55,
+		"minimum_count": 0,
+		"positions": [
+			Vector2(300, 548),
+			Vector2(380, 480),
+		],
+	},
+	{
+		"prefix": "SapGroveRafflesiaExtract",
+		"item_id": "rafflesia_extract",
+		"amount": 1,
 		"minimum_count": 0,
 		"positions": [
 			Vector2(1360, 432),
@@ -53,7 +87,6 @@ const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
 		"prefix": "OldRootBeringinRoot",
 		"item_id": "beringin_root",
 		"amount": 1,
-		"spawn_chance": 0.5,
 		"minimum_count": 0,
 		"positions": [
 			Vector2(720, 344),
@@ -63,13 +96,38 @@ const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
 	{
 		"prefix": "RuinGlimmerAetherBloom",
 		"item_id": "aether_bloom",
-		"amount": 2,
-		"spawn_chance": 0.35,
-		"minimum_count": 1,
+		"amount": 1,
+		"minimum_count": 0,
 		"positions": [
 			Vector2(736, 208),
 			Vector2(672, 232),
-			Vector2(832, 240),
+		],
+	},
+	{
+		"prefix": "GardenGateDianthusPollen",
+		"item_id": "dianthus_pollen",
+		"amount": 1,
+		"minimum_count": 0,
+		"positions": [
+			Vector2(800, 880),
+		],
+	},
+	{
+		"prefix": "SapGroveKecombrangExtract",
+		"item_id": "kecombrang_extract",
+		"amount": 1,
+		"minimum_count": 0,
+		"positions": [
+			Vector2(1280, 440),
+		],
+	},
+	{
+		"prefix": "OldRootKunyitExtract",
+		"item_id": "kunyit_extract",
+		"amount": 1,
+		"minimum_count": 0,
+		"positions": [
+			Vector2(640, 280),
 		],
 	},
 ]
@@ -185,20 +243,30 @@ func _clear_daytime_resources() -> void:
 			child.free()
 
 func _spawn_resource_rule(rule: Dictionary, rng: RandomNumberGenerator) -> void:
+	var day: int = DayNightCycle.day_count
+	var has_day_one_count: bool = rule.has("day_one_count")
+	if day == 1 and not has_day_one_count:
+		return
 	var positions: Array[Vector2] = _get_shuffled_positions(rule.get("positions", []), rng)
 	if positions.is_empty():
 		return
 	var required_count: int = int(rule.get("minimum_count", 0))
-	if DayNightCycle.day_count == 1 and rule.has("day_one_count"):
+	if day == 1 and has_day_one_count:
 		required_count = int(rule["day_one_count"])
 	required_count = clampi(required_count, 0, positions.size())
 
+	var item_rarity: ItemDatabase.Rarity = ItemDatabase.get_rarity(str(rule.get("item_id", "petal_shard")))
+	var base_chance: float = float(RARITY_SPAWN_CHANCE.get(item_rarity, 0.80))
+	var effective_chance: float = base_chance
+	if item_rarity != ItemDatabase.Rarity.COMMON:
+		effective_chance = base_chance * pow(0.92, floor(float(day - 1) / 5.0))
+
 	var spawned_count: int = 0
-	var can_roll_extra: bool = not (DayNightCycle.day_count == 1 and rule.has("day_one_count"))
+	var can_roll_extra: bool = not (day == 1 and has_day_one_count)
 	for index: int in range(positions.size()):
 		var should_spawn: bool = spawned_count < required_count
 		if not should_spawn and can_roll_extra:
-			should_spawn = rng.randf() <= float(rule.get("spawn_chance", 1.0))
+			should_spawn = rng.randf() <= effective_chance
 		if should_spawn:
 			_spawn_resource_pickup(rule, positions[index], spawned_count + 1)
 			spawned_count += 1
