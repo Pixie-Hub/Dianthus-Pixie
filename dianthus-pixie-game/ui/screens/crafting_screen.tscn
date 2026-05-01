@@ -1,18 +1,19 @@
-[gd_scene format=4 uid="uid://crafting_screen01"]
+[gd_scene format=3 uid="uid://0ll47w5vafl6"]
 
-[ext_resource type="Script" path="res://ui/screens/crafting_screen.gd" id="1_csscript"]
+[ext_resource type="Script" uid="uid://cdqdbd37bmrfb" path="res://ui/screens/crafting_screen.gd" id="1_csscript"]
 
-[node name="CraftingScreen" type="CanvasLayer"]
+[node name="CraftingScreen" type="CanvasLayer" unique_id=662045275]
+visible = false
 script = ExtResource("1_csscript")
 
-[node name="Overlay" type="ColorRect" parent="."]
+[node name="Overlay" type="ColorRect" parent="." unique_id=296136202]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0, 0, 0, 0.6)
 mouse_filter = 1
+color = Color(0, 0, 0, 0.6)
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=1194620856]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -23,48 +24,52 @@ offset_top = -140.0
 offset_right = 160.0
 offset_bottom = 140.0
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel"]
-anchors_preset = 15
+[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=738764136]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme_override_constants/margin_left = 8
-theme_override_constants/margin_right = 8
 theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=924542064]
+layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=1418194567]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
 text = "CRAFTING"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 8
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=389456774]
 custom_minimum_size = Vector2(0, 160)
+layout_mode = 2
 size_flags_vertical = 3
 
-[node name="RecipeList" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/ScrollContainer"]
+[node name="RecipeList" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/ScrollContainer" unique_id=214481683]
 unique_name_in_owner = true
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 2
 
-[node name="DescriptionLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="DescriptionLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=2068533261]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
 text = "Select a recipe."
 autowrap_mode = 2
-theme_override_font_sizes/font_size = 8
 
-[node name="CraftButton" type="Button" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="CraftButton" type="Button" parent="Panel/MarginContainer/VBoxContainer" unique_id=1685003754]
 unique_name_in_owner = true
-text = "CRAFT"
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
 disabled = true
-theme_override_font_sizes/font_size = 8
+text = "CRAFT"
 
-[node name="SwitchToBreedingBtn" type="Button" parent="Panel/MarginContainer/VBoxContainer"]
-text = ">> Breeding"
+[node name="SwitchToBreedingBtn" type="Button" parent="Panel/MarginContainer/VBoxContainer" unique_id=684488843]
+layout_mode = 2
 theme_override_font_sizes/font_size = 8
+text = ">> Breeding"

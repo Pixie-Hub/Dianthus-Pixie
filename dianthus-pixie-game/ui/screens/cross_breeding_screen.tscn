@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bvf1qpqwfd7jp" path="res://ui/screens/cross_breeding_screen.gd" id="1_cbs"]
 
 [node name="CrossBreedingScreen" type="CanvasLayer" unique_id=1687957879]
+visible = false
 script = ExtResource("1_cbs")
 
 [node name="Overlay" type="ColorRect" parent="." unique_id=1829548517]

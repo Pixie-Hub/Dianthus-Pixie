@@ -5,6 +5,7 @@
 [node name="EndingScreen" type="CanvasLayer" unique_id=1557495123]
 process_mode = 3
 layer = 101
+visible = false
 script = ExtResource("1_script")
 
 [node name="Overlay" type="ColorRect" parent="." unique_id=1248221096]

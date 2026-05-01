@@ -1,10 +1,11 @@
-[gd_scene format=3 uid="uid://quest_log_screen_01"]
+[gd_scene format=3 uid="uid://bma7njjcese1p"]
 
-[ext_resource type="Script" uid="uid://quest_log_scr_gd" path="res://ui/quests/quest_log_screen.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://dlm2anatfv0qh" path="res://ui/quests/quest_log_screen.gd" id="1_script"]
 
 [node name="QuestLogScreen" type="CanvasLayer" unique_id=1234567891]
 process_mode = 3
 layer = 95
+visible = false
 script = ExtResource("1_script")
 
 [node name="Overlay" type="ColorRect" parent="." unique_id=1234567892]

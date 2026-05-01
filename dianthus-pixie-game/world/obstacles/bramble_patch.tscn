@@ -1,23 +1,23 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://8aecktxeycbs"]
 
-[ext_resource type="Script" path="res://world/obstacles/bramble_patch.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://begjoc8ujtupy" path="res://world/obstacles/bramble_patch.gd" id="1_script"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bramble"]
 size = Vector2(56, 30)
 
-[node name="BramblePatch" type="StaticBody2D"]
+[node name="BramblePatch" type="StaticBody2D" unique_id=1493925874]
 collision_layer = 10
 collision_mask = 0
 script = ExtResource("1_script")
 
-[node name="VisualRoot" type="Node2D" parent="."]
+[node name="VisualRoot" type="Node2D" parent="." unique_id=1247776823]
 unique_name_in_owner = true
 
-[node name="BrambleMass" type="Polygon2D" parent="VisualRoot"]
-polygon = PackedVector2Array(-30, -12, -18, -18, 4, -14, 22, -18, 32, -6, 28, 8, 14, 16, -10, 14, -28, 18, -36, 4)
+[node name="BrambleMass" type="Polygon2D" parent="VisualRoot" unique_id=883883893]
 color = Color(0.23, 0.33, 0.12, 1)
+polygon = PackedVector2Array(-30, -12, -18, -18, 4, -14, 22, -18, 32, -6, 28, 8, 14, 16, -10, 14, -28, 18, -36, 4)
 
-[node name="VineStrokeA" type="Line2D" parent="VisualRoot"]
+[node name="VineStrokeA" type="Line2D" parent="VisualRoot" unique_id=1732267661]
 points = PackedVector2Array(-30, 6, -14, -8, 2, 3, 18, -10, 30, 2)
 width = 4.0
 default_color = Color(0.38, 0.23, 0.12, 1)
@@ -25,7 +25,7 @@ joint_mode = 2
 begin_cap_mode = 2
 end_cap_mode = 2
 
-[node name="VineStrokeB" type="Line2D" parent="VisualRoot"]
+[node name="VineStrokeB" type="Line2D" parent="VisualRoot" unique_id=304360362]
 points = PackedVector2Array(-28, -6, -10, 8, 8, -4, 24, 10)
 width = 3.0
 default_color = Color(0.47, 0.28, 0.14, 1)
@@ -33,9 +33,9 @@ joint_mode = 2
 begin_cap_mode = 2
 end_cap_mode = 2
 
-[node name="ThornTips" type="Polygon2D" parent="VisualRoot"]
-polygon = PackedVector2Array(-22, -19, -17, -10, -10, -18, 6, -16, 11, -7, 17, -17, 29, -10, 22, -4, 34, -2, 25, 4, 31, 13, 18, 9, 10, 18, 4, 8, -7, 17, -3, 7, -18, 17, -12, 7, -34, 8, -23, 2)
+[node name="ThornTips" type="Polygon2D" parent="VisualRoot" unique_id=2101180195]
 color = Color(0.68, 0.62, 0.36, 0.95)
+polygon = PackedVector2Array(-22, -19, -17, -10, -10, -18, 6, -16, 11, -7, 17, -17, 29, -10, 22, -4, 34, -2, 25, 4, 31, 13, 18, 9, 10, 18, 4, 8, -7, 17, -3, 7, -18, 17, -12, 7, -34, 8, -23, 2)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1080205427]
 shape = SubResource("RectangleShape2D_bramble")

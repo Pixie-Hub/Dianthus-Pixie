@@ -1,22 +1,21 @@
-[gd_scene format=4 uid="uid://inv_screen_01"]
+[gd_scene format=3 uid="uid://ceejuwh64gc3d"]
 
-[ext_resource type="Script" path="res://ui/screens/inventory_screen.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://k1jvt76q5c4x" path="res://ui/screens/inventory_screen.gd" id="1_script"]
 
-[node name="InventoryScreen" type="CanvasLayer"]
+[node name="InventoryScreen" type="CanvasLayer" unique_id=358813027]
 layer = 90
+visible = false
 script = ExtResource("1_script")
 
-[node name="Overlay" type="ColorRect" parent="."]
+[node name="Overlay" type="ColorRect" parent="." unique_id=1923895194]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
-color = Color(0, 0, 0, 0.6)
 mouse_filter = 1
+color = Color(0, 0, 0, 0.6)
 
-[node name="Panel" type="PanelContainer" parent="."]
+[node name="Panel" type="PanelContainer" parent="." unique_id=1998460874]
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -26,37 +25,36 @@ offset_top = -128.0
 offset_right = 144.0
 offset_bottom = 128.0
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=4306907]
 layout_mode = 2
 theme_override_constants/margin_left = 8
-theme_override_constants/margin_right = 8
 theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=1885355639]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=1494746459]
 layout_mode = 2
+theme_override_font_sizes/font_size = 16
 text = "INVENTORY"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 16
 
-[node name="SlotGrid" type="GridContainer" parent="Panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
+[node name="SlotGrid" type="GridContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=1994137851]
 unique_name_in_owner = true
+layout_mode = 2
 columns = 6
 
-[node name="Tooltip" type="Label" parent="."]
+[node name="Tooltip" type="Label" parent="." unique_id=916350254]
 unique_name_in_owner = true
+visible = false
+anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 8.0
 offset_top = -48.0
 offset_right = 320.0
 offset_bottom = -8.0
-text = ""
-visible = false
-mouse_filter = 2
 theme_override_font_sizes/font_size = 8
