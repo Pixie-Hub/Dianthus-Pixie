@@ -56,9 +56,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -118.0
-offset_top = -38.0
+offset_top = -54.0
 offset_right = 118.0
-offset_bottom = 38.0
+offset_bottom = 54.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_overlay_panel")
@@ -79,17 +79,42 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.93, 0.72, 1)
 theme_override_font_sizes/font_size = 10
-text = "Press E to harvest!"
+text = "Hold Space to balance harvest"
 horizontal_alignment = 1
 autowrap_mode = 3
+
+[node name="BalanceBar" type="Panel" parent="Panel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+clip_contents = true
+custom_minimum_size = Vector2(220, 26)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_timer_bg")
+
+[node name="TargetZone" type="ColorRect" parent="Panel/MarginContainer/VBoxContainer/BalanceBar"]
+unique_name_in_owner = true
+offset_left = 82.0
+offset_right = 139.0
+offset_bottom = 26.0
+mouse_filter = 2
+color = Color(0.23, 0.82, 0.27, 0.85)
+
+[node name="IndicatorLine" type="ColorRect" parent="Panel/MarginContainer/VBoxContainer/BalanceBar"]
+unique_name_in_owner = true
+offset_left = 108.0
+offset_top = -3.0
+offset_right = 112.0
+offset_bottom = 29.0
+mouse_filter = 2
+color = Color(1, 1, 1, 1)
 
 [node name="TimerBar" type="ProgressBar" parent="Panel/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(220, 12)
 layout_mode = 2
 size_flags_horizontal = 3
-max_value = 1.2
-value = 1.2
+max_value = 4.5
+value = 4.5
 show_percentage = false
 theme_override_styles/background = SubResource("StyleBoxFlat_timer_bg")
 theme_override_styles/fill = SubResource("StyleBoxFlat_timer_fill")
