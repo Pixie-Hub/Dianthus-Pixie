@@ -24,7 +24,7 @@
 [ext_resource type="PackedScene" uid="uid://8aecktxeycbs" path="res://world/obstacles/bramble_patch.tscn" id="19_bramble"]
 [ext_resource type="PackedScene" uid="uid://coy6xduda7ul6" path="res://ui/screens/ending_screen.tscn" id="19_ending"]
 [ext_resource type="PackedScene" uid="uid://ckly87alm222s" path="res://ui/screens/full_map_screen.tscn" id="20_fullmap"]
-[ext_resource type="PackedScene" uid="uid://scout_tracks_01" path="res://world/obstacles/scout_tracks.tscn" id="21_scoutracks"]
+[ext_resource type="PackedScene" uid="uid://j5pejkq30nz3r" path="res://world/obstacles/scout_tracks.tscn" id="21_scoutracks"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cjr1j"]
 texture = ExtResource("2_quyxi")

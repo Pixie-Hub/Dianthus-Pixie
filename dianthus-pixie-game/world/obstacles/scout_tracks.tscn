@@ -1,4 +1,4 @@
-[gd_scene format=4 uid="uid://scout_tracks_01"]
+[gd_scene format=4 uid="uid://j5pejkq30nz3r"]
 
 [ext_resource type="Script" path="res://world/obstacles/scout_tracks.gd" id="1_script"]
 
