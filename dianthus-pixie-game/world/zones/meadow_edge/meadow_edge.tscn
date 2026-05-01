@@ -1631,6 +1631,7 @@ item_id = "verdant_sap"
 [node name="RuinGlimmerAetherBloom" parent="YSortLayer/PickupContainer" unique_id=243556159 instance=ExtResource("11_pickup")]
 position = Vector2(736, 208)
 item_id = "aether_bloom"
+amount = 2
 
 [node name="SapGroveBougainvilleaExtract" parent="YSortLayer/PickupContainer" unique_id=1804135738 instance=ExtResource("11_pickup")]
 position = Vector2(1360, 432)
