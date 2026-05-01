@@ -21,32 +21,17 @@ const CORE_DOT_COLOR: Color = Color(1.0, 0.4, 0.7)
 const PLANT_DOT_COLOR: Color = Color(0.3, 0.9, 0.3)
 const ENEMY_DOT_COLOR: Color = Color(0.95, 0.25, 0.25)
 const SPAWN_ARROW_COLOR: Color = Color(0.95, 0.25, 0.25)
-const SCOUT_ARROW_COLOR: Color = Color(1.0, 0.85, 0.2, 1.0)
 const BOUNDS_COLOR: Color = Color(0.65, 0.50, 0.25, 0.9)
 const WORLD_BOUNDS_COLOR: Color = Color(0.45, 0.72, 0.42, 0.85)
 const BG_COLOR: Color = Color(0.08, 0.08, 0.12, 0.85)
 
 var _spawner: WaveSpawner = null
 var _plant_manager: Node = null
-var _scouted_spawn_point: Vector2 = Vector2.ZERO
-var _has_scouted_intel: bool = false
-var _scout_pulse_time: float = 0.0
-
-
-func set_scouted_intel(world_pos: Vector2) -> void:
-	_scouted_spawn_point = world_pos
-	_has_scouted_intel = true
-
-
-func clear_scouted_intel() -> void:
-	_scouted_spawn_point = Vector2.ZERO
-	_has_scouted_intel = false
 
 
 func _ready() -> void:
 	custom_minimum_size = map_size
 	call_deferred("refresh_references")
-	DayNightCycle.phase_changed.connect(_on_phase_changed_map)
 
 
 func refresh_references() -> void:
@@ -59,14 +44,8 @@ func refresh_references() -> void:
 	_plant_manager = scene_root.find_child("PlantPlacementManager", true, false)
 
 
-func _process(delta: float) -> void:
-	_scout_pulse_time += delta
+func _process(_delta: float) -> void:
 	queue_redraw()
-
-
-func _on_phase_changed_map(phase: String) -> void:
-	if phase == "DAY":
-		clear_scouted_intel()
 
 
 func _draw() -> void:
@@ -111,15 +90,6 @@ func _draw() -> void:
 	var player_mp: Vector2 = _get_player_map_position(player_pos)
 	if draw_rect_area.has_point(player_mp):
 		draw_circle(player_mp, PLAYER_DOT_RADIUS * marker_scale, PLAYER_DOT_COLOR)
-
-	if _has_scouted_intel:
-		var scout_dir: Vector2 = (_scouted_spawn_point - player_pos).normalized()
-		if scout_dir != Vector2.ZERO:
-			var scout_edge: Vector2 = _compute_box_edge(player_mp, scout_dir, draw_size)
-			var pulse_alpha: float = 0.55 + 0.45 * sin(_scout_pulse_time * TAU * 1.2)
-			var scout_color: Color = SCOUT_ARROW_COLOR
-			scout_color.a = pulse_alpha
-			_draw_arrow_colored(scout_edge, scout_dir, scout_color)
 
 	if not DayNightCycle.is_night():
 		return

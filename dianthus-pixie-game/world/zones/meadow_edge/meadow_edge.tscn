@@ -24,7 +24,6 @@
 [ext_resource type="PackedScene" uid="uid://8aecktxeycbs" path="res://world/obstacles/bramble_patch.tscn" id="19_bramble"]
 [ext_resource type="PackedScene" uid="uid://coy6xduda7ul6" path="res://ui/screens/ending_screen.tscn" id="19_ending"]
 [ext_resource type="PackedScene" uid="uid://ckly87alm222s" path="res://ui/screens/full_map_screen.tscn" id="20_fullmap"]
-[ext_resource type="PackedScene" uid="uid://j5pejkq30nz3r" path="res://world/obstacles/scout_tracks.tscn" id="21_scoutracks"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cjr1j"]
 texture = ExtResource("2_quyxi")
@@ -1618,12 +1617,6 @@ bramble_id = &"old_root_hollow_pocket"
 position = Vector2(1006, 800)
 rotation = 0.34
 bramble_id = &"south_return_shortcut"
-
-[node name="ScoutTracksNorth" parent="YSortLayer" unique_id=300100001 instance=ExtResource("21_scoutracks")]
-position = Vector2(400, 192)
-
-[node name="ScoutTracksEast" parent="YSortLayer" unique_id=300100002 instance=ExtResource("21_scoutracks")]
-position = Vector2(1280, 480)
 
 [node name="BreedingBench" parent="YSortLayer" unique_id=62907201 instance=ExtResource("12_bench")]
 position = Vector2(832, 848)

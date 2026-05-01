@@ -335,22 +335,6 @@ func _unhandled_input(event: InputEvent) -> void:
 			QuestManager._on_devourer_defeated()
 			print("DEBUG: Shift+7 — Emitted devourer_defeated.")
 			print("DEBUG: flag_story_devourer_defeated == %s" % str(UnlockFlags.has_flag("flag_story_devourer_defeated")))
-		elif event.keycode == KEY_8 and event.shift_pressed:
-			var spawner8: Node = get_tree().current_scene.find_child("WaveSpawner", true, false)
-			if spawner8 != null and spawner8.has_method("predict_spawn_direction"):
-				var pos8: Vector2 = spawner8.predict_spawn_direction()
-				var hud8: Node = get_tree().current_scene.find_child("HUD", true, false)
-				if hud8 != null:
-					var mm8: MapView = hud8.find_child("Minimap", true, false) as MapView
-					if mm8 != null:
-						mm8.set_scouted_intel(pos8)
-						print("DEBUG: Shift+8 — Force scout reveal at %s." % pos8)
-					else:
-						print("DEBUG: Shift+8 — Minimap not found.")
-				else:
-					print("DEBUG: Shift+8 — HUD not found.")
-			else:
-				print("DEBUG: Shift+8 — WaveSpawner not found.")
 		elif event.keycode == KEY_9 and event.shift_pressed:
 			DayNightCycle._phase_timer = 35.0
 			print("DEBUG: Shift+9 — Set DAY timer to 35s remaining.")
