@@ -25,6 +25,7 @@
 [ext_resource type="PackedScene" uid="uid://coy6xduda7ul6" path="res://ui/screens/ending_screen.tscn" id="19_ending"]
 [ext_resource type="PackedScene" uid="uid://ckly87alm222s" path="res://ui/screens/full_map_screen.tscn" id="20_fullmap"]
 [ext_resource type="PackedScene" uid="uid://daytime_spawner01" path="res://world/events/daytime_event_spawner.tscn" id="21_events"]
+[ext_resource type="PackedScene" uid="uid://fortification_spot01" path="res://world/fortifications/fortification_spot.tscn" id="22_fortspot"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cjr1j"]
 texture = ExtResource("2_quyxi")
@@ -1618,6 +1619,22 @@ bramble_id = &"old_root_hollow_pocket"
 position = Vector2(1006, 800)
 rotation = 0.34
 bramble_id = &"south_return_shortcut"
+
+[node name="FortSpotNorth" parent="YSortLayer" unique_id=1940100001 instance=ExtResource("22_fortspot")]
+position = Vector2(768, 736)
+spot_label = "North Gate"
+
+[node name="FortSpotSouth" parent="YSortLayer" unique_id=1940100002 instance=ExtResource("22_fortspot")]
+position = Vector2(768, 928)
+spot_label = "South Gate"
+
+[node name="FortSpotWest" parent="YSortLayer" unique_id=1940100003 instance=ExtResource("22_fortspot")]
+position = Vector2(656, 832)
+spot_label = "West Gate"
+
+[node name="FortSpotEast" parent="YSortLayer" unique_id=1940100004 instance=ExtResource("22_fortspot")]
+position = Vector2(880, 832)
+spot_label = "East Gate"
 
 [node name="BreedingBench" parent="YSortLayer" unique_id=62907201 instance=ExtResource("12_bench")]
 position = Vector2(832, 848)

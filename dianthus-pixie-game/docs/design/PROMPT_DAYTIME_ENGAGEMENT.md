@@ -12,7 +12,6 @@ The existing daytime systems create **decisions about what to do**, but each act
 2. **Plant placement is instantaneous.** Enter placement mode, click 1–8 tiles, exit. Under 10 seconds for a full garden rearrangement.
 3. **No daytime threats.** The world is completely safe during DAY. Once the player learns the routes, there is zero tension while gathering. The bramble patches are a one-time obstacle per day.
 4. **Resource nodes are spatially static.** The same positions are used every day (randomized by a seeded RNG that only toggles whether a node spawns). The player memorizes the map within 2–3 days and stops exploring.
-5. **Only 2 scout tracks exist.** Each takes ~5 seconds to interact with. Combined cost: ~40 seconds of travel + 10 seconds of interaction. That fills less than 30% of the phase.
 6. **No garden upkeep cost.** Plants, once placed, require zero maintenance. The garden does not demand any daytime attention.
 7. **Nothing scales daytime complexity.** Enemy HP/DMG/count scales with day count, but daytime has no parallel progression. Day 1 and Day 20 feel identical during exploration.
 8. **No time-consuming preparation actions.** Loadout changes are instant. There are no traps to set, walls to repair, or fortifications to build.
@@ -25,7 +24,6 @@ These systems are solid and should be preserved:
 - **Rarity-based spawn probabilities** — COMMON/UNCOMMON/RARE tiers with scarcity scaling
 - **Harvest QTE** — Active interaction for UNCOMMON/RARE pickups
 - **Bramble patches** — Obstacle-gated optional pockets
-- **Scout tracks** — Daytime-to-night strategic link
 - **Return pressure** — Dusk tint, audio, HUD warning at 30 seconds remaining
 - **Daily quest variety** — Objectives like "collect 10 Petal Shards" or "defeat 5 Shadowlings"
 

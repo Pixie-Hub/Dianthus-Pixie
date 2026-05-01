@@ -1,0 +1,19 @@
+[gd_scene format=4 uid="uid://spore_trap01"]
+
+[ext_resource type="Script" path="res://world/fortifications/spore_trap.gd" id="1_script"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_trigger"]
+radius = 10.0
+
+[node name="SporeTrap" type="Area2D"]
+script = ExtResource("1_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_trigger")
+
+[node name="Visual" type="ColorRect" parent="."]
+offset_left = -7.0
+offset_top = -7.0
+offset_right = 7.0
+offset_bottom = 7.0
+color = Color(0.3, 0.7, 0.2, 0.85)

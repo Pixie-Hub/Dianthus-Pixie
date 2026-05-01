@@ -325,6 +325,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_3 and event.shift_pressed:
 			equip_weapon(0, "petal_shield")
 			print("DEBUG: Shift+3 — Equip Petal Shield to slot 1.")
+		elif event.keycode == KEY_4 and event.shift_pressed and not event.ctrl_pressed:
+			InventoryManager.add_item("petal_shard", 12)
+			InventoryManager.add_item("verdant_sap", 8)
+			InventoryManager.add_item("moonspore", 4)
+			print("DEBUG: Shift+4 — Added fortification materials (12 Petal Shard, 8 Verdant Sap, 4 Moonspore).")
 		elif event.keycode == KEY_5 and event.shift_pressed and not event.ctrl_pressed:
 			ZoneTracker.enter_zone("ruins_of_veld")
 			print("DEBUG: Shift+5 — Emitted zone_entered{zone_id=ruins_of_veld}.")
