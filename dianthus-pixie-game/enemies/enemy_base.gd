@@ -29,7 +29,7 @@ func _ready() -> void:
 	current_hp = max_hp
 	add_to_group(&"enemies")
 	collision_layer = CollisionLayers.ENEMY
-	collision_mask = CollisionLayers.PLAYER | CollisionLayers.TERRAIN
+	collision_mask = CollisionLayers.MASK_ENEMY
 
 
 func take_damage(amount: int) -> void:

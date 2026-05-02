@@ -7,6 +7,6 @@ const ENEMY: int = 8
 const PROJECTILE: int = 16
 
 const MASK_PLAYER: int = TERRAIN
-const MASK_ENEMY: int = TERRAIN | PLAYER
+const MASK_ENEMY: int = PLAYER
 const MASK_PROJECTILE_PLAYER: int = TERRAIN | ENEMY
 const MASK_INTERACTABLE: int = PLAYER
