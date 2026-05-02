@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://rhythm_harvest_01"]
+
+[ext_resource type="Script" path="res://minigames/harvest_qte/rhythm_harvest_screen.gd" id="1_script"]
+
+[node name="RhythmHarvestScreen" type="CanvasLayer"]
+process_mode = 3
+layer = 95
+script = ExtResource("1_script")

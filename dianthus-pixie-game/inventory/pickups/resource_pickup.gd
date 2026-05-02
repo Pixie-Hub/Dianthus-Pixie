@@ -1,6 +1,7 @@
 extends Area2D
 
 const HARVEST_QTE_SCENE: PackedScene = preload("res://minigames/harvest_qte/harvest_qte_screen.tscn")
+const RHYTHM_HARVEST_SCENE: PackedScene = preload("res://minigames/harvest_qte/rhythm_harvest_screen.tscn")
 
 @export var item_id: String = "petal_shard"
 @export var amount: int = 1
@@ -55,24 +56,49 @@ func _should_start_harvest_qte() -> bool:
 
 
 func _start_harvest_qte() -> void:
+	var rarity: int = ItemDatabase.get_rarity(item_id)
+	if rarity == ItemDatabase.Rarity.UNCOMMON:
+		_start_rhythm_harvest()
+	else:
+		_start_balance_qte()
+
+
+func _start_balance_qte() -> void:
 	var qte_screen: Node = HARVEST_QTE_SCENE.instantiate()
 	get_tree().current_scene.add_child(qte_screen)
-	qte_screen.connect("finished", _on_harvest_qte_finished)
+	qte_screen.connect("finished", _on_balance_qte_finished)
 	qte_screen.call("start_qte", item_id, amount)
 
 
-func _on_harvest_qte_finished(success: bool) -> void:
-	var granted_amount: int = _get_harvest_success_amount() if success else _get_reduced_harvest_amount()
+func _on_balance_qte_finished(success: bool) -> void:
+	var granted_amount: int = _get_rare_success_amount() if success else _get_rare_reduced_amount()
 	_grant_pickup(granted_amount, not success, success and granted_amount > amount)
 
 
-func _get_harvest_success_amount() -> int:
-	if ItemDatabase.get_rarity(item_id) == ItemDatabase.Rarity.RARE:
-		return amount + 1
-	return amount
+func _start_rhythm_harvest() -> void:
+	var rhythm_screen: Node = RHYTHM_HARVEST_SCENE.instantiate()
+	get_tree().current_scene.add_child(rhythm_screen)
+	rhythm_screen.connect("finished", _on_rhythm_harvest_finished)
+	rhythm_screen.call("start_qte", item_id, amount)
 
 
-func _get_reduced_harvest_amount() -> int:
+func _on_rhythm_harvest_finished(hits: int) -> void:
+	if hits == 3:
+		var bonus_amount: int = amount * 2
+		_grant_pickup(bonus_amount, false, true)
+	elif hits >= 1:
+		_grant_pickup(amount, false, false)
+	else:
+		_show_popup("+0 %s (Harvest Lost!)" % ItemDatabase.get_display_name(item_id), Color(1.0, 0.25, 0.25))
+		set_tutorial_hint_active(false)
+		queue_free()
+
+
+func _get_rare_success_amount() -> int:
+	return amount + 1
+
+
+func _get_rare_reduced_amount() -> int:
 	return maxi(1, int(floor(float(amount) * 0.5)))
 
 
