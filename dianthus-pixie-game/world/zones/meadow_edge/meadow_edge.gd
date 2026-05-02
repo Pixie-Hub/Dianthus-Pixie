@@ -11,7 +11,7 @@ const RESOURCE_RNG_DAY_STEP: int = 7919
 const DAYTIME_RESOURCE_PICKUP_GROUP: StringName = &"daytime_resource_pickups"
 const RARITY_SPAWN_CHANCE: Dictionary = {
 	ItemDatabase.Rarity.COMMON:   0.80,
-	ItemDatabase.Rarity.UNCOMMON: 0.45,
+	ItemDatabase.Rarity.UNCOMMON: 0.18,
 	ItemDatabase.Rarity.RARE:     0.20,
 }
 const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [

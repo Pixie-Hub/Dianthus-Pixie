@@ -4,7 +4,7 @@ signal save_completed(success: bool, manual: bool)
 signal load_completed(success: bool)
 
 const SAVE_PATH: String = "user://savegame.json"
-const SCHEMA_VERSION: int = 11
+const SCHEMA_VERSION: int = 12
 const GAME_VERSION: String = "0.1.0"
 
 const PLANT_TYPE_TO_SCENE: Dictionary = {
@@ -227,6 +227,15 @@ func _gather_state(manual: bool) -> Dictionary:
 	state["endless_mode"] = GameManager.endless_mode
 	state["difficulty"] = {"tier": DifficultyManager.get_tier_label().to_lower()}
 
+	# Daytime expedition state
+	var event_spawner: Node = null
+	if is_instance_valid(get_tree().current_scene):
+		event_spawner = get_tree().current_scene.find_child("DaytimeEventSpawner", true, false)
+	if event_spawner != null and event_spawner.has_method("serialize"):
+		state["daytime_event"] = event_spawner.call("serialize")
+	else:
+		state["daytime_event"] = {"last_event_id": "", "completed_day": -1}
+
 	return state
 
 
@@ -322,6 +331,13 @@ func _apply_state(state: Dictionary) -> void:
 
 	# 5.10 Endless mode.
 	GameManager.endless_mode = bool(state.get("endless_mode", false))
+
+	# 5.11 Daytime expedition state.
+	var event_spawner: Node = null
+	if is_instance_valid(get_tree().current_scene):
+		event_spawner = get_tree().current_scene.find_child("DaytimeEventSpawner", true, false)
+	if event_spawner != null and event_spawner.has_method("deserialize"):
+		event_spawner.call("deserialize", state.get("daytime_event", {}))
 
 	# 5.5 Difficulty tier.
 	var diff_tier: String = state.get("difficulty", {}).get("tier", "normal")
@@ -458,4 +474,10 @@ func _migrate(data: Dictionary) -> Dictionary:
 	if version < 11:
 		print("[SaveManager] Migrated v10 → v11 (plant vitality)")
 		data["schema_version"] = 11
+	# v11 → v12: daytime expedition completed_day tracking added.
+	if version < 12:
+		print("[SaveManager] Migrated v11 → v12 (daytime_event)")
+		if not data.has("daytime_event"):
+			data["daytime_event"] = {"last_event_id": "", "completed_day": -1}
+		data["schema_version"] = 12
 	return data

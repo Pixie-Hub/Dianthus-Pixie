@@ -42,6 +42,7 @@ const DESPAWN_TIME_REMAINING: float = 30.0
 
 var _active_event: DaytimeEvent = null
 var _last_event_id: StringName = &""
+var _completed_day: int = -1
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 
@@ -68,8 +69,24 @@ func _process(_delta: float) -> void:
 		_despawn_active()
 
 
+func serialize() -> Dictionary:
+	return {
+		"last_event_id": str(_last_event_id),
+		"completed_day": _completed_day,
+	}
+
+
+func deserialize(data: Dictionary) -> void:
+	_last_event_id = StringName(str(data.get("last_event_id", "")))
+	_completed_day = int(data.get("completed_day", -1))
+	if _completed_day == DayNightCycle.day_count:
+		_despawn_active()
+
+
 func _spawn_event() -> void:
 	if DayNightCycle.day_count < 1:
+		return
+	if _completed_day == DayNightCycle.day_count:
 		return
 	_despawn_active()
 	_rng.seed = 94321 + DayNightCycle.day_count * 31337
@@ -127,6 +144,7 @@ func _get_scene(event_id: StringName) -> PackedScene:
 
 
 func _on_event_completed(_id: StringName) -> void:
+	_completed_day = DayNightCycle.day_count
 	_active_event = null
 	active_event_cleared.emit()
 
