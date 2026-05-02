@@ -683,6 +683,8 @@ func _end_attack() -> void:
 	is_attacking = false
 	if is_dead:
 		return
+	if _current_weapon == null:
+		return
 	_attack_cooldown_timer = _current_weapon.cooldown * (1.0 - attack_speed_bonus)
 	var hitbox_shape: CollisionShape2D = _sword_hitbox.get_child(0)
 	hitbox_shape.disabled = true
