@@ -30,6 +30,11 @@ func should_retreat() -> bool:
 	return false
 
 
+# Override: Phantom Weaver uses a top-down sprite — rotate toward movement direction.
+func _uses_top_down_facing() -> bool:
+	return true
+
+
 func _get_death_sfx_id() -> String:
 	return "phantom_weaver_death"
 

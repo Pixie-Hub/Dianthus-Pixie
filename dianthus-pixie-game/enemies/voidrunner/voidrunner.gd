@@ -18,5 +18,10 @@ func should_retreat() -> bool:
 	return false
 
 
+# Override: Voidrunner uses a top-down sprite — rotate toward movement direction.
+func _uses_top_down_facing() -> bool:
+	return true
+
+
 func _get_death_sfx_id() -> String:
 	return "voidrunner_death"

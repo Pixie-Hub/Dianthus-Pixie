@@ -29,7 +29,7 @@ func _ready() -> void:
 	current_hp = max_hp
 	add_to_group(&"enemies")
 	collision_layer = CollisionLayers.ENEMY
-	collision_mask = CollisionLayers.PLAYER
+	collision_mask = CollisionLayers.PLAYER | CollisionLayers.TERRAIN
 
 
 func take_damage(amount: int) -> void:
@@ -145,6 +145,23 @@ func _physics_process(_delta: float) -> void:
 	if is_stunned():
 		velocity = Vector2.ZERO
 		move_and_slide()
+	_update_sprite_facing()
+
+
+func _update_sprite_facing() -> void:
+	if not is_instance_valid(_sprite) or velocity == Vector2.ZERO:
+		return
+	if _uses_top_down_facing():
+		_sprite.rotation = velocity.angle()
+	else:
+		if velocity.x < 0.0:
+			_sprite.flip_h = true
+		elif velocity.x > 0.0:
+			_sprite.flip_h = false
+
+
+func _uses_top_down_facing() -> bool:
+	return false
 
 
 func should_retreat() -> bool:
