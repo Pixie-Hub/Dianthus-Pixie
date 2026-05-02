@@ -25,6 +25,12 @@ func roll_for_day(day: int) -> void:
 		day, current_daily_ids.size(), current_daily_ids])
 
 
+func reset_state() -> void:
+	last_rolled_day = 0
+	current_daily_ids = []
+	print("[DailyQuestRoller] State reset.")
+
+
 func force_reroll() -> void:
 	last_rolled_day = -1
 	roll_for_day(DayNightCycle.day_count)

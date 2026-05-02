@@ -229,6 +229,16 @@ func report_event(event_id: StringName, amount: int = 1, context: Dictionary = {
 			return
 
 
+# ── Reset ─────────────────────────────────────────────────────────────────────
+
+func reset_state() -> void:
+	_active = {}
+	_completed = {}
+	_failed = {}
+	_tracked_quest_id = &""
+	print("[QuestManager] State reset.")
+
+
 # ── Serialization ─────────────────────────────────────────────────────────────
 
 func serialize() -> Dictionary:

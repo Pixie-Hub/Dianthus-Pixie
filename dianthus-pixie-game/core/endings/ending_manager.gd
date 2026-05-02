@@ -13,6 +13,11 @@ func _ready() -> void:
 	UnlockFlags.flag_set.connect(_on_flag_set)
 
 
+func reset_state() -> void:
+	_ending_fired = false
+	print("[EndingManager] State reset.")
+
+
 func force_trigger(ending_id: String) -> void:
 	_ending_fired = false
 	_fire(ending_id)

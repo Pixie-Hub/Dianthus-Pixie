@@ -21,6 +21,11 @@ func clear_flag(flag_name: String) -> void:
 	_flags.erase(flag_name)
 
 
+func reset_state() -> void:
+	_flags = {}
+	print("[UnlockFlags] State reset.")
+
+
 func serialize() -> Dictionary:
 	return _flags.duplicate()
 

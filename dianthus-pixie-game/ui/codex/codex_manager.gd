@@ -33,6 +33,12 @@ func get_total_count() -> int:
 	return PlantRegistry.get_all_plant_ids().size()
 
 
+func reset_state() -> void:
+	discovered_plants = {}
+	discover_plant("bougainvillea", false)
+	print("[CodexManager] State reset.")
+
+
 func serialize() -> Dictionary:
 	return {"discovered_plants": discovered_plants.duplicate()}
 
