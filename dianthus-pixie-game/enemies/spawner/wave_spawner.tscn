@@ -6,7 +6,7 @@
 script = ExtResource("1_wvsp")
 
 [node name="SpawnNorth" type="Marker2D" parent="." unique_id=611031472]
-position = Vector2(320, -16)
+position = Vector2(320, 32)
 
 [node name="SpawnSouth" type="Marker2D" parent="." unique_id=1370820617]
 position = Vector2(320, 496)
@@ -15,4 +15,4 @@ position = Vector2(320, 496)
 position = Vector2(656, 240)
 
 [node name="SpawnWest" type="Marker2D" parent="." unique_id=575008252]
-position = Vector2(-16, 240)
+position = Vector2(32, 240)
