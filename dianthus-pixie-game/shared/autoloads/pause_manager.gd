@@ -1,6 +1,9 @@
 extends Node
 
+signal pause_state_changed(is_paused: bool)
+
 var _holders: Dictionary = {}
+var _last_paused: bool = false
 
 
 func _ready() -> void:
@@ -18,6 +21,7 @@ func request_pause(owner: Object) -> void:
 	_holders[owner.get_instance_id()] = weakref(owner)
 	set_process(true)
 	get_tree().paused = true
+	_emit_if_changed(true)
 
 
 func release_pause(owner: Object) -> void:
@@ -30,6 +34,7 @@ func clear_all() -> void:
 	_holders.clear()
 	set_process(false)
 	get_tree().paused = false
+	_emit_if_changed(false)
 
 
 func is_pause_requested() -> bool:
@@ -42,6 +47,13 @@ func _sync_pause_state() -> void:
 	var should_pause: bool = not _holders.is_empty()
 	get_tree().paused = should_pause
 	set_process(should_pause)
+	_emit_if_changed(should_pause)
+
+
+func _emit_if_changed(is_paused: bool) -> void:
+	if is_paused != _last_paused:
+		_last_paused = is_paused
+		pause_state_changed.emit(is_paused)
 
 
 func _cleanup_holders() -> void:

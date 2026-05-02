@@ -45,6 +45,9 @@ const PREPARATION_THRESHOLD: float = 30.0
 const FADE_DURATION: float = 1.5
 const INTENSE_THRESHOLD: float = 0.5
 const INTENSE_POLL_INTERVAL: float = 2.0
+const MUFFLE_FADE: float = 0.3
+const MUFFLE_VOLUME_OFFSET_DB: float = -8.0
+const MUFFLE_LOWPASS_HZ: float = 800.0
 
 var _player_a: AudioStreamPlayer = null
 var _player_b: AudioStreamPlayer = null
@@ -59,7 +62,10 @@ var _poll_timer: float = 0.0
 var _cache: Dictionary = {}
 var _fade_tween: Tween = null
 var _intense_tween: Tween = null
+var _muffle_tween: Tween = null
 var _wave_spawner: Node = null
+var _muffle_effect_index: int = -1
+var _is_muffled: bool = false
 
 
 func _ready() -> void:
@@ -70,6 +76,8 @@ func _ready() -> void:
 
 	DayNightCycle.phase_changed.connect(_on_phase_changed)
 	get_tree().root.child_entered_tree.connect(_on_scene_changed)
+	PauseManager.pause_state_changed.connect(_on_pause_state_changed)
+	call_deferred("_setup_muffle_effect")
 	call_deferred("_sync_to_current_context")
 
 
@@ -109,12 +117,16 @@ func play_devourer_boss() -> void:
 
 func stop_music(fade: bool = true) -> void:
 	_current_track = ""
+	_is_muffled = false
 	if fade:
 		_fade_out_player(_active_player)
 	else:
 		_stop_player(_player_a)
 		_stop_player(_player_b)
 	_set_intense(false, false)
+	var bus_idx: int = AudioServer.get_bus_index(&"Music")
+	if bus_idx >= 0 and _muffle_effect_index >= 0:
+		AudioServer.set_bus_effect_enabled(bus_idx, _muffle_effect_index, false)
 
 
 func play_ending_music(ending_id: String) -> void:
@@ -266,7 +278,10 @@ func _crossfade_to(track_id: String, stream: AudioStream, loop: bool) -> void:
 	_fade_tween = create_tween()
 	_fade_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	_fade_tween.set_parallel(true)
-	_fade_tween.tween_property(incoming, "volume_db", _get_track_volume_db(track_id), FADE_DURATION)
+	var target_vol: float = _get_track_volume_db(track_id)
+	if _is_muffled:
+		target_vol += MUFFLE_VOLUME_OFFSET_DB
+	_fade_tween.tween_property(incoming, "volume_db", target_vol, FADE_DURATION)
 	if is_instance_valid(outgoing):
 		_fade_tween.tween_property(outgoing, "volume_db", -80.0, FADE_DURATION)
 		_fade_tween.chain().tween_callback(outgoing.stop)
@@ -343,3 +358,38 @@ func _get_wave_spawner() -> Node:
 		if scene != null:
 			_wave_spawner = scene.find_child("WaveSpawner", true, false)
 	return _wave_spawner
+
+
+func _setup_muffle_effect() -> void:
+	var bus_idx: int = AudioServer.get_bus_index(&"Music")
+	if bus_idx < 0:
+		return
+	var effect: AudioEffectLowPassFilter = AudioEffectLowPassFilter.new()
+	effect.cutoff_hz = MUFFLE_LOWPASS_HZ
+	effect.resonance = 0.5
+	AudioServer.add_bus_effect(bus_idx, effect)
+	_muffle_effect_index = AudioServer.get_bus_effect_count(bus_idx) - 1
+	AudioServer.set_bus_effect_enabled(bus_idx, _muffle_effect_index, false)
+
+
+func _on_pause_state_changed(is_paused: bool) -> void:
+	set_muffle(is_paused)
+
+
+func set_muffle(on: bool) -> void:
+	if on == _is_muffled:
+		return
+	_is_muffled = on
+	var bus_idx: int = AudioServer.get_bus_index(&"Music")
+	if bus_idx < 0:
+		return
+	if _muffle_tween and _muffle_tween.is_valid():
+		_muffle_tween.kill()
+	_muffle_tween = create_tween()
+	_muffle_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	var base_vol: float = _get_track_volume_db(_current_track) if not _current_track.is_empty() else 0.0
+	var target_vol: float = base_vol + MUFFLE_VOLUME_OFFSET_DB if on else base_vol
+	if is_instance_valid(_active_player):
+		_muffle_tween.tween_property(_active_player, "volume_db", target_vol, MUFFLE_FADE)
+	if _muffle_effect_index >= 0:
+		AudioServer.set_bus_effect_enabled(bus_idx, _muffle_effect_index, on)
