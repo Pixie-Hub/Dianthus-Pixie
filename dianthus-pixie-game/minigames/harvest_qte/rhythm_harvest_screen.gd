@@ -275,10 +275,8 @@ func _on_circle_draw() -> void:
 		return
 
 	_draw_filled_circle(_circle_draw, center, TARGET_RADIUS, TARGET_COLOR)
-	if _approach_radius > TARGET_RADIUS:
+	if _approach_radius > 0.0:
 		_draw_circle_outline(_circle_draw, center, _approach_radius, APPROACH_COLOR, 2.5)
-	else:
-		_draw_circle_outline(_circle_draw, center, TARGET_RADIUS, APPROACH_COLOR, 2.5)
 
 
 func _draw_filled_circle(ctrl: Control, center: Vector2, radius: float, color: Color) -> void:
