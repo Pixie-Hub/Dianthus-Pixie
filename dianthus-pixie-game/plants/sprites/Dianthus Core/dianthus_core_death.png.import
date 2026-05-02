@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://lshj2x1akr8o"
-path="res://.godot/imported/Dianthus Core.png-b7c25b1fdcc437f041ebea3261cfc0b2.ctex"
+uid="uid://y815em0uf3j7"
+path="res://.godot/imported/dianthus_core_death.png-4ad7e3a4211cffb3cdc53288e88e8fba.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://plants/sprites/Dianthus Core.png"
-dest_files=["res://.godot/imported/Dianthus Core.png-b7c25b1fdcc437f041ebea3261cfc0b2.ctex"]
+source_file="res://plants/sprites/Dianthus Core/dianthus_core_death.png"
+dest_files=["res://.godot/imported/dianthus_core_death.png-4ad7e3a4211cffb3cdc53288e88e8fba.ctex"]
 
 [params]
 

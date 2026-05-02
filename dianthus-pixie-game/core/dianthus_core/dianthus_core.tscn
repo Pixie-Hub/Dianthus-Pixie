@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://ctmxjj3qpo8b8"]
 
 [ext_resource type="Script" uid="uid://edo73p7wtn7o" path="res://core/dianthus_core/dianthus_core.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://lshj2x1akr8o" path="res://plants/sprites/Dianthus Core.png" id="2_fjt3g"]
+[ext_resource type="Texture2D" uid="uid://lshj2x1akr8o" path="res://plants/sprites/Dianthus Core/Dianthus Core.png" id="2_fjt3g"]
+[ext_resource type="Texture2D" uid="uid://y815em0uf3j7" path="res://plants/sprites/Dianthus Core/dianthus_core_death.png" id="3_death"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_body"]
 radius = 12.0
@@ -24,6 +25,7 @@ radius = 16.0
 [node name="DianthusCore" type="StaticBody2D" unique_id=1007223560]
 collision_mask = 0
 script = ExtResource("1_script")
+death_texture = ExtResource("3_death")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=963698410]
 unique_name_in_owner = true
