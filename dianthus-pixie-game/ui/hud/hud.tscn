@@ -397,6 +397,7 @@ theme_override_constants/margin_bottom = 4
 custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 script = ExtResource("3_minimap_script")
+show_world_bounds = true
 
 [node name="WaveCounterPanel" type="PanelContainer" parent="." unique_id=1512697353]
 anchors_preset = 2

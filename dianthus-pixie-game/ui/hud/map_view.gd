@@ -49,6 +49,8 @@ func refresh_references() -> void:
 	_spawner = scene_root.find_child("WaveSpawner", true, false) as WaveSpawner
 	_plant_manager = scene_root.find_child("PlantPlacementManager", true, false)
 	_event_spawner = scene_root.find_child("DaytimeEventSpawner", true, false)
+	if scene_root.has_method("get_map_bounds"):
+		world_bounds = scene_root.get_map_bounds()
 
 
 func _process(_delta: float) -> void:
