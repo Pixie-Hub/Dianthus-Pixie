@@ -26,6 +26,8 @@ const EVENT_MARKER_RADIUS: float = 4.0
 const BOUNDS_COLOR: Color = Color(0.65, 0.50, 0.25, 0.9)
 const WORLD_BOUNDS_COLOR: Color = Color(0.45, 0.72, 0.42, 0.85)
 const BG_COLOR: Color = Color(0.08, 0.08, 0.12, 0.85)
+const QUEST_MATERIAL_COLOR: Color = Color(0.25, 1.0, 0.85, 1.0)
+const QUEST_MATERIAL_RADIUS: float = 3.5
 
 var _spawner: WaveSpawner = null
 var _plant_manager: Node = null
@@ -94,6 +96,8 @@ func _draw() -> void:
 	var player_mp: Vector2 = _get_player_map_position(player_pos)
 	if draw_rect_area.has_point(player_mp):
 		draw_circle(player_mp, PLAYER_DOT_RADIUS * marker_scale, PLAYER_DOT_COLOR)
+
+	_draw_tracked_material_markers(player_pos, draw_rect_area)
 
 	if not DayNightCycle.is_night():
 		if is_instance_valid(_event_spawner) and _event_spawner.has_method("has_active_event"):
@@ -187,6 +191,47 @@ func _compute_box_edge(center: Vector2, dir: Vector2, box_size: Vector2) -> Vect
 				if t < best_t or best_t == 0.0:
 					best_t = t
 	return center + dir * best_t
+
+
+func _draw_tracked_material_markers(player_pos: Vector2, draw_rect_area: Rect2) -> void:
+	var tracked_id: StringName = QuestManager.get_tracked_quest()
+	if tracked_id == &"":
+		return
+	var quest: QuestData = QuestManager.get_quest_data(tracked_id)
+	if quest == null:
+		return
+	var item_ids: Array[String] = []
+	var prog: Dictionary = QuestManager.get_progress(tracked_id)
+	for obj: QuestObjective in quest.objectives:
+		if obj.event_id != &"item_collected":
+			continue
+		var item_id: String = obj.filter.get("item_id", "")
+		if item_id.is_empty():
+			continue
+		var obj_data: Variant = prog.get(obj.objective_id)
+		var current: int = 0
+		if obj_data is Dictionary:
+			current = int((obj_data as Dictionary).get("current", 0))
+		if current < obj.target_count and item_id not in item_ids:
+			item_ids.append(item_id)
+	if item_ids.is_empty():
+		return
+	var t: float = Time.get_ticks_msec() / 1000.0
+	var pulse_alpha: float = 0.6 + 0.4 * sin(t * TAU * 2.0)
+	var draw_color: Color = Color(QUEST_MATERIAL_COLOR.r, QUEST_MATERIAL_COLOR.g, QUEST_MATERIAL_COLOR.b, pulse_alpha)
+	for pickup: Node in get_tree().get_nodes_in_group(&"pickups"):
+		if not is_instance_valid(pickup):
+			continue
+		var pid: Variant = pickup.get("item_id")
+		if not pid is String:
+			continue
+		if (pid as String) not in item_ids:
+			continue
+		var mp: Vector2 = _world_to_map((pickup as Node2D).global_position, player_pos)
+		if draw_rect_area.has_point(mp):
+			draw_circle(mp, QUEST_MATERIAL_RADIUS * marker_scale, draw_color)
+			draw_arc(mp, (QUEST_MATERIAL_RADIUS + 2.0) * marker_scale, 0.0, TAU, 12,
+					Color(draw_color.r, draw_color.g, draw_color.b, pulse_alpha * 0.55), 1.0)
 
 
 func _draw_event_marker(world_pos: Vector2, player_pos: Vector2, draw_size: Vector2, draw_rect_area: Rect2) -> void:

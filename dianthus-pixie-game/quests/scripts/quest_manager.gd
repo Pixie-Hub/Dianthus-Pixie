@@ -206,6 +206,10 @@ func is_tracking_any() -> bool:
 	return _tracked_quest_id != &""
 
 
+func get_quest_data(id: StringName) -> QuestData:
+	return _registry.get(id)
+
+
 func report_event(event_id: StringName, amount: int = 1, context: Dictionary = {}) -> void:
 	for quest_id: StringName in _active.keys():
 		var q: QuestData = _registry.get(quest_id)

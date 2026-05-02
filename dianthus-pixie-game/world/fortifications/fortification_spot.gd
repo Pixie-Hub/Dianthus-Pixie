@@ -4,7 +4,6 @@ extends Area2D
 const INTERACT_RADIUS: float = 28.0
 const BARRICADE_BUILD_TIME: float = 4.0
 const TRAP_BUILD_TIME: float = 3.0
-const TAP_THRESHOLD: float = 0.3
 
 const BARRICADE_COST: Dictionary = {"petal_shard": 3, "verdant_sap": 2}
 const TRAP_COST: Dictionary = {"verdant_sap": 2, "moonspore": 1}
@@ -22,7 +21,6 @@ var _built_structure: Node = null
 var _selected_type: StructureType = StructureType.BARRICADE
 var _is_building: bool = false
 var _build_timer: float = 0.0
-var _press_start_time: float = 0.0
 
 @onready var _visual: ColorRect = $Visual
 @onready var _prompt_label: Label = %PromptLabel
@@ -79,18 +77,24 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("interact") and not _is_building:
 		_is_building = true
 		_build_timer = 0.0
-		_press_start_time = Time.get_ticks_msec() / 1000.0
 		_update_progress_bar(0.0)
 		get_viewport().set_input_as_handled()
 		return
 
 	if event.is_action_released("interact") and _is_building:
-		var hold_time: float = (Time.get_ticks_msec() / 1000.0) - _press_start_time
-		if hold_time < TAP_THRESHOLD:
-			_selected_type = StructureType.TRAP if _selected_type == StructureType.BARRICADE else StructureType.BARRICADE
 		_cancel_build()
 		get_viewport().set_input_as_handled()
 		return
+
+	if not _is_building:
+		if event.is_action_pressed("fort_type_next"):
+			_cycle_type(1)
+			get_viewport().set_input_as_handled()
+			return
+		if event.is_action_pressed("fort_type_prev"):
+			_cycle_type(-1)
+			get_viewport().set_input_as_handled()
+			return
 
 
 func _on_body_entered(body: Node2D) -> void:
@@ -194,7 +198,7 @@ func _refresh_prompt() -> void:
 		_set_prompt_text("[E] Build %s (%s)\nNot enough resources" % [type_name, cost_str])
 	else:
 		_prompt_label.add_theme_color_override("font_color", Color(1.0, 0.85, 0.5, 1.0))
-		_set_prompt_text("[Hold E] Build %s (%s)\n[Tap E] Switch type" % [type_name, cost_str])
+		_set_prompt_text("[Hold E] Build %s (%s)\n[,/.] or [Scroll] Switch type" % [type_name, cost_str])
 
 
 func _set_prompt_text(text: String) -> void:
@@ -216,6 +220,13 @@ func _get_cost_string() -> String:
 	for item_id: String in cost:
 		parts.append("%dx %s" % [cost[item_id], ItemDatabase.get_display_name(item_id)])
 	return ", ".join(parts)
+
+
+func _cycle_type(direction: int) -> void:
+	var count: int = StructureType.size()
+	_selected_type = StructureType.values()[(_selected_type + direction + count) % count]
+	if _player_in_range:
+		_refresh_prompt()
 
 
 func _update_progress_bar(ratio: float) -> void:
