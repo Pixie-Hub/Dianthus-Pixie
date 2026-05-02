@@ -144,7 +144,7 @@ func apply_pull(toward: Vector2, duration: float, distance: float) -> void:
 func _physics_process(_delta: float) -> void:
 	if is_stunned():
 		velocity = Vector2.ZERO
-		move_and_slide()
+	move_and_slide()
 	_update_sprite_facing()
 
 
