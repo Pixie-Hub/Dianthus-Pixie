@@ -36,6 +36,8 @@ var _flash_color: Color = Color.TRANSPARENT
 var _show_result: bool = false
 var _result_timer: float = 0.0
 
+var _frozen_miss_radius: float = 0.0
+
 var _circle_draw: Control = null
 var _prompt_label: Label = null
 var _result_label: Label = null
@@ -66,7 +68,6 @@ func start_qte(item_id: String, amount: int) -> void:
 	_start_circle()
 
 	SfxManager.play("harvest_qte_prompt")
-	PauseManager.request_pause(self)
 	set_process(true)
 
 
@@ -205,6 +206,7 @@ func _check_hit() -> void:
 		_flash_color = HIT_FLASH_COLOR
 		SfxManager.play("harvest_qte_success")
 	else:
+		_frozen_miss_radius = _approach_radius
 		_flash_color = MISS_FLASH_COLOR
 		SfxManager.play("harvest_qte_fail")
 	_waiting_next = true
@@ -250,7 +252,6 @@ func _show_final_result() -> void:
 func _finish() -> void:
 	_active = false
 	set_process(false)
-	PauseManager.release_pause(self)
 	finished.emit(_hits)
 	queue_free()
 
@@ -271,7 +272,8 @@ func _on_circle_draw() -> void:
 		return
 
 	if _flash_timer > 0.0:
-		_draw_circle_outline(_circle_draw, center, TARGET_RADIUS + 2.0, _flash_color, 3.0)
+		var flash_radius: float = TARGET_RADIUS + 2.0 if _flash_color == HIT_FLASH_COLOR else _frozen_miss_radius
+		_draw_circle_outline(_circle_draw, center, flash_radius, _flash_color, 3.0)
 		return
 
 	_draw_filled_circle(_circle_draw, center, TARGET_RADIUS, TARGET_COLOR)
@@ -305,5 +307,4 @@ func _get_shrink_speed() -> float:
 
 
 func _exit_tree() -> void:
-	if _active:
-		PauseManager.release_pause(self)
+	pass

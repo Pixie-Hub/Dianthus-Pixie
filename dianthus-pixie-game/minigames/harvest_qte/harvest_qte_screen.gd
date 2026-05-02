@@ -69,7 +69,6 @@ func start_qte(item_id: String, amount: int) -> void:
 	_timer_bar.value = _duration
 	_update_balance_bar()
 	SfxManager.play("harvest_qte_prompt")
-	PauseManager.request_pause(self)
 	set_process(true)
 
 
@@ -105,9 +104,8 @@ func _complete(success: bool) -> void:
 		_result_label.text = "Harvest reduced!"
 		_result_label.add_theme_color_override("font_color", RESULT_FAIL_COLOR)
 		SfxManager.play("harvest_qte_fail")
-	PauseManager.release_pause(self)
 	finished.emit(success)
-	await get_tree().create_timer(0.25, true).timeout
+	await get_tree().create_timer(0.25).timeout
 	queue_free()
 
 
@@ -179,5 +177,4 @@ func _ensure_node_refs() -> void:
 
 
 func _exit_tree() -> void:
-	if _active:
-		PauseManager.release_pause(self)
+	pass
