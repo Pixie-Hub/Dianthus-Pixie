@@ -46,8 +46,8 @@ const FADE_DURATION: float = 1.5
 const INTENSE_THRESHOLD: float = 0.5
 const INTENSE_POLL_INTERVAL: float = 2.0
 const MUFFLE_FADE: float = 0.3
-const MUFFLE_VOLUME_OFFSET_DB: float = -8.0
-const MUFFLE_LOWPASS_HZ: float = 800.0
+const MUFFLE_VOLUME_OFFSET_DB: float = -4.0
+const MUFFLE_LOWPASS_HZ: float = 3000.0
 
 var _player_a: AudioStreamPlayer = null
 var _player_b: AudioStreamPlayer = null

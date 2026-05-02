@@ -122,12 +122,35 @@ func _draw_world_rect(world_rect: Rect2, player_pos: Vector2, color: Color, widt
 	var draw_size: Vector2 = _get_draw_size()
 	var tl: Vector2 = _world_to_map(world_rect.position, player_pos)
 	var br: Vector2 = _world_to_map(world_rect.position + world_rect.size, player_pos)
-	tl = _clamp_to_map(tl, draw_size)
-	br = _clamp_to_map(br, draw_size)
-	var rect_size: Vector2 = br - tl
-	if absf(rect_size.x) < 1.0 or absf(rect_size.y) < 1.0:
-		return
-	draw_rect(Rect2(tl, rect_size), color, false, width)
+
+	var min_x: float = 0.0
+	var max_x: float = draw_size.x
+	var min_y: float = 0.0
+	var max_y: float = draw_size.y
+	
+	if tl.y >= min_y and tl.y <= max_y:
+		var start_x: float = clampf(tl.x, min_x, max_x)
+		var end_x: float = clampf(br.x, min_x, max_x)
+		if start_x != end_x:
+			draw_line(Vector2(start_x, tl.y), Vector2(end_x, tl.y), color, width)
+
+	if br.y >= min_y and br.y <= max_y:
+		var start_x: float = clampf(tl.x, min_x, max_x)
+		var end_x: float = clampf(br.x, min_x, max_x)
+		if start_x != end_x:
+			draw_line(Vector2(start_x, br.y), Vector2(end_x, br.y), color, width)
+
+	if tl.x >= min_x and tl.x <= max_x:
+		var start_y: float = clampf(tl.y, min_y, max_y)
+		var end_y: float = clampf(br.y, min_y, max_y)
+		if start_y != end_y:
+			draw_line(Vector2(tl.x, start_y), Vector2(tl.x, end_y), color, width)
+
+	if br.x >= min_x and br.x <= max_x:
+		var start_y: float = clampf(tl.y, min_y, max_y)
+		var end_y: float = clampf(br.y, min_y, max_y)
+		if start_y != end_y:
+			draw_line(Vector2(br.x, start_y), Vector2(br.x, end_y), color, width)
 
 
 func _world_to_map(world_pos: Vector2, player_pos: Vector2) -> Vector2:
