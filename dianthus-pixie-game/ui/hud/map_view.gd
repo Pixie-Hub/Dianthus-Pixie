@@ -28,6 +28,7 @@ const WORLD_BOUNDS_COLOR: Color = Color(0.45, 0.72, 0.42, 0.85)
 const BG_COLOR: Color = Color(0.08, 0.08, 0.12, 0.85)
 const QUEST_MATERIAL_COLOR: Color = Color(0.25, 1.0, 0.85, 1.0)
 const QUEST_MATERIAL_RADIUS: float = 3.5
+const QUEST_BENCH_MARKER_RADIUS: float = 4.5
 
 var _spawner: WaveSpawner = null
 var _plant_manager: Node = null
@@ -98,6 +99,7 @@ func _draw() -> void:
 		draw_circle(player_mp, PLAYER_DOT_RADIUS * marker_scale, PLAYER_DOT_COLOR)
 
 	_draw_tracked_material_markers(player_pos, draw_rect_area)
+	_draw_tracked_bench_marker(player_pos, draw_rect_area)
 
 	if not DayNightCycle.is_night():
 		if is_instance_valid(_event_spawner) and _event_spawner.has_method("has_active_event"):
@@ -232,6 +234,44 @@ func _draw_tracked_material_markers(player_pos: Vector2, draw_rect_area: Rect2) 
 			draw_circle(mp, QUEST_MATERIAL_RADIUS * marker_scale, draw_color)
 			draw_arc(mp, (QUEST_MATERIAL_RADIUS + 2.0) * marker_scale, 0.0, TAU, 12,
 					Color(draw_color.r, draw_color.g, draw_color.b, pulse_alpha * 0.55), 1.0)
+
+
+func _draw_tracked_bench_marker(player_pos: Vector2, draw_rect_area: Rect2) -> void:
+	var tracked_id: StringName = QuestManager.get_tracked_quest()
+	if tracked_id == &"":
+		return
+	var quest: QuestData = QuestManager.get_quest_data(tracked_id)
+	if quest == null:
+		return
+	var prog: Dictionary = QuestManager.get_progress(tracked_id)
+	var needs_bench: bool = false
+	for obj: QuestObjective in quest.objectives:
+		if obj.event_id != &"weapon_crafted" and obj.event_id != &"plant_bred":
+			continue
+		var obj_data: Variant = prog.get(obj.objective_id)
+		var current: int = 0
+		if obj_data is Dictionary:
+			current = int((obj_data as Dictionary).get("current", 0))
+		if current < obj.target_count:
+			needs_bench = true
+			break
+	if not needs_bench:
+		return
+	var t: float = Time.get_ticks_msec() / 1000.0
+	var pulse_alpha: float = 0.6 + 0.4 * sin(t * TAU * 2.0)
+	var draw_color: Color = Color(QUEST_MATERIAL_COLOR.r, QUEST_MATERIAL_COLOR.g, QUEST_MATERIAL_COLOR.b, pulse_alpha)
+	var draw_size: Vector2 = _get_draw_size()
+	for bench: Node in get_tree().get_nodes_in_group(&"breeding_benches"):
+		if not is_instance_valid(bench):
+			continue
+		var mp: Vector2 = _world_to_map((bench as Node2D).global_position, player_pos)
+		var marker_mp: Vector2 = mp
+		if not draw_rect_area.has_point(mp):
+			var dir: Vector2 = (mp - draw_size * 0.5).normalized()
+			marker_mp = _compute_box_edge(draw_size * 0.5, dir, draw_size)
+		draw_circle(marker_mp, QUEST_BENCH_MARKER_RADIUS * marker_scale, draw_color)
+		draw_arc(marker_mp, (QUEST_BENCH_MARKER_RADIUS + 2.0) * marker_scale, 0.0, TAU, 12,
+				Color(draw_color.r, draw_color.g, draw_color.b, pulse_alpha * 0.55), 1.0)
 
 
 func _draw_event_marker(world_pos: Vector2, player_pos: Vector2, draw_size: Vector2, draw_rect_area: Rect2) -> void:
