@@ -7,6 +7,8 @@ signal event_despawned(event_id: StringName)
 
 const INTERACT_RADIUS: float = 28.0
 const DESPAWN_WARNING_TIME: float = 30.0
+const INTERACTION_PROMPT_SCENE: PackedScene = preload("res://ui/components/interaction_prompt.tscn")
+const PROMPT_STATUS_NORMAL: int = 0
 
 @export var event_id: StringName = &""
 @export var event_display_name: String = "Event"
@@ -15,10 +17,13 @@ const DESPAWN_WARNING_TIME: float = 30.0
 var _is_active: bool = false
 var _player_in_range: bool = false
 var _is_complete: bool = false
+var _prompt_progress: float = -1.0
 
 @onready var _visual: ColorRect = $Visual
 @onready var _prompt_label: Label = %PromptLabel
 @onready var _interaction_shape: CollisionShape2D = $InteractionShape
+
+var _interaction_prompt = null
 
 
 func _ready() -> void:
@@ -28,6 +33,7 @@ func _ready() -> void:
 	body_exited.connect(_on_body_exited)
 	DayNightCycle.phase_changed.connect(_on_phase_changed)
 	_visual.color = event_color
+	_setup_interaction_prompt()
 	_update_prompt("")
 
 
@@ -96,10 +102,28 @@ func _give_reward() -> void:
 	pass
 
 
-func _update_prompt(text: String) -> void:
+func _setup_interaction_prompt() -> void:
 	if is_instance_valid(_prompt_label):
+		_prompt_label.visible = false
+	_interaction_prompt = get_node_or_null("%InteractionPrompt")
+	if _interaction_prompt == null:
+		_interaction_prompt = INTERACTION_PROMPT_SCENE.instantiate()
+		_interaction_prompt.name = "InteractionPrompt"
+		add_child(_interaction_prompt)
+
+
+func _update_prompt(text: String) -> void:
+	if is_instance_valid(_interaction_prompt):
+		_interaction_prompt.show_message(text, event_color, PROMPT_STATUS_NORMAL, _prompt_progress)
+	elif is_instance_valid(_prompt_label):
 		_prompt_label.text = text
 		_prompt_label.visible = not text.is_empty()
+
+
+func _set_prompt_progress(ratio: float) -> void:
+	_prompt_progress = ratio
+	if is_instance_valid(_interaction_prompt):
+		_interaction_prompt.set_progress(ratio)
 
 
 func get_world_position() -> Vector2:

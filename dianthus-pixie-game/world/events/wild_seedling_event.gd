@@ -6,10 +6,6 @@ const HOLD_DURATION: float = 4.0
 var _hold_timer: float = 0.0
 var _is_holding: bool = false
 
-@onready var _progress_bar: ColorRect = %ProgressBar
-@onready var _progress_bg: ColorRect = %ProgressBg
-
-
 func _ready() -> void:
 	event_id = &"wild_seedling"
 	event_display_name = "Wild Seedling"
@@ -81,11 +77,7 @@ func _pick_seed() -> String:
 
 
 func _update_progress_bar(ratio: float) -> void:
-	if not is_instance_valid(_progress_bar) or not is_instance_valid(_progress_bg):
-		return
-	_progress_bar.size.x = _progress_bg.size.x * clampf(ratio, 0.0, 1.0)
-	_progress_bar.visible = ratio > 0.0
-	_progress_bg.visible = ratio > 0.0
+	_set_prompt_progress(ratio)
 
 
 func _show_reward_popup(text: String) -> void:

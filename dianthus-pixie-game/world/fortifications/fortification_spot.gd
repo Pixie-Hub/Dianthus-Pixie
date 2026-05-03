@@ -10,6 +10,10 @@ const TRAP_COST: Dictionary = {"verdant_sap": 2, "moonspore": 1}
 
 const BARRICADE_SCENE: String = "res://world/fortifications/thorn_barricade.tscn"
 const TRAP_SCENE: String = "res://world/fortifications/spore_trap.tscn"
+const INTERACTION_PROMPT_SCENE: PackedScene = preload("res://ui/components/interaction_prompt.tscn")
+const PROMPT_STATUS_NORMAL: int = 0
+const PROMPT_STATUS_DISABLED: int = 2
+const PROMPT_STATUS_SUCCESS: int = 3
 
 enum StructureType { BARRICADE, TRAP }
 
@@ -28,6 +32,8 @@ var _build_timer: float = 0.0
 @onready var _progress_bg: ColorRect = %ProgressBg
 @onready var _progress_bar: ColorRect = %ProgressBar
 
+var _interaction_prompt = null
+
 
 func _ready() -> void:
 	collision_layer = 0
@@ -35,6 +41,7 @@ func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 	DayNightCycle.phase_changed.connect(_on_phase_changed)
+	_setup_interaction_prompt()
 	_update_visual()
 	_hide_prompt()
 
@@ -65,7 +72,15 @@ func _process(delta: float) -> void:
 	var build_time: float = BARRICADE_BUILD_TIME if _selected_type == StructureType.BARRICADE else TRAP_BUILD_TIME
 	_update_progress_bar(_build_timer / build_time)
 	var type_name: String = "Thorn Barricade" if _selected_type == StructureType.BARRICADE else "Spore Trap"
-	_set_prompt_text("Building %s... %.0f%%\nRelease [E] to cancel" % [type_name, (_build_timer / build_time) * 100.0])
+	_show_prompt(
+		"Building %s" % type_name,
+		"Progress: %.0f%%" % ((_build_timer / build_time) * 100.0),
+		"Hold E",
+		"Release E to cancel",
+		Color(1.0, 0.78, 0.28, 1.0),
+		PROMPT_STATUS_NORMAL,
+		_build_timer / build_time
+	)
 
 	if _build_timer >= build_time:
 		_finish_build()
@@ -187,35 +202,78 @@ func _update_visual() -> void:
 	_visual.modulate = Color(0.5, 0.5, 0.5, 0.5) if _is_built else Color.WHITE
 
 
+func _setup_interaction_prompt() -> void:
+	if is_instance_valid(_prompt_label):
+		_prompt_label.visible = false
+	if is_instance_valid(_progress_bg):
+		_progress_bg.visible = false
+	if is_instance_valid(_progress_bar):
+		_progress_bar.visible = false
+
+	_interaction_prompt = get_node_or_null("%InteractionPrompt")
+	if _interaction_prompt == null:
+		_interaction_prompt = INTERACTION_PROMPT_SCENE.instantiate()
+		_interaction_prompt.name = "InteractionPrompt"
+		add_child(_interaction_prompt)
+
+
 func _refresh_prompt() -> void:
-	if not is_instance_valid(_prompt_label):
-		return
 	if _is_built:
-		_prompt_label.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6, 1.0))
 		var built_name: String = "Thorn Barricade" if _selected_type == StructureType.BARRICADE else "Spore Trap"
-		_set_prompt_text("%s built here  [%s]\nClears at dawn" % [built_name, spot_label])
+		_show_prompt(
+			"%s Ready" % built_name,
+			spot_label,
+			"",
+			"Clears at dawn",
+			Color(0.45, 0.95, 0.58, 1.0),
+			PROMPT_STATUS_SUCCESS
+		)
 		return
 	var type_name: String = "Thorn Barricade" if _selected_type == StructureType.BARRICADE else "Spore Trap"
 	var cost_str: String = _get_cost_string()
 	if not _can_afford():
-		_prompt_label.add_theme_color_override("font_color", Color(0.8, 0.4, 0.4, 1.0))
-		_set_prompt_text("[Hold E] Build %s\nNeed: %s  (not enough)" % [type_name, cost_str])
+		_show_prompt(
+			"Build %s" % type_name,
+			"Need: %s" % cost_str,
+			"Hold E",
+			"Not enough materials",
+			Color(1.0, 0.45, 0.25, 1.0),
+			PROMPT_STATUS_DISABLED
+		)
 	else:
-		_prompt_label.add_theme_color_override("font_color", Color(1.0, 0.85, 0.5, 1.0))
-		_set_prompt_text("[Hold E] Build %s\nCost: %s   [, / .] Switch type" % [type_name, cost_str])
+		_show_prompt(
+			"Build %s" % type_name,
+			"Cost: %s" % cost_str,
+			"Hold E",
+			", / .  Switch type",
+			Color(1.0, 0.78, 0.28, 1.0)
+		)
 
 
-func _set_prompt_text(text: String) -> void:
-	if not is_instance_valid(_prompt_label):
+func _show_prompt(title: String, body: String = "", key_text: String = "", hint: String = "", accent: Color = Color(1.0, 0.78, 0.28, 1.0), status: int = PROMPT_STATUS_NORMAL, progress: float = -1.0) -> void:
+	if is_instance_valid(_interaction_prompt):
+		_interaction_prompt.show_interaction(title, body, key_text, hint, accent, status, progress)
 		return
-	_prompt_label.text = text
-	_prompt_label.visible = true
+	if is_instance_valid(_prompt_label):
+		var lines: PackedStringArray = PackedStringArray([title])
+		if not body.is_empty():
+			lines.append(body)
+		if not hint.is_empty():
+			lines.append(hint)
+		_prompt_label.text = "\n".join(lines)
+		_prompt_label.visible = true
 
 
 func _hide_prompt() -> void:
+	if is_instance_valid(_interaction_prompt):
+		_interaction_prompt.hide_prompt()
 	if is_instance_valid(_prompt_label):
 		_prompt_label.text = ""
 		_prompt_label.visible = false
+	if is_instance_valid(_progress_bg):
+		_progress_bg.visible = false
+	if is_instance_valid(_progress_bar):
+		_progress_bar.visible = false
 
 
 func _get_cost_string() -> String:
@@ -234,6 +292,9 @@ func _cycle_type(direction: int) -> void:
 
 
 func _update_progress_bar(ratio: float) -> void:
+	if is_instance_valid(_interaction_prompt):
+		_interaction_prompt.set_progress(ratio)
+		return
 	if not is_instance_valid(_progress_bar) or not is_instance_valid(_progress_bg):
 		return
 	_progress_bar.size.x = _progress_bg.size.x * clampf(ratio, 0.0, 1.0)

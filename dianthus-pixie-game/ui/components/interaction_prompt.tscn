@@ -1,0 +1,118 @@
+[gd_scene format=3 uid="uid://dgjlo3k80moau"]
+
+[ext_resource type="Script" path="res://ui/components/interaction_prompt.gd" id="1_script"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.055, 0.047, 0.041, 0.92)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.72, 0.56, 0.28, 0.82)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0, 0, 0, 0.45)
+shadow_size = 5
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_key"]
+content_margin_left = 7.0
+content_margin_top = 2.0
+content_margin_right = 7.0
+content_margin_bottom = 2.0
+bg_color = Color(0.12, 0.1, 0.08, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.9, 0.76, 0.42, 0.92)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="InteractionPrompt" type="PanelContainer" unique_id=2108994589]
+visible = false
+custom_minimum_size = Vector2(188, 0)
+offset_left = -94.0
+offset_top = -88.0
+offset_right = 94.0
+offset_bottom = -24.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+script = ExtResource("1_script")
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=1285794614]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 7
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 7
+
+[node name="Content" type="VBoxContainer" parent="Margin" unique_id=921311644]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Header" type="HBoxContainer" parent="Margin/Content" unique_id=733356955]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="AccentBar" type="ColorRect" parent="Margin/Content/Header" unique_id=1364302231]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(3, 18)
+layout_mode = 2
+color = Color(1, 0.78, 0.28, 1)
+
+[node name="KeyBadge" type="PanelContainer" parent="Margin/Content/Header" unique_id=1259966824]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_key")
+
+[node name="KeyLabel" type="Label" parent="Margin/Content/Header/KeyBadge" unique_id=764671930]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.78, 0.28, 1)
+theme_override_font_sizes/font_size = 10
+text = "E"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TitleLabel" type="Label" parent="Margin/Content/Header" unique_id=1034479191]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.98, 0.95, 0.88, 1)
+theme_override_font_sizes/font_size = 11
+text = "Interact"
+text_overrun_behavior = 3
+
+[node name="BodyLabel" type="Label" parent="Margin/Content" unique_id=1325194316]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.76, 0.68, 1)
+theme_override_font_sizes/font_size = 9
+text = "Body"
+autowrap_mode = 3
+
+[node name="ProgressBg" type="ColorRect" parent="Margin/Content" unique_id=906983067]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(160, 5)
+layout_mode = 2
+color = Color(0.02, 0.018, 0.015, 0.95)
+
+[node name="ProgressFill" type="ColorRect" parent="Margin/Content/ProgressBg" unique_id=1195186356]
+unique_name_in_owner = true
+layout_mode = 0
+offset_bottom = 5.0
+color = Color(1, 0.78, 0.28, 1)
+
+[node name="HintLabel" type="Label" parent="Margin/Content" unique_id=982322516]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.56, 0.62, 0.58, 1)
+theme_override_font_sizes/font_size = 8
+text = "Hint"
+autowrap_mode = 3
