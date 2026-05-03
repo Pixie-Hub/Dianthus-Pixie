@@ -70,17 +70,47 @@ func _process(_delta: float) -> void:
 
 
 func serialize() -> Dictionary:
+	var active_id: String = ""
+	var active_pos_x: float = 0.0
+	var active_pos_y: float = 0.0
+	if is_instance_valid(_active_event) and not _active_event._is_complete:
+		active_id = str(_active_event.event_id)
+		active_pos_x = _active_event.global_position.x
+		active_pos_y = _active_event.global_position.y
 	return {
 		"last_event_id": str(_last_event_id),
 		"completed_day": _completed_day,
+		"active_event_id": active_id,
+		"active_event_pos_x": active_pos_x,
+		"active_event_pos_y": active_pos_y,
 	}
 
 
 func deserialize(data: Dictionary) -> void:
 	_last_event_id = StringName(str(data.get("last_event_id", "")))
 	_completed_day = int(data.get("completed_day", -1))
+	var saved_active_id: StringName = StringName(str(data.get("active_event_id", "")))
 	if _completed_day == DayNightCycle.day_count:
 		_despawn_active()
+		return
+	if saved_active_id != &"" and DayNightCycle.get_phase_name() == "DAY":
+		_despawn_active()
+		var scene: PackedScene = _get_scene(saved_active_id)
+		if scene != null:
+			var event: DaytimeEvent = scene.instantiate() as DaytimeEvent
+			if event != null:
+				var pos_x: float = float(data.get("active_event_pos_x", 0.0))
+				var pos_y: float = float(data.get("active_event_pos_y", 0.0))
+				event.global_position = Vector2(pos_x, pos_y)
+				event.event_completed.connect(_on_event_completed)
+				event.event_despawned.connect(_on_event_despawned)
+				if event.has_signal("spawn_sealed"):
+					event.spawn_sealed.connect(_on_spawn_sealed)
+				add_child(event)
+				event.activate()
+				_active_event = event
+				active_event_position_changed.emit(event.global_position)
+				print("[DaytimeEventSpawner] Restored saved event: %s at %s" % [saved_active_id, event.global_position])
 
 
 func _spawn_event() -> void:

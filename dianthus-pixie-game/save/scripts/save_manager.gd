@@ -4,7 +4,7 @@ signal save_completed(success: bool, manual: bool)
 signal load_completed(success: bool)
 
 const SAVE_PATH: String = "user://savegame.json"
-const SCHEMA_VERSION: int = 13
+const SCHEMA_VERSION: int = 14
 const GAME_VERSION: String = "0.1.0"
 
 const PLANT_TYPE_TO_SCENE: Dictionary = {
@@ -487,4 +487,14 @@ func _migrate(data: Dictionary) -> Dictionary:
 		if not data.has("pickups"):
 			data["pickups"] = {"collected_day": -1, "collected_names": []}
 		data["schema_version"] = 13
+	# v13 → v14: active daytime event serialization added.
+	if version < 14:
+		print("[SaveManager] Migrated v13 → v14 (active daytime event)")
+		var ev: Dictionary = data.get("daytime_event", {})
+		if not ev.has("active_event_id"):
+			ev["active_event_id"] = ""
+			ev["active_event_pos_x"] = 0.0
+			ev["active_event_pos_y"] = 0.0
+			data["daytime_event"] = ev
+		data["schema_version"] = 14
 	return data
