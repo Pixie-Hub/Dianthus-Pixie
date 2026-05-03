@@ -116,6 +116,9 @@ func _grant_pickup(granted_amount: int, reduced_reward: bool, bonus_reward: bool
 		else:
 			_show_popup("+%d %s" % [granted_amount, display], Color(1.0, 1.0, 0.6))
 		set_tutorial_hint_active(false)
+		var zone: Node = get_tree().current_scene
+		if zone != null and zone.has_method("mark_pickup_collected"):
+			zone.call("mark_pickup_collected", name)
 		queue_free()
 
 

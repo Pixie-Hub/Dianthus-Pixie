@@ -4,7 +4,7 @@ signal save_completed(success: bool, manual: bool)
 signal load_completed(success: bool)
 
 const SAVE_PATH: String = "user://savegame.json"
-const SCHEMA_VERSION: int = 12
+const SCHEMA_VERSION: int = 13
 const GAME_VERSION: String = "0.1.0"
 
 const PLANT_TYPE_TO_SCENE: Dictionary = {
@@ -236,6 +236,13 @@ func _gather_state(manual: bool) -> Dictionary:
 	else:
 		state["daytime_event"] = {"last_event_id": "", "completed_day": -1}
 
+	# Pickup collection state
+	var current_scene: Node = get_tree().current_scene if is_instance_valid(get_tree().current_scene) else null
+	if current_scene != null and current_scene.has_method("serialize_pickup_state"):
+		state["pickups"] = current_scene.call("serialize_pickup_state")
+	else:
+		state["pickups"] = {"collected_day": -1, "collected_names": []}
+
 	return state
 
 
@@ -338,6 +345,11 @@ func _apply_state(state: Dictionary) -> void:
 		event_spawner = get_tree().current_scene.find_child("DaytimeEventSpawner", true, false)
 	if event_spawner != null and event_spawner.has_method("deserialize"):
 		event_spawner.call("deserialize", state.get("daytime_event", {}))
+
+	# 5.12 Pickup collection state — removes already-collected pickups from the scene.
+	var pickup_scene: Node = get_tree().current_scene if is_instance_valid(get_tree().current_scene) else null
+	if pickup_scene != null and pickup_scene.has_method("apply_collected_pickups"):
+		pickup_scene.call("apply_collected_pickups", state.get("pickups", {}))
 
 	# 5.5 Difficulty tier.
 	var diff_tier: String = state.get("difficulty", {}).get("tier", "normal")
@@ -480,4 +492,10 @@ func _migrate(data: Dictionary) -> Dictionary:
 		if not data.has("daytime_event"):
 			data["daytime_event"] = {"last_event_id": "", "completed_day": -1}
 		data["schema_version"] = 12
+	# v12 → v13: pickup collection tracking added.
+	if version < 13:
+		print("[SaveManager] Migrated v12 → v13 (pickup state)")
+		if not data.has("pickups"):
+			data["pickups"] = {"collected_day": -1, "collected_names": []}
+		data["schema_version"] = 13
 	return data

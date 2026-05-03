@@ -165,6 +165,8 @@ const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
 @onready var _pickup_container: Node2D = $YSortLayer/PickupContainer
 
 var _wave_spawner: WaveSpawner = null
+var _collected_pickup_names: Array[String] = []
+var _collected_day: int = -1
 
 func _ready() -> void:
 	DayNightCycle.register_canvas_modulate(_canvas_modulate)
@@ -256,6 +258,9 @@ func _refresh_placement_bounds() -> void:
 func _spawn_daytime_resources() -> void:
 	if not is_instance_valid(_pickup_container):
 		return
+	if DayNightCycle.day_count != _collected_day:
+		_collected_pickup_names.clear()
+		_collected_day = DayNightCycle.day_count
 	_clear_daytime_resources()
 	var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 	rng.seed = RESOURCE_RNG_SEED_BASE + (DayNightCycle.day_count * RESOURCE_RNG_DAY_STEP)
@@ -296,6 +301,30 @@ func _spawn_resource_rule(rule: Dictionary, rng: RandomNumberGenerator) -> void:
 			_spawn_resource_pickup(rule, positions[index], spawned_count + 1)
 			spawned_count += 1
 
+func mark_pickup_collected(pickup_name: String) -> void:
+	if not pickup_name in _collected_pickup_names:
+		_collected_pickup_names.append(pickup_name)
+
+
+func serialize_pickup_state() -> Dictionary:
+	return {
+		"collected_day": _collected_day,
+		"collected_names": _collected_pickup_names.duplicate(),
+	}
+
+
+func apply_collected_pickups(data: Dictionary) -> void:
+	_collected_day = int(data.get("collected_day", -1))
+	_collected_pickup_names.clear()
+	for n: Variant in data.get("collected_names", []):
+		_collected_pickup_names.append(str(n))
+	if not is_instance_valid(_pickup_container):
+		return
+	for child: Node in _pickup_container.get_children():
+		if child.name in _collected_pickup_names:
+			child.free()
+
+
 func _get_shuffled_positions(source_positions: Array, rng: RandomNumberGenerator) -> Array[Vector2]:
 	var shuffled: Array[Vector2] = []
 	for source_position: Variant in source_positions:
@@ -309,10 +338,13 @@ func _get_shuffled_positions(source_positions: Array, rng: RandomNumberGenerator
 	return shuffled
 
 func _spawn_resource_pickup(rule: Dictionary, pickup_position: Vector2, spawn_number: int) -> void:
+	var pickup_name: String = "%s%d" % [str(rule.get("prefix", "DaytimeResource")), spawn_number]
+	if pickup_name in _collected_pickup_names:
+		return
 	var pickup: Node2D = RESOURCE_PICKUP_SCENE.instantiate() as Node2D
 	if pickup == null:
 		return
-	pickup.name = "%s%d" % [str(rule.get("prefix", "DaytimeResource")), spawn_number]
+	pickup.name = pickup_name
 	pickup.position = pickup_position
 	pickup.set("item_id", str(rule.get("item_id", "petal_shard")))
 	pickup.set("amount", int(rule.get("amount", 1)))
