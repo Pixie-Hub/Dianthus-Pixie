@@ -1,47 +1,46 @@
-[gd_scene format=4 uid="uid://fortification_spot01"]
+[gd_scene format=3 uid="uid://cxjh5m0cebb67"]
 
-[ext_resource type="Script" path="res://world/fortifications/fortification_spot.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://dbirylfa8h4q6" path="res://world/fortifications/fortification_spot.gd" id="1_script"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_interact"]
-radius = 28.0
+radius = 24.020824
 
-[node name="FortificationSpot" type="Area2D"]
+[node name="FortificationSpot" type="Area2D" unique_id=582512456]
 script = ExtResource("1_script")
 
-[node name="InteractionShape" type="CollisionShape2D" parent="."]
+[node name="InteractionShape" type="CollisionShape2D" parent="." unique_id=966261158]
 shape = SubResource("CircleShape2D_interact")
 
-[node name="Visual" type="ColorRect" parent="."]
+[node name="Visual" type="ColorRect" parent="." unique_id=2062739599]
 offset_left = -8.0
 offset_top = -8.0
 offset_right = 8.0
 offset_bottom = 8.0
 color = Color(0.6, 0.5, 0.3, 0.7)
 
-[node name="ProgressBg" type="ColorRect" parent="."]
+[node name="ProgressBg" type="ColorRect" parent="." unique_id=1497032188]
+unique_name_in_owner = true
+visible = false
 offset_left = -16.0
 offset_top = 10.0
 offset_right = 16.0
 offset_bottom = 14.0
 color = Color(0.2, 0.2, 0.2, 0.9)
-visible = false
-unique_name_in_owner = true
 
-[node name="ProgressBar" type="ColorRect" parent="."]
+[node name="ProgressBar" type="ColorRect" parent="." unique_id=488925937]
+unique_name_in_owner = true
+visible = false
 offset_left = -16.0
 offset_top = 10.0
 offset_right = 16.0
 offset_bottom = 14.0
-color = Color(1.0, 0.75, 0.2, 1)
-visible = false
-unique_name_in_owner = true
+color = Color(1, 0.75, 0.2, 1)
 
-[node name="PromptLabel" type="Label" parent="."]
+[node name="PromptLabel" type="Label" parent="." unique_id=691864094]
+unique_name_in_owner = true
 offset_left = -80.0
 offset_top = -44.0
 offset_right = 80.0
 offset_bottom = -16.0
-text = ""
 horizontal_alignment = 1
 autowrap_mode = 3
-unique_name_in_owner = true
