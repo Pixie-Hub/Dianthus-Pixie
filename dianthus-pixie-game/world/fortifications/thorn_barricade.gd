@@ -3,10 +3,12 @@ extends StaticBody2D
 
 const MAX_HP: int = 60
 const HIT_FLASH_DURATION: float = 0.1
+const DMG_COOLDOWN: float = 1.0
 
 var _current_hp: int = MAX_HP
 var _touching_enemies: Array[EnemyBase] = []
 var _dmg_accumulator: float = 0.0
+var _hit_cooldowns: Dictionary = {}
 
 @onready var _visual: ColorRect = $Visual
 @onready var _hp_bar: ColorRect = %HpBar
@@ -31,7 +33,7 @@ func _process(delta: float) -> void:
 			if not is_instance_valid(enemy) or enemy.is_dead:
 				_touching_enemies.erase(enemy)
 				continue
-			take_damage(enemy.damage)
+			take_damage(enemy.damage, enemy)
 
 
 func _setup_enemy_hit_detection() -> void:
@@ -59,7 +61,13 @@ func _on_enemy_exited(body: Node2D) -> void:
 		_touching_enemies.erase(body as EnemyBase)
 
 
-func take_damage(amount: int) -> void:
+func take_damage(amount: int, source: Object = null) -> void:
+	var now: float = Time.get_ticks_msec() / 1000.0
+	if source != null:
+		var src_id: int = source.get_instance_id()
+		if _hit_cooldowns.get(src_id, 0.0) > now:
+			return
+		_hit_cooldowns[src_id] = now + DMG_COOLDOWN
 	_current_hp = max(_current_hp - amount, 0)
 	_update_hp_bar()
 	_flash()

@@ -4,10 +4,11 @@ var _attack_timer: float = 0.0
 
 
 func enter() -> void:
-	_attack_timer = 0.0
 	var e: EnemyBase = enemy as EnemyBase
-	if e != null and not is_instance_valid(e.current_siege_target):
-		e.current_siege_target = GameManager.dianthus_core
+	if e != null:
+		_attack_timer = e.attack_cooldown
+		if not is_instance_valid(e.current_siege_target):
+			e.current_siege_target = GameManager.dianthus_core
 
 
 func update(delta: float) -> void:
