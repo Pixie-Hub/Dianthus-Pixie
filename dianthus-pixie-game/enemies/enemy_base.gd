@@ -90,7 +90,7 @@ func distance_to_core() -> float:
 
 func get_nearby_barricade() -> Node2D:
 	var closest: Node2D = null
-	var closest_dist: float = attack_range * 3.0
+	var closest_dist: float = detection_radius * 2.0
 	for node in get_tree().get_nodes_in_group(&"barricades"):
 		if not is_instance_valid(node):
 			continue
