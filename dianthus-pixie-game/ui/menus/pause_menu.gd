@@ -93,6 +93,5 @@ func _on_main_menu_confirmed() -> void:
 	_is_open = false
 	visible = false
 	PauseManager.clear_all()
-	SaveManager.save_to_slot(false)
 	print("[PauseMenu] Returning to main menu.")
 	get_tree().change_scene_to_file("res://ui/menus/main_menu.tscn")

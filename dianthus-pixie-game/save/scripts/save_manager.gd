@@ -25,17 +25,6 @@ var _pending_load_state: Dictionary = {}
 var _is_saving: bool = false
 
 
-func _ready() -> void:
-	_connect_autosave()
-
-
-func _connect_autosave() -> void:
-	GameManager.night_survived.connect(_on_night_survived)
-
-
-func _on_night_survived(_day: int) -> void:
-	call_deferred("save_to_slot", false)
-
 
 # --- Public API ---
 
