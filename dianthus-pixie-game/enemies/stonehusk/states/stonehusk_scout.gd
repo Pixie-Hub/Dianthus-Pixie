@@ -25,6 +25,11 @@ func physics_update(delta: float) -> void:
 		return
 
 	# No retreat check — Stonehusk never retreats.
+	var barricade: Node2D = e.get_nearby_barricade()
+	if barricade != null:
+		e.current_siege_target = barricade
+		state_machine.transition_to(&"Siege")
+		return
 	if e.distance_to_core() <= e.attack_range:
 		state_machine.transition_to(&"Siege")
 		return

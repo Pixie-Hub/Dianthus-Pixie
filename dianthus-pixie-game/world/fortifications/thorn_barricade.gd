@@ -16,6 +16,7 @@ var _dmg_accumulator: float = 0.0
 func _ready() -> void:
 	collision_layer = CollisionLayers.INTERACTABLE | CollisionLayers.TERRAIN
 	collision_mask = 0
+	add_to_group(&"barricades")
 	_update_hp_bar()
 	_setup_enemy_hit_detection()
 

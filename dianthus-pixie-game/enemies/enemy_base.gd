@@ -16,6 +16,7 @@ signal damage_dealt(target: Node, amount: int)
 var current_hp: int = 0
 var is_dead: bool = false
 var speed_modifier: float = 1.0
+var current_siege_target: Node2D = null
 var _timed_slow_until: float = 0.0
 var _timed_slow_value: float = 1.0
 var _stun_until: float = 0.0
@@ -85,6 +86,25 @@ func distance_to_player() -> float:
 
 func distance_to_core() -> float:
 	return global_position.distance_to(get_core_position())
+
+
+func get_nearby_barricade() -> Node2D:
+	var closest: Node2D = null
+	var closest_dist: float = attack_range * 1.5
+	for node in get_tree().get_nodes_in_group(&"barricades"):
+		if not is_instance_valid(node):
+			continue
+		var d: float = global_position.distance_to((node as Node2D).global_position)
+		if d < closest_dist:
+			closest_dist = d
+			closest = node as Node2D
+	return closest
+
+
+func get_siege_target_position() -> Vector2:
+	if is_instance_valid(current_siege_target):
+		return current_siege_target.global_position
+	return get_core_position()
 
 
 func count_nearby_allies(radius: float) -> int:

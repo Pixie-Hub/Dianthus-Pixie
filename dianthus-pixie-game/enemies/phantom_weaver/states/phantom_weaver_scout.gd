@@ -28,6 +28,11 @@ func physics_update(delta: float) -> void:
 	if not e.is_player_dead() and e.distance_to_player() <= e.detection_radius:
 		state_machine.transition_to(&"Attack")
 		return
+	var barricade: Node2D = e.get_nearby_barricade()
+	if barricade != null:
+		e.current_siege_target = barricade
+		state_machine.transition_to(&"Siege")
+		return
 	if e.distance_to_core() <= e.attack_range:
 		state_machine.transition_to(&"Siege")
 		return
