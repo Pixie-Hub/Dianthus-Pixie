@@ -4,7 +4,7 @@ signal hp_changed(current_hp: int, max_hp: int)
 signal core_destroyed
 signal core_damaged(amount: int)
 
-const MAX_HP: int = 200
+const MAX_HP: int = 500
 const DAYTIME_REGEN_RATE: float = 5.0 / 60.0
 const DEATH_FRAME_COUNT: int = 8
 const DEATH_FRAME_DURATION: float = 0.08
