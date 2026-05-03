@@ -42,7 +42,9 @@ func physics_update(delta: float) -> void:
 
 
 func _update_target() -> void:
-	var target: Vector2 = (enemy as EnemyBase).get_core_position()
+	var e: EnemyBase = enemy as EnemyBase
+	var barricade: Node2D = e.get_nearby_barricade() if e != null else null
+	var target: Vector2 = barricade.global_position if is_instance_valid(barricade) else e.get_core_position()
 	if not _use_direct_steering and is_instance_valid(_nav_agent):
 		_nav_agent.target_position = target
 
@@ -55,7 +57,9 @@ func _move(e: EnemyBase) -> void:
 	if has_path:
 		direction = (_nav_agent.get_next_path_position() - e.global_position).normalized()
 	else:
-		direction = (e.get_core_position() - e.global_position).normalized()
+		var barricade: Node2D = e.get_nearby_barricade()
+		var steer_target: Vector2 = barricade.global_position if is_instance_valid(barricade) else e.get_core_position()
+		direction = (steer_target - e.global_position).normalized()
 	# No wander angle — pure beeline.
 	e.velocity = direction * e.get_effective_speed()
 	e.move_and_slide()
