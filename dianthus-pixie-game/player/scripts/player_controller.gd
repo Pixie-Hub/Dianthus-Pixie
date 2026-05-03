@@ -66,6 +66,7 @@ const PETAL_SHIELD_COUNTER_STUN: float = 0.6
 var is_blocking: bool = false
 var _block_raised_time: float = -1.0
 var _saved_damage_reduction: float = 0.0
+var is_harvesting: bool = false
 
 func _ready() -> void:
 	PlayerAnimationBuilder.build(%AnimationPlayer, "Sprite2D")
@@ -91,7 +92,7 @@ func _physics_process(delta: float) -> void:
 	if is_dead:
 		return
 	_attack_cooldown_timer = max(_attack_cooldown_timer - delta, 0.0)
-	if is_attacking:
+	if is_attacking or is_harvesting:
 		velocity = Vector2.ZERO
 		move_and_slide()
 		return
@@ -434,6 +435,12 @@ func _unhandled_input(event: InputEvent) -> void:
 					screen.open()
 			get_viewport().set_input_as_handled()
 
+func set_harvesting(value: bool) -> void:
+	is_harvesting = value
+	if not value:
+		_travel("idle")
+
+
 func take_damage(amount: int) -> void:
 	if is_dead or is_invincible:
 		return
@@ -465,6 +472,8 @@ func heal(amount: int) -> void:
 	hp_changed.emit(current_hp, MAX_HP)
 
 func _die() -> void:
+	if is_harvesting:
+		is_harvesting = false
 	if is_blocking:
 		_drop_block()
 	_stop_core_energy_tick_loop()

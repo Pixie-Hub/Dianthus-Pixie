@@ -101,6 +101,16 @@ func get_total_count(item_id: String) -> int:
 	return total
 
 
+func can_accept_item(item_id: String) -> bool:
+	var max_stack: int = ItemDatabase.get_max_stack(item_id)
+	for slot: Dictionary in slots:
+		if slot.is_empty():
+			return true
+		if slot.get("item_id", "") == item_id and int(slot.get("count", 0)) < max_stack:
+			return true
+	return false
+
+
 func get_slot(index: int) -> Dictionary:
 	if index < 0 or index >= slots.size():
 		return {}

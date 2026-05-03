@@ -56,6 +56,10 @@ func _should_start_harvest_qte() -> bool:
 
 
 func _start_harvest_qte() -> void:
+	if not InventoryManager.can_accept_item(item_id):
+		_show_popup("Inventory Full!", Color(1.0, 0.4, 0.4))
+		_pickup_pending = false
+		return
 	var rarity: int = ItemDatabase.get_rarity(item_id)
 	if rarity == ItemDatabase.Rarity.UNCOMMON:
 		_start_rhythm_harvest()
@@ -64,6 +68,7 @@ func _start_harvest_qte() -> void:
 
 
 func _start_balance_qte() -> void:
+	_lock_player()
 	var qte_screen: Node = HARVEST_QTE_SCENE.instantiate()
 	get_tree().current_scene.add_child(qte_screen)
 	qte_screen.connect("finished", _on_balance_qte_finished)
@@ -71,11 +76,13 @@ func _start_balance_qte() -> void:
 
 
 func _on_balance_qte_finished(success: bool) -> void:
+	_unlock_player()
 	var granted_amount: int = _get_rare_success_amount() if success else _get_rare_reduced_amount()
 	_grant_pickup(granted_amount, not success, success and granted_amount > amount)
 
 
 func _start_rhythm_harvest() -> void:
+	_lock_player()
 	var rhythm_screen: Node = RHYTHM_HARVEST_SCENE.instantiate()
 	get_tree().current_scene.add_child(rhythm_screen)
 	rhythm_screen.connect("finished", _on_rhythm_harvest_finished)
@@ -83,6 +90,7 @@ func _start_rhythm_harvest() -> void:
 
 
 func _on_rhythm_harvest_finished(hits: int) -> void:
+	_unlock_player()
 	if hits == 3:
 		var bonus_amount: int = amount * 2
 		_grant_pickup(bonus_amount, false, true)
@@ -92,6 +100,18 @@ func _on_rhythm_harvest_finished(hits: int) -> void:
 		_show_popup("+0 %s (Harvest Lost!)" % ItemDatabase.get_display_name(item_id), Color(1.0, 0.25, 0.25))
 		set_tutorial_hint_active(false)
 		queue_free()
+
+
+func _lock_player() -> void:
+	var player: Node = GameManager.player
+	if is_instance_valid(player) and player.has_method("set_harvesting"):
+		player.call("set_harvesting", true)
+
+
+func _unlock_player() -> void:
+	var player: Node = GameManager.player
+	if is_instance_valid(player) and player.has_method("set_harvesting"):
+		player.call("set_harvesting", false)
 
 
 func _get_rare_success_amount() -> int:
