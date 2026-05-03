@@ -973,8 +973,93 @@ func _get_plant_id(plant: PlantBase) -> String:
 	return str(plant.name).to_snake_case()
 
 
+func _re_sync_with_quest_manager() -> void:
+	# After a save load the tutorial progress file (user://tutorial_progress.cfg)
+	# may be ahead of the game save because the two are written independently.
+	# QuestManager.deserialize() is the source of truth.  Reset any tutorial
+	# tracker flags that are ahead of what the quest save actually recorded,
+	# then re-report any objectives that are genuinely complete so the two
+	# stay in sync.
+
+	# Phase 1 — movement quest
+	if current_state == TutorialState.DAY_1_MOVEMENT \
+			and QuestManager.is_active(PHASE_DAY_1_MOVEMENT):
+		var prog: Dictionary = QuestManager.get_progress(PHASE_DAY_1_MOVEMENT)
+		var move_done: bool = _obj_complete(prog, &"move_5_seconds")
+		var inv_done: bool  = _obj_complete(prog, &"open_inventory")
+		var shard_done: bool = _obj_complete(prog, &"collect_petal_shards")
+		var sap_done: bool  = _obj_complete(prog, &"collect_verdant_sap")
+
+		if not move_done:
+			moved_enough = false
+			_reported_movement = false
+			movement_seconds = 0.0
+		else:
+			_reported_movement = true
+		if not inv_done:
+			inventory_opened = false
+		if not (shard_done and sap_done):
+			resource_collected = false
+		_save_progress()
+		return
+
+	# Phase 2 — crafting quest
+	if current_state == TutorialState.DAY_1_CRAFTING \
+			and QuestManager.is_active(PHASE_DAY_1_CRAFTING):
+		var prog: Dictionary = QuestManager.get_progress(PHASE_DAY_1_CRAFTING)
+		if not _obj_complete(prog, &"find_breeding_bench"):
+			bench_reached = false
+		if not _obj_complete(prog, &"open_crafting_bench"):
+			crafting_opened = false
+		if not _obj_complete(prog, &"select_thorn_sword"):
+			thorn_sword_selected = false
+		if not _obj_complete(prog, &"craft_thorn_sword"):
+			thorn_sword_crafted = false
+		_save_progress()
+		return
+
+	# Phase 3 — combat quest
+	if current_state == TutorialState.DAY_1_COMBAT \
+			and QuestManager.is_active(PHASE_DAY_1_COMBAT):
+		var prog: Dictionary = QuestManager.get_progress(PHASE_DAY_1_COMBAT)
+		if not _obj_complete(prog, &"hit_shadow_creature"):
+			combat_enemy_hit = false
+		if not _obj_complete(prog, &"survive_night_1"):
+			night_1_survived = false
+		night_1_failed = false
+		_save_progress()
+		return
+
+	# Phase 4 — defense quest
+	if current_state == TutorialState.DAY_3_DEFENSE \
+			and QuestManager.is_active(PHASE_DAY_3_DEFENSE):
+		var prog: Dictionary = QuestManager.get_progress(PHASE_DAY_3_DEFENSE)
+		if not _obj_complete(prog, &"enter_plant_placement_mode"):
+			plant_placement_mode_entered = false
+		if not _obj_complete(prog, &"place_tutorial_plant"):
+			tutorial_plant_placed = false
+		if not _obj_complete(prog, &"trigger_plant_ability"):
+			plant_ability_triggered = false
+		if not _obj_complete(prog, &"survive_night_3"):
+			night_3_survived = false
+		night_3_failed = false
+		_save_progress()
+		return
+
+	# Always reset the one-shot movement gate so fresh tracking works
+	_reported_movement = moved_enough
+
+
+func _obj_complete(prog: Dictionary, obj_id: StringName) -> bool:
+	if not prog.has(obj_id):
+		return false
+	var info: Dictionary = prog[obj_id]
+	return int(info.get("current", 0)) >= int(info.get("target", 1))
+
+
 func _on_load_completed(_success: bool) -> void:
 	_load_progress()
+	_re_sync_with_quest_manager()
 	call_deferred("_sync_active_phase_with_scene")
 	call_deferred("_connect_scene_tutorial_hooks")
 
