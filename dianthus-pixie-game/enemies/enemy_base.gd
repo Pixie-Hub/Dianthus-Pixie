@@ -90,11 +90,11 @@ func distance_to_core() -> float:
 
 func get_nearby_barricade() -> Node2D:
 	var closest: Node2D = null
-	var closest_dist: float = max(attack_range * 1.5, 96.0)
+	var closest_dist: float = attack_range * 3.0
 	for node in get_tree().get_nodes_in_group(&"barricades"):
 		if not is_instance_valid(node):
 			continue
-		var d: float = global_position.distance_to((node as Node2D).global_position)
+		var d: float = _distance_to_body_edge(node as Node2D)
 		if d < closest_dist:
 			closest_dist = d
 			closest = node as Node2D
@@ -103,8 +103,39 @@ func get_nearby_barricade() -> Node2D:
 
 func get_siege_target_position() -> Vector2:
 	if is_instance_valid(current_siege_target):
-		return current_siege_target.global_position
+		return _nearest_edge_point(current_siege_target)
 	return get_core_position()
+
+
+func distance_to_siege_target() -> float:
+	if is_instance_valid(current_siege_target):
+		return _distance_to_body_edge(current_siege_target)
+	return distance_to_core()
+
+
+func _distance_to_body_edge(body: Node2D) -> float:
+	return global_position.distance_to(_nearest_edge_point(body))
+
+
+func _nearest_edge_point(body: Node2D) -> Vector2:
+	var shape_node: CollisionShape2D = body.get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if shape_node == null or shape_node.shape == null:
+		return body.global_position
+	var shape: Shape2D = shape_node.shape
+	var local_pos: Vector2 = body.to_local(global_position) - shape_node.position
+	var clamped: Vector2
+	if shape is RectangleShape2D:
+		var half: Vector2 = (shape as RectangleShape2D).size * 0.5
+		clamped = Vector2(clampf(local_pos.x, -half.x, half.x), clampf(local_pos.y, -half.y, half.y))
+	elif shape is CircleShape2D:
+		var r: float = (shape as CircleShape2D).radius
+		if local_pos.length() <= r:
+			clamped = local_pos
+		else:
+			clamped = local_pos.normalized() * r
+	else:
+		return body.global_position
+	return body.to_global(clamped + shape_node.position)
 
 
 func count_nearby_allies(radius: float) -> int:

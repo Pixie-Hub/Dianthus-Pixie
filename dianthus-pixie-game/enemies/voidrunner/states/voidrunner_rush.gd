@@ -1,65 +1,22 @@
-extends State
-
-const NAV_UPDATE_INTERVAL: float = 0.3
-
-var _nav_timer: float = 0.0
-var _nav_agent: NavigationAgent2D = null
-var _use_direct_steering: bool = false
+extends EnemyScoutState
 
 
-func enter() -> void:
-	_nav_agent = enemy.get_node_or_null("%NavigationAgent2D") as NavigationAgent2D
-	_use_direct_steering = _nav_agent == null
-	_nav_timer = NAV_UPDATE_INTERVAL
-	_update_target()
-	var e: EnemyBase = enemy as EnemyBase
-	if e != null:
-		e.play_animation(&"walk")
+func _get_nav_update_interval() -> float:
+	return 0.3
 
 
-func physics_update(delta: float) -> void:
-	var e: EnemyBase = enemy as EnemyBase
-	if e == null or e.is_stunned():
-		return
-	var barricade: Node2D = e.get_nearby_barricade()
-	if barricade != null:
-		e.current_siege_target = barricade
-		state_machine.transition_to(&"Siege")
-		return
-	if e.distance_to_core() <= e.attack_range:
-		state_machine.transition_to(&"Siege")
-		return
-	# Only switch to Attack if player is CLOSER than Core and within detection range.
-	if not e.is_player_dead() and e.distance_to_player() <= e.detection_radius and e.distance_to_player() < e.distance_to_core():
-		state_machine.transition_to(&"Attack")
-		return
-
-	_nav_timer -= delta
-	if _nav_timer <= 0.0:
-		_nav_timer = NAV_UPDATE_INTERVAL
-		_update_target()
-	_move(e)
+func _get_wander_angle_max() -> float:
+	return 0.0
 
 
-func _update_target() -> void:
-	var e: EnemyBase = enemy as EnemyBase
-	var barricade: Node2D = e.get_nearby_barricade() if e != null else null
-	var target: Vector2 = barricade.global_position if is_instance_valid(barricade) else e.get_core_position()
-	if not _use_direct_steering and is_instance_valid(_nav_agent):
-		_nav_agent.target_position = target
+func _get_scout_fallback_state() -> StringName:
+	return &"Rush"
 
 
-func _move(e: EnemyBase) -> void:
-	var direction: Vector2
-	var has_path: bool = (not _use_direct_steering
-		and is_instance_valid(_nav_agent)
-		and _nav_agent.get_current_navigation_path().size() > 1)
-	if has_path:
-		direction = (_nav_agent.get_next_path_position() - e.global_position).normalized()
-	else:
-		var barricade: Node2D = e.get_nearby_barricade()
-		var steer_target: Vector2 = barricade.global_position if is_instance_valid(barricade) else e.get_core_position()
-		direction = (steer_target - e.global_position).normalized()
-	# No wander angle — pure beeline.
-	e.velocity = direction * e.get_effective_speed()
-	e.move_and_slide()
+func _check_retreat(_e: EnemyBase) -> bool:
+	return false
+
+
+# Only switch to Attack if player is CLOSER than Core and within detection range.
+func _check_player_detection(e: EnemyBase) -> bool:
+	return not e.is_player_dead() and e.distance_to_player() <= e.detection_radius and e.distance_to_player() < e.distance_to_core()
