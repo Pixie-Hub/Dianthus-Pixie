@@ -27,7 +27,7 @@ func _ready() -> void:
 
 func _on_player_enter() -> void:
 	if not _challenge_active:
-		_update_prompt("[E] Enter Fissure (10s survival = RARE reward)")
+		_update_prompt("[E] Enter Void Fissure\nSurvive 10s inside the circle — Rare reward")
 
 
 func _on_player_exit() -> void:
@@ -68,7 +68,7 @@ func _start_challenge() -> void:
 		_radius_visual.visible = true
 	if is_instance_valid(_timer_label):
 		_timer_label.visible = true
-	_update_prompt("Stay inside circle!")
+	_update_prompt("Stay inside the circle!\nEnemies incoming — don't leave!")
 	SfxManager.play("wave_start")
 	for i: int in range(SHADOW_COUNT):
 		_spawn_shadow()

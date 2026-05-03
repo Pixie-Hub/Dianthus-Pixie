@@ -65,7 +65,7 @@ func _process(delta: float) -> void:
 	var build_time: float = BARRICADE_BUILD_TIME if _selected_type == StructureType.BARRICADE else TRAP_BUILD_TIME
 	_update_progress_bar(_build_timer / build_time)
 	var type_name: String = "Thorn Barricade" if _selected_type == StructureType.BARRICADE else "Spore Trap"
-	_set_prompt_text("Building %s... %.0f%%" % [type_name, (_build_timer / build_time) * 100.0])
+	_set_prompt_text("Building %s... %.0f%%\nRelease [E] to cancel" % [type_name, (_build_timer / build_time) * 100.0])
 
 	if _build_timer >= build_time:
 		_finish_build()
@@ -192,16 +192,17 @@ func _refresh_prompt() -> void:
 		return
 	if _is_built:
 		_prompt_label.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6, 1.0))
-		_set_prompt_text("[Fortified — %s]" % spot_label)
+		var built_name: String = "Thorn Barricade" if _selected_type == StructureType.BARRICADE else "Spore Trap"
+		_set_prompt_text("%s built here  [%s]\nClears at dawn" % [built_name, spot_label])
 		return
 	var type_name: String = "Thorn Barricade" if _selected_type == StructureType.BARRICADE else "Spore Trap"
 	var cost_str: String = _get_cost_string()
 	if not _can_afford():
 		_prompt_label.add_theme_color_override("font_color", Color(0.8, 0.4, 0.4, 1.0))
-		_set_prompt_text("[E] Build %s (%s)\nNot enough resources" % [type_name, cost_str])
+		_set_prompt_text("[Hold E] Build %s\nNeed: %s  (not enough)" % [type_name, cost_str])
 	else:
 		_prompt_label.add_theme_color_override("font_color", Color(1.0, 0.85, 0.5, 1.0))
-		_set_prompt_text("[Hold E] Build %s (%s)\n[,/.] or [Scroll] Switch type" % [type_name, cost_str])
+		_set_prompt_text("[Hold E] Build %s\nCost: %s   [, / .] Switch type" % [type_name, cost_str])
 
 
 func _set_prompt_text(text: String) -> void:

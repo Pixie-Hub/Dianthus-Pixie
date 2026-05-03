@@ -19,7 +19,7 @@ func _ready() -> void:
 
 
 func _on_player_enter() -> void:
-	_update_prompt("Hold [E] to channel bloom (6s)")
+	_update_prompt("Hold [E] to channel the Resonance Bloom\nReward: Restore Core HP  •  Stand still")
 
 
 func _on_player_exit() -> void:
@@ -36,11 +36,11 @@ func _process(delta: float) -> void:
 			return
 		if _is_moving():
 			_cancel_channel()
-			_update_prompt("Stand still to channel! Hold [E]")
+			_update_prompt("Stand still and hold [E] to channel!")
 			return
 		_channel_timer += delta
 		_update_progress_bar(_channel_timer / CHANNEL_DURATION)
-		_update_prompt("Channeling... %.0f%%" % (_channel_timer / CHANNEL_DURATION * 100.0))
+		_update_prompt("Channeling Bloom... %.0f%%\nRelease [E] to cancel" % (_channel_timer / CHANNEL_DURATION * 100.0))
 		if _channel_timer >= CHANNEL_DURATION:
 			_finish_event()
 
@@ -68,7 +68,7 @@ func _cancel_channel() -> void:
 	_channel_timer = 0.0
 	_update_progress_bar(0.0)
 	if _player_in_range:
-		_update_prompt("Hold [E] to channel bloom (6s)")
+		_update_prompt("Hold [E] to channel the Resonance Bloom\nReward: Restore Core HP  •  Stand still")
 
 
 func _give_reward() -> void:

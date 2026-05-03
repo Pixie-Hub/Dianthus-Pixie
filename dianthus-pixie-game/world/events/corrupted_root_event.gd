@@ -29,7 +29,7 @@ func _on_activated() -> void:
 
 
 func _on_player_enter() -> void:
-	_update_prompt("[E] Destroy Root (HP: %d)" % _current_hp)
+	_update_prompt("[E] Strike — Corrupted Root  HP: %d/%d\nReward: Seal a spawn point tonight" % [_current_hp, ROOT_HP])
 
 
 func _on_player_exit() -> void:
@@ -42,7 +42,7 @@ func _process(delta: float) -> void:
 	if _attack_cooldown > 0.0:
 		_attack_cooldown -= delta
 	if _player_in_range and _is_active:
-		_update_prompt("[E] Destroy Root (HP: %d)" % _current_hp)
+		_update_prompt("[E] Strike — Corrupted Root  HP: %d/%d\nWarning: Root strikes back!" % [_current_hp, ROOT_HP])
 
 
 func _handle_input(event: InputEvent) -> void:

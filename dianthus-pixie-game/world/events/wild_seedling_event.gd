@@ -18,7 +18,7 @@ func _ready() -> void:
 
 
 func _on_player_enter() -> void:
-	_update_prompt("Hold [E] to rescue seedling (4s)")
+	_update_prompt("Hold [E] to rescue seedling\nReward: Rare plant seed")
 
 
 func _on_player_exit() -> void:
@@ -35,7 +35,7 @@ func _process(delta: float) -> void:
 			return
 		_hold_timer += delta
 		_update_progress_bar(_hold_timer / HOLD_DURATION)
-		_update_prompt("Hold [E] ... %.0f%%" % (_hold_timer / HOLD_DURATION * 100.0))
+		_update_prompt("Rescuing seedling... %.0f%%\nRelease [E] to cancel" % (_hold_timer / HOLD_DURATION * 100.0))
 		if _hold_timer >= HOLD_DURATION:
 			_finish_event()
 
@@ -54,7 +54,7 @@ func _cancel_hold() -> void:
 	_hold_timer = 0.0
 	_update_progress_bar(0.0)
 	if _player_in_range:
-		_update_prompt("Hold [E] to rescue seedling (4s)")
+		_update_prompt("Hold [E] to rescue seedling\nReward: Rare plant seed")
 
 
 func _give_reward() -> void:
