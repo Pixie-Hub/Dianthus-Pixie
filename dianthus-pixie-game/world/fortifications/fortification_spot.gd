@@ -14,6 +14,7 @@ const TRAP_SCENE: String = "res://world/fortifications/spore_trap.tscn"
 enum StructureType { BARRICADE, TRAP }
 
 @export var spot_label: String = "Fortification Spot"
+@export var barricade_sideways: bool = false
 
 var _player_in_range: bool = false
 var _is_built: bool = false
@@ -143,6 +144,8 @@ func _finish_build() -> void:
 
 	var structure: Node2D = scene.instantiate() as Node2D
 	structure.global_position = global_position
+	if barricade_sideways and _selected_type == StructureType.BARRICADE:
+		structure.rotation = PI / 2.0
 	var ysort: Node = get_tree().current_scene.get_node_or_null("YSortLayer")
 	if ysort != null:
 		ysort.add_child(structure)

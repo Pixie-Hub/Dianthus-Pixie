@@ -1631,10 +1631,12 @@ spot_label = "South Gate"
 [node name="FortSpotWest" parent="YSortLayer" unique_id=1940100003 instance=ExtResource("22_fortspot")]
 position = Vector2(656, 832)
 spot_label = "West Gate"
+barricade_sideways = true
 
 [node name="FortSpotEast" parent="YSortLayer" unique_id=1940100004 instance=ExtResource("22_fortspot")]
 position = Vector2(880, 832)
 spot_label = "East Gate"
+barricade_sideways = true
 
 [node name="BreedingBench" parent="YSortLayer" unique_id=62907201 instance=ExtResource("12_bench")]
 position = Vector2(832, 848)
