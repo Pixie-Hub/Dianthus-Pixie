@@ -16,7 +16,7 @@ var _hit_cooldowns: Dictionary = {}
 
 
 func _ready() -> void:
-	collision_layer = CollisionLayers.INTERACTABLE | CollisionLayers.TERRAIN
+	collision_layer = CollisionLayers.INTERACTABLE | CollisionLayers.BARRICADE
 	collision_mask = 0
 	add_to_group(&"barricades")
 	_update_hp_bar()
