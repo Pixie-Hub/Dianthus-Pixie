@@ -118,7 +118,7 @@ func _distance_to_body_edge(body: Node2D) -> float:
 
 
 func _nearest_edge_point(body: Node2D) -> Vector2:
-	var shape_node: CollisionShape2D = body.get_node_or_null("CollisionShape2D") as CollisionShape2D
+	var shape_node: CollisionShape2D = _find_body_collision_shape(body)
 	if shape_node == null or shape_node.shape == null:
 		return body.global_position
 	var shape: Shape2D = shape_node.shape
@@ -136,6 +136,13 @@ func _nearest_edge_point(body: Node2D) -> Vector2:
 	else:
 		return body.global_position
 	return body.to_global(clamped + shape_node.position)
+
+
+func _find_body_collision_shape(body: Node2D) -> CollisionShape2D:
+	for child in body.get_children():
+		if child is CollisionShape2D and child.shape != null:
+			return child as CollisionShape2D
+	return null
 
 
 func count_nearby_allies(radius: float) -> int:
