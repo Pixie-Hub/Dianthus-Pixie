@@ -86,6 +86,13 @@ Use `docs/design/TASK_BREAKDOWN.md` as the guide for which tasks have and have n
 - For `%NodeName` lookups, verify the scene node exists and has correct `unique_name_in_owner` metadata before changing script logic.
 - Do not manually edit generated `.import` files or `.uid` files unless the user explicitly asks and the reason is clear.
 
+## Scene-First Configuration
+
+- Always configure default node properties, layouts, and static signal connections directly in the Godot Editor (.tscn files) whenever possible.
+- Avoid writing boilerplate setup code or hardcoding UI properties in GDScript (e.g., inside `_ready()`) unless the properties must be generated dynamically at runtime.
+- Use `@onready` references to scene-authored nodes rather than creating nodes with `Node.new()` and `add_child()` in script.
+- Runtime-dynamic logic (visibility toggling, tween animations, signal-driven updates) belongs in script. Static defaults (text, colors, anchors, styles, initial visibility) belong in the scene.
+
 ## Implementation Guidelines
 
 - Prefer feature-local scripts and resources over new global systems.

@@ -17,6 +17,9 @@ extends CanvasLayer
 @onready var _slot2_name: Label = %Slot2NameLabel
 @onready var _skill_name: Label = %SkillNameLabel
 @onready var _tracked_quest_panel: TrackedQuestHUD = %TrackedQuestPanel
+@onready var _endless_label: Label = %EndlessLabel
+@onready var _return_label: Label = %ReturnWarningLabel
+@onready var _skip_day_button: Button = %SkipDayButton
 
 const HOTBAR_SELECTED_COLOR: Color = Color(0.9, 0.75, 0.2, 1)
 const HOTBAR_NORMAL_COLOR: Color = Color(0.3, 0.3, 0.3, 1)
@@ -34,10 +37,7 @@ var _prev_core_hp: int = -1
 var _low_hp_tween: Tween = null
 var _core_danger_tween: Tween = null
 var _core_in_danger: bool = false
-var _endless_label: Label = null
-var _return_label: Label = null
 var _return_tween: Tween = null
-var _skip_day_button: Button = null
 
 
 func _ready() -> void:
@@ -49,16 +49,13 @@ func _ready() -> void:
 	DayNightCycle.phase_changed.connect(_on_phase_changed_hud)
 	_on_colorblind_changed(GameManager.colorblind_mode)
 	GameManager.game_state_changed.connect(_on_game_state_changed)
-	_setup_endless_label()
 	_refresh_endless_label()
 	QuestManager.quest_completed.connect(_on_quest_completed_hud)
-	_setup_return_label()
-	_setup_skip_day_button()
+	_skip_day_button.pressed.connect(_on_skip_day_pressed)
+	_skip_day_button.visible = not DayNightCycle.is_night()
 
 
 func _process(_delta: float) -> void:
-	if _return_label == null:
-		return
 	var is_night: bool = DayNightCycle.is_night()
 	var remaining: float = DayNightCycle.get_time_remaining()
 	var should_show: bool = not is_night and remaining <= RETURN_WARNING_THRESHOLD
@@ -130,51 +127,10 @@ func _on_phase_changed_hud(phase: String) -> void:
 	var tint: Color = HOTBAR_LOCKED_COLOR if is_night else Color.WHITE
 	_slot1_panel.modulate = tint
 	_slot2_panel.modulate = tint
-	if is_night and _return_label != null:
+	if is_night:
 		_return_label.visible = false
 		_stop_return_pulse()
-	if _skip_day_button != null:
-		_skip_day_button.visible = not is_night
-
-
-func _setup_skip_day_button() -> void:
-	_skip_day_button = Button.new()
-	_skip_day_button.name = "SkipDayButton"
-	_skip_day_button.text = "Skip to Night  [N]"
-	_skip_day_button.add_theme_color_override("font_color", Color(1.0, 0.78, 0.28, 1.0))
-	_skip_day_button.add_theme_color_override("font_hover_color", Color(1.0, 0.95, 0.6, 1.0))
-	_skip_day_button.add_theme_color_override("font_pressed_color", Color(0.85, 0.55, 0.1, 1.0))
-	_skip_day_button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	var sb_normal: StyleBoxFlat = StyleBoxFlat.new()
-	sb_normal.bg_color = Color(0.12, 0.09, 0.06, 0.85)
-	sb_normal.border_width_left = 1
-	sb_normal.border_width_right = 1
-	sb_normal.border_width_top = 1
-	sb_normal.border_width_bottom = 1
-	sb_normal.border_color = Color(0.65, 0.50, 0.25, 0.8)
-	sb_normal.corner_radius_top_left = 3
-	sb_normal.corner_radius_top_right = 3
-	sb_normal.corner_radius_bottom_right = 3
-	sb_normal.corner_radius_bottom_left = 3
-	_skip_day_button.add_theme_stylebox_override("normal", sb_normal)
-	var sb_hover: StyleBoxFlat = sb_normal.duplicate() as StyleBoxFlat
-	sb_hover.border_color = Color(1.0, 0.78, 0.28, 1.0)
-	_skip_day_button.add_theme_stylebox_override("hover", sb_hover)
-	var sb_pressed: StyleBoxFlat = sb_normal.duplicate() as StyleBoxFlat
-	sb_pressed.bg_color = Color(0.25, 0.18, 0.05, 0.9)
-	_skip_day_button.add_theme_stylebox_override("pressed", sb_pressed)
-	_skip_day_button.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	_skip_day_button.anchor_left = 1.0
-	_skip_day_button.anchor_top = 0.0
-	_skip_day_button.anchor_right = 1.0
-	_skip_day_button.anchor_bottom = 0.0
-	_skip_day_button.offset_left = -134.0
-	_skip_day_button.offset_top = 4.0
-	_skip_day_button.offset_right = -4.0
-	_skip_day_button.offset_bottom = 22.0
-	_skip_day_button.visible = not DayNightCycle.is_night()
-	_skip_day_button.pressed.connect(_on_skip_day_pressed)
-	add_child(_skip_day_button)
+	_skip_day_button.visible = not is_night
 
 
 func _on_skip_day_pressed() -> void:
@@ -182,24 +138,6 @@ func _on_skip_day_pressed() -> void:
 		return
 	print("[HUD] Skip to Night triggered.")
 	DayNightCycle.debug_skip_phase()
-
-
-func _setup_return_label() -> void:
-	_return_label = Label.new()
-	_return_label.name = "ReturnWarningLabel"
-	_return_label.text = "Return to Garden!"
-	_return_label.add_theme_color_override("font_color", Color(1.0, 0.55, 0.1, 1.0))
-	_return_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_return_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_return_label.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	_return_label.anchor_left = 0.0
-	_return_label.anchor_top = 0.0
-	_return_label.anchor_right = 1.0
-	_return_label.anchor_bottom = 0.0
-	_return_label.offset_top = 56.0
-	_return_label.offset_bottom = 80.0
-	_return_label.visible = false
-	add_child(_return_label)
 
 
 func _start_return_pulse() -> void:
@@ -214,8 +152,7 @@ func _stop_return_pulse() -> void:
 	if is_instance_valid(_return_tween):
 		_return_tween.kill()
 	_return_tween = null
-	if _return_label != null:
-		_return_label.modulate = Color.WHITE
+	_return_label.modulate = Color.WHITE
 
 
 func _start_low_hp_pulse() -> void:
@@ -300,28 +237,8 @@ func _on_quest_completed_hud(quest_id: StringName) -> void:
 		_tracked_quest_panel.untrack_quest()
 
 
-func _setup_endless_label() -> void:
-	_endless_label = Label.new()
-	_endless_label.name = "EndlessLabel"
-	_endless_label.text = "\u221e ENDLESS"
-	_endless_label.add_theme_color_override("font_color", Color(1.0, 0.85, 0.3, 1))
-	_endless_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	_endless_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_endless_label.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	_endless_label.anchor_left = 1.0
-	_endless_label.anchor_top = 1.0
-	_endless_label.anchor_right = 1.0
-	_endless_label.anchor_bottom = 1.0
-	_endless_label.offset_left = -90.0
-	_endless_label.offset_top = -112.0
-	_endless_label.offset_right = -4.0
-	_endless_label.offset_bottom = -100.0
-	add_child(_endless_label)
-
-
 func _refresh_endless_label() -> void:
-	if _endless_label != null:
-		_endless_label.visible = GameManager.endless_mode
+	_endless_label.visible = GameManager.endless_mode
 
 
 func _shake(node: Control) -> void:
