@@ -43,6 +43,7 @@ var selected_weapon_slot: int = 0
 var _current_weapon: WeaponData = null
 var _debug_plant_cycle: int = 0
 var _debug_enemy_index: int = 0
+var _ability_manager: AbilityManager = null
 
 const DEBUG_ENEMY_SCENES: Array[String] = [
 	"res://enemies/shadowling/shadowling.tscn",
@@ -81,6 +82,8 @@ func _ready() -> void:
 	_sword_hitbox.body_entered.connect(_on_sword_hitbox_body_entered)
 	CraftingManager.weapon_crafted.connect(_on_weapon_crafted)
 	_setup_core_energy_tick_timer()
+	_ability_manager = AbilityManager.new()
+	add_child(_ability_manager)
 	loadout_changed.emit(weapon_slots, active_skill_id, selected_weapon_slot)
 
 
@@ -376,6 +379,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_5 and event.ctrl_pressed and event.shift_pressed:
 			QuestManager.start_quest(&"story_01_whispers")
 			print("DEBUG: Ctrl+Shift+5 — Force-started story_01_whispers.")
+		elif event.keycode == KEY_F and event.shift_pressed and not event.ctrl_pressed:
+			set_active_skill("dash")
+			print("DEBUG: Shift+F — Equipped 'dash' skill. Press F to activate (costs 20 energy).")
 		elif event.keycode == KEY_F and event.ctrl_pressed and event.shift_pressed:
 			var story_active: Array[QuestData] = QuestManager.get_active_quests()
 			var found_story: bool = false
@@ -829,16 +835,9 @@ func set_active_skill(skill_id: String) -> void:
 
 
 func _activate_skill() -> void:
-	if active_skill_id.is_empty():
-		print("[Player] No active skill equipped.")
+	if _ability_manager == null:
 		return
-	if not try_spend_energy(SKILL_ENERGY_COST):
-		print("[Player] Not enough energy for skill. Need %d, have %d." % [SKILL_ENERGY_COST, current_energy])
-		return
-	print("[Player] Activated skill: %s (-%d energy)" % [active_skill_id, SKILL_ENERGY_COST])
-	# TODO (PLANT-09): Spore Bomb skill behavior.
-	# TODO (PLANT-10): Vine Whip skill behavior.
-	# TODO (PLANT-11): Petal Shield skill behavior.
+	_ability_manager.try_activate(active_skill_id, self)
 
 
 func _debug_place_plant() -> void:
