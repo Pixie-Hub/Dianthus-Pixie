@@ -308,7 +308,7 @@ FOUND-01..06 (Done)
 | Shift+F3 | Energy set to 50 | PLANT-07 |
 | F4 | Player +25 HP | CORE-08 |
 | Shift+F4 | Energy filled to max | PLANT-07 |
-| F5 | Cycle-spawn enemy at mouse: Shadowling → Voidrunner → Stonehusk → Phantom Weaver (repeats) | ENEMY-01/02/03 |
+| F5 | Cycle-spawn enemy at mouse: Shadowling → Voidrunner → Stonehusk → Phantom Weaver → Swarm Larva (×5) (repeats) | ENEMY-01/02/03/04 |
 | F6 | Kill all enemies | CORE-06 |
 | F7 | Skip current phase | FOUND-05 |
 | F8 | Force-start wave | CORE-07 |

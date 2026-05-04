@@ -50,6 +50,7 @@ const DEBUG_ENEMY_SCENES: Array[String] = [
 	"res://enemies/voidrunner/voidrunner.tscn",
 	"res://enemies/stonehusk/stonehusk.tscn",
 	"res://enemies/phantom_weaver/phantom_weaver.tscn",
+	"res://enemies/swarm_larva/swarm_larva.tscn",
 ]
 var current_energy: int = 0
 var max_energy: int = BASE_MAX_ENERGY
@@ -884,20 +885,24 @@ func _debug_spawn_enemy() -> void:
 	if scene == null:
 		push_warning("DEBUG: Could not load enemy scene: %s" % scene_path)
 		return
-	var e: EnemyBase = scene.instantiate() as EnemyBase
 	var spawn_pos: Vector2 = global_position + Vector2(100, 0)
 	if get_viewport() != null:
 		var mouse_world: Vector2 = get_canvas_transform().affine_inverse() * get_viewport().get_mouse_position()
 		spawn_pos = mouse_world
-	e.global_position = spawn_pos
 	var ysort: Node = get_tree().current_scene.get_node_or_null("YSortLayer")
-	if ysort != null:
-		ysort.add_child(e)
-	else:
-		get_tree().current_scene.add_child(e)
-	if e.has_method("activate"):
-		e.activate()
-	print("[Debug] Spawned %s at %s" % [scene_path.get_file().get_basename(), spawn_pos])
+	var container: Node = ysort if ysort != null else get_tree().current_scene
+	var batch: int = 5 if scene_path.find("swarm_larva") >= 0 else 1
+	for _b: int in batch:
+		var e: EnemyBase = scene.instantiate() as EnemyBase
+		var offset: Vector2 = Vector2(randf_range(-12.0, 12.0), randf_range(-12.0, 12.0)) if batch > 1 else Vector2.ZERO
+		e.global_position = spawn_pos + offset
+		container.add_child(e)
+		if e.has_method("activate"):
+			e.activate()
+	var label: String = scene_path.get_file().get_basename()
+	if batch > 1:
+		label += " (x%d)" % batch
+	print("[Debug] Spawned %s at %s" % [label, spawn_pos])
 	_debug_enemy_index = (_debug_enemy_index + 1) % DEBUG_ENEMY_SCENES.size()
 
 

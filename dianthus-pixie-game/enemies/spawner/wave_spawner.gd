@@ -12,6 +12,7 @@ const ENEMY_SCENES: Dictionary = {
 	"voidrunner": preload("res://enemies/voidrunner/voidrunner.tscn"),
 	"stonehusk": preload("res://enemies/stonehusk/stonehusk.tscn"),
 	"phantom_weaver": preload("res://enemies/phantom_weaver/phantom_weaver.tscn"),
+	"swarm_larva": preload("res://enemies/swarm_larva/swarm_larva.tscn"),
 }
 
 # Each entry: { "type": String, "weight": float, "min_day": int }
@@ -20,6 +21,7 @@ const ENEMY_POOL: Array[Dictionary] = [
 	{ "type": "voidrunner", "weight": 0.6, "min_day": 2 },
 	{ "type": "stonehusk", "weight": 0.3, "min_day": 4 },
 	{ "type": "phantom_weaver", "weight": 0.4, "min_day": 6 },
+	{ "type": "swarm_larva", "weight": 0.5, "min_day": 8 },
 ]
 
 @export var total_enemies: int = 5
@@ -29,6 +31,9 @@ const ENEMY_POOL: Array[Dictionary] = [
 @export var spawn_batch_size: int = 1
 @export var spawn_offset_radius: float = 24.0
 @export var enemy_container_path: NodePath = NodePath("")
+
+const SWARM_BATCH_MIN: int = 5
+const SWARM_BATCH_MAX: int = 10
 
 @export_group("Difficulty Scaling")
 @export var hp_growth_per_day: float = 0.10
@@ -122,12 +127,21 @@ func _process(delta: float) -> void:
 func _spawn_enemy() -> void:
 	if _active_spawn_points.is_empty():
 		return
+	var picked_type: String = _pick_enemy_type()
+	var batch: int = _get_batch_size(picked_type)
 	var base_pos: Vector2 = _active_spawn_points[randi() % _active_spawn_points.size()]
+	for _b: int in batch:
+		if _enemies_spawned >= _current_wave_total:
+			break
+		_spawn_single_enemy(ENEMY_SCENES[picked_type], base_pos)
+
+
+func _spawn_single_enemy(scene: PackedScene, base_pos: Vector2) -> void:
 	var rand_dir: Vector2 = Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0))
 	if rand_dir != Vector2.ZERO:
 		rand_dir = rand_dir.normalized()
 	var spawn_pos: Vector2 = base_pos + rand_dir * randf_range(0.0, spawn_offset_radius)
-	var enemy: EnemyBase = _pick_enemy_scene().instantiate() as EnemyBase
+	var enemy: EnemyBase = scene.instantiate() as EnemyBase
 	if enemy == null:
 		push_warning("[WaveSpawner] Failed to instantiate enemy scene as EnemyBase.")
 		return
@@ -164,6 +178,12 @@ func _spawn_enemy() -> void:
 	_counted_dead[enemy] = false
 	enemy_spawned.emit(enemy)
 	print("[WaveSpawner] Spawned enemy %d/%d at %s" % [_enemies_spawned, _current_wave_total, spawn_pos])
+
+
+func _get_batch_size(enemy_type: String) -> int:
+	if enemy_type == "swarm_larva":
+		return randi_range(SWARM_BATCH_MIN, SWARM_BATCH_MAX)
+	return 1
 
 
 func _on_enemy_died(enemy: EnemyBase) -> void:
@@ -226,9 +246,9 @@ func is_wave_active() -> bool:
 	return _wave_active
 
 
-func _pick_enemy_scene() -> PackedScene:
+func _pick_enemy_type() -> String:
 	if ENEMY_POOL.is_empty():
-		return enemy_scene
+		return "shadowling"
 	var day: int = max(1, DayNightCycle.day_count)
 	var pool: Array[Dictionary] = []
 	var total_weight: float = 0.0
@@ -237,14 +257,14 @@ func _pick_enemy_scene() -> PackedScene:
 			pool.append(entry)
 			total_weight += entry["weight"]
 	if pool.is_empty():
-		return ENEMY_SCENES["shadowling"]
+		return "shadowling"
 	var roll: float = randf() * total_weight
 	var cumulative: float = 0.0
 	for entry: Dictionary in pool:
 		cumulative += entry["weight"]
 		if roll <= cumulative:
-			return ENEMY_SCENES[entry["type"]]
-	return ENEMY_SCENES[pool.back()["type"]]
+			return entry["type"]
+	return pool.back()["type"]
 
 
 # TODO (DIFF-02): Add override_entry_point_count(n: int) for Surge Night to force all 4 entry points.
