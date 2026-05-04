@@ -297,6 +297,19 @@ func _clear_daytime_resources() -> void:
 		if child.is_in_group(DAYTIME_RESOURCE_PICKUP_GROUP):
 			child.free()
 
+func _is_spawn_point_clear(pos: Vector2) -> bool:
+	var space_state: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
+	if space_state == null:
+		return true
+	var params: PhysicsPointQueryParameters2D = PhysicsPointQueryParameters2D.new()
+	params.position = pos
+	params.collision_mask = 1
+	params.collide_with_bodies = true
+	params.collide_with_areas = false
+	var results: Array[Dictionary] = space_state.intersect_point(params, 1)
+	return results.is_empty()
+
+
 func _spawn_resource_rule(rule: Dictionary, rng: RandomNumberGenerator) -> void:
 	var day: int = DayNightCycle.day_count
 	var has_day_one_count: bool = rule.has("day_one_count")
@@ -323,7 +336,18 @@ func _spawn_resource_rule(rule: Dictionary, rng: RandomNumberGenerator) -> void:
 		if not should_spawn and can_roll_extra:
 			should_spawn = rng.randf() <= effective_chance
 		if should_spawn:
-			_spawn_resource_pickup(rule, positions[index], spawned_count + 1)
+			var candidate: Vector2 = positions[index]
+			if not _is_spawn_point_clear(candidate):
+				var found_clear: bool = false
+				for offset: Vector2 in [Vector2(16, 0), Vector2(-16, 0), Vector2(0, 16), Vector2(0, -16), Vector2(16, 16), Vector2(-16, 16), Vector2(16, -16), Vector2(-16, -16)]:
+					var alt: Vector2 = candidate + offset
+					if _is_spawn_point_clear(alt):
+						candidate = alt
+						found_clear = true
+						break
+				if not found_clear:
+					continue
+			_spawn_resource_pickup(rule, candidate, spawned_count + 1)
 			spawned_count += 1
 
 func mark_pickup_collected(pickup_name: String) -> void:
