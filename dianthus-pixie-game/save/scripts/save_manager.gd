@@ -4,7 +4,7 @@ signal save_completed(success: bool, manual: bool)
 signal load_completed(success: bool)
 
 const SAVE_PATH: String = "user://savegame.json"
-const SCHEMA_VERSION: int = 14
+const SCHEMA_VERSION: int = 15
 const GAME_VERSION: String = "0.1.0"
 
 const PLANT_TYPE_TO_SCENE: Dictionary = {
@@ -232,6 +232,13 @@ func _gather_state(manual: bool) -> Dictionary:
 	else:
 		state["pickups"] = {"collected_day": -1, "collected_names": []}
 
+	# Bramble cleared state
+	var bramble_scene: Node = get_tree().current_scene if is_instance_valid(get_tree().current_scene) else null
+	if bramble_scene != null and bramble_scene.has_method("serialize_bramble_state"):
+		state["brambles"] = bramble_scene.call("serialize_bramble_state")
+	else:
+		state["brambles"] = []
+
 	return state
 
 
@@ -339,6 +346,11 @@ func _apply_state(state: Dictionary) -> void:
 	var pickup_scene: Node = get_tree().current_scene if is_instance_valid(get_tree().current_scene) else null
 	if pickup_scene != null and pickup_scene.has_method("apply_collected_pickups"):
 		pickup_scene.call("apply_collected_pickups", state.get("pickups", {}))
+
+	# 5.13 Bramble cleared state — removes destroyed brambles from the scene.
+	var bramble_scene: Node = get_tree().current_scene if is_instance_valid(get_tree().current_scene) else null
+	if bramble_scene != null and bramble_scene.has_method("apply_cleared_brambles"):
+		bramble_scene.call("apply_cleared_brambles", state.get("brambles", []))
 
 	# 5.5 Difficulty tier.
 	var diff_tier: String = state.get("difficulty", {}).get("tier", "normal")
@@ -497,4 +509,10 @@ func _migrate(data: Dictionary) -> Dictionary:
 			ev["active_event_pos_y"] = 0.0
 			data["daytime_event"] = ev
 		data["schema_version"] = 14
+	# v14 → v15: bramble cleared state added.
+	if version < 15:
+		print("[SaveManager] Migrated v14 → v15 (brambles)")
+		if not data.has("brambles"):
+			data["brambles"] = []
+		data["schema_version"] = 15
 	return data

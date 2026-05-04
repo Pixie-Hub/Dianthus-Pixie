@@ -10,7 +10,7 @@ const RESOURCE_RNG_SEED_BASE: int = 17041
 const RESOURCE_RNG_DAY_STEP: int = 7919
 const DAYTIME_RESOURCE_PICKUP_GROUP: StringName = &"daytime_resource_pickups"
 const RARITY_SPAWN_CHANCE: Dictionary = {
-	ItemDatabase.Rarity.COMMON:   0.80,
+	ItemDatabase.Rarity.COMMON:   0.45,
 	ItemDatabase.Rarity.UNCOMMON: 0.18,
 	ItemDatabase.Rarity.RARE:     0.20,
 }
@@ -120,8 +120,6 @@ const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
 		"minimum_count": 0,
 		"positions": [
 			Vector2(736, 208),
-			Vector2(672, 232),
-			Vector2(700, 196),
 			Vector2(752, 240),
 		],
 	},
@@ -167,6 +165,7 @@ const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
 var _wave_spawner: WaveSpawner = null
 var _collected_pickup_names: Array[String] = []
 var _collected_day: int = -1
+var _cleared_bramble_ids: Array[String] = []
 
 func _ready() -> void:
 	DayNightCycle.register_canvas_modulate(_canvas_modulate)
@@ -187,6 +186,7 @@ func _ready() -> void:
 		_setup_wave_spawn_points()
 		_wave_spawner.wave_started.connect(_on_wave_started)
 		_wave_spawner.wave_cleared.connect(_on_wave_cleared)
+	_connect_bramble_signals()
 
 func _process(_delta: float) -> void:
 	if is_instance_valid(_timer_label):
@@ -220,6 +220,31 @@ func _update_debug_labels() -> void:
 		_phase_label.text = "Phase: %s" % DayNightCycle.get_phase_name()
 	if is_instance_valid(_day_label):
 		_day_label.text = "Day: %d" % DayNightCycle.day_count
+
+
+func _connect_bramble_signals() -> void:
+	for bramble: Node in get_tree().get_nodes_in_group(&"brambles"):
+		if bramble.has_signal("cleared") and not bramble.cleared.is_connected(_on_bramble_cleared):
+			bramble.cleared.connect(_on_bramble_cleared)
+
+
+func _on_bramble_cleared(bramble_id: StringName) -> void:
+	var id: String = str(bramble_id)
+	if not id in _cleared_bramble_ids:
+		_cleared_bramble_ids.append(id)
+
+
+func serialize_bramble_state() -> Array:
+	return _cleared_bramble_ids.duplicate()
+
+
+func apply_cleared_brambles(cleared_ids: Array) -> void:
+	_cleared_bramble_ids.clear()
+	for entry: Variant in cleared_ids:
+		_cleared_bramble_ids.append(str(entry))
+	for bramble: Node in get_tree().get_nodes_in_group(&"brambles"):
+		if bramble.has_method("_clear") and str(bramble.get("bramble_id")) in _cleared_bramble_ids:
+			bramble.queue_free()
 
 
 func _on_wave_started() -> void:
