@@ -245,8 +245,9 @@ func _try_drop_seed() -> void:
 			var pickup: Node2D = _SEED_PICKUP.instantiate() as Node2D
 			pickup.set("item_id", entry.get("item", ""))
 			pickup.set("amount", 1)
-			get_parent().add_child(pickup)
-			pickup.global_position = global_position
+			var drop_pos: Vector2 = global_position
+			get_parent().call_deferred("add_child", pickup)
+			pickup.set_deferred("global_position", drop_pos)
 			return
 
 
