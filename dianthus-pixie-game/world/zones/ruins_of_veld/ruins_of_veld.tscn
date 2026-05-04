@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://ruins_of_veld_zone01"]
+
+[ext_resource type="Script" path="res://world/zones/ruins_of_veld/ruins_of_veld.gd" id="1_rnsvld"]
+
+[node name="RuinsOfVeld" type="Node2D"]
+script = ExtResource("1_rnsvld")
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+color = Color(0.72, 0.68, 0.62, 1)
+
+[node name="YSortLayer" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="PickupContainer" type="Node2D" parent="YSortLayer"]
+
+[node name="DebugOverlay" type="CanvasLayer" parent="."]
+layer = 128
+
+[node name="PhaseLabel" type="Label" parent="DebugOverlay"]
+offset_left = 8.0
+offset_top = 8.0
+text = "Phase: "
+
+[node name="DayLabel" type="Label" parent="DebugOverlay"]
+offset_left = 8.0
+offset_top = 28.0
+text = "Day: "
+
+[node name="TimerLabel" type="Label" parent="DebugOverlay"]
+offset_left = 8.0
+offset_top = 48.0
+text = "Time: "

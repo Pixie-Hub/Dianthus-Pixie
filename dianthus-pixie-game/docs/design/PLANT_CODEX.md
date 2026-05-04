@@ -337,8 +337,8 @@ again, the player must breed another one.
 | Plant Codex UI | ✅ Done | `codex_screen.gd` |
 | Enemy seed drops | ✅ Done | `_get_seed_drop_table()` virtual in `enemy_base.gd`; Shadowling 20% bougie, Voidrunner 15%/10% rafflesia/melati, Stonehusk 15%/5% beringin/kecombrang, Phantom Weaver 20% wijaya_kusuma |
 | Wild Seedling Event seed selection | ✅ Done | Day-gated priority: Day 1+ common/rafflesia, Day 3+ mid-tier, Day 7+ rare; undiscovered seeds prioritised |
-| Dusk Forest zone seed pickups | ❌ Not Started | Blocked on WORLD-01 |
-| Ruins of Veld rare seed nodes | ❌ Not Started | Blocked on WORLD-02 |
+| Dusk Forest zone seed pickups | ✅ Done | `dusk_forest.gd` DAYTIME_RESOURCE_RULES; melati_seed×1–2 + wijaya_kusuma_seed×1 guaranteed Day 3+; rafflesia_seed/moonspore/shadow_resin/kecombrang_extract also present |
+| Ruins of Veld rare seed nodes | ✅ Done | `ruins_of_veld.gd` DAYTIME_RESOURCE_RULES; kecombrang_seed×1 + kunyit_seed×1 guaranteed Day 7+; kunyit_seed placed deeper to incentivise exploration |
 | Void Fissure seed reward selection | ✅ Done | Prefers undiscovered kecombrang_seed/kunyit_seed; falls back to rare materials when both discovered |
 | Corrupted Root clean-kill seed drop | ✅ Done | `kunyit_seed` given if player took 0 hits during fight and kunyit not yet discovered |
 
