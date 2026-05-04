@@ -245,7 +245,7 @@ func _refresh_prompt() -> void:
 			"Build %s" % type_name,
 			"Cost: %s" % cost_str,
 			"Hold E",
-			", / .  Switch type",
+			"< / >  or  Scroll  \u00b7  Switch type",
 			Color(1.0, 0.78, 0.28, 1.0)
 		)
 

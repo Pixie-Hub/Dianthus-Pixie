@@ -37,6 +37,7 @@ var _core_in_danger: bool = false
 var _endless_label: Label = null
 var _return_label: Label = null
 var _return_tween: Tween = null
+var _skip_day_button: Button = null
 
 
 func _ready() -> void:
@@ -52,6 +53,7 @@ func _ready() -> void:
 	_refresh_endless_label()
 	QuestManager.quest_completed.connect(_on_quest_completed_hud)
 	_setup_return_label()
+	_setup_skip_day_button()
 
 
 func _process(_delta: float) -> void:
@@ -66,6 +68,9 @@ func _process(_delta: float) -> void:
 	elif not should_show and _return_label.visible:
 		_return_label.visible = false
 		_stop_return_pulse()
+
+	if Input.is_action_just_pressed("skip_day") and not is_night:
+		_on_skip_day_pressed()
 
 
 func _on_player_hp_changed(current_hp: int, max_hp: int) -> void:
@@ -128,6 +133,55 @@ func _on_phase_changed_hud(phase: String) -> void:
 	if is_night and _return_label != null:
 		_return_label.visible = false
 		_stop_return_pulse()
+	if _skip_day_button != null:
+		_skip_day_button.visible = not is_night
+
+
+func _setup_skip_day_button() -> void:
+	_skip_day_button = Button.new()
+	_skip_day_button.name = "SkipDayButton"
+	_skip_day_button.text = "Skip to Night  [N]"
+	_skip_day_button.add_theme_color_override("font_color", Color(1.0, 0.78, 0.28, 1.0))
+	_skip_day_button.add_theme_color_override("font_hover_color", Color(1.0, 0.95, 0.6, 1.0))
+	_skip_day_button.add_theme_color_override("font_pressed_color", Color(0.85, 0.55, 0.1, 1.0))
+	_skip_day_button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	var sb_normal: StyleBoxFlat = StyleBoxFlat.new()
+	sb_normal.bg_color = Color(0.12, 0.09, 0.06, 0.85)
+	sb_normal.border_width_left = 1
+	sb_normal.border_width_right = 1
+	sb_normal.border_width_top = 1
+	sb_normal.border_width_bottom = 1
+	sb_normal.border_color = Color(0.65, 0.50, 0.25, 0.8)
+	sb_normal.corner_radius_top_left = 3
+	sb_normal.corner_radius_top_right = 3
+	sb_normal.corner_radius_bottom_right = 3
+	sb_normal.corner_radius_bottom_left = 3
+	_skip_day_button.add_theme_stylebox_override("normal", sb_normal)
+	var sb_hover: StyleBoxFlat = sb_normal.duplicate() as StyleBoxFlat
+	sb_hover.border_color = Color(1.0, 0.78, 0.28, 1.0)
+	_skip_day_button.add_theme_stylebox_override("hover", sb_hover)
+	var sb_pressed: StyleBoxFlat = sb_normal.duplicate() as StyleBoxFlat
+	sb_pressed.bg_color = Color(0.25, 0.18, 0.05, 0.9)
+	_skip_day_button.add_theme_stylebox_override("pressed", sb_pressed)
+	_skip_day_button.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	_skip_day_button.anchor_left = 1.0
+	_skip_day_button.anchor_top = 0.0
+	_skip_day_button.anchor_right = 1.0
+	_skip_day_button.anchor_bottom = 0.0
+	_skip_day_button.offset_left = -134.0
+	_skip_day_button.offset_top = 4.0
+	_skip_day_button.offset_right = -4.0
+	_skip_day_button.offset_bottom = 22.0
+	_skip_day_button.visible = not DayNightCycle.is_night()
+	_skip_day_button.pressed.connect(_on_skip_day_pressed)
+	add_child(_skip_day_button)
+
+
+func _on_skip_day_pressed() -> void:
+	if DayNightCycle.is_night():
+		return
+	print("[HUD] Skip to Night triggered.")
+	DayNightCycle.debug_skip_phase()
 
 
 func _setup_return_label() -> void:
