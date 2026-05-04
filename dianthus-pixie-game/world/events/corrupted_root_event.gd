@@ -11,6 +11,7 @@ const DAMAGE_FLASH_DURATION: float = 0.12
 var _current_hp: int = ROOT_HP
 var _attack_cooldown: float = 0.0
 const ATTACK_COOLDOWN_TIME: float = 1.2
+var _player_was_hit: bool = false
 
 @onready var _hp_bar: ColorRect = %HpBar
 @onready var _hp_bar_bg: ColorRect = %HpBarBg
@@ -25,6 +26,7 @@ func _ready() -> void:
 
 func _on_activated() -> void:
 	_current_hp = ROOT_HP
+	_player_was_hit = false
 	_update_hp_bar()
 
 
@@ -69,6 +71,7 @@ func _deal_damage() -> void:
 		var dist: float = global_position.distance_to(player.global_position)
 		if dist <= ATTACK_RANGE + 12.0:
 			player.take_damage(ATTACK_DAMAGE)
+			_player_was_hit = true
 			_attack_cooldown = ATTACK_COOLDOWN_TIME
 
 	if _current_hp <= 0:
@@ -84,6 +87,9 @@ func _flash_damage() -> void:
 func _give_reward() -> void:
 	spawn_sealed.emit(global_position)
 	_show_reward_popup("Spawn point sealed tonight!")
+	if not _player_was_hit and not CodexManager.is_plant_discovered("kunyit"):
+		InventoryManager.add_item("kunyit_seed", 1)
+		_show_reward_popup("Clean kill! Kunyit Seed dropped!")
 
 
 func _update_hp_bar() -> void:

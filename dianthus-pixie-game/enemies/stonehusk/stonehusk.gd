@@ -21,6 +21,13 @@ func _get_death_sfx_id() -> String:
 	return "stonehusk_death"
 
 
+func _get_seed_drop_table() -> Array[Dictionary]:
+	return [
+		{"item": "beringin_seed", "chance": 0.15},
+		{"item": "kecombrang_seed", "chance": 0.05},
+	]
+
+
 # Override: Stonehusk resists pull — halve the pull distance.
 # TODO: ENEMY-WEAKNESS — replace with pull_resistance: float export for a generic system.
 func apply_pull(toward: Vector2, duration: float, distance: float) -> void:

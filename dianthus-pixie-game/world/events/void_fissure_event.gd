@@ -27,7 +27,7 @@ func _ready() -> void:
 
 func _on_player_enter() -> void:
 	if not _challenge_active:
-		_update_prompt("[E] Enter Void Fissure\nSurvive 10s inside the circle — Rare reward")
+		_update_prompt("[E] Enter Void Fissure\nSurvive 10s inside the circle — Uncommon reward")
 
 
 func _on_player_exit() -> void:
@@ -158,12 +158,31 @@ func _cleanup_shadows() -> void:
 
 
 func _give_reward() -> void:
-	var rare_items: Array[String] = ["aether_bloom", "dianthus_pollen", "kecombrang_extract"]
-	var chosen: String = rare_items[randi() % rare_items.size()]
-	InventoryManager.add_item(chosen, 1)
-	var item_name: String = ItemDatabase.get_display_name(chosen)
-	_show_reward_popup("Rare reward: %s!" % item_name)
-	QuestManager.report_event(&"item_collected", 1, {item_id = chosen})
+	var seed_id: String = _pick_rare_fissure_seed()
+	if not seed_id.is_empty():
+		InventoryManager.add_item(seed_id, 1)
+		var seed_name: String = ItemDatabase.get_display_name(seed_id)
+		_show_reward_popup("Rare seed: %s!" % seed_name)
+		QuestManager.report_event(&"item_collected", 1, {item_id = seed_id})
+	else:
+		var rare_items: Array[String] = ["aether_bloom", "dianthus_pollen", "kecombrang_extract"]
+		var chosen: String = rare_items[randi() % rare_items.size()]
+		InventoryManager.add_item(chosen, 1)
+		var item_name: String = ItemDatabase.get_display_name(chosen)
+		_show_reward_popup("Rare reward: %s!" % item_name)
+		QuestManager.report_event(&"item_collected", 1, {item_id = chosen})
+
+
+func _pick_rare_fissure_seed() -> String:
+	# Kecombrang and Kunyit are listed as primary Void Fissure rewards in PLANT_CODEX.md.
+	# Prefer undiscovered seeds; return empty string when both are already discovered.
+	var candidates: Array[String] = []
+	for s: String in ["kecombrang_seed", "kunyit_seed"]:
+		if not CodexManager.is_plant_discovered(s.trim_suffix("_seed")):
+			candidates.append(s)
+	if candidates.is_empty():
+		return ""
+	return candidates[randi() % candidates.size()]
 
 
 func _show_reward_popup(text: String) -> void:

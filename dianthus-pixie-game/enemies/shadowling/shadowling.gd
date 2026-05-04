@@ -14,3 +14,7 @@ func activate() -> void:
 
 func _get_death_sfx_id() -> String:
 	return "shadowling_death"
+
+
+func _get_seed_drop_table() -> Array[Dictionary]:
+	return [{"item": "bougainvillea_seed", "chance": 0.20}]

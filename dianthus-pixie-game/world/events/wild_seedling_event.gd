@@ -62,18 +62,32 @@ func _give_reward() -> void:
 
 
 func _pick_seed() -> String:
-	var all_seeds: Array[String] = [
-		"bougainvillea_seed", "rafflesia_seed", "melati_seed",
-		"wijaya_kusuma_seed", "beringin_seed", "kecombrang_seed", "kunyit_seed",
-	]
+	# Day gates match acquisition table in PLANT_CODEX.md.
+	# Rare seeds (kecombrang, kunyit) unlock at Day 7+ (Ruins of Veld parity).
+	# Mid-game seeds (melati, wijaya_kusuma, beringin) unlock at Day 3+ (Dusk Forest parity).
+	const SEED_DAY_GATE: Dictionary = {
+		"bougainvillea_seed": 1,
+		"rafflesia_seed": 1,
+		"melati_seed": 3,
+		"wijaya_kusuma_seed": 3,
+		"beringin_seed": 3,
+		"kecombrang_seed": 7,
+		"kunyit_seed": 7,
+	}
+	var day: int = DayNightCycle.day_count
+	var eligible: Array[String] = []
+	for s: String in SEED_DAY_GATE.keys():
+		if day >= int(SEED_DAY_GATE[s]):
+			eligible.append(s)
+	if eligible.is_empty():
+		eligible = ["bougainvillea_seed", "rafflesia_seed"]
 	var undiscovered: Array[String] = []
-	for s: String in all_seeds:
-		var plant_id: String = s.trim_suffix("_seed")
-		if not CodexManager.is_plant_discovered(plant_id):
+	for s: String in eligible:
+		if not CodexManager.is_plant_discovered(s.trim_suffix("_seed")):
 			undiscovered.append(s)
 	if not undiscovered.is_empty():
 		return undiscovered[randi() % undiscovered.size()]
-	return all_seeds[randi() % all_seeds.size()]
+	return eligible[randi() % eligible.size()]
 
 
 func _update_progress_bar(ratio: float) -> void:

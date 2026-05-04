@@ -25,3 +25,10 @@ func _uses_top_down_facing() -> bool:
 
 func _get_death_sfx_id() -> String:
 	return "voidrunner_death"
+
+
+func _get_seed_drop_table() -> Array[Dictionary]:
+	return [
+		{"item": "rafflesia_seed", "chance": 0.15},
+		{"item": "melati_seed", "chance": 0.10},
+	]

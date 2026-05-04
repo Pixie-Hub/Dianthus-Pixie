@@ -6,6 +6,7 @@ signal enemy_died(enemy: EnemyBase)
 signal damage_dealt(target: Node, amount: int)
 
 const FLIP_DEADZONE: float = 5.0
+const _SEED_PICKUP: PackedScene = preload("res://inventory/pickups/resource_pickup.tscn")
 
 @export var max_hp: int = 40
 @export var damage: int = 8
@@ -59,6 +60,7 @@ func die() -> void:
 		fsm.set_physics_process(false)
 	enemy_died.emit(self)
 	remove_from_group(&"enemies")
+	_try_drop_seed()
 	if is_instance_valid(GameManager.player) and GameManager.player.has_method("add_energy"):
 		GameManager.player.add_energy(10)
 	_play_death_animation()
@@ -231,6 +233,21 @@ func should_retreat() -> bool:
 
 func _get_death_sfx_id() -> String:
 	return "enemy_hit"
+
+
+func _get_seed_drop_table() -> Array[Dictionary]:
+	return []
+
+
+func _try_drop_seed() -> void:
+	for entry: Dictionary in _get_seed_drop_table():
+		if randf() < float(entry.get("chance", 0.0)):
+			var pickup: Node2D = _SEED_PICKUP.instantiate() as Node2D
+			pickup.set("item_id", entry.get("item", ""))
+			pickup.set("amount", 1)
+			get_parent().add_child(pickup)
+			pickup.global_position = global_position
+			return
 
 
 func play_animation(anim_name: StringName) -> void:

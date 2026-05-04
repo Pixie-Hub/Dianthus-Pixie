@@ -39,6 +39,10 @@ func _get_death_sfx_id() -> String:
 	return "phantom_weaver_death"
 
 
+func _get_seed_drop_table() -> Array[Dictionary]:
+	return [{"item": "wijaya_kusuma_seed", "chance": 0.20}]
+
+
 # Override: detect 30% HP crossover; trigger one-time teleport.
 func take_damage(amount: int) -> void:
 	if is_dead or _is_teleporting:

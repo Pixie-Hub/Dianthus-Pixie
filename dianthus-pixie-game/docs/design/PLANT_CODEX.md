@@ -47,7 +47,7 @@ two parent extracts.
 | **Weakness** | Small radius; only effective if enemies route through it. Wilts quickly on Hard. |
 
 **Acquisition — Bougainvillea Seed**
-- **Starting Gift:** Player spawns with 1 seed on Day 1 (tutorial handout, or found near the Garden Gate).
+- **Tutorial Gift:** Player gets 1 seed on Day 3 (tutorial handout).
 - **Meadow Edge Pickup:** 1–2 seeds placed as ground pickups near the safe main path (accessible Day 1).
 - **Shadowling Drop:** 20 % chance on death (Day 1+). This is the primary renewable source.
 - **Wild Seedling Event:** Guaranteed reward if Bougainvillea is the "least recently discovered" base plant.
@@ -335,11 +335,12 @@ again, the player must breed another one.
 | Vitality / tending | ✅ Done | `plant_base.gd` |
 | Hybrid breeding via bench | ✅ Done | `breeding_manager.gd` |
 | Plant Codex UI | ✅ Done | `codex_screen.gd` |
-| Enemy seed drops | ❌ Not Started | TODO: wire drop tables into `enemy_base.gd` die() |
-| Wild Seedling Event seed selection | ⚠️ Partial | Currently random base seed; priority logic TODO |
+| Enemy seed drops | ✅ Done | `_get_seed_drop_table()` virtual in `enemy_base.gd`; Shadowling 20% bougie, Voidrunner 15%/10% rafflesia/melati, Stonehusk 15%/5% beringin/kecombrang, Phantom Weaver 20% wijaya_kusuma |
+| Wild Seedling Event seed selection | ✅ Done | Day-gated priority: Day 1+ common/rafflesia, Day 3+ mid-tier, Day 7+ rare; undiscovered seeds prioritised |
 | Dusk Forest zone seed pickups | ❌ Not Started | Blocked on WORLD-01 |
 | Ruins of Veld rare seed nodes | ❌ Not Started | Blocked on WORLD-02 |
-| Void Fissure seed reward selection | ⚠️ Partial | Currently drops crafting materials; seed option TODO |
+| Void Fissure seed reward selection | ✅ Done | Prefers undiscovered kecombrang_seed/kunyit_seed; falls back to rare materials when both discovered |
+| Corrupted Root clean-kill seed drop | ✅ Done | `kunyit_seed` given if player took 0 hits during fight and kunyit not yet discovered |
 
 ---
 
