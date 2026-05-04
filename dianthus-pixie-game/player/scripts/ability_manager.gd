@@ -14,11 +14,20 @@ const ABILITIES: Dictionary = {
 		"energy_cost": 40,
 		"cooldown": 8.0,
 	},
+	"thorn_burst": {
+		"display_name": "Thorn Burst",
+		"description": "Unleash a ring of thorns that damages and briefly stuns nearby enemies.",
+		"energy_cost": 35,
+		"cooldown": 5.0,
+	},
 }
 
 const DASH_DISTANCE: float = 64.0
 const DASH_DURATION: float = 0.12
 const HEAL_PULSE_AMOUNT: int = 25
+const THORN_BURST_DAMAGE: int = 18
+const THORN_BURST_RADIUS: float = 56.0
+const THORN_BURST_STUN: float = 0.4
 
 var _cooldown_timers: Dictionary = {}
 
@@ -69,6 +78,8 @@ func _execute(ability_id: String, player: CharacterBody2D) -> void:
 			_ability_dash(player)
 		"heal_pulse":
 			_ability_heal_pulse(player)
+		"thorn_burst":
+			_ability_thorn_burst(player)
 		_:
 			push_warning("[AbilityManager] No behavior implemented for ability_id: '%s'" % ability_id)
 
@@ -91,3 +102,29 @@ func _ability_dash(player: CharacterBody2D) -> void:
 func _ability_heal_pulse(player: CharacterBody2D) -> void:
 	if player.has_method("heal"):
 		player.heal(HEAL_PULSE_AMOUNT)
+
+
+func _ability_thorn_burst(player: CharacterBody2D) -> void:
+	var hit_count: int = 0
+	for body in player.get_tree().get_nodes_in_group(&"enemies"):
+		if body is EnemyBase and not body.is_dead:
+			if player.global_position.distance_to(body.global_position) <= THORN_BURST_RADIUS:
+				body.take_damage(THORN_BURST_DAMAGE)
+				if body.has_method("apply_stun"):
+					body.apply_stun(THORN_BURST_STUN)
+				hit_count += 1
+	if hit_count > 0 and player.has_method("add_energy"):
+		player.add_energy(hit_count * 3)
+	_spawn_thorn_burst_vfx(player)
+
+
+func _spawn_thorn_burst_vfx(player: CharacterBody2D) -> void:
+	var ring: ColorRect = ColorRect.new()
+	ring.color = Color(0.45, 0.85, 0.25, 0.5)
+	var size: float = THORN_BURST_RADIUS * 2.0
+	ring.size = Vector2(size, size)
+	ring.position = -Vector2(size * 0.5, size * 0.5)
+	player.add_child(ring)
+	var tween: Tween = player.create_tween()
+	tween.tween_property(ring, "modulate:a", 0.0, 0.35)
+	tween.tween_callback(ring.queue_free)

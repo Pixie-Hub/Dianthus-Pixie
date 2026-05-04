@@ -382,6 +382,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_F and event.shift_pressed and not event.ctrl_pressed:
 			set_active_skill("dash")
 			print("DEBUG: Shift+F — Equipped 'dash' skill. Press F to activate (costs 20 energy).")
+		elif event.keycode == KEY_G and event.shift_pressed and not event.ctrl_pressed:
+			set_active_skill("thorn_burst")
+			print("DEBUG: Shift+G — Equipped 'thorn_burst' skill. Press F to activate (costs 35 energy).")
 		elif event.keycode == KEY_F and event.ctrl_pressed and event.shift_pressed:
 			var story_active: Array[QuestData] = QuestManager.get_active_quests()
 			var found_story: bool = false
