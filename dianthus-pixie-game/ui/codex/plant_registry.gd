@@ -9,7 +9,7 @@ const PLANTS: Dictionary = {
 		"color": Color(0.85, 0.15, 0.45, 1),
 		"seed_id": "bougainvillea_seed",
 		"is_hybrid": false,
-		"unlock_hint": "Available from start.",
+		"unlock_hint": "Find Bougainvillea seed in the world.",
 		"sprite_path": "res://plants/sprites/Bougainvillea.png",
 	},
 	"rafflesia": {

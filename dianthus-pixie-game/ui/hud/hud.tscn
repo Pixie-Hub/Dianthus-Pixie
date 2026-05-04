@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://shyr5xnjuqkr" load_steps=15]
+[gd_scene format=3 uid="uid://shyr5xnjuqkr"]
 
 [ext_resource type="Script" uid="uid://cgu6f8pnrtcni" path="res://ui/hud/hud.gd" id="1_script"]
 [ext_resource type="Script" uid="uid://co8gar52s1lgm" path="res://ui/hud/time_of_day_indicator.gd" id="2_tod_script"]
@@ -111,18 +111,6 @@ corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_skip_hover"]
-bg_color = Color(0.12, 0.09, 0.06, 0.85)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(1.0, 0.78, 0.28, 1.0)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_skip_pressed"]
 bg_color = Color(0.25, 0.18, 0.05, 0.9)
 border_width_left = 1
@@ -130,6 +118,18 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.65, 0.5, 0.25, 0.8)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_skip_hover"]
+bg_color = Color(0.12, 0.09, 0.06, 0.85)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 0.78, 0.28, 1)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
@@ -618,41 +618,38 @@ offset_right = -4.0
 offset_bottom = -100.0
 grow_horizontal = 0
 grow_vertical = 0
-theme_override_colors/font_color = Color(1.0, 0.85, 0.3, 1)
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+text = "  ENDLESS"
 horizontal_alignment = 2
-text = "\u221e ENDLESS"
 
 [node name="ReturnWarningLabel" type="Label" parent="." unique_id=700000002]
 unique_name_in_owner = true
 visible = false
-anchors_preset = 4
-anchor_left = 0.0
-anchor_top = 0.0
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 0.0
 offset_top = 56.0
 offset_bottom = 80.0
 grow_horizontal = 2
-theme_override_colors/font_color = Color(1.0, 0.55, 0.1, 1.0)
+theme_override_colors/font_color = Color(1, 0.55, 0.1, 1)
+text = "Return to Garden!"
 horizontal_alignment = 1
 vertical_alignment = 1
-text = "Return to Garden!"
 
 [node name="SkipDayButton" type="Button" parent="." unique_id=700000003]
 unique_name_in_owner = true
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -134.0
-offset_top = 4.0
+offset_left = -137.0
+offset_top = 64.0
 offset_right = -4.0
-offset_bottom = 22.0
+offset_bottom = 89.0
 grow_horizontal = 0
 mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(1.0, 0.78, 0.28, 1.0)
-theme_override_colors/font_hover_color = Color(1.0, 0.95, 0.6, 1.0)
-theme_override_colors/font_pressed_color = Color(0.85, 0.55, 0.1, 1.0)
+theme_override_colors/font_color = Color(1, 0.78, 0.28, 1)
+theme_override_colors/font_pressed_color = Color(0.85, 0.55, 0.1, 1)
+theme_override_colors/font_hover_color = Color(1, 0.95, 0.6, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_skip_normal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_skip_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_skip_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_skip_hover")
 text = "Skip to Night  [N]"

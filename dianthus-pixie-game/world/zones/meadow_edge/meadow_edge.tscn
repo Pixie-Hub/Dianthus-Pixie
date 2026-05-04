@@ -25,7 +25,7 @@
 [ext_resource type="PackedScene" uid="uid://coy6xduda7ul6" path="res://ui/screens/ending_screen.tscn" id="19_ending"]
 [ext_resource type="PackedScene" uid="uid://ckly87alm222s" path="res://ui/screens/full_map_screen.tscn" id="20_fullmap"]
 [ext_resource type="PackedScene" path="res://world/events/daytime_event_spawner.tscn" id="21_events"]
-[ext_resource type="PackedScene" path="res://world/fortifications/fortification_spot.tscn" id="22_fortspot"]
+[ext_resource type="PackedScene" uid="uid://cxjh5m0cebb67" path="res://world/fortifications/fortification_spot.tscn" id="22_fortspot"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cjr1j"]
 texture = ExtResource("2_quyxi")

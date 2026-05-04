@@ -8,7 +8,7 @@ enum Phase {
 }
 
 const PHASE_DURATIONS: Dictionary = {
-	Phase.DAY: 180.0,
+	Phase.DAY: 150.0,
 	Phase.NIGHT: 90.0,
 }
 

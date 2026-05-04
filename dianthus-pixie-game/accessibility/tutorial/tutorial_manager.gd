@@ -413,8 +413,7 @@ func _try_start_day_3_defense() -> void:
 	_show_hud()
 	_set_core_tutorial_glow(true)
 	_connect_scene_tutorial_hooks()
-	if not InventoryManager.has_item("bougainvillea_seed", 1):
-		InventoryManager.add_item("bougainvillea_seed", 1)
+	InventoryManager.add_item("bougainvillea_seed", 1)
 	phase_started.emit(PHASE_DAY_3_DEFENSE)
 	QuestManager.start_quest(PHASE_DAY_3_DEFENSE)
 	QuestManager.track_quest(PHASE_DAY_3_DEFENSE)

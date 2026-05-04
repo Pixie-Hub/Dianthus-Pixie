@@ -6,7 +6,6 @@ var discovered_plants: Dictionary = {}
 
 
 func _ready() -> void:
-	discover_plant("bougainvillea", false)
 	BreedingManager.breed_succeeded.connect(_on_breed_succeeded)
 	InventoryManager.item_added.connect(_on_item_added)
 
@@ -35,7 +34,6 @@ func get_total_count() -> int:
 
 func reset_state() -> void:
 	discovered_plants = {}
-	discover_plant("bougainvillea", false)
 	print("[CodexManager] State reset.")
 
 
@@ -50,7 +48,6 @@ func deserialize(data: Dictionary) -> void:
 		for pid: String in (disc as Dictionary):
 			if (disc as Dictionary)[pid]:
 				discovered_plants[pid] = true
-	discover_plant("bougainvillea", false)
 
 
 func _on_breed_succeeded(combo_id: String, _result_item_id: String) -> void:

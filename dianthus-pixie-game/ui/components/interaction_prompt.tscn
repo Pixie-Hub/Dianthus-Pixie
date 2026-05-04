@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dgjlo3k80moau"]
 
-[ext_resource type="Script" path="res://ui/components/interaction_prompt.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://cq7lu48kpt6aj" path="res://ui/components/interaction_prompt.gd" id="1_script"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 bg_color = Color(0.055, 0.047, 0.041, 0.92)
