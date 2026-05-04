@@ -5,6 +5,8 @@ signal hp_changed(current_hp: int, max_hp: int)
 signal enemy_died(enemy: EnemyBase)
 signal damage_dealt(target: Node, amount: int)
 
+const FLIP_DEADZONE: float = 5.0
+
 @export var max_hp: int = 40
 @export var damage: int = 8
 @export var move_speed: float = 40.0
@@ -212,9 +214,9 @@ func _update_sprite_facing() -> void:
 	if _uses_top_down_facing():
 		_sprite.rotation = velocity.angle()
 	else:
-		if velocity.x < 0.0:
+		if velocity.x < -FLIP_DEADZONE:
 			_sprite.flip_h = true
-		elif velocity.x > 0.0:
+		elif velocity.x > FLIP_DEADZONE:
 			_sprite.flip_h = false
 
 
