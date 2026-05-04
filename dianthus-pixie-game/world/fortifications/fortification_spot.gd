@@ -236,7 +236,7 @@ func _refresh_prompt() -> void:
 			"Build %s" % type_name,
 			"Need: %s" % cost_str,
 			"Hold E",
-			"Not enough materials",
+			"Not enough materials  \u00b7  < / >  or  Scroll  \u00b7  Switch type",
 			Color(1.0, 0.45, 0.25, 1.0),
 			PROMPT_STATUS_DISABLED
 		)
