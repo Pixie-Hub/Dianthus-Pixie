@@ -1,45 +1,10 @@
 extends Node
 
 # Dynamic BGM controller for every track listed in docs/design/BGM_LIST.md.
+# Track AudioStreamPlayer nodes are configured in the editor (stream, volume_db, bus).
+# Each child node is named by its track_id (e.g. "main_menu", "exploration_day").
 
-const TRACKS: Dictionary = {
-	"main_menu": "res://audio/music/main_menu.mp3",
-	"exploration_day": "res://audio/music/exploration_day.mp3",
-	"preparation_phase": "res://audio/music/preparation_phase.mp3",
-	"night_combat_base": "res://audio/music/night_combat_base.mp3",
-	"night_combat_intense": "res://audio/music/night_combat_intense.mp3",
-	"surge_night": "res://audio/music/surge_night.mp3",
-	"devourer_boss": "res://audio/music/devourer_boss.mp3",
-	"ending_true": "res://audio/music/ending_true.mp3",
-	"ending_survival": "res://audio/music/ending_survival.mp3",
-	"ending_discovery": "res://audio/music/ending_discovery.mp3",
-}
-
-const LOOPING_TRACKS: Dictionary = {
-	"main_menu": true,
-	"exploration_day": true,
-	"preparation_phase": true,
-	"night_combat_base": true,
-	"night_combat_intense": true,
-	"surge_night": true,
-	"devourer_boss": true,
-	"ending_true": false,
-	"ending_survival": false,
-	"ending_discovery": false,
-}
-
-const BGM_VOLUME_DB: Dictionary = {
-	"main_menu": -20.0,
-	"exploration_day": -20.0,
-	"preparation_phase": -20.0,
-	"night_combat_base": -20.0,
-	"night_combat_intense": -20.0,
-	"surge_night": -20.0,
-	"devourer_boss": -20.0,
-	"ending_true": -20.0,
-	"ending_survival": -20.0,
-	"ending_discovery": -20.0,
-}
+const TRACKS_PATH: NodePath = ^"Tracks"
 
 const PREPARATION_THRESHOLD: float = 30.0
 const FADE_DURATION: float = 1.5
@@ -59,7 +24,7 @@ var _intense_active: bool = false
 var _in_prep_phase: bool = false
 var _poll_timer: float = 0.0
 
-var _cache: Dictionary = {}
+var _tracks_node: Node = null
 var _fade_tween: Tween = null
 var _intense_tween: Tween = null
 var _muffle_tween: Tween = null
@@ -70,6 +35,7 @@ var _is_muffled: bool = false
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	_tracks_node = get_node_or_null(TRACKS_PATH)
 	_player_a = _make_player("MusicA")
 	_player_b = _make_player("MusicB")
 	_player_intense = _make_player("MusicIntense")
@@ -98,7 +64,13 @@ func play_track(track_id: String, loop: Variant = null) -> void:
 	if stream == null:
 		return
 	_current_track = track_id
-	var should_loop: bool = LOOPING_TRACKS.get(track_id, true) if loop == null else bool(loop)
+	var should_loop: bool
+	if loop != null:
+		should_loop = bool(loop)
+	elif stream is AudioStreamMP3:
+		should_loop = (stream as AudioStreamMP3).loop
+	else:
+		should_loop = true
 	_crossfade_to(track_id, stream, should_loop)
 
 
@@ -131,7 +103,7 @@ func stop_music(fade: bool = true) -> void:
 
 func play_ending_music(ending_id: String) -> void:
 	var track_id: String = "ending_" + ending_id
-	if not TRACKS.has(track_id):
+	if _find_track_node(track_id) == null:
 		track_id = "ending_survival"
 	play_track(track_id, false)
 	_set_intense(false, false)
@@ -139,10 +111,6 @@ func play_ending_music(ending_id: String) -> void:
 
 func play_end(ending_id: String) -> void:
 	play_ending_music(ending_id)
-
-
-func get_track_path(track_id: String) -> String:
-	return TRACKS.get(track_id, "")
 
 
 func _sync_to_current_context() -> void:
@@ -313,23 +281,28 @@ func _make_player(player_name: String) -> AudioStreamPlayer:
 	return p
 
 
+func _find_track_node(track_id: String) -> AudioStreamPlayer:
+	if _tracks_node == null:
+		return null
+	return _tracks_node.get_node_or_null(NodePath(track_id)) as AudioStreamPlayer
+
+
 func _get_stream(track_id: String) -> AudioStream:
-	if _cache.has(track_id):
-		return _cache[track_id]
-	var path: String = TRACKS.get(track_id, "")
-	if path.is_empty():
-		push_warning("[MusicManager] Unknown track_id: %s" % track_id)
+	var node: AudioStreamPlayer = _find_track_node(track_id)
+	if node == null:
+		push_warning("[MusicManager] No track node found for track_id: %s" % track_id)
 		return null
-	var stream: AudioStream = load(path) as AudioStream
-	if stream == null:
-		push_warning("[MusicManager] Could not load track: %s" % path)
+	if node.stream == null:
+		push_warning("[MusicManager] Track node has no stream: %s" % track_id)
 		return null
-	_cache[track_id] = stream
-	return stream
+	return node.stream
 
 
 func _get_track_volume_db(track_id: String) -> float:
-	return float(BGM_VOLUME_DB.get(track_id, 0.0))
+	var node: AudioStreamPlayer = _find_track_node(track_id)
+	if node == null:
+		return 0.0
+	return node.volume_db
 
 
 func _apply_loop(stream: AudioStream, loop: bool) -> void:

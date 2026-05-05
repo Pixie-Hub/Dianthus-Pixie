@@ -1,0 +1,68 @@
+[gd_scene format=3 uid="uid://music_mgr_scene_01"]
+
+[ext_resource type="Script" uid="uid://d0vw7dmveolxr" path="res://audio/music_manager.gd" id="1_music_manager"]
+[ext_resource type="AudioStream" uid="uid://cg1ce5iknnt3n" path="res://audio/music/main_menu.mp3" id="bgm_main_menu"]
+[ext_resource type="AudioStream" uid="uid://bss7oylb64kmr" path="res://audio/music/exploration_day.mp3" id="bgm_exploration_day"]
+[ext_resource type="AudioStream" uid="uid://c6jt571yxukma" path="res://audio/music/preparation_phase.mp3" id="bgm_preparation_phase"]
+[ext_resource type="AudioStream" uid="uid://dpimv3rk1g1fy" path="res://audio/music/night_combat_base.mp3" id="bgm_night_combat_base"]
+[ext_resource type="AudioStream" uid="uid://nt8n5gcoe3ok" path="res://audio/music/night_combat_intense.mp3" id="bgm_night_combat_intense"]
+[ext_resource type="AudioStream" uid="uid://dgsrbioehtxx3" path="res://audio/music/surge_night.mp3" id="bgm_surge_night"]
+[ext_resource type="AudioStream" uid="uid://dk3uham0qlaea" path="res://audio/music/devourer_boss.mp3" id="bgm_devourer_boss"]
+[ext_resource type="AudioStream" uid="uid://dwandqbcdjsnd" path="res://audio/music/ending_true.mp3" id="bgm_ending_true"]
+[ext_resource type="AudioStream" uid="uid://bu2uhkupv3v1u" path="res://audio/music/ending_survival.mp3" id="bgm_ending_survival"]
+[ext_resource type="AudioStream" uid="uid://do0qxy2v3j3vp" path="res://audio/music/ending_discovery.mp3" id="bgm_ending_discovery"]
+
+[node name="MusicManager" type="Node"]
+script = ExtResource("1_music_manager")
+
+[node name="Tracks" type="Node" parent="."]
+
+[node name="main_menu" type="AudioStreamPlayer" parent="Tracks"]
+stream = ExtResource("bgm_main_menu")
+volume_db = -20.0
+bus = &"Music"
+
+[node name="exploration_day" type="AudioStreamPlayer" parent="Tracks"]
+stream = ExtResource("bgm_exploration_day")
+volume_db = -20.0
+bus = &"Music"
+
+[node name="preparation_phase" type="AudioStreamPlayer" parent="Tracks"]
+stream = ExtResource("bgm_preparation_phase")
+volume_db = -20.0
+bus = &"Music"
+
+[node name="night_combat_base" type="AudioStreamPlayer" parent="Tracks"]
+stream = ExtResource("bgm_night_combat_base")
+volume_db = -20.0
+bus = &"Music"
+
+[node name="night_combat_intense" type="AudioStreamPlayer" parent="Tracks"]
+stream = ExtResource("bgm_night_combat_intense")
+volume_db = -20.0
+bus = &"Music"
+
+[node name="surge_night" type="AudioStreamPlayer" parent="Tracks"]
+stream = ExtResource("bgm_surge_night")
+volume_db = -20.0
+bus = &"Music"
+
+[node name="devourer_boss" type="AudioStreamPlayer" parent="Tracks"]
+stream = ExtResource("bgm_devourer_boss")
+volume_db = -20.0
+bus = &"Music"
+
+[node name="ending_true" type="AudioStreamPlayer" parent="Tracks"]
+stream = ExtResource("bgm_ending_true")
+volume_db = -20.0
+bus = &"Music"
+
+[node name="ending_survival" type="AudioStreamPlayer" parent="Tracks"]
+stream = ExtResource("bgm_ending_survival")
+volume_db = -20.0
+bus = &"Music"
+
+[node name="ending_discovery" type="AudioStreamPlayer" parent="Tracks"]
+stream = ExtResource("bgm_ending_discovery")
+volume_db = -20.0
+bus = &"Music"
