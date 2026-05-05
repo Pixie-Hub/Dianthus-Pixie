@@ -17,7 +17,7 @@ func _ready() -> void:
 
 
 func _find_struct_mgr() -> void:
-	_struct_mgr = get_tree().current_scene.get_node_or_null("GardenStructureManager")
+	_struct_mgr = get_tree().current_scene.find_child("GardenStructureManager", true, false)
 
 
 func _on_load_completed(_ok: bool) -> void:
