@@ -26,6 +26,9 @@
 [ext_resource type="PackedScene" uid="uid://ckly87alm222s" path="res://ui/screens/full_map_screen.tscn" id="20_fullmap"]
 [ext_resource type="PackedScene" path="res://world/events/daytime_event_spawner.tscn" id="21_events"]
 [ext_resource type="PackedScene" uid="uid://cxjh5m0cebb67" path="res://world/fortifications/fortification_spot.tscn" id="22_fortspot"]
+[ext_resource type="PackedScene" uid="uid://garden_expansion_01" path="res://world/garden/garden_expansion_spot.tscn" id="23_expansion"]
+[ext_resource type="PackedScene" uid="uid://garden_structure_01" path="res://world/garden/garden_structure_spot.tscn" id="24_structure"]
+[ext_resource type="Script" uid="uid://garden_structure_mgr01" path="res://world/garden/garden_structure_manager.gd" id="25_structmgr"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cjr1j"]
 texture = ExtResource("2_quyxi")
@@ -1713,3 +1716,17 @@ enemy_container_path = NodePath("../YSortLayer")
 [node name="EndingScreen" parent="." unique_id=1708759462 instance=ExtResource("19_ending")]
 
 [node name="DaytimeEventSpawner" parent="." unique_id=1891234567 instance=ExtResource("21_events")]
+
+[node name="GardenExpansionSpot" parent="YSortLayer" unique_id=500100001 instance=ExtResource("23_expansion")]
+position = Vector2(624, 832)
+
+[node name="GardenStructureSpotStorage" parent="YSortLayer" unique_id=500100002 instance=ExtResource("24_structure")]
+position = Vector2(912, 832)
+structure_id = &"storage_shed"
+
+[node name="GardenStructureSpotWatchtower" parent="YSortLayer" unique_id=500100003 instance=ExtResource("24_structure")]
+position = Vector2(624, 784)
+structure_id = &"watchtower"
+
+[node name="GardenStructureManager" parent="." unique_id=500100004]
+script = ExtResource("25_structmgr")

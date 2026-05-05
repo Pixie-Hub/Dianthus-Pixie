@@ -343,6 +343,9 @@ FOUND-01..06 (Done)
 | Ctrl+5 | Force-spawn Devourer boss (skips quest check) | ENEMY-05 |
 | Ctrl+6 | Force Devourer phase transition: cycles Phase 1 → 2 → 3 → 1 | ENEMY-05 |
 | Ctrl+7 | Kill all summoned Devourer minions | ENEMY-05 |
+| Ctrl+8 | Force expand garden (adds materials + bumps day if needed, then calls `expand_garden()`) | WORLD-05 |
+| Ctrl+9 | Force build Storage Shed upgrade (adds materials + bumps day, calls `build_storage()`) | WORLD-06 |
+| Ctrl+0 | Force build Watchtower (adds materials + bumps day, calls `build_watchtower()`) | WORLD-06 |
 | Ctrl+Shift+5 | Force-start `story_01_whispers` quest (skips Day 2 wait) | QUEST-05 |
 
 ### Letter Keys

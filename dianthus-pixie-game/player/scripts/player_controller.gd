@@ -408,6 +408,40 @@ func _unhandled_input(event: InputEvent) -> void:
 						fsm.transition_to(StringName("Phase%d" % next_phase))
 						devourer.set("_current_phase", next_phase)
 					print("DEBUG: Ctrl+6 — Devourer forced to Phase %d." % next_phase)
+		elif event.keycode == KEY_0 and event.ctrl_pressed and not event.shift_pressed:
+			var struct_mgr: Node = get_tree().current_scene.find_child("GardenStructureManager", true, false)
+			if struct_mgr != null and struct_mgr.has_method("build_watchtower"):
+				InventoryManager.add_item("stone", 20)
+				InventoryManager.add_item("verdant_sap", 10)
+				DayNightCycle.day_count = max(DayNightCycle.day_count, 5)
+				struct_mgr.call("build_watchtower")
+				print("DEBUG: Ctrl+0 — Watchtower force built.")
+			else:
+				push_warning("DEBUG: Ctrl+0 — GardenStructureManager not found.")
+		elif event.keycode == KEY_9 and event.ctrl_pressed and not event.shift_pressed:
+			var struct_mgr: Node = get_tree().current_scene.find_child("GardenStructureManager", true, false)
+			if struct_mgr != null and struct_mgr.has_method("build_storage"):
+				InventoryManager.add_item("stone", 20)
+				InventoryManager.add_item("verdant_sap", 10)
+				DayNightCycle.day_count = max(DayNightCycle.day_count, 3)
+				struct_mgr.call("build_storage")
+				print("DEBUG: Ctrl+9 — Storage Shed force built, tier now %d." % int(struct_mgr.get("storage_tier")))
+			else:
+				push_warning("DEBUG: Ctrl+9 — GardenStructureManager not found.")
+		elif event.keycode == KEY_8 and event.ctrl_pressed and not event.shift_pressed:
+			var ppm: Node = get_tree().current_scene.find_child("PlantPlacementManager", true, false)
+			if ppm != null and ppm.has_method("expand_garden"):
+				var old_tier: int = int(ppm.get("expansion_tier"))
+				if ppm.has_method("can_expand") and not ppm.call("can_expand"):
+					ppm.set("expansion_tier", old_tier)
+					InventoryManager.add_item("verdant_sap", 20)
+					InventoryManager.add_item("stone", 30)
+					print("DEBUG: Ctrl+8 — Added materials and retrying expand.")
+					DayNightCycle.day_count = max(DayNightCycle.day_count, 12)
+				ppm.call("expand_garden")
+				print("DEBUG: Ctrl+8 — Garden tier now %d." % int(ppm.get("expansion_tier")))
+			else:
+				push_warning("DEBUG: Ctrl+8 — PlantPlacementManager not found.")
 		elif event.keycode == KEY_7 and event.ctrl_pressed and not event.shift_pressed:
 			var devourers: Array[Node] = get_tree().get_nodes_in_group(&"devourer")
 			if devourers.is_empty():

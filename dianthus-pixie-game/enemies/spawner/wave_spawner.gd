@@ -354,4 +354,11 @@ func predict_spawn_direction() -> Vector2:
 	return marker.global_position
 
 
+func predict_all_spawn_directions() -> Array[Vector2]:
+	var result: Array[Vector2] = []
+	for marker: Marker2D in _spawn_point_markers:
+		result.append(marker.global_position)
+	return result
+
+
 # TODO (DIFF-02): Add override_entry_point_count(n: int) for Surge Night to force all 4 entry points.

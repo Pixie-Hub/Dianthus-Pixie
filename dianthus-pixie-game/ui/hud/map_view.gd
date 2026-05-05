@@ -21,6 +21,7 @@ const CORE_DOT_COLOR: Color = Color(1.0, 0.4, 0.7)
 const PLANT_DOT_COLOR: Color = Color(0.3, 0.9, 0.3)
 const ENEMY_DOT_COLOR: Color = Color(0.95, 0.25, 0.25)
 const SCOUT_ARROW_COLOR: Color = Color(1.0, 0.85, 0.2, 1)
+const WATCHTOWER_ARROW_COLOR: Color = Color(0.4, 0.85, 1.0, 1)
 const EVENT_MARKER_COLOR: Color = Color(1.0, 0.85, 0.2, 1.0)
 const EVENT_MARKER_RADIUS: float = 4.0
 const BOUNDS_COLOR: Color = Color(0.65, 0.50, 0.25, 0.9)
@@ -33,6 +34,7 @@ const QUEST_BENCH_MARKER_RADIUS: float = 4.5
 var _spawner: WaveSpawner = null
 var _plant_manager: Node = null
 var _event_spawner: Node = null
+var _watchtower_active: bool = false
 
 
 func _ready() -> void:
@@ -109,6 +111,13 @@ func _draw() -> void:
 				var ev_pos: Vector2 = _event_spawner.get_active_event_position()
 				_draw_event_marker(ev_pos, player_pos, draw_size, draw_rect_area)
 		return
+
+	if _watchtower_active and _spawner != null:
+		for spawn_pt: Vector2 in _spawner.predict_all_spawn_directions():
+			var dir: Vector2 = (spawn_pt - player_pos).normalized()
+			var edge_pt: Vector2 = _compute_box_edge(player_mp, dir, draw_size)
+			_draw_arrow_colored(edge_pt, dir, WATCHTOWER_ARROW_COLOR)
+
 	if _spawner == null or not _spawner.is_wave_active():
 		return
 
@@ -309,6 +318,10 @@ func _draw_event_marker(world_pos: Vector2, player_pos: Vector2, draw_size: Vect
 		var dir: Vector2 = (mp - draw_size * 0.5).normalized()
 		edge_mp = _compute_box_edge(draw_size * 0.5, dir, draw_size)
 	draw_circle(edge_mp, EVENT_MARKER_RADIUS * marker_scale, color)
+
+
+func set_watchtower_active(active: bool) -> void:
+	_watchtower_active = active
 
 
 func _draw_arrow(tip: Vector2, dir: Vector2) -> void:

@@ -6,7 +6,6 @@ signal item_removed(item_id: String, amount: int)
 signal inventory_full
 
 var max_slots: int = 30
-# TODO: WORLD-06 — expand max_slots to 60 via Garden Storage upgrade.
 
 var slots: Array[Dictionary] = []
 
@@ -128,6 +127,18 @@ func swap_slots(a: int, b: int) -> void:
 
 func clear_all() -> void:
 	_init_slots()
+	inventory_changed.emit()
+
+
+func set_max_slots(new_max: int) -> void:
+	if new_max == max_slots:
+		return
+	max_slots = new_max
+	if slots.size() < max_slots:
+		while slots.size() < max_slots:
+			slots.append({})
+	elif slots.size() > max_slots:
+		slots.resize(max_slots)
 	inventory_changed.emit()
 
 

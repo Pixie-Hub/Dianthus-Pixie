@@ -153,6 +153,23 @@ const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
 			Vector2(600, 296),
 		],
 	},
+	{
+		"prefix": "GardenRuinsStone",
+		"item_id": "stone",
+		"amount": 1,
+		"day_one_count": 3,
+		"minimum_count": 2,
+		"positions": [
+			Vector2(500, 740),
+			Vector2(580, 780),
+			Vector2(440, 700),
+			Vector2(620, 820),
+			Vector2(460, 760),
+			Vector2(540, 700),
+			Vector2(660, 740),
+			Vector2(420, 820),
+		],
+	},
 ]
 
 @onready var _canvas_modulate: CanvasModulate = $CanvasModulate

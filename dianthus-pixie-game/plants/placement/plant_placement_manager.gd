@@ -5,8 +5,15 @@ signal plant_placed(seed_id: String, grid_pos: Vector2i)
 signal placement_failed(reason: String)
 
 const GRID_SIZE: int = 16
-const MAX_ACTIVE_PLANTS: int = 8
 const DEFAULT_GARDEN_SIZE: Vector2i = Vector2i(12, 10)
+
+# Each tier: { size, plant_cap, min_day, cost_verdant_sap, cost_stone }
+const EXPANSION_TIERS: Array[Dictionary] = [
+	{ "size": Vector2i(14, 12), "plant_cap": 10, "min_day": 3,  "cost_verdant_sap": 5,  "cost_stone": 8  },
+	{ "size": Vector2i(16, 13), "plant_cap": 12, "min_day": 5,  "cost_verdant_sap": 8,  "cost_stone": 12 },
+	{ "size": Vector2i(18, 15), "plant_cap": 14, "min_day": 8,  "cost_verdant_sap": 12, "cost_stone": 18 },
+	{ "size": Vector2i(20, 16), "plant_cap": 16, "min_day": 12, "cost_verdant_sap": 16, "cost_stone": 24 },
+]
 
 const SEED_TO_SCENE: Dictionary = {
 	"bougainvillea_seed": "res://plants/entities/bougainvillea.tscn",
@@ -58,6 +65,7 @@ var _garden_size: Vector2i = DEFAULT_GARDEN_SIZE
 var _occupied_tiles: Dictionary = {}
 var _core_tile: Vector2i = Vector2i(-1, -1)
 var _palette_ui: Node = null
+var expansion_tier: int = 0
 
 
 func _ready() -> void:
@@ -139,7 +147,7 @@ func _can_place() -> bool:
 		DayNightCycle.is_day() and
 		_is_within_garden(_ghost_grid_pos) and
 		not _is_tile_occupied(_ghost_grid_pos) and
-		_get_active_plant_count() < MAX_ACTIVE_PLANTS and
+		_get_active_plant_count() < get_plant_cap() and
 		InventoryManager.has_item(selected_seed_id)
 	)
 
@@ -192,6 +200,10 @@ func _on_load_completed(_success: bool) -> void:
 
 
 func _update_garden_origin() -> void:
+	if expansion_tier > 0 and expansion_tier <= EXPANSION_TIERS.size():
+		_garden_size = EXPANSION_TIERS[expansion_tier - 1]["size"]
+	else:
+		_garden_size = DEFAULT_GARDEN_SIZE
 	if is_instance_valid(GameManager.dianthus_core):
 		var core_pos: Vector2 = GameManager.dianthus_core.global_position
 		_garden_origin = core_pos - Vector2(_garden_size.x * GRID_SIZE / 2.0, _garden_size.y * GRID_SIZE / 2.0)
@@ -199,7 +211,6 @@ func _update_garden_origin() -> void:
 	else:
 		_garden_origin = Vector2(224.0, 160.0)
 		_core_tile = Vector2i(6, 5)
-	# TODO: WORLD-05 — garden expansion to 20×16, adjustable _garden_size
 
 
 func _rebuild_occupied_tiles() -> void:
@@ -335,3 +346,45 @@ func get_garden_origin() -> Vector2:
 
 func get_garden_size_world() -> Vector2:
 	return Vector2(_garden_size.x * GRID_SIZE, _garden_size.y * GRID_SIZE)
+
+
+func get_plant_cap() -> int:
+	if expansion_tier > 0 and expansion_tier <= EXPANSION_TIERS.size():
+		return int(EXPANSION_TIERS[expansion_tier - 1]["plant_cap"])
+	return 8
+
+
+func get_next_tier_data() -> Dictionary:
+	if expansion_tier >= EXPANSION_TIERS.size():
+		return {}
+	return EXPANSION_TIERS[expansion_tier]
+
+
+func can_expand() -> bool:
+	if expansion_tier >= EXPANSION_TIERS.size():
+		return false
+	var tier: Dictionary = EXPANSION_TIERS[expansion_tier]
+	if DayNightCycle.day_count < int(tier["min_day"]):
+		return false
+	if not DayNightCycle.is_day():
+		return false
+	if InventoryManager.get_total_count("verdant_sap") < int(tier["cost_verdant_sap"]):
+		return false
+	if InventoryManager.get_total_count("stone") < int(tier["cost_stone"]):
+		return false
+	return true
+
+
+func expand_garden() -> bool:
+	if not can_expand():
+		return false
+	var tier: Dictionary = EXPANSION_TIERS[expansion_tier]
+	InventoryManager.remove_item("verdant_sap", int(tier["cost_verdant_sap"]))
+	InventoryManager.remove_item("stone", int(tier["cost_stone"]))
+	expansion_tier += 1
+	_update_garden_origin()
+	_rebuild_occupied_tiles()
+	queue_redraw()
+	print("[PlantPlacement] Garden expanded to tier %d: %s, cap=%d" % [
+		expansion_tier, _garden_size, get_plant_cap()])
+	return true

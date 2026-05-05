@@ -3,7 +3,7 @@
 **Project:** Dianthus Pixie  
 **Engine:** Godot 4.x  
 **Art:** Aseprite (16×16 tiles, 16×24 characters)  
-**Last Updated:** 2026-05-12
+**Last Updated:** 2026-05-05
 **GDD Reference:** `Dianthus Pixie GDD.md` (v1.1)
 
 > **Legend — Effort:** XS < 2 h · S < 1 d · M 1–3 d · L 3–7 d · XL > 1 wk  
@@ -84,8 +84,8 @@
 | WORLD-02 | Ruins of Veld Zone | World & Map | High | Not Started | WORLD-01 | [Unassigned] | L | • Ruined-city biome tilemap; Shadow Resin and Kunyit nodes per GDD §10.1; • unlocks Day 7 via story quest gate; zone contains a story-relevant landmark |
 | WORLD-03 | Obsidian Bog Zone | World & Map | Medium | Not Started | WORLD-02 | [Unassigned] | L | • Black-swamp tilemap; Aether Bloom spawn nodes per GDD §10.1; • unlocks Day 14 ⚠️ *GDD §10.1 says "terrain sulit" but does not define the mechanic — movement speed penalty? periodic damage? must be decided* |
 | WORLD-04 | Core Sanctum Zone | World & Map | Medium | Not Started | WORLD-03, QUEST-05 | [Unassigned] | M | • Sacred biome tilemap; unlimited Dianthus Pollen nodes per GDD §10.1; • access gated behind final story quest completion |
-| WORLD-05 | Garden Expansion (12×10 → 20×16) | World & Map | Medium | Not Started | PLANT-03 | [Unassigned] | M | • Garden grid expandable with Verdant Sap + Stone per GDD §10.2; • expanded grid slots immediately usable for plant placement; • expansion is incremental, not a single unlock |
-| WORLD-06 | Garden Structures (Storage & Watchtower) | World & Map | Medium | Not Started | WORLD-05 | [Unassigned] | M | • Storage structure adds inventory slots per GDD §10.2 & §6.2; • Watchtower displays spawn direction indicators on minimap during night per GDD §10.2; • both structures require material cost |
+| WORLD-05 | Garden Expansion (12×10 → 20×16) | World & Map | Medium | Done | PLANT-03 | [Unassigned] | M | • Garden grid expandable with Verdant Sap + Stone per GDD §10.2; • expanded grid slots immediately usable for plant placement; • expansion is incremental, not a single unlock |
+| WORLD-06 | Garden Structures (Storage & Watchtower) | World & Map | Medium | Done | WORLD-05 | [Unassigned] | M | • Storage structure adds inventory slots per GDD §10.2 & §6.2; • Watchtower displays spawn direction indicators on minimap during night per GDD §10.2; • both structures require material cost |
 | DIFF-01 | Difficulty Scaling System | Core Mechanics | High | Done | CORE-07 | [Unassigned] | M | • Enemy HP/DMG/speed scale per tier per GDD §8.2: Early (D1–5), Mid (D6–14), Late (D15–29), Endless (D30+); • spawn count increases on schedule; • all values data-driven in a resource file |
 | DIFF-02 | Surge Night (Every 7th Night) | Core Mechanics | High | Not Started | DIFF-01 | [Unassigned] | M | • Nights 7, 14, 21… spawn 3× normal enemy count, all one tier stronger per GDD §8.2; • all 4 entry points active simultaneously; • Surge Night ambient wind cue fires per GDD §12.3 |
 | DIFF-03 | Voidlord Mini-Boss (Night 21) | Enemy AI | Medium | Not Started | ENEMY-01, DIFF-01 | [Unassigned] | M | • Voidlord appears Night 21 as Devourer precursor per GDD §8.2; • unique attack pattern distinct from Voidrunner; • defeat triggers story dialogue and zone unlock hint |

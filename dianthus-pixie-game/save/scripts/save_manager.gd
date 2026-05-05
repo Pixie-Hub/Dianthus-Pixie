@@ -4,7 +4,7 @@ signal save_completed(success: bool, manual: bool)
 signal load_completed(success: bool)
 
 const SAVE_PATH: String = "user://savegame.json"
-const SCHEMA_VERSION: int = 16
+const SCHEMA_VERSION: int = 17
 const GAME_VERSION: String = "0.1.0"
 
 const PLANT_TYPE_TO_SCENE: Dictionary = {
@@ -192,6 +192,21 @@ func _gather_state(manual: bool) -> Dictionary:
 		core_hp = GameManager.dianthus_core.current_hp
 	state["core"] = {"current_hp": core_hp}
 
+	# Garden expansion tier
+	var ppm: Node = null
+	if is_instance_valid(get_tree().current_scene):
+		ppm = get_tree().current_scene.find_child("PlantPlacementManager", true, false)
+	state["garden_expansion"] = {"tier": ppm.get("expansion_tier") if ppm != null else 0}
+
+	# Garden structures
+	var struct_mgr: Node = null
+	if is_instance_valid(get_tree().current_scene):
+		struct_mgr = get_tree().current_scene.find_child("GardenStructureManager", true, false)
+	if struct_mgr != null and struct_mgr.has_method("serialize"):
+		state["garden_structures"] = struct_mgr.call("serialize")
+	else:
+		state["garden_structures"] = {"storage_tier": 0, "watchtower_built": false}
+
 	# Garden
 	var plants_arr: Array = []
 	for plant: Node in get_tree().get_nodes_in_group("plants"):
@@ -369,6 +384,25 @@ func _apply_state(state: Dictionary) -> void:
 		_:
 			DifficultyManager.set_tier(DifficultyManager.Tier.NORMAL)
 
+	# 5.14 Garden expansion tier — restore before plants so grid is correctly sized.
+	var ppm_restore: Node = null
+	if is_instance_valid(get_tree().current_scene):
+		ppm_restore = get_tree().current_scene.find_child("PlantPlacementManager", true, false)
+	if ppm_restore != null:
+		var saved_tier: int = int(state.get("garden_expansion", {}).get("tier", 0))
+		ppm_restore.set("expansion_tier", saved_tier)
+		if ppm_restore.has_method("_update_garden_origin"):
+			ppm_restore.call("_update_garden_origin")
+		if ppm_restore.has_method("_rebuild_occupied_tiles"):
+			ppm_restore.call("_rebuild_occupied_tiles")
+
+	# 5.15 Garden structures.
+	var struct_mgr_restore: Node = null
+	if is_instance_valid(get_tree().current_scene):
+		struct_mgr_restore = get_tree().current_scene.find_child("GardenStructureManager", true, false)
+	if struct_mgr_restore != null and struct_mgr_restore.has_method("deserialize"):
+		struct_mgr_restore.call("deserialize", state.get("garden_structures", {}))
+
 	# 6. Garden plants — instantiate each saved entry into the current scene.
 	var scene_root: Node = get_tree().current_scene
 	var plants_arr: Array = state.get("garden", {}).get("plants", [])
@@ -537,4 +571,12 @@ func _migrate(data: Dictionary) -> Dictionary:
 		if not data.get("player", {}).has("active_skill_id"):
 			data["player"]["active_skill_id"] = ""
 		data["schema_version"] = 16
+	# v16 -> v17: garden expansion tier and structures added.
+	if version < 17:
+		print("[SaveManager] Migrated v16 -> v17 (garden expansion + structures)")
+		if not data.has("garden_expansion"):
+			data["garden_expansion"] = {"tier": 0}
+		if not data.has("garden_structures"):
+			data["garden_structures"] = {"storage_tier": 0, "watchtower_built": false}
+		data["schema_version"] = 17
 	return data
