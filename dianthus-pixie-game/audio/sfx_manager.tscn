@@ -97,36 +97,42 @@ stream = ExtResource("sfx_thorn_sword_swing")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.08
 
 [node name="thorn_sword_hit" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=2019486552]
 stream = ExtResource("sfx_thorn_sword_hit")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="blazeblade_swing" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=296184838]
 stream = ExtResource("sfx_blazeblade_swing")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="blazeblade_hit" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1383318259]
 stream = ExtResource("sfx_blazeblade_hit")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="vine_whip_crack" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=2086648868]
 stream = ExtResource("sfx_vine_whip_crack")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="vine_whip_pull" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=913375433]
 stream = ExtResource("sfx_vine_whip_pull")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="crystal_lash_crack" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1056596512]
 stream = ExtResource("sfx_crystal_lash_crack")
@@ -139,18 +145,21 @@ stream = ExtResource("sfx_spore_bomb_throw")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="spore_bomb_detonate" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1155008245]
 stream = ExtResource("sfx_spore_bomb_detonate")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="void_grenade_detonate" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=2124845514]
 stream = ExtResource("sfx_void_grenade_detonate")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="petal_shield_raise" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=817083787]
 stream = ExtResource("sfx_petal_shield_raise")
@@ -181,6 +190,7 @@ stream = ExtResource("sfx_player_take_damage")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="player_death" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1703980927]
 stream = ExtResource("sfx_player_death")
@@ -199,192 +209,224 @@ stream = ExtResource("sfx_player_invincibility")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.03
 
 [node name="plant_placed" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1567030360]
 stream = ExtResource("sfx_plant_placed")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="plant_destroyed" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=960618577]
 stream = ExtResource("sfx_plant_destroyed")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="bougainvillea_thorn_tick" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1360646264]
 stream = ExtResource("sfx_bougainvillea_thorn_tick")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.08
 
 [node name="rafflesia_miasma_hum" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=542773237]
 stream = ExtResource("sfx_rafflesia_miasma_hum")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.03
 
 [node name="melati_energy_pulse" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1614806735]
 stream = ExtResource("sfx_melati_energy_pulse")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="wijaya_kusuma_attack" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=2039216139]
 stream = ExtResource("sfx_wijaya_kusuma_attack")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="beringin_wall_spawn" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=2074027387]
 stream = ExtResource("sfx_beringin_wall_spawn")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="beringin_wall_break" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=165626709]
 stream = ExtResource("sfx_beringin_wall_break")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="kecombrang_speed_boost" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1641662526]
 stream = ExtResource("sfx_kecombrang_speed_boost")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="kunyit_melee_buff" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1068384851]
 stream = ExtResource("sfx_kunyit_melee_buff")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="bunga_api_burn_tick" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1990145948]
 stream = ExtResource("sfx_bunga_api_burn_tick")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.08
 
 [node name="bunga_bayang_attack" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=2001006145]
 stream = ExtResource("sfx_bunga_bayang_attack")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="melati_emas_regen_pulse" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=76644606]
 stream = ExtResource("sfx_melati_emas_regen_pulse")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="baja_kuning_armor_buff" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1822079514]
 stream = ExtResource("sfx_baja_kuning_armor_buff")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="enemy_hit" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1361980081]
 stream = ExtResource("sfx_enemy_hit")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.08
 
 [node name="shadowling_footstep" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=2078611041]
 stream = ExtResource("sfx_shadowling_footstep")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.08
 
 [node name="shadowling_attack" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1204403426]
 stream = ExtResource("sfx_shadowling_attack")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="shadowling_retreat" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1760936390]
 stream = ExtResource("sfx_shadowling_retreat")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="shadowling_death" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=60035737]
 stream = ExtResource("sfx_shadowling_death")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="voidrunner_charge" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1505395445]
 stream = ExtResource("sfx_voidrunner_charge")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="voidrunner_death" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1761891733]
 stream = ExtResource("sfx_voidrunner_death")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="stonehusk_footstep" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=789180282]
 stream = ExtResource("sfx_stonehusk_footstep")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.07
 
 [node name="stonehusk_attack" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=437042764]
 stream = ExtResource("sfx_stonehusk_attack")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="stonehusk_death" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=773524568]
 stream = ExtResource("sfx_stonehusk_death")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="phantom_weaver_teleport" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=213901096]
 stream = ExtResource("sfx_phantom_weaver_teleport")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="phantom_weaver_attack" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1241940682]
 stream = ExtResource("sfx_phantom_weaver_attack")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="phantom_weaver_death" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=428868359]
 stream = ExtResource("sfx_phantom_weaver_death")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="swarm_larva_skitter" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1439242992]
 stream = ExtResource("sfx_swarm_larva_skitter")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.08
 
 [node name="swarm_larva_death" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1080267584]
 stream = ExtResource("sfx_swarm_larva_death")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="core_take_damage" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=623302098]
 stream = ExtResource("sfx_core_take_damage")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="core_low_hp" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=38877590]
 stream = ExtResource("sfx_core_low_hp")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.03
 
 [node name="core_destroyed" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1060296163]
 stream = ExtResource("sfx_core_destroyed")
@@ -397,12 +439,14 @@ stream = ExtResource("sfx_core_heal")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="core_energy_tick" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1769998083]
 stream = ExtResource("sfx_core_energy_tick")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="crafting_success" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=187604102]
 stream = ExtResource("sfx_crafting_success")
@@ -415,6 +459,7 @@ stream = ExtResource("sfx_crafting_fail")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.03
 
 [node name="weapon_equipped" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=819556786]
 stream = ExtResource("sfx_weapon_equipped")
@@ -439,36 +484,42 @@ stream = ExtResource("sfx_screen_close")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.03
 
 [node name="item_pickup" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1839721061]
 stream = ExtResource("sfx_item_pickup")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="item_stack" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1273466225]
 stream = ExtResource("sfx_item_stack")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="inventory_full" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1286509363]
 stream = ExtResource("sfx_inventory_full")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="ui_button_click" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=419055961]
 stream = ExtResource("sfx_ui_button_click")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="screen_open" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=497427842]
 stream = ExtResource("sfx_screen_open")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.03
 
 [node name="breeding_start" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1102140029]
 stream = ExtResource("sfx_breeding_start")
@@ -487,6 +538,7 @@ stream = ExtResource("sfx_breeding_fail")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.03
 
 [node name="breeding_critical_fail" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1297870001]
 stream = ExtResource("sfx_breeding_critical_fail")
@@ -577,56 +629,67 @@ stream = ExtResource("sfx_minigame_tap_correct")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="minigame_tap_miss" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=220275219]
 stream = ExtResource("sfx_minigame_tap_miss")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="harvest_qte_prompt" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=218193941]
 stream = ExtResource("sfx_harvest_qte_prompt")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="harvest_qte_success" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1658904103]
 stream = ExtResource("sfx_harvest_qte_success")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="harvest_qte_fail" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=1577047040]
 stream = ExtResource("sfx_harvest_qte_fail")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="SpatialPlayers" type="Node" parent="." unique_id=495815009]
 
 [node name="thorn_sword_swing" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=876271441]
 stream = ExtResource("sfx_thorn_sword_swing")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.08
 
 [node name="thorn_sword_hit" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=420986120]
 stream = ExtResource("sfx_thorn_sword_hit")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="blazeblade_swing" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=50779584]
 stream = ExtResource("sfx_blazeblade_swing")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="blazeblade_hit" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=516360933]
 stream = ExtResource("sfx_blazeblade_hit")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="vine_whip_crack" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=385242484]
 stream = ExtResource("sfx_vine_whip_crack")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="vine_whip_pull" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=2061149221]
 stream = ExtResource("sfx_vine_whip_pull")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="crystal_lash_crack" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=188831788]
 stream = ExtResource("sfx_crystal_lash_crack")
@@ -635,25 +698,28 @@ bus = &"SFX"
 [node name="spore_bomb_throw" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1346605898]
 stream = ExtResource("sfx_spore_bomb_throw")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="spore_bomb_detonate" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1318849893]
 stream = ExtResource("sfx_spore_bomb_detonate")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="void_grenade_detonate" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=125509464]
 stream = ExtResource("sfx_void_grenade_detonate")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="petal_shield_raise" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1999220354]
 stream = ExtResource("sfx_petal_shield_raise")
 bus = &"SFX"
 
-[node name="petal_shield_block" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=859093048]
-stream = ExtResource("sfx_petal_shield_block")
-bus = &"SFX"
-
 [node name="petal_shield_counter" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=777632150]
 stream = ExtResource("sfx_petal_shield_counter")
+bus = &"SFX"
+
+[node name="petal_shield_block" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=859093048]
+stream = ExtResource("sfx_petal_shield_block")
 bus = &"SFX"
 
 [node name="iron_bloom_shield_raise" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1787713849]
@@ -663,6 +729,7 @@ bus = &"SFX"
 [node name="player_take_damage" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=18627106]
 stream = ExtResource("sfx_player_take_damage")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="player_death" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1087660064]
 stream = ExtResource("sfx_player_death")
@@ -675,130 +742,162 @@ bus = &"SFX"
 [node name="player_invincibility" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=833814714]
 stream = ExtResource("sfx_player_invincibility")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.03
 
 [node name="plant_placed" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1179602219]
 stream = ExtResource("sfx_plant_placed")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="plant_destroyed" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=727383984]
 stream = ExtResource("sfx_plant_destroyed")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="bougainvillea_thorn_tick" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1968592204]
 stream = ExtResource("sfx_bougainvillea_thorn_tick")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.08
 
 [node name="rafflesia_miasma_hum" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=250393562]
 stream = ExtResource("sfx_rafflesia_miasma_hum")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.03
 
 [node name="melati_energy_pulse" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=2019815329]
 stream = ExtResource("sfx_melati_energy_pulse")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="wijaya_kusuma_attack" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1568773514]
 stream = ExtResource("sfx_wijaya_kusuma_attack")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="beringin_wall_spawn" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1244039148]
 stream = ExtResource("sfx_beringin_wall_spawn")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="beringin_wall_break" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1626339808]
 stream = ExtResource("sfx_beringin_wall_break")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="kecombrang_speed_boost" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1446115594]
 stream = ExtResource("sfx_kecombrang_speed_boost")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="kunyit_melee_buff" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1161472964]
 stream = ExtResource("sfx_kunyit_melee_buff")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="bunga_api_burn_tick" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=106582749]
 stream = ExtResource("sfx_bunga_api_burn_tick")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.08
 
 [node name="bunga_bayang_attack" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=306326421]
 stream = ExtResource("sfx_bunga_bayang_attack")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="melati_emas_regen_pulse" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=2050928427]
 stream = ExtResource("sfx_melati_emas_regen_pulse")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="baja_kuning_armor_buff" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1376683848]
 stream = ExtResource("sfx_baja_kuning_armor_buff")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="enemy_hit" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=58675928]
 stream = ExtResource("sfx_enemy_hit")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.08
 
 [node name="shadowling_footstep" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1154414437]
 stream = ExtResource("sfx_shadowling_footstep")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.08
 
 [node name="shadowling_attack" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1495944257]
 stream = ExtResource("sfx_shadowling_attack")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="shadowling_retreat" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=48709176]
 stream = ExtResource("sfx_shadowling_retreat")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="shadowling_death" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1502563193]
 stream = ExtResource("sfx_shadowling_death")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="voidrunner_charge" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=813543748]
 stream = ExtResource("sfx_voidrunner_charge")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="voidrunner_death" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=506960009]
 stream = ExtResource("sfx_voidrunner_death")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="stonehusk_footstep" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1115481802]
 stream = ExtResource("sfx_stonehusk_footstep")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.07
 
 [node name="stonehusk_attack" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=146486098]
 stream = ExtResource("sfx_stonehusk_attack")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="stonehusk_death" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1101714284]
 stream = ExtResource("sfx_stonehusk_death")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="phantom_weaver_teleport" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=701355663]
 stream = ExtResource("sfx_phantom_weaver_teleport")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="phantom_weaver_attack" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1844492610]
 stream = ExtResource("sfx_phantom_weaver_attack")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="phantom_weaver_death" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=370263212]
 stream = ExtResource("sfx_phantom_weaver_death")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="swarm_larva_skitter" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1024614185]
 stream = ExtResource("sfx_swarm_larva_skitter")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.08
 
 [node name="swarm_larva_death" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=959282766]
 stream = ExtResource("sfx_swarm_larva_death")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="core_take_damage" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1787117857]
 stream = ExtResource("sfx_core_take_damage")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="core_low_hp" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=312659342]
 stream = ExtResource("sfx_core_low_hp")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.03
 
 [node name="core_destroyed" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=277044087]
 stream = ExtResource("sfx_core_destroyed")
@@ -807,10 +906,12 @@ bus = &"SFX"
 [node name="core_heal" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1129804922]
 stream = ExtResource("sfx_core_heal")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="core_energy_tick" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1306761822]
 stream = ExtResource("sfx_core_energy_tick")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="crafting_success" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=548099677]
 stream = ExtResource("sfx_crafting_success")
@@ -819,6 +920,7 @@ bus = &"SFX"
 [node name="crafting_fail" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1156569272]
 stream = ExtResource("sfx_crafting_fail")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.03
 
 [node name="weapon_equipped" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=2131566745]
 stream = ExtResource("sfx_weapon_equipped")
@@ -835,26 +937,32 @@ bus = &"SFX"
 [node name="screen_close" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1496479787]
 stream = ExtResource("sfx_screen_close")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.03
 
 [node name="item_pickup" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=338658158]
 stream = ExtResource("sfx_item_pickup")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="item_stack" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=2139447127]
 stream = ExtResource("sfx_item_stack")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.06
 
 [node name="inventory_full" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=646711993]
 stream = ExtResource("sfx_inventory_full")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="ui_button_click" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1209512673]
 stream = ExtResource("sfx_ui_button_click")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="screen_open" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1644255096]
 stream = ExtResource("sfx_screen_open")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.03
 
 [node name="breeding_start" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=188457078]
 stream = ExtResource("sfx_breeding_start")
@@ -867,6 +975,7 @@ bus = &"SFX"
 [node name="breeding_fail" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=275744741]
 stream = ExtResource("sfx_breeding_fail")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.03
 
 [node name="breeding_critical_fail" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=672321683]
 stream = ExtResource("sfx_breeding_critical_fail")
@@ -927,19 +1036,24 @@ bus = &"SFX"
 [node name="minigame_tap_correct" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=729567147]
 stream = ExtResource("sfx_minigame_tap_correct")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="minigame_tap_miss" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1191246100]
 stream = ExtResource("sfx_minigame_tap_miss")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.05
 
 [node name="harvest_qte_prompt" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1866913744]
 stream = ExtResource("sfx_harvest_qte_prompt")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="harvest_qte_success" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=47846318]
 stream = ExtResource("sfx_harvest_qte_success")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
 
 [node name="harvest_qte_fail" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=1885069598]
 stream = ExtResource("sfx_harvest_qte_fail")
 bus = &"SFX"
+metadata/pitch_rand_range = 0.04
