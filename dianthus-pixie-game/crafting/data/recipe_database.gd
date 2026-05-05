@@ -66,6 +66,30 @@ const RECIPES: Dictionary = {
 		"upgrade_of": "petal_shield",
 		"description": "Petal Shield reinforced with shadow resin. Enhanced defence.",
 	},
+	"ability_dash": {
+		"display_name": "Dash",
+		"materials": {"verdant_sap": 3, "moonspore": 1},
+		"result_type": "ability",
+		"result_id": "dash",
+		"upgrade_of": "",
+		"description": "Dash in the facing direction, granting brief invincibility. Costs 20 energy.",
+	},
+	"ability_heal_pulse": {
+		"display_name": "Heal Pulse",
+		"materials": {"dianthus_pollen": 1, "aether_bloom": 1},
+		"result_type": "ability",
+		"result_id": "heal_pulse",
+		"upgrade_of": "",
+		"description": "Release a burst of Dianthus energy to restore 25 HP. Costs 40 energy.",
+	},
+	"ability_thorn_burst": {
+		"display_name": "Thorn Burst",
+		"materials": {"bougainvillea_extract": 2, "kecombrang_extract": 1},
+		"result_type": "ability",
+		"result_id": "thorn_burst",
+		"upgrade_of": "",
+		"description": "Unleash a ring of thorns that damages and stuns nearby enemies. Costs 35 energy.",
+	},
 }
 
 

@@ -26,6 +26,7 @@ func _ready() -> void:
 	visible = false
 	_craft_button.pressed.connect(_on_craft_pressed)
 	CraftingManager.weapon_crafted.connect(_on_weapon_crafted)
+	CraftingManager.ability_crafted.connect(_on_weapon_crafted)
 	InventoryManager.inventory_changed.connect(_refresh_availability)
 	var switch_btn: Button = find_child("SwitchToBreedingBtn", true, false) as Button
 	if switch_btn != null:
@@ -103,8 +104,10 @@ func _build_recipe_list() -> void:
 
 	for recipe_id: String in RecipeDatabase.get_all_recipe_ids():
 		var recipe: Dictionary = RecipeDatabase.get_recipe(recipe_id)
+		var result_type: String = str(recipe.get("result_type", "weapon"))
 		var result_id: String = str(recipe.get("result_id", ""))
-		var owned: bool = CraftingManager.owns_weapon(result_id)
+		var owned: bool = (result_type == "ability" and CraftingManager.owns_ability(result_id)) or \
+				(result_type != "ability" and CraftingManager.owns_weapon(result_id))
 		var craftable: bool = CraftingManager.can_craft(recipe_id)
 
 		var row: PanelContainer = PanelContainer.new()

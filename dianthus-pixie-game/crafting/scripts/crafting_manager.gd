@@ -1,6 +1,7 @@
 extends Node
 
 signal weapon_crafted(weapon_id: String)
+signal ability_crafted(ability_id: String)
 signal craft_failed(reason: String)
 
 const WEAPON_DATA_PATHS: Dictionary = {
@@ -15,6 +16,7 @@ const WEAPON_DATA_PATHS: Dictionary = {
 }
 
 var owned_weapons: Dictionary = {}
+var owned_abilities: Dictionary = {}
 
 
 # --- Public API ---
@@ -26,8 +28,12 @@ func can_craft(recipe_id: String) -> bool:
 	var required_flag: String = RecipeDatabase.get_required_flag(recipe_id)
 	if not required_flag.is_empty() and not UnlockFlags.has_flag(required_flag):
 		return false
+	var result_type: String = str(recipe.get("result_type", "weapon"))
 	var result_id: String = str(recipe.get("result_id", ""))
-	if owned_weapons.get(result_id, false):
+	if result_type == "ability":
+		if owned_abilities.get(result_id, false):
+			return false
+	elif owned_weapons.get(result_id, false):
 		return false
 	var materials: Dictionary = RecipeDatabase.get_materials(recipe_id)
 	for item_id: String in materials:
@@ -37,6 +43,7 @@ func can_craft(recipe_id: String) -> bool:
 	if not base.is_empty() and not owned_weapons.get(base, false):
 		return false
 	return true
+
 
 
 func craft(recipe_id: String) -> bool:
@@ -49,14 +56,21 @@ func craft(recipe_id: String) -> bool:
 	var materials: Dictionary = RecipeDatabase.get_materials(recipe_id)
 	for item_id: String in materials:
 		InventoryManager.remove_item(item_id, int(materials[item_id]))
+	var result_type: String = str(recipe.get("result_type", "weapon"))
 	var base: String = RecipeDatabase.get_upgrade_base(recipe_id)
 	if not base.is_empty():
 		owned_weapons.erase(base)
 	var result_id: String = str(recipe.get("result_id", ""))
-	owned_weapons[result_id] = true
-	SfxManager.play("crafting_success")
-	print("[CraftingManager] Crafted: %s" % result_id)
-	weapon_crafted.emit(result_id)
+	if result_type == "ability":
+		owned_abilities[result_id] = true
+		SfxManager.play("crafting_success")
+		print("[CraftingManager] Crafted ability: %s" % result_id)
+		ability_crafted.emit(result_id)
+	else:
+		owned_weapons[result_id] = true
+		SfxManager.play("crafting_success")
+		print("[CraftingManager] Crafted: %s" % result_id)
+		weapon_crafted.emit(result_id)
 	return true
 
 
@@ -72,6 +86,18 @@ func get_owned_weapon_ids() -> Array:
 	return ids
 
 
+func owns_ability(ability_id: String) -> bool:
+	return owned_abilities.get(ability_id, false)
+
+
+func get_owned_ability_ids() -> Array:
+	var ids: Array = []
+	for aid: String in owned_abilities:
+		if owned_abilities[aid]:
+			ids.append(aid)
+	return ids
+
+
 func get_weapon_data(weapon_id: String) -> WeaponData:
 	var path: String = WEAPON_DATA_PATHS.get(weapon_id, "")
 	if path.is_empty():
@@ -83,14 +109,26 @@ func get_weapon_data(weapon_id: String) -> WeaponData:
 # --- Serialization ---
 
 func serialize() -> Dictionary:
-	return owned_weapons.duplicate()
+	return {
+		"weapons": owned_weapons.duplicate(),
+		"abilities": owned_abilities.duplicate(),
+	}
 
 
 func deserialize(data: Dictionary) -> void:
 	owned_weapons = {}
-	for wid: String in data:
-		if data[wid]:
+	owned_abilities = {}
+	# Support legacy flat format (pre-ability schema) and new nested format.
+	var weapons_data: Variant = data.get("weapons", null)
+	if weapons_data == null:
+		weapons_data = data
+	for wid: String in (weapons_data as Dictionary):
+		if (weapons_data as Dictionary)[wid]:
 			owned_weapons[wid] = true
+	var abilities_data: Dictionary = data.get("abilities", {}) as Dictionary
+	for aid: String in abilities_data:
+		if abilities_data[aid]:
+			owned_abilities[aid] = true
 
 
 # --- Private ---
@@ -102,8 +140,11 @@ func _craft_fail_reason(recipe_id: String) -> String:
 	var required_flag: String = RecipeDatabase.get_required_flag(recipe_id)
 	if not required_flag.is_empty() and not UnlockFlags.has_flag(required_flag):
 		return "Locked. Complete a discovery quest to unlock."
+	var result_type: String = str(recipe.get("result_type", "weapon"))
 	var result_id: String = str(recipe.get("result_id", ""))
-	if owned_weapons.get(result_id, false):
+	if result_type == "ability" and owned_abilities.get(result_id, false):
+		return "Already owned."
+	elif result_type != "ability" and owned_weapons.get(result_id, false):
 		return "Already owned."
 	var base: String = RecipeDatabase.get_upgrade_base(recipe_id)
 	if not base.is_empty() and not owned_weapons.get(base, false):

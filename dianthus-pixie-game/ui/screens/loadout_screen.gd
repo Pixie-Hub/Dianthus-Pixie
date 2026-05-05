@@ -3,10 +3,19 @@ extends CanvasLayer
 const SLOT_SELECTED_COLOR: Color = Color(0.9, 0.75, 0.2, 1)
 const SLOT_NORMAL_COLOR: Color = Color(0.3, 0.3, 0.3, 1)
 const LOCKED_COLOR: Color = Color(0.7, 0.15, 0.15, 1)
+const ABILITY_EQUIPPED_COLOR: Color = Color(0.2, 0.8, 0.5, 1)
+
+const ABILITY_DISPLAY_NAMES: Dictionary = {
+	"dash": "Dash",
+	"heal_pulse": "Heal Pulse",
+	"thorn_burst": "Thorn Burst",
+}
 
 @onready var _slot1_panel: PanelContainer = %Slot1
 @onready var _slot2_panel: PanelContainer = %Slot2
 @onready var _owned_list: VBoxContainer = %OwnedList
+@onready var _ability_list: VBoxContainer = %AbilityList
+@onready var _skill_slot: PanelContainer = %SkillSlot
 @onready var _lock_label: Label = %LockLabel
 @onready var _slot1_label: Label = %Slot1WeaponLabel
 @onready var _slot2_label: Label = %Slot2WeaponLabel
@@ -22,6 +31,7 @@ func _ready() -> void:
 	process_mode = PROCESS_MODE_ALWAYS
 	GameManager.loadout_changed.connect(_on_loadout_changed)
 	DayNightCycle.phase_changed.connect(_on_phase_changed)
+	CraftingManager.ability_crafted.connect(_on_ability_crafted)
 	_is_night = DayNightCycle.is_night()
 
 
@@ -57,6 +67,7 @@ func _refresh() -> void:
 
 	_lock_label.visible = _is_night
 	_build_owned_list(slots)
+	_build_ability_list(skill)
 
 
 func _build_owned_list(_current_slots: Array) -> void:
@@ -94,6 +105,60 @@ func _build_owned_list(_current_slots: Array) -> void:
 		row.add_child(btn2)
 
 		_owned_list.add_child(row)
+
+
+func _build_ability_list(equipped_skill: String) -> void:
+	for child: Node in _ability_list.get_children():
+		child.queue_free()
+
+	var owned: Array = CraftingManager.get_owned_ability_ids()
+	if owned.is_empty():
+		var none_label: Label = Label.new()
+		none_label.text = "No abilities owned. Craft them at the bench."
+		none_label.add_theme_font_size_override("font_size", 6)
+		_ability_list.add_child(none_label)
+		return
+
+	for aid: String in owned:
+		var row: HBoxContainer = HBoxContainer.new()
+		var is_equipped: bool = (aid == equipped_skill)
+
+		var name_label: Label = Label.new()
+		name_label.text = ABILITY_DISPLAY_NAMES.get(aid, aid.capitalize().replace("_", " "))
+		name_label.add_theme_font_size_override("font_size", 6)
+		name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		if is_equipped:
+			name_label.modulate = ABILITY_EQUIPPED_COLOR
+		row.add_child(name_label)
+
+		var equip_btn: Button = Button.new()
+		equip_btn.add_theme_font_size_override("font_size", 6)
+		if is_equipped:
+			equip_btn.text = "[Equipped]"
+			equip_btn.disabled = true
+		else:
+			equip_btn.text = "Equip"
+			equip_btn.disabled = _is_night
+			var ability_id: String = aid
+			equip_btn.pressed.connect(func() -> void: _equip_ability(ability_id))
+		row.add_child(equip_btn)
+
+		_ability_list.add_child(row)
+
+
+func _equip_ability(ability_id: String) -> void:
+	if _is_night:
+		print("[LoadoutScreen] Loadout locked during Night.")
+		return
+	SfxManager.play("ui_button_click")
+	if is_instance_valid(GameManager.player) and GameManager.player.has_method("set_active_skill"):
+		GameManager.player.set_active_skill(ability_id)
+	_refresh()
+
+
+func _on_ability_crafted(_ability_id: String) -> void:
+	if visible:
+		_refresh()
 
 
 func _assign_weapon(slot: int, weapon_id: String) -> void:

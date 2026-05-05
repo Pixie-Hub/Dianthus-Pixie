@@ -4,7 +4,7 @@ signal save_completed(success: bool, manual: bool)
 signal load_completed(success: bool)
 
 const SAVE_PATH: String = "user://savegame.json"
-const SCHEMA_VERSION: int = 15
+const SCHEMA_VERSION: int = 16
 const GAME_VERSION: String = "0.1.0"
 
 const PLANT_TYPE_TO_SCENE: Dictionary = {
@@ -181,6 +181,10 @@ func _gather_state(manual: bool) -> Dictionary:
 	if is_instance_valid(GameManager.player) and GameManager.player._current_weapon != null:
 		equipped_id = GameManager.player._current_weapon.weapon_id
 	state["player"]["equipped_weapon"] = equipped_id
+	var active_skill: String = ""
+	if is_instance_valid(GameManager.player):
+		active_skill = str(GameManager.player.active_skill_id)
+	state["player"]["active_skill_id"] = active_skill
 
 	# Core
 	var core_hp: int = 200
@@ -321,6 +325,9 @@ func _apply_state(state: Dictionary) -> void:
 			GameManager.player.weapon_slots[0] = ""
 			GameManager.player.selected_weapon_slot = 0
 			GameManager.player._current_weapon = null
+		var saved_skill: String = str(state.get("player", {}).get("active_skill_id", ""))
+		if not saved_skill.is_empty() and GameManager.player.has_method("set_active_skill"):
+			GameManager.player.set_active_skill(saved_skill)
 		GameManager.player.loadout_changed.emit(
 			GameManager.player.weapon_slots,
 			GameManager.player.active_skill_id,
@@ -434,7 +441,7 @@ func _migrate(data: Dictionary) -> Dictionary:
 	if version < 3:
 		print("[SaveManager] Migrating save from v%d to v3." % version)
 		if not data.has("crafting"):
-			data["crafting"] = {"thorn_sword": true}
+			data["crafting"] = {"weapons": {"thorn_sword": true}, "abilities": {}}
 		if not data.get("player", {}).has("equipped_weapon"):
 			data["player"]["equipped_weapon"] = "thorn_sword"
 		data["schema_version"] = 3
@@ -515,4 +522,19 @@ func _migrate(data: Dictionary) -> Dictionary:
 		if not data.has("brambles"):
 			data["brambles"] = []
 		data["schema_version"] = 15
+	# v15 → v16: ability ownership and active_skill_id added.
+	if version < 16:
+		print("[SaveManager] Migrated v15 → v16 (ability ownership)")
+		var crafting: Variant = data.get("crafting", null)
+		if crafting is Dictionary:
+			var cd: Dictionary = crafting as Dictionary
+			if not cd.has("weapons"):
+				data["crafting"] = {"weapons": cd.duplicate(), "abilities": {}}
+			elif not cd.has("abilities"):
+				cd["abilities"] = {}
+		else:
+			data["crafting"] = {"weapons": {"thorn_sword": true}, "abilities": {}}
+		if not data.get("player", {}).has("active_skill_id"):
+			data["player"]["active_skill_id"] = ""
+		data["schema_version"] = 16
 	return data

@@ -305,12 +305,21 @@ func _unhandled_input(event: InputEvent) -> void:
 				InventoryManager.add_item("bunga_bayang_seed", 1)
 				InventoryManager.add_item("melati_emas_seed", 1)
 				InventoryManager.add_item("baja_kuning_seed", 1)
-				print("DEBUG: Added crafting + plant seed test materials (Shift+Insert).")
+				InventoryManager.add_item("aether_bloom", 2)
+				print("DEBUG: Added crafting + plant seed + ability test materials (Shift+Insert).")
 			else:
 				InventoryManager.add_item("petal_shard", 5)
 				InventoryManager.add_item("verdant_sap", 2)
 				InventoryManager.add_item("moonspore", 1)
 				print("DEBUG: Added 5 Petal Shard, 2 Verdant Sap, 1 Moonspore to inventory.")
+		if event.keycode == KEY_A and event.shift_pressed and not event.ctrl_pressed:
+			CraftingManager.owned_abilities["dash"] = true
+			CraftingManager.owned_abilities["heal_pulse"] = true
+			CraftingManager.owned_abilities["thorn_burst"] = true
+			print("DEBUG: Shift+A — granted all 3 abilities.")
+			var ls_a: Node = get_tree().current_scene.find_child("LoadoutScreen", true, false)
+			if ls_a != null and ls_a.has_method("_refresh"):
+				ls_a._refresh()
 		if event.keycode == KEY_L and event.shift_pressed:
 			for wid: String in CraftingManager.get_owned_weapon_ids():
 				pass
