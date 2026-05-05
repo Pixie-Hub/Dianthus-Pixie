@@ -1,15 +1,14 @@
-[gd_scene format=3 uid="uid://devourer_boss_01"]
+[gd_scene format=3 uid="uid://c1xv56g7ie3ae"]
 
-[ext_resource type="Script" path="res://enemies/devourer/the_devourer.gd" id="1_dev"]
-[ext_resource type="Script" path="res://enemies/fsm/state_machine.gd" id="2_fsm"]
-[ext_resource type="Texture2D" path="res://enemies/devourer/the_devourer.png" id="3_devpng"]
-[ext_resource type="Script" path="res://enemies/devourer/states/devourer_idle.gd" id="4_idle"]
-[ext_resource type="Script" path="res://enemies/devourer/states/devourer_phase1.gd" id="5_phase1"]
-[ext_resource type="Script" path="res://enemies/devourer/states/devourer_phase2.gd" id="6_phase2"]
-[ext_resource type="Script" path="res://enemies/devourer/states/devourer_phase3.gd" id="7_phase3"]
+[ext_resource type="Script" uid="uid://b26asmcdajpdl" path="res://enemies/devourer/the_devourer.gd" id="1_dev"]
+[ext_resource type="Script" uid="uid://bp6rkgxl62npj" path="res://enemies/fsm/state_machine.gd" id="2_fsm"]
+[ext_resource type="Texture2D" uid="uid://8bwkaschaia7" path="res://enemies/devourer/the_devourer.png" id="3_devpng"]
+[ext_resource type="Script" uid="uid://dys1mdfjif14b" path="res://enemies/devourer/states/devourer_idle.gd" id="4_idle"]
+[ext_resource type="Script" uid="uid://0i3aflqa6afx" path="res://enemies/devourer/states/devourer_phase1.gd" id="5_phase1"]
+[ext_resource type="Script" uid="uid://otwegbm76rb" path="res://enemies/devourer/states/devourer_phase2.gd" id="6_phase2"]
+[ext_resource type="Script" uid="uid://djk1sfx5yk8ms" path="res://enemies/devourer/states/devourer_phase3.gd" id="7_phase3"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
-radius = 10.0
 height = 20.0
 
 [sub_resource type="Animation" id="Animation_RESET"]
@@ -25,6 +24,55 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_attack"]
+resource_name = "attack"
+length = 0.35
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.12, 0.25, 0.35),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1.15, 0.85), Vector2(1.15, 0.85), Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_channel"]
+resource_name = "channel"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0.55, 0.2, 0.75, 1), Color(1, 0.2, 0.2, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_charge"]
+resource_name = "charge"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0.55, 0.2, 0.75, 1), Color(0.85, 0.4, 1, 1)]
 }
 
 [sub_resource type="Animation" id="Animation_idle"]
@@ -61,62 +109,12 @@ tracks/0/keys = {
 "values": [Vector2(1, 1), Vector2(1.06, 0.95)]
 }
 
-[sub_resource type="Animation" id="Animation_attack"]
-resource_name = "attack"
-length = 0.35
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:scale")
-tracks/0/interp = 1
-tracks/0/loop_wrap = false
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.12, 0.25, 0.35),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(1, 1), Vector2(1.15, 0.85), Vector2(1.15, 0.85), Vector2(1, 1)]
-}
-
-[sub_resource type="Animation" id="Animation_charge"]
-resource_name = "charge"
-length = 0.8
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.4),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(0.55, 0.2, 0.75, 1), Color(0.85, 0.4, 1.0, 1)]
-}
-
-[sub_resource type="Animation" id="Animation_channel"]
-resource_name = "channel"
-length = 1.0
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(0.55, 0.2, 0.75, 1), Color(1.0, 0.2, 0.2, 1)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_dev"]
 _data = {
 &"RESET": SubResource("Animation_RESET"),
 &"attack": SubResource("Animation_attack"),
-&"charge": SubResource("Animation_charge"),
 &"channel": SubResource("Animation_channel"),
+&"charge": SubResource("Animation_charge"),
 &"idle": SubResource("Animation_idle"),
 &"walk": SubResource("Animation_walk")
 }
@@ -124,7 +122,7 @@ _data = {
 [sub_resource type="CircleShape2D" id="CircleShape2D_slam"]
 radius = 40.0
 
-[node name="TheDevourer" type="CharacterBody2D"]
+[node name="TheDevourer" type="CharacterBody2D" unique_id=145729690]
 collision_layer = 8
 collision_mask = 6
 script = ExtResource("1_dev")
@@ -135,42 +133,40 @@ detection_radius = 120.0
 attack_range = 40.0
 attack_cooldown = 2.5
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=3900000001]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=-394967295]
 unique_name_in_owner = true
 texture_filter = 1
-scale = Vector2(1, 1)
-modulate = Color(0.55, 0.2, 0.75, 1)
 texture = ExtResource("3_devpng")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=596775231]
 shape = SubResource("CapsuleShape2D_body")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=3900000002]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=-394967294]
 unique_name_in_owner = true
 libraries/ = SubResource("AnimationLibrary_dev")
 
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=3900000003]
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=-394967293]
 unique_name_in_owner = true
 
-[node name="StateMachine" type="Node" parent="."]
+[node name="StateMachine" type="Node" parent="." unique_id=1503643355]
 script = ExtResource("2_fsm")
 
-[node name="Idle" type="Node" parent="StateMachine"]
+[node name="Idle" type="Node" parent="StateMachine" unique_id=395772668]
 script = ExtResource("4_idle")
 
-[node name="Phase1" type="Node" parent="StateMachine"]
+[node name="Phase1" type="Node" parent="StateMachine" unique_id=2105234461]
 script = ExtResource("5_phase1")
 
-[node name="Phase2" type="Node" parent="StateMachine"]
+[node name="Phase2" type="Node" parent="StateMachine" unique_id=2082758996]
 script = ExtResource("6_phase2")
 
-[node name="Phase3" type="Node" parent="StateMachine"]
+[node name="Phase3" type="Node" parent="StateMachine" unique_id=1755400129]
 script = ExtResource("7_phase3")
 
-[node name="VoidSlamArea" type="Area2D" parent="."]
+[node name="VoidSlamArea" type="Area2D" parent="." unique_id=2085058178]
 collision_layer = 0
 collision_mask = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="VoidSlamArea"]
-disabled = true
+[node name="CollisionShape2D" type="CollisionShape2D" parent="VoidSlamArea" unique_id=453862866]
 shape = SubResource("CircleShape2D_slam")
+disabled = true

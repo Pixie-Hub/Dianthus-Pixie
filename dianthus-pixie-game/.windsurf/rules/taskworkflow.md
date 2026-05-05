@@ -27,6 +27,7 @@ Primary references:
 - Read files before editing them.
 - Follow existing patterns in the codebase.
 - Keep changes narrow and local to the requested behavior.
+- Strictly adhere to **Scene-First Configuration** principles: prioritize setting up nodes and properties in `.tscn` files over writing boilerplate in `.gd` scripts.
 - If the prompt is ambiguous, ask before implementing. Clarify unclear target scenes, intended player flow, asset choice, task scope, or whether a design task should be started.
 - Do not treat debug shortcuts as the real player flow unless the user explicitly says so. Prefer actual in-world interactions and input actions from `project.godot`.
 - Before editing, check `git status --short` and identify unrelated user changes.
@@ -93,11 +94,55 @@ Use `docs/design/TASK_BREAKDOWN.md` as the guide for which tasks have and have n
 - Use `@onready` references to scene-authored nodes rather than creating nodes with `Node.new()` and `add_child()` in script.
 - Runtime-dynamic logic (visibility toggling, tween animations, signal-driven updates) belongs in script. Static defaults (text, colors, anchors, styles, initial visibility) belong in the scene.
 
+## UI Theme Consistency
+
+Every UI screen, panel, or HUD element added to the game must visually match the established game theme. Before implementing any new UI, review existing screens (e.g., `ui/hud/hud.tscn`, `ui/screens/crafting_screen.tscn`, `ui/codex/codex_screen.tscn`) to extract and replicate the visual language.
+
+**Color palette (source: existing HUD wood panels and screens):**
+- Panel background: warm dark brown (`Color(0.18, 0.12, 0.07, 1)` or similar)
+- Panel border: muted gold (`Color(0.72, 0.55, 0.22, 1)` or similar)
+- Primary text: off-white / cream (`Color(0.95, 0.90, 0.80, 1)`)
+- Accent / highlight: gold (`Color(1.0, 0.80, 0.25, 1)`)
+- Danger / night: deep red or crimson (`Color(0.75, 0.12, 0.12, 1)`)
+- Nature / plant: muted green (`Color(0.30, 0.55, 0.20, 1)`)
+- Subdued / disabled: dark grey-brown (`Color(0.35, 0.30, 0.25, 1)`)
+
+**StyleBoxFlat rules for panels:**
+- Use `StyleBoxFlat` with rounded corners (4 px) for all Panel and PanelContainer nodes.
+- Background fill: warm dark brown. Border width: 2 px on all sides. Border color: muted gold.
+- Drop shadow: `shadow_color = Color(0, 0, 0, 0.4)`, `shadow_size = 4`.
+- Do not use flat default gray Godot theme. Do not leave any panel with the engine default `StyleBoxEmpty` or unstyled appearance.
+
+**Typography:**
+- Use the project font from `shared/fonts/` if one exists; otherwise fall back to the Godot default but set `font_color` explicitly — never leave it as the engine default white-on-gray.
+- Title labels: font size 14–18, color gold or cream.
+- Body / item labels: font size 10–12, color cream.
+- Hint / secondary labels: font size 8–10, color `Color(0.70, 0.65, 0.55, 1)` (dimmed cream).
+
+**Button styling:**
+- Normal state: dark brown background, gold border, cream text.
+- Hover state: slightly lighter brown or gold tint background.
+- Pressed state: darker brown, inset shadow effect.
+- Disabled state: desaturated grey-brown, dimmed text.
+- Match the `StyleBoxFlat` pattern already used by `SkipDayButton` in `ui/hud/hud.tscn`.
+
+**Layout conventions:**
+- Overlay backdrop behind any modal panel: full-screen `ColorRect` with `Color(0, 0, 0, 0.65)`.
+- Panels are centered on screen unless the design explicitly requires a corner anchor (e.g., HUD elements).
+- Internal margin: 12–16 px `MarginContainer` padding inside every panel.
+- Separator lines between major sections: `HSeparator` with a gold or dark-gold tint modulate.
+
+**Enforcement:**
+- When adding a new `.tscn` UI file, always author StyleBoxFlat sub-resources for every Panel/PanelContainer/Button directly in the scene file.
+- Do not set colors or styles programmatically in `_ready()` unless they are truly runtime-dynamic (e.g., rarity-driven item colors). Static appearance always belongs in the `.tscn`.
+- Before committing any new UI, do a visual scan: if any node would render with the default Godot gray theme, it is not finished.
+
 ## Implementation Guidelines
 
 - Prefer feature-local scripts and resources over new global systems.
 - Use existing autoloads and managers instead of introducing duplicate singletons.
 - Preserve existing names, signal contracts, input action names, and resource paths unless the request requires changing them.
+- **For UI and configuration changes, look at `.tscn` files first before adding programmatic setup to `.gd` scripts.**
 - For UI and pause behavior, account for overlapping screens. Shared pause state should be managed through the existing pause ownership pattern.
 - For audio, route behavior through `SfxManager` and `MusicManager` where possible. Keep SFX IDs semantically matched to the screen or gameplay event.
 - For tutorial and quest logic, verify both visible prompt text and the event/signal that completes the step.
