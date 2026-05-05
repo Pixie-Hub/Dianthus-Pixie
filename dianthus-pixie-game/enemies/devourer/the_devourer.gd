@@ -1,6 +1,8 @@
 class_name TheDevourer
 extends EnemyBase
 
+signal damaged_during_surge()
+
 const PHASE2_THRESHOLD: float = 0.7
 const PHASE3_THRESHOLD: float = 0.3
 const SURGE_THRESHOLD: float = 0.15
@@ -92,6 +94,7 @@ func take_damage(amount: int) -> void:
 	super.take_damage(effective)
 	if is_dead:
 		return
+	damaged_during_surge.emit()
 	_check_phase_transition()
 
 
