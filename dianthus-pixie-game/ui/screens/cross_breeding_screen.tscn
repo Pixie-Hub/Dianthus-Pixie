@@ -38,6 +38,14 @@ layout_mode = 2
 text = "CROSS-BREEDING"
 horizontal_alignment = 1
 
+[node name="HSeparatorTop" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer" unique_id=1342085114]
+layout_mode = 2
+
+[node name="SectionLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=1342085115]
+layout_mode = 2
+theme_override_font_sizes/font_size = 6
+text = "COMBINE EXTRACTS"
+
 [node name="SlotsRow" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=1900253441]
 layout_mode = 2
 theme_override_constants/separation = 4
@@ -45,7 +53,7 @@ alignment = 1
 
 [node name="SlotA" type="PanelContainer" parent="Panel/MarginContainer/VBoxContainer/SlotsRow" unique_id=1825749573]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(48, 48)
+custom_minimum_size = Vector2(56, 48)
 layout_mode = 2
 
 [node name="SlotALabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/SlotsRow/SlotA" unique_id=2069077792]
@@ -63,7 +71,7 @@ vertical_alignment = 1
 
 [node name="SlotB" type="PanelContainer" parent="Panel/MarginContainer/VBoxContainer/SlotsRow" unique_id=1985837556]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(48, 48)
+custom_minimum_size = Vector2(56, 48)
 layout_mode = 2
 
 [node name="SlotBLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/SlotsRow/SlotB" unique_id=1122059471]
@@ -80,7 +88,7 @@ text = "->"
 vertical_alignment = 1
 
 [node name="OutputSlot" type="PanelContainer" parent="Panel/MarginContainer/VBoxContainer/SlotsRow" unique_id=1954485026]
-custom_minimum_size = Vector2(48, 48)
+custom_minimum_size = Vector2(56, 48)
 layout_mode = 2
 
 [node name="OutputLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/SlotsRow/OutputSlot" unique_id=1746520428]
@@ -96,7 +104,8 @@ layout_mode = 2
 
 [node name="ComboListTitle" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=1375508003]
 layout_mode = 2
-text = "Known Combinations:"
+theme_override_font_sizes/font_size = 6
+text = "KNOWN COMBINATIONS"
 
 [node name="ComboScroll" type="ScrollContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=91772928]
 custom_minimum_size = Vector2(0, 80)
@@ -114,11 +123,13 @@ theme_override_constants/separation = 4
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 8
 disabled = true
 text = "BREED"
 
 [node name="SwitchToCraftingBtn" type="Button" parent="Panel/MarginContainer/VBoxContainer/ButtonsRow" unique_id=811832668]
 layout_mode = 2
+theme_override_font_sizes/font_size = 8
 text = ">> Crafting"
 
 [node name="ItemPickerPanel" type="PanelContainer" parent="." unique_id=1977388512]
@@ -129,13 +140,27 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -100.0
-offset_top = -80.0
+offset_top = -90.0
 offset_right = 100.0
-offset_bottom = 80.0
+offset_bottom = 90.0
 
-[node name="ItemPickerScroll" type="ScrollContainer" parent="ItemPickerPanel" unique_id=1363646181]
+[node name="ItemPickerVBox" type="VBoxContainer" parent="ItemPickerPanel" unique_id=1977388513]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="ItemPickerTitle" type="Label" parent="ItemPickerPanel/ItemPickerVBox" unique_id=1977388514]
+layout_mode = 2
+theme_override_font_sizes/font_size = 6
+text = "SELECT ITEM"
+horizontal_alignment = 1
+
+[node name="ItemPickerSeparator" type="HSeparator" parent="ItemPickerPanel/ItemPickerVBox" unique_id=1977388515]
 layout_mode = 2
 
-[node name="ItemPickerList" type="VBoxContainer" parent="ItemPickerPanel/ItemPickerScroll" unique_id=1215934109]
+[node name="ItemPickerScroll" type="ScrollContainer" parent="ItemPickerPanel/ItemPickerVBox" unique_id=1363646181]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ItemPickerList" type="VBoxContainer" parent="ItemPickerPanel/ItemPickerVBox/ItemPickerScroll" unique_id=1215934109]
 unique_name_in_owner = true
 layout_mode = 2

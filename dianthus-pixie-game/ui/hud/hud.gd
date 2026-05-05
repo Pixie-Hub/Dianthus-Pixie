@@ -117,7 +117,7 @@ func _on_colorblind_changed(enabled: bool) -> void:
 func _on_loadout_changed(weapon_slots: Array, skill_id: String, selected_slot: int) -> void:
 	_slot1_name.text = _hotbar_label(weapon_slots[0] if weapon_slots.size() > 0 else "")
 	_slot2_name.text = _hotbar_label(weapon_slots[1] if weapon_slots.size() > 1 else "")
-	_skill_name.text = skill_id if not skill_id.is_empty() else "[Empty]"
+	_skill_name.text = AbilityManager.ABILITIES.get(skill_id, {}).get("display_name", skill_id) if not skill_id.is_empty() else "[Empty]"
 	_apply_hotbar_border(_slot1_panel, selected_slot == 0)
 	_apply_hotbar_border(_slot2_panel, selected_slot == 1)
 

@@ -20,6 +20,7 @@ const ABILITY_DISPLAY_NAMES: Dictionary = {
 @onready var _slot1_label: Label = %Slot1WeaponLabel
 @onready var _slot2_label: Label = %Slot2WeaponLabel
 @onready var _skill_label: Label = %SkillLabel
+@onready var _cost_label: Label = %CostLabel
 
 var _pending_assign_slot: int = -1
 var _is_night: bool = false
@@ -60,7 +61,8 @@ func _refresh() -> void:
 
 	_slot1_label.text = _weapon_display(slots[0])
 	_slot2_label.text = _weapon_display(slots[1])
-	_skill_label.text = skill if not skill.is_empty() else "[Empty]"
+	_skill_label.text = AbilityManager.ABILITIES.get(skill, {}).get("display_name", skill) if not skill.is_empty() else "[Empty]"
+	_cost_label.text = "%dE" % int(AbilityManager.ABILITIES.get(skill, {}).get("energy_cost", 0)) if not skill.is_empty() else "\u2014"
 
 	_apply_slot_border(_slot1_panel, sel == 0)
 	_apply_slot_border(_slot2_panel, sel == 1)
@@ -124,12 +126,18 @@ func _build_ability_list(equipped_skill: String) -> void:
 		var is_equipped: bool = (aid == equipped_skill)
 
 		var name_label: Label = Label.new()
-		name_label.text = ABILITY_DISPLAY_NAMES.get(aid, aid.capitalize().replace("_", " "))
+		name_label.text = AbilityManager.ABILITIES.get(aid, {}).get("display_name", aid.capitalize())
 		name_label.add_theme_font_size_override("font_size", 6)
 		name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		if is_equipped:
 			name_label.modulate = ABILITY_EQUIPPED_COLOR
 		row.add_child(name_label)
+
+		var cost_lbl: Label = Label.new()
+		cost_lbl.text = "%dE" % int(AbilityManager.ABILITIES.get(aid, {}).get("energy_cost", 0))
+		cost_lbl.add_theme_font_size_override("font_size", 6)
+		cost_lbl.modulate = Color(0.2, 0.7, 0.9, 1.0)
+		row.add_child(cost_lbl)
 
 		var equip_btn: Button = Button.new()
 		equip_btn.add_theme_font_size_override("font_size", 6)

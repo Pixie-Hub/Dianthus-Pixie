@@ -35,7 +35,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if DayNightCycle.is_night():
 			print("[BreedingBench] Cannot craft at night.")
 			return
-		var screen: Node = get_tree().current_scene.find_child("CrossBreedingScreen", true, false)
+		var screen: Node = get_tree().current_scene.find_child("CraftingScreen", true, false)
 		if screen != null and screen.has_method("open"):
 			screen.open()
 			TutorialManager.report_crafting_bench_opened()
