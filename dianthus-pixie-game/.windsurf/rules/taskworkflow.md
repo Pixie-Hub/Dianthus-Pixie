@@ -208,5 +208,6 @@ Every UI screen, panel, or HUD element added to the game must visually match the
 - Check status before and after editing.
 - Stage only the intended files.
 - Do not commit generated noise, editor-local cache files, or unrelated user work.
+- Do not commit any PROMPT_*.md and GEMINI_*.md filed
 - If validation cannot be run, still commit the requested file changes and mention the validation limit.
 - In the final response, include the commit hash and a brief summary of what changed.
