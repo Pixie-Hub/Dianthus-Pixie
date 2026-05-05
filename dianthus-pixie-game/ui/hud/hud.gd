@@ -26,6 +26,11 @@ extends CanvasLayer
 @onready var _boss_panel: PanelContainer = %BossHPPanel
 @onready var _boss_bar: ProgressBar = %BossHPBar
 @onready var _boss_label: Label = %BossHPLabel
+@onready var _forecast_panel: PanelContainer = %WatchtowerForecastPanel
+@onready var _forecast_special_label: Label = %ForecastSpecialLabel
+@onready var _forecast_lanes_label: Label = %ForecastLanesLabel
+@onready var _forecast_threats_label: Label = %ForecastThreatsLabel
+@onready var _forecast_count_label: Label = %ForecastCountLabel
 
 const HOTBAR_SELECTED_COLOR: Color = Color(0.9, 0.75, 0.2, 1)
 const HOTBAR_NORMAL_COLOR: Color = Color(0.3, 0.3, 0.3, 1)
@@ -37,6 +42,14 @@ const WOOD_PANEL_BORDER_DANGER: Color = Color(0.85, 0.20, 0.15, 1.0)
 const LOW_HP_THRESHOLD: float = 0.25
 
 const RETURN_WARNING_THRESHOLD: float = 30.0
+const FORECAST_ENEMY_LABELS: Dictionary = {
+	"shadowling": "Shadowling",
+	"voidrunner": "Voidrunner",
+	"stonehusk": "Stonehusk",
+	"phantom_weaver": "Phantom Weaver",
+	"swarm_larva": "Swarm Larva",
+	"the_devourer": "The Devourer",
+}
 
 var _prev_player_hp: int = -1
 var _prev_core_hp: int = -1
@@ -46,6 +59,7 @@ var _core_in_danger: bool = false
 var _return_tween: Tween = null
 var _confirm_visible: bool = false
 var _active_boss: Node = null
+var _forecast_spawner: WaveSpawner = null
 
 
 func _ready() -> void:
@@ -64,6 +78,9 @@ func _ready() -> void:
 	_skip_confirm_panel.visible = false
 	_skip_confirm_yes.pressed.connect(_on_skip_confirm_yes)
 	_skip_confirm_no.pressed.connect(_on_skip_confirm_no)
+	GardenStructureManager.watchtower_constructed.connect(_on_watchtower_constructed)
+	SaveManager.load_completed.connect(_on_hud_load_completed)
+	_forecast_panel.visible = false
 	call_deferred("_connect_wave_spawner")
 
 
@@ -146,10 +163,14 @@ func _connect_wave_spawner() -> void:
 	var spawner: Node = get_tree().get_first_node_in_group(&"wave_spawners")
 	if spawner == null:
 		return
+	_forecast_spawner = spawner as WaveSpawner
 	if spawner.has_signal(&"boss_spawned") and not spawner.boss_spawned.is_connected(_on_boss_spawned):
 		spawner.boss_spawned.connect(_on_boss_spawned)
 	if spawner.has_signal(&"boss_defeated") and not spawner.boss_defeated.is_connected(_on_boss_defeated):
 		spawner.boss_defeated.connect(_on_boss_defeated)
+	if spawner.has_signal(&"forecast_updated") and not spawner.forecast_updated.is_connected(_on_forecast_updated):
+		spawner.forecast_updated.connect(_on_forecast_updated)
+	_refresh_watchtower_forecast()
 
 
 func _on_boss_spawned(boss: Node) -> void:
@@ -185,6 +206,7 @@ func _on_phase_changed_hud(phase: String) -> void:
 	if not is_night:
 		_boss_panel.visible = false
 		_active_boss = null
+	_refresh_watchtower_forecast()
 
 
 func _on_skip_day_pressed() -> void:
@@ -311,6 +333,71 @@ func _on_quest_completed_hud(quest_id: StringName) -> void:
 
 func _refresh_endless_label() -> void:
 	_endless_label.visible = GameManager.endless_mode
+
+
+func _on_watchtower_constructed() -> void:
+	_refresh_watchtower_forecast()
+
+
+func _on_hud_load_completed(_success: bool) -> void:
+	_refresh_watchtower_forecast()
+
+
+func _on_forecast_updated(_forecast: Dictionary) -> void:
+	_refresh_watchtower_forecast()
+
+
+func _refresh_watchtower_forecast() -> void:
+	if not is_instance_valid(_forecast_panel):
+		return
+	var should_show: bool = GardenStructureManager.watchtower_built \
+			and DayNightCycle.is_day() \
+			and is_instance_valid(_forecast_spawner) \
+			and _forecast_spawner.has_next_wave_forecast()
+	_forecast_panel.visible = should_show
+	if not should_show:
+		return
+	var forecast: Dictionary = _forecast_spawner.get_next_wave_forecast()
+	var day: int = int(forecast.get("day", DayNightCycle.day_count))
+	if bool(forecast.get("is_boss", false)):
+		_forecast_special_label.text = "Boss: %s" % str(forecast.get("special_label", "Unknown"))
+	else:
+		_forecast_special_label.text = "Night %d forecast" % day
+	_forecast_lanes_label.text = "Lanes: %s" % _format_forecast_lanes(forecast)
+	_forecast_threats_label.text = "Threats: %s" % _format_forecast_threats(forecast)
+	_forecast_count_label.text = "Total: %d" % int(forecast.get("wave_total", 0))
+
+
+func _format_forecast_lanes(forecast: Dictionary) -> String:
+	var labels: Array[String] = []
+	var lanes: Array = forecast.get("lanes", [])
+	for lane: Variant in lanes:
+		if not lane is Dictionary:
+			continue
+		var lane_data: Dictionary = lane as Dictionary
+		var count: int = int(lane_data.get("count", 0))
+		if count <= 0 and not bool(forecast.get("is_boss", false)):
+			continue
+		labels.append("%s %d" % [str(lane_data.get("name", "Lane")), max(1, count)])
+	if labels.is_empty():
+		return "None"
+	return ", ".join(labels)
+
+
+func _format_forecast_threats(forecast: Dictionary) -> String:
+	var labels: Array[String] = []
+	var totals: Dictionary = forecast.get("enemy_totals", {})
+	for entry: Dictionary in WaveSpawner.ENEMY_POOL:
+		var enemy_type: String = str(entry.get("type", ""))
+		var count: int = int(totals.get(enemy_type, 0))
+		if count > 0:
+			labels.append("%s x%d" % [FORECAST_ENEMY_LABELS.get(enemy_type, enemy_type.capitalize()), count])
+	var boss_count: int = int(totals.get("the_devourer", 0))
+	if boss_count > 0:
+		labels.append("%s x%d" % [FORECAST_ENEMY_LABELS["the_devourer"], boss_count])
+	if labels.is_empty():
+		return "None"
+	return ", ".join(labels)
 
 
 func _shake(node: Control) -> void:

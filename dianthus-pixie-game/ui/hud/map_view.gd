@@ -39,6 +39,7 @@ var _watchtower_active: bool = false
 
 func _ready() -> void:
 	add_to_group("minimap")
+	_watchtower_active = GardenStructureManager.watchtower_built
 	custom_minimum_size = map_size
 	call_deferred("refresh_references")
 
@@ -111,15 +112,16 @@ func _draw() -> void:
 			if _event_spawner.has_active_event():
 				var ev_pos: Vector2 = _event_spawner.get_active_event_position()
 				_draw_event_marker(ev_pos, player_pos, draw_size, draw_rect_area)
+		if _watchtower_active and _spawner != null:
+			_draw_forecast_lanes(player_pos, draw_size, draw_rect_area)
 		return
 
-	if _watchtower_active and _spawner != null:
-		for spawn_pt: Vector2 in _spawner.predict_all_spawn_directions():
-			var dir: Vector2 = (spawn_pt - player_pos).normalized()
-			var edge_pt: Vector2 = _compute_box_edge(player_mp, dir, draw_size)
-			_draw_arrow_colored(edge_pt, dir, WATCHTOWER_ARROW_COLOR)
-
 	if _spawner == null or not _spawner.is_wave_active():
+		if _watchtower_active and _spawner != null:
+			for spawn_pt: Vector2 in _get_forecast_lane_positions():
+				var dir: Vector2 = (spawn_pt - player_pos).normalized()
+				var edge_pt: Vector2 = _compute_box_edge(player_mp, dir, draw_size)
+				_draw_arrow_colored(edge_pt, dir, WATCHTOWER_ARROW_COLOR)
 		return
 
 	for spawn_pt: Vector2 in _spawner.get_active_spawn_points():
@@ -319,6 +321,44 @@ func _draw_event_marker(world_pos: Vector2, player_pos: Vector2, draw_size: Vect
 		var dir: Vector2 = (mp - draw_size * 0.5).normalized()
 		edge_mp = _compute_box_edge(draw_size * 0.5, dir, draw_size)
 	draw_circle(edge_mp, EVENT_MARKER_RADIUS * marker_scale, color)
+
+
+func _draw_forecast_lanes(player_pos: Vector2, draw_size: Vector2, draw_rect_area: Rect2) -> void:
+	var core_pos: Vector2 = player_pos
+	if is_instance_valid(GameManager.dianthus_core):
+		core_pos = (GameManager.dianthus_core as Node2D).global_position
+	var core_mp: Vector2 = _world_to_map(core_pos, player_pos)
+	core_mp = _clamp_to_map(core_mp, draw_size)
+	var color: Color = Color(WATCHTOWER_ARROW_COLOR.r, WATCHTOWER_ARROW_COLOR.g, WATCHTOWER_ARROW_COLOR.b, 0.72)
+	for spawn_pt: Vector2 in _get_forecast_lane_positions():
+		var spawn_mp: Vector2 = _world_to_map(spawn_pt, player_pos)
+		var outward: Vector2 = (spawn_mp - core_mp).normalized()
+		if outward == Vector2.ZERO:
+			continue
+		var lane_edge: Vector2 = spawn_mp
+		if not draw_rect_area.has_point(spawn_mp):
+			lane_edge = _compute_box_edge(core_mp, outward, draw_size)
+		draw_line(lane_edge, core_mp, color, maxf(1.0, marker_scale))
+		var inward: Vector2 = (core_mp - lane_edge).normalized()
+		if inward != Vector2.ZERO:
+			_draw_arrow_colored(lane_edge + inward * ARROW_SIZE * marker_scale, inward, WATCHTOWER_ARROW_COLOR)
+
+
+func _get_forecast_lane_positions() -> Array[Vector2]:
+	var positions: Array[Vector2] = []
+	if _spawner == null or not _spawner.has_method("get_next_wave_forecast"):
+		return positions
+	var forecast: Dictionary = _spawner.get_next_wave_forecast()
+	var lanes: Array = forecast.get("lanes", [])
+	for lane: Variant in lanes:
+		if not lane is Dictionary:
+			continue
+		var lane_data: Dictionary = lane as Dictionary
+		if int(lane_data.get("count", 0)) <= 0 and not bool(forecast.get("is_boss", false)):
+			continue
+		var lane_position: Vector2 = lane_data.get("position", Vector2.ZERO)
+		positions.append(lane_position)
+	return positions
 
 
 func set_watchtower_active(active: bool) -> void:
