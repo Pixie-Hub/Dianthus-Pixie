@@ -82,6 +82,8 @@ func _finish_expand() -> void:
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):
+		if _placement_manager == null:
+			_find_placement_manager()
 		_player_in_range = true
 		_refresh_prompt()
 

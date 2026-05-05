@@ -104,6 +104,8 @@ func _finish_build() -> void:
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):
+		if _struct_mgr == null:
+			_find_struct_mgr()
 		_player_in_range = true
 		_refresh_prompt()
 
