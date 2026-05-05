@@ -112,4 +112,4 @@ func deserialize(data: Dictionary) -> void:
 	watchtower_built = bool(data.get("watchtower_built", false))
 	_apply_inventory_slots()
 	if watchtower_built:
-		_notify_map_view_watchtower()
+		call_deferred("_notify_map_view_watchtower")
