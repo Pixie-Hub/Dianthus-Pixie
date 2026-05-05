@@ -300,56 +300,85 @@ FOUND-01..06 (Done)
 
 ## Quick Reference — Debug Keys
 
+### Function Keys
+
 | Key | Action | Added by |
 |-----|--------|----------|
 | F1 | Core -20 HP | CORE-03 |
 | F2 | Core +20 HP | CORE-03 |
-| F3 | Player -25 HP | CORE-08 |
-| Shift+F3 | Energy set to 50 | PLANT-07 |
+| F3 | Player -25 HP (applies damage reduction) | CORE-08 |
+| Shift+F3 | Set energy to 50 | PLANT-07 |
 | F4 | Player +25 HP | CORE-08 |
-| Shift+F4 | Energy filled to max | PLANT-07 |
-| F5 | Cycle-spawn enemy at mouse: Shadowling → Voidrunner → Stonehusk → Phantom Weaver → Swarm Larva (×5) (repeats) | ENEMY-01/02/03/04 |
+| Shift+F4 | Fill energy to max | PLANT-07 |
+| F5 | Cycle-spawn enemy at mouse: Shadowling → Voidrunner → Stonehusk → Phantom Weaver → Swarm Larva ×5 (repeats) | ENEMY-01/02/03/04 |
 | F6 | Kill all enemies | CORE-06 |
-| F7 | Skip current phase | FOUND-05 |
+| F7 | Skip current phase (DAY→NIGHT or NIGHT→DAY) | FOUND-05 |
 | F8 | Force-start wave | CORE-07 |
 | F9 | Force-clear wave | CORE-07 |
-| F10 | Place plant cycle at mouse (no grid): Bougainvillea → Rafflesia → Melati → Wijaya Kusuma → Beringin → Kecombrang → Kunyit → Bunga Api → Bunga Bayang → Melati Emas → Baja Kuning → Clear | PLANT-02..06b |
+| F10 | Place plant at mouse (no grid, cycles): Bougainvillea → Rafflesia → Melati → Wijaya Kusuma → Beringin → Kecombrang → Kunyit → Bunga Api → Bunga Bayang → Melati Emas → Baja Kuning → Clear all | PLANT-02..06b |
 | F11 | Manual save (`SaveManager.save_to_slot(true)`) | SAVE-01/02 |
 | Shift+F11 | Delete save file (test New Game overwrite) | SAVE-02 |
 | F12 | Load save (`SaveManager.load_from_slot()`) | SAVE-02 |
-| Insert | Add 5 Petal Shard + 2 Verdant Sap + 1 Moonspore (inventory test) | CORE-02/UI-02 |
-| Shift+Insert | Add all crafting + breeding + plant seed test materials (extracts ×1 each + 5 Petal Shard + 5 Verdant Sap + 3 Moonspore + 2 Shadow Resin + 1 Dianthus Pollen + 3 Bougainvillea Seed + 2 Rafflesia/Melati Seed + 1 of each remaining base + hybrid seed) | PLANT-02..06b |
-| I | Toggle 30-slot Inventory screen | UI-02 |
-| E | Interact with BreedingBench (opens CrossBreeding UI) | PLANT-06 / PLANT-CB |
-| C | Toggle CraftingScreen directly (debug bypass bench proximity) | PLANT-06 |
-| B | Toggle CrossBreedingScreen directly (debug bypass bench proximity) | PLANT-CB |
-| P | Toggle plant placement mode (DAY only; shows seed palette HUD) | PLANT-03 |
-| J | Toggle Plant Codex screen (pauses game) | UI-04 |
-| Shift+J | Discover all 11 plants in codex (debug unlock) | UI-04 |
-| L | Toggle Loadout screen (pauses game) | PLANT-08 |
-| Shift+L | Grant all 8 weapons to CraftingManager (debug unlock) | PLANT-08 |
-| Shift+1 | Equip Spore Bomb to weapon slot 1 (night-locked) | PLANT-09 |
-| Shift+2 | Equip Vine Whip to weapon slot 1 (night-locked) | PLANT-10 |
-| Shift+3 | Equip Petal Shield to weapon slot 1 (night-locked) | PLANT-11 |
+
+### Number Keys
+
+| Key | Action | Added by |
+|-----|--------|----------|
 | 1 | Select weapon slot 1 | PLANT-08 |
 | 2 | Select weapon slot 2 | PLANT-08 |
-| Q | Toggle Quest Log screen (pauses game; Active/Completed/Failed tabs with progress bars) | UI-03 |
-| Shift+Q | Force-reroll daily quests (`DailyQuestRoller.force_reroll()`) | QUEST-02 |
-| Ctrl+Shift+Q | Print full quest summary (active quests + objectives + unlock flags) to Output | QUEST-02 |
-| F | Activate equipped skill (costs 30 energy) | QUEST-01 |
-| Shift+K | Print all active quest progress to Output log | QUEST-01 |
-| Shift+Alt+K | Force-complete the first active quest (grants rewards) | QUEST-01 |
-| (DayNightCycle.debug_skip_phase via console / F7) | Force phase change | UI-01: Time-of-Day color/label flips, minimap arrows toggle on night |
+| Shift+1 | Equip Spore Bomb to slot 1 (night-locked) | PLANT-09 |
+| Shift+2 | Equip Vine Whip to slot 1 (night-locked) | PLANT-10 |
+| Shift+3 | Equip Petal Shield to slot 1 (night-locked) | PLANT-11 |
+| Shift+4 | Add fortification materials: 12 Petal Shard + 8 Verdant Sap + 4 Moonspore | WORLD |
 | Shift+5 | Emit `zone_entered{zone_id=ruins_of_veld}` — advances story_03_journey objective | QUEST-05 |
 | Shift+6 | Emit `voidlord_defeated` — satisfies story_05_voidlord objective | QUEST-05 |
 | Shift+7 | Emit `devourer_defeated` — satisfies story_07_devourer objective; prints flag confirmation | QUEST-05 |
-| N | Skip current DAY phase → immediately transitions to NIGHT (HUD button also available top-right during DAY) | Skip Daytime |
 | Shift+9 | Set DAY phase timer to 35 s remaining — triggers return pressure cues immediately | DAY-06 |
-| Ctrl+Shift+5 | Force-start `story_01_whispers` (skips Day 2 wait) | QUEST-05 |
-| Ctrl+Shift+F | Force-fail the current active story quest with `time_limit` (tests alt-ending branch) | QUEST-05 |
+| Shift+0 | Force-spawn daytime event (cycles): Corrupted Root → Wild Seedling → Void Fissure → Dianthus Resonance | DAY-10 |
 | Ctrl+1 | Force-trigger True ending (`EndingManager.force_trigger("true")`) | END-01 |
 | Ctrl+2 | Force-trigger Survival ending (`EndingManager.force_trigger("survival")`) | END-02 |
 | Ctrl+3 | Force-trigger Discovery ending (`EndingManager.force_trigger("discovery")`) | END-03 |
 | Ctrl+4 | Toggle Endless Mode on/off (`GameManager.endless_mode`) | END-04 |
 | Ctrl+Shift+4 | Submit current day score to EndlessLeaderboard; print rank and best | END-04 |
+| Ctrl+5 | Force-spawn Devourer boss (skips quest check) | ENEMY-05 |
+| Ctrl+6 | Force Devourer phase transition: cycles Phase 1 → 2 → 3 → 1 | ENEMY-05 |
+| Ctrl+7 | Kill all summoned Devourer minions | ENEMY-05 |
+| Ctrl+Shift+5 | Force-start `story_01_whispers` quest (skips Day 2 wait) | QUEST-05 |
+
+### Letter Keys
+
+| Key | Action | Added by |
+|-----|--------|----------|
+| E | Interact with BreedingBench → opens CrossBreeding UI (in-world, day only) | PLANT-06 / PLANT-CB |
+| N | Skip current DAY phase → immediately transitions to NIGHT (HUD Skip button also available) | Skip Daytime |
+| P | Toggle plant placement mode (DAY only; shows seed palette HUD) | PLANT-03 |
+| I | Toggle 30-slot Inventory screen | UI-02 |
+| B | Toggle CrossBreedingScreen directly (debug bypass bench proximity) | PLANT-CB |
+| C | Toggle CraftingScreen directly (debug bypass bench proximity) | PLANT-06 |
+| J | Toggle Plant Codex screen (pauses game) | UI-04 |
+| L | Toggle Loadout screen (pauses game) | PLANT-08 |
+| Q | Toggle Quest Log screen (pauses game; Active/Completed/Failed tabs) | UI-03 |
+| F | Activate equipped skill (costs energy per ability) | QUEST-01 |
+| Shift+A | Grant all 3 abilities instantly (dash, heal_pulse, thorn_burst) | Ability System |
+| Shift+F | Equip 'dash' skill (then press F to activate, costs 20 energy) | Ability System |
+| Shift+G | Equip 'thorn_burst' skill (then press F to activate, costs 35 energy) | Ability System |
+| Shift+J | Discover all 11 plants in codex instantly | UI-04 |
+| Shift+K | Print all active quest progress to Output log | QUEST-01 |
+| Shift+L | Grant all 8 weapons to CraftingManager instantly | PLANT-08 |
+| Shift+Q | Force-reroll daily quests (`DailyQuestRoller.force_reroll()`) | QUEST-02 |
+| Shift+Alt+K | Force-complete the first active quest (grants rewards) | QUEST-01 |
+| Ctrl+Shift+F | Force-fail the current active story quest with `time_limit` | QUEST-05 |
+| Ctrl+Shift+Q | Print full quest summary (active quests + objectives + unlock flags) to Output | QUEST-02 |
+
+### Insert Key
+
+| Key | Action | Added by |
+|-----|--------|----------|
+| Insert | Add 5 Petal Shard + 2 Verdant Sap + 1 Moonspore to inventory | CORE-02/UI-02 |
+| Shift+Insert | Add all test materials: extracts ×1 each, 5 Petal Shard, 5 Verdant Sap, 3 Moonspore, 2 Shadow Resin, 1 Dianthus Pollen, 2 Aether Bloom, all 11 plant seeds | PLANT-02..06b |
+
+### Console
+
+| Key | Action | Added by |
+|-----|--------|----------|
 | `Dialogic.start("res://...")` via console | Trigger a Dialogic timeline directly for testing | DIALOG-01 |
