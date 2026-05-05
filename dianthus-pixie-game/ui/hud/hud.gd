@@ -20,6 +20,9 @@ extends CanvasLayer
 @onready var _endless_label: Label = %EndlessLabel
 @onready var _return_label: Label = %ReturnWarningLabel
 @onready var _skip_day_button: Button = %SkipDayButton
+@onready var _skip_confirm_panel: PanelContainer = %SkipConfirmPanel
+@onready var _skip_confirm_yes: Button = %SkipConfirmYes
+@onready var _skip_confirm_no: Button = %SkipConfirmNo
 
 const HOTBAR_SELECTED_COLOR: Color = Color(0.9, 0.75, 0.2, 1)
 const HOTBAR_NORMAL_COLOR: Color = Color(0.3, 0.3, 0.3, 1)
@@ -38,6 +41,7 @@ var _low_hp_tween: Tween = null
 var _core_danger_tween: Tween = null
 var _core_in_danger: bool = false
 var _return_tween: Tween = null
+var _confirm_visible: bool = false
 
 
 func _ready() -> void:
@@ -53,6 +57,9 @@ func _ready() -> void:
 	QuestManager.quest_completed.connect(_on_quest_completed_hud)
 	_skip_day_button.pressed.connect(_on_skip_day_pressed)
 	_skip_day_button.visible = not DayNightCycle.is_night()
+	_skip_confirm_panel.visible = false
+	_skip_confirm_yes.pressed.connect(_on_skip_confirm_yes)
+	_skip_confirm_no.pressed.connect(_on_skip_confirm_no)
 
 
 func _process(_delta: float) -> void:
@@ -68,6 +75,8 @@ func _process(_delta: float) -> void:
 
 	if Input.is_action_just_pressed("skip_day") and not is_night:
 		_on_skip_day_pressed()
+	if _confirm_visible and Input.is_action_just_pressed("ui_cancel"):
+		_on_skip_confirm_no()
 
 
 func _on_player_hp_changed(current_hp: int, max_hp: int) -> void:
@@ -131,13 +140,32 @@ func _on_phase_changed_hud(phase: String) -> void:
 		_return_label.visible = false
 		_stop_return_pulse()
 	_skip_day_button.visible = not is_night
+	_on_skip_confirm_no()
 
 
 func _on_skip_day_pressed() -> void:
 	if DayNightCycle.is_night():
 		return
-	print("[HUD] Skip to Night triggered.")
+	if _confirm_visible:
+		_on_skip_confirm_no()
+		return
+	_confirm_visible = true
+	_skip_confirm_panel.visible = true
+	_skip_day_button.disabled = true
+
+
+func _on_skip_confirm_yes() -> void:
+	_confirm_visible = false
+	_skip_confirm_panel.visible = false
+	_skip_day_button.disabled = false
+	print("[HUD] Skip to Night confirmed.")
 	DayNightCycle.debug_skip_phase()
+
+
+func _on_skip_confirm_no() -> void:
+	_confirm_visible = false
+	_skip_confirm_panel.visible = false
+	_skip_day_button.disabled = false
 
 
 func _start_return_pulse() -> void:
