@@ -1,7 +1,15 @@
 extends CanvasLayer
 
-const SLOT_EMPTY_COLOR: Color = Color(0.15, 0.15, 0.15, 1.0)
-const SLOT_FILLED_COLOR: Color = Color(0.2, 0.3, 0.2, 1.0)
+const SLOT_EMPTY_BG: Color = Color(0.12, 0.08, 0.04, 1.0)
+const SLOT_EMPTY_BORDER: Color = Color(0.45, 0.35, 0.15, 1.0)
+const SLOT_FILLED_BG: Color = Color(0.15, 0.18, 0.09, 1.0)
+const SLOT_FILLED_BORDER: Color = Color(0.45, 0.62, 0.22, 1.0)
+const COMBO_KNOWN_COLOR: Color = Color(0.95, 0.90, 0.80, 1.0)
+const COMBO_UNKNOWN_COLOR: Color = Color(0.45, 0.40, 0.33, 1.0)
+const PICKER_BTN_BG: Color = Color(0.16, 0.10, 0.05, 1.0)
+const PICKER_BTN_BORDER: Color = Color(0.38, 0.28, 0.12, 1.0)
+const PICKER_BTN_HOVER_BG: Color = Color(0.28, 0.19, 0.09, 1.0)
+const PICKER_BTN_HOVER_BORDER: Color = Color(1.0, 0.80, 0.25, 1.0)
 const BREED_DELAY: float = 4.0
 const MAX_BENCH_DISTANCE: float = 48.0
 
@@ -131,14 +139,39 @@ func _open_item_picker() -> void:
 		has_items = true
 		var btn: Button = Button.new()
 		btn.text = "%s x%d" % [ItemDatabase.get_display_name(item_id), count]
-		btn.add_theme_font_size_override("font_size", 8)
+		btn.add_theme_font_size_override("font_size", 9)
+		btn.add_theme_color_override("font_color", Color(0.95, 0.90, 0.80, 1.0))
+		var btn_normal: StyleBoxFlat = StyleBoxFlat.new()
+		btn_normal.bg_color = PICKER_BTN_BG
+		btn_normal.border_width_left = 1
+		btn_normal.border_width_right = 1
+		btn_normal.border_width_bottom = 1
+		btn_normal.border_color = PICKER_BTN_BORDER
+		btn_normal.corner_radius_top_left = 2
+		btn_normal.corner_radius_top_right = 2
+		btn_normal.corner_radius_bottom_right = 2
+		btn_normal.corner_radius_bottom_left = 2
+		var btn_hover: StyleBoxFlat = StyleBoxFlat.new()
+		btn_hover.bg_color = PICKER_BTN_HOVER_BG
+		btn_hover.border_width_left = 1
+		btn_hover.border_width_right = 1
+		btn_hover.border_width_bottom = 1
+		btn_hover.border_color = PICKER_BTN_HOVER_BORDER
+		btn_hover.corner_radius_top_left = 2
+		btn_hover.corner_radius_top_right = 2
+		btn_hover.corner_radius_bottom_right = 2
+		btn_hover.corner_radius_bottom_left = 2
+		btn.add_theme_stylebox_override("normal", btn_normal)
+		btn.add_theme_stylebox_override("hover", btn_hover)
+		btn.add_theme_stylebox_override("pressed", btn_normal)
 		var capture_id: String = item_id
 		btn.pressed.connect(func() -> void: _select_item(capture_id))
 		_item_picker_list.add_child(btn)
 	if not has_items:
 		var lbl: Label = Label.new()
 		lbl.text = "(No items)"
-		lbl.add_theme_font_size_override("font_size", 8)
+		lbl.add_theme_font_size_override("font_size", 9)
+		lbl.add_theme_color_override("font_color", Color(0.50, 0.45, 0.38, 1.0))
 		_item_picker_list.add_child(lbl)
 	_item_picker_panel.visible = true
 
@@ -166,7 +199,8 @@ func _update_slot_style(panel: PanelContainer, filled: bool) -> void:
 	var style: StyleBoxFlat = panel.get_theme_stylebox("panel") as StyleBoxFlat
 	if style == null:
 		return
-	style.bg_color = SLOT_FILLED_COLOR if filled else SLOT_EMPTY_COLOR
+	style.bg_color = SLOT_FILLED_BG if filled else SLOT_EMPTY_BG
+	style.border_color = SLOT_FILLED_BORDER if filled else SLOT_EMPTY_BORDER
 
 
 func _refresh_output() -> void:
@@ -189,15 +223,15 @@ func _refresh_combo_list() -> void:
 		var combo: Dictionary = BreedingManager.get_combo(combo_id)
 		var discovered: bool = BreedingManager.is_discovered(combo_id)
 		var lbl: Label = Label.new()
-		lbl.add_theme_font_size_override("font_size", 8)
+		lbl.add_theme_font_size_override("font_size", 9)
 		if discovered:
 			var ia: String = ItemDatabase.get_display_name(str(combo.get("input_a", "")))
 			var ib: String = ItemDatabase.get_display_name(str(combo.get("input_b", "")))
-			lbl.text = "%s + %s -> %s" % [ia, ib, str(combo.get("display_name", combo_id))]
-			lbl.modulate = Color.WHITE
+			lbl.text = "%s + %s → %s" % [ia, ib, str(combo.get("display_name", combo_id))]
+			lbl.add_theme_color_override("font_color", COMBO_KNOWN_COLOR)
 		else:
-			lbl.text = "??? + ??? -> ???"
-			lbl.modulate = Color(0.5, 0.5, 0.5, 1.0)
+			lbl.text = "??? + ??? → ???"
+			lbl.add_theme_color_override("font_color", COMBO_UNKNOWN_COLOR)
 		_combo_list.add_child(lbl)
 
 
@@ -249,10 +283,10 @@ func _on_breed_succeeded(_combo_id: String, result_item_id: String) -> void:
 
 func _on_breed_failed(_reason: String) -> void:
 	_show_breed_feedback("Failed!")
-	_output_label.modulate = Color(0.9, 0.3, 0.3, 1.0)
+	_output_label.add_theme_color_override("font_color", Color(0.85, 0.30, 0.25, 1.0))
 	var tween: Tween = create_tween()
 	tween.tween_interval(0.8)
-	tween.tween_callback(func() -> void: _output_label.modulate = Color.WHITE)
+	tween.tween_callback(func() -> void: _output_label.add_theme_color_override("font_color", Color(0.95, 0.90, 0.80, 1.0)))
 	_slot_a_item = ""
 	_slot_b_item = ""
 	_refresh_slots()

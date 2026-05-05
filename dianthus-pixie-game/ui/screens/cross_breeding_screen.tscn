@@ -2,6 +2,142 @@
 
 [ext_resource type="Script" uid="uid://bvf1qpqwfd7jp" path="res://ui/screens/cross_breeding_screen.gd" id="1_cbs"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_main_panel"]
+bg_color = Color(0.18, 0.12, 0.07, 0.97)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.72, 0.55, 0.22, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color(0, 0, 0, 0.4)
+shadow_size = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slot_empty"]
+bg_color = Color(0.12, 0.08, 0.04, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.45, 0.35, 0.15, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slot_filled"]
+bg_color = Color(0.15, 0.18, 0.09, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.45, 0.62, 0.22, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_output_slot"]
+bg_color = Color(0.10, 0.07, 0.03, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.72, 0.55, 0.22, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_normal"]
+bg_color = Color(0.22, 0.15, 0.08, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.72, 0.55, 0.22, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_hover"]
+bg_color = Color(0.30, 0.21, 0.10, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1.0, 0.80, 0.25, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_pressed"]
+bg_color = Color(0.14, 0.09, 0.04, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.72, 0.55, 0.22, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_disabled"]
+bg_color = Color(0.18, 0.15, 0.12, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.35, 0.30, 0.25, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_picker_panel"]
+bg_color = Color(0.20, 0.13, 0.08, 0.98)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.72, 0.55, 0.22, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_size = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_picker_btn_normal"]
+bg_color = Color(0.16, 0.10, 0.05, 1)
+border_width_left = 1
+border_width_top = 0
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.38, 0.28, 0.12, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_picker_btn_hover"]
+bg_color = Color(0.28, 0.19, 0.09, 1)
+border_width_left = 1
+border_width_top = 0
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1.0, 0.80, 0.25, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
 [node name="CrossBreedingScreen" type="CanvasLayer" unique_id=1687957879]
 script = ExtResource("1_cbs")
 
@@ -9,7 +145,8 @@ script = ExtResource("1_cbs")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0, 0, 0, 0.6)
+mouse_filter = 1
+color = Color(0, 0, 0, 0.65)
 
 [node name="Panel" type="PanelContainer" parent="." unique_id=1982488185]
 anchors_preset = 8
@@ -17,48 +154,56 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -160.0
-offset_top = -130.0
-offset_right = 160.0
-offset_bottom = 130.0
+offset_left = -165.0
+offset_top = -140.0
+offset_right = 165.0
+offset_bottom = 140.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_main_panel")
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=958681332]
 layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=1236601577]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 6
 
 [node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=1342085113]
 layout_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(1.0, 0.80, 0.25, 1)
 text = "CROSS-BREEDING"
 horizontal_alignment = 1
 
 [node name="HSeparatorTop" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer" unique_id=1342085114]
 layout_mode = 2
+modulate = Color(0.72, 0.55, 0.22, 0.8)
 
 [node name="SectionLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=1342085115]
 layout_mode = 2
-theme_override_font_sizes/font_size = 6
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.70, 0.65, 0.55, 1)
 text = "COMBINE EXTRACTS"
 
 [node name="SlotsRow" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=1900253441]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 6
 alignment = 1
 
 [node name="SlotA" type="PanelContainer" parent="Panel/MarginContainer/VBoxContainer/SlotsRow" unique_id=1825749573]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(56, 48)
+custom_minimum_size = Vector2(60, 52)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_slot_empty")
 
 [node name="SlotALabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/SlotsRow/SlotA" unique_id=2069077792]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 9
+theme_override_colors/font_color = Color(0.95, 0.90, 0.80, 1)
 text = "?"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -66,17 +211,22 @@ autowrap_mode = 3
 
 [node name="PlusLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/SlotsRow" unique_id=654864745]
 layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.72, 0.55, 0.22, 1)
 text = "+"
 vertical_alignment = 1
 
 [node name="SlotB" type="PanelContainer" parent="Panel/MarginContainer/VBoxContainer/SlotsRow" unique_id=1985837556]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(56, 48)
+custom_minimum_size = Vector2(60, 52)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_slot_empty")
 
 [node name="SlotBLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/SlotsRow/SlotB" unique_id=1122059471]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 9
+theme_override_colors/font_color = Color(0.95, 0.90, 0.80, 1)
 text = "?"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -84,16 +234,21 @@ autowrap_mode = 3
 
 [node name="ArrowLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/SlotsRow" unique_id=288216324]
 layout_mode = 2
-text = "->"
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.72, 0.55, 0.22, 1)
+text = "→"
 vertical_alignment = 1
 
 [node name="OutputSlot" type="PanelContainer" parent="Panel/MarginContainer/VBoxContainer/SlotsRow" unique_id=1954485026]
-custom_minimum_size = Vector2(56, 48)
+custom_minimum_size = Vector2(60, 52)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_output_slot")
 
 [node name="OutputLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/SlotsRow/OutputSlot" unique_id=1746520428]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 9
+theme_override_colors/font_color = Color(0.95, 0.90, 0.80, 1)
 text = "?"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -101,35 +256,49 @@ autowrap_mode = 3
 
 [node name="Separator" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer" unique_id=1293318401]
 layout_mode = 2
+modulate = Color(0.72, 0.55, 0.22, 0.8)
 
 [node name="ComboListTitle" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=1375508003]
 layout_mode = 2
-theme_override_font_sizes/font_size = 6
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.70, 0.65, 0.55, 1)
 text = "KNOWN COMBINATIONS"
 
 [node name="ComboScroll" type="ScrollContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=91772928]
-custom_minimum_size = Vector2(0, 80)
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="ComboList" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/ComboScroll" unique_id=1793529733]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_constants/separation = 2
 
 [node name="ButtonsRow" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=908071243]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 6
 
 [node name="BreedButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/ButtonsRow" unique_id=1274586395]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.95, 0.90, 0.80, 1)
+theme_override_colors/font_disabled_color = Color(0.50, 0.45, 0.38, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_btn_disabled")
 disabled = true
 text = "BREED"
 
 [node name="SwitchToCraftingBtn" type="Button" parent="Panel/MarginContainer/VBoxContainer/ButtonsRow" unique_id=811832668]
 layout_mode = 2
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 9
+theme_override_colors/font_color = Color(0.95, 0.90, 0.80, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
 text = ">> Crafting"
 
 [node name="ItemPickerPanel" type="PanelContainer" parent="." unique_id=1977388512]
@@ -139,28 +308,43 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -100.0
-offset_top = -90.0
-offset_right = 100.0
-offset_bottom = 90.0
+offset_left = -110.0
+offset_top = -100.0
+offset_right = 110.0
+offset_bottom = 100.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_picker_panel")
 
 [node name="ItemPickerVBox" type="VBoxContainer" parent="ItemPickerPanel" unique_id=1977388513]
 layout_mode = 2
-theme_override_constants/separation = 2
+theme_override_constants/separation = 3
 
-[node name="ItemPickerTitle" type="Label" parent="ItemPickerPanel/ItemPickerVBox" unique_id=1977388514]
+[node name="ItemPickerMargin" type="MarginContainer" parent="ItemPickerPanel/ItemPickerVBox" unique_id=1977388516]
 layout_mode = 2
-theme_override_font_sizes/font_size = 6
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
+
+[node name="ItemPickerInner" type="VBoxContainer" parent="ItemPickerPanel/ItemPickerVBox/ItemPickerMargin" unique_id=1977388517]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="ItemPickerTitle" type="Label" parent="ItemPickerPanel/ItemPickerVBox/ItemPickerMargin/ItemPickerInner" unique_id=1977388514]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(1.0, 0.80, 0.25, 1)
 text = "SELECT ITEM"
 horizontal_alignment = 1
 
-[node name="ItemPickerSeparator" type="HSeparator" parent="ItemPickerPanel/ItemPickerVBox" unique_id=1977388515]
+[node name="ItemPickerSeparator" type="HSeparator" parent="ItemPickerPanel/ItemPickerVBox/ItemPickerMargin/ItemPickerInner" unique_id=1977388515]
 layout_mode = 2
+modulate = Color(0.72, 0.55, 0.22, 0.8)
 
-[node name="ItemPickerScroll" type="ScrollContainer" parent="ItemPickerPanel/ItemPickerVBox" unique_id=1363646181]
+[node name="ItemPickerScroll" type="ScrollContainer" parent="ItemPickerPanel/ItemPickerVBox/ItemPickerMargin/ItemPickerInner" unique_id=1363646181]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ItemPickerList" type="VBoxContainer" parent="ItemPickerPanel/ItemPickerVBox/ItemPickerScroll" unique_id=1215934109]
+[node name="ItemPickerList" type="VBoxContainer" parent="ItemPickerPanel/ItemPickerVBox/ItemPickerMargin/ItemPickerInner/ItemPickerScroll" unique_id=1215934109]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_constants/separation = 2

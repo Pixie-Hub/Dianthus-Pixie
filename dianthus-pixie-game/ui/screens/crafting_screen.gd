@@ -1,10 +1,15 @@
 extends CanvasLayer
 
-const ACCENT_COLOR: Color = Color(0.9, 0.75, 0.2, 1.0)
-const CRAFTABLE_COLOR: Color = Color(1.0, 1.0, 1.0, 1.0)
-const UNCRAFTABLE_COLOR: Color = Color(0.5, 0.5, 0.5, 1.0)
-const HAVE_COLOR: Color = Color(0.4, 0.9, 0.4, 1.0)
-const NEED_COLOR: Color = Color(0.9, 0.3, 0.3, 1.0)
+const ACCENT_COLOR: Color = Color(1.0, 0.80, 0.25, 1.0)
+const CRAFTABLE_COLOR: Color = Color(0.95, 0.90, 0.80, 1.0)
+const UNCRAFTABLE_COLOR: Color = Color(0.50, 0.45, 0.38, 1.0)
+const HAVE_COLOR: Color = Color(0.40, 0.75, 0.35, 1.0)
+const NEED_COLOR: Color = Color(0.85, 0.30, 0.25, 1.0)
+const ROW_BG_COLOR: Color = Color(0.14, 0.09, 0.05, 1.0)
+const ROW_BORDER_COLOR: Color = Color(0.38, 0.28, 0.12, 1.0)
+const ROW_SELECTED_BORDER: Color = Color(1.0, 0.80, 0.25, 1.0)
+const UPGRADE_COLOR: Color = Color(0.75, 0.55, 1.0, 1.0)
+const OWNED_COLOR: Color = Color(0.50, 0.45, 0.38, 1.0)
 const CRAFT_DELAY: float = 4.0
 const MAX_BENCH_DISTANCE: float = 48.0
 
@@ -112,40 +117,44 @@ func _build_recipe_list() -> void:
 
 		var row: PanelContainer = PanelContainer.new()
 		var style: StyleBoxFlat = StyleBoxFlat.new()
-		style.bg_color = Color(0.15, 0.15, 0.15, 1.0)
+		style.bg_color = ROW_BG_COLOR
 		style.border_width_left = 1
 		style.border_width_right = 1
 		style.border_width_top = 1
 		style.border_width_bottom = 1
-		style.border_color = ACCENT_COLOR if _is_tutorial_target_recipe(recipe_id) else Color(0.3, 0.3, 0.3, 1.0)
+		style.corner_radius_top_left = 3
+		style.corner_radius_top_right = 3
+		style.corner_radius_bottom_right = 3
+		style.corner_radius_bottom_left = 3
+		style.border_color = ACCENT_COLOR if _is_tutorial_target_recipe(recipe_id) else ROW_BORDER_COLOR
 		row.add_theme_stylebox_override("panel", style)
-		row.custom_minimum_size = Vector2(0, 24)
+		row.custom_minimum_size = Vector2(0, 26)
 
 		var hbox: HBoxContainer = HBoxContainer.new()
 		hbox.add_theme_constant_override("separation", 4)
 
 		var name_label: Label = Label.new()
 		name_label.text = RecipeDatabase.get_display_name(recipe_id)
-		name_label.add_theme_font_size_override("font_size", 8)
+		name_label.add_theme_font_size_override("font_size", 10)
 		name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		if _is_tutorial_target_recipe(recipe_id):
-			name_label.modulate = ACCENT_COLOR
+			name_label.add_theme_color_override("font_color", ACCENT_COLOR)
 		else:
-			name_label.modulate = CRAFTABLE_COLOR if craftable else UNCRAFTABLE_COLOR
+			name_label.add_theme_color_override("font_color", Color(0.95, 0.90, 0.80, 1.0) if craftable else Color(0.50, 0.45, 0.38, 1.0))
 
 		var mat_label: Label = Label.new()
 		mat_label.text = _build_material_summary(recipe_id)
 		mat_label.add_theme_font_size_override("font_size", 8)
-		mat_label.modulate = UNCRAFTABLE_COLOR
+		mat_label.add_theme_color_override("font_color", Color(0.50, 0.45, 0.38, 1.0))
 
 		var tag_label: Label = Label.new()
 		tag_label.add_theme_font_size_override("font_size", 8)
 		if owned:
 			tag_label.text = "[Owned]"
-			tag_label.modulate = Color(0.6, 0.6, 0.6, 1.0)
+			tag_label.add_theme_color_override("font_color", OWNED_COLOR)
 		elif RecipeDatabase.is_upgrade(recipe_id):
 			tag_label.text = "[Upgrade]"
-			tag_label.modulate = Color(0.8, 0.6, 1.0, 1.0)
+			tag_label.add_theme_color_override("font_color", UPGRADE_COLOR)
 
 		hbox.add_child(name_label)
 		hbox.add_child(mat_label)
@@ -176,19 +185,22 @@ func _update_selection_highlight() -> void:
 		var row: PanelContainer = _row_panels[rid] as PanelContainer
 		var style: StyleBoxFlat = row.get_theme_stylebox("panel") as StyleBoxFlat
 		if rid == _selected_recipe_id:
-			style.border_color = ACCENT_COLOR
+			style.bg_color = Color(0.22, 0.15, 0.07, 1.0)
+			style.border_color = ROW_SELECTED_BORDER
 			style.border_width_left = 2
 			style.border_width_right = 2
 			style.border_width_top = 2
 			style.border_width_bottom = 2
 		elif _is_tutorial_target_recipe(rid):
+			style.bg_color = ROW_BG_COLOR
 			style.border_color = ACCENT_COLOR
 			style.border_width_left = 1
 			style.border_width_right = 1
 			style.border_width_top = 1
 			style.border_width_bottom = 1
 		else:
-			style.border_color = Color(0.3, 0.3, 0.3, 1.0)
+			style.bg_color = ROW_BG_COLOR
+			style.border_color = ROW_BORDER_COLOR
 			style.border_width_left = 1
 			style.border_width_right = 1
 			style.border_width_top = 1
@@ -221,9 +233,9 @@ func _refresh_availability() -> void:
 		var name_label: Label = hbox.get_child(0) as Label
 		var craftable: bool = CraftingManager.can_craft(recipe_id)
 		if _is_tutorial_target_recipe(recipe_id):
-			name_label.modulate = ACCENT_COLOR
+			name_label.add_theme_color_override("font_color", ACCENT_COLOR)
 		else:
-			name_label.modulate = CRAFTABLE_COLOR if craftable else UNCRAFTABLE_COLOR
+			name_label.add_theme_color_override("font_color", CRAFTABLE_COLOR if craftable else UNCRAFTABLE_COLOR)
 	if not _selected_recipe_id.is_empty():
 		_update_description()
 		_craft_button.disabled = not CraftingManager.can_craft(_selected_recipe_id)

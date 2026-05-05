@@ -2,6 +2,80 @@
 
 [ext_resource type="Script" uid="uid://cdqdbd37bmrfb" path="res://ui/screens/crafting_screen.gd" id="1_csscript"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_main_panel"]
+bg_color = Color(0.18, 0.12, 0.07, 0.97)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.72, 0.55, 0.22, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color(0, 0, 0, 0.4)
+shadow_size = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_desc_panel"]
+bg_color = Color(0.12, 0.08, 0.04, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.45, 0.35, 0.15, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_normal"]
+bg_color = Color(0.22, 0.15, 0.08, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.72, 0.55, 0.22, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_hover"]
+bg_color = Color(0.30, 0.21, 0.10, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1.0, 0.80, 0.25, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_pressed"]
+bg_color = Color(0.14, 0.09, 0.04, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.72, 0.55, 0.22, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_disabled"]
+bg_color = Color(0.18, 0.15, 0.12, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.35, 0.30, 0.25, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
 [node name="CraftingScreen" type="CanvasLayer" unique_id=662045275]
 script = ExtResource("1_csscript")
 
@@ -10,44 +84,46 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 1
-color = Color(0, 0, 0, 0.6)
+color = Color(0, 0, 0, 0.65)
 
-[node name="Panel" type="Panel" parent="." unique_id=1194620856]
+[node name="Panel" type="PanelContainer" parent="." unique_id=1194620856]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -160.0
-offset_top = -140.0
-offset_right = 160.0
-offset_bottom = 140.0
+offset_left = -165.0
+offset_top = -148.0
+offset_right = 165.0
+offset_bottom = 148.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_main_panel")
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=738764136]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=924542064]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 6
 
 [node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=1418194567]
 layout_mode = 2
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(1.0, 0.80, 0.25, 1)
 text = "CRAFTING"
 horizontal_alignment = 1
 
 [node name="HSeparator1" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer" unique_id=1418194568]
 layout_mode = 2
+modulate = Color(0.72, 0.55, 0.22, 0.8)
 
 [node name="RecipesLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=1418194569]
 layout_mode = 2
-theme_override_font_sizes/font_size = 6
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.70, 0.65, 0.55, 1)
 text = "RECIPES"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=389456774]
@@ -59,45 +135,59 @@ size_flags_vertical = 3
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 2
+theme_override_constants/separation = 3
 
 [node name="HSeparator2" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer" unique_id=1418194570]
 layout_mode = 2
+modulate = Color(0.72, 0.55, 0.22, 0.8)
 
 [node name="DescriptionPanel" type="PanelContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=1418194571]
-custom_minimum_size = Vector2(0, 52)
+custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_desc_panel")
 
 [node name="DescriptionMargin" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer/DescriptionPanel" unique_id=1418194572]
 layout_mode = 2
-theme_override_constants/margin_left = 6
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 6
-theme_override_constants/margin_bottom = 4
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
 
 [node name="DescriptionLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/DescriptionPanel/DescriptionMargin" unique_id=2068533261]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 9
+theme_override_colors/font_color = Color(0.95, 0.90, 0.80, 1)
 text = "Select a recipe."
 autowrap_mode = 2
 
 [node name="HSeparator3" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer" unique_id=1418194573]
 layout_mode = 2
+modulate = Color(0.72, 0.55, 0.22, 0.8)
 
 [node name="ButtonsRow" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=1418194574]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 6
 
 [node name="CraftButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/ButtonsRow" unique_id=1685003754]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.95, 0.90, 0.80, 1)
+theme_override_colors/font_disabled_color = Color(0.50, 0.45, 0.38, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_btn_disabled")
 disabled = true
 text = "CRAFT"
 
 [node name="SwitchToBreedingBtn" type="Button" parent="Panel/MarginContainer/VBoxContainer/ButtonsRow" unique_id=684488843]
 layout_mode = 2
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 9
+theme_override_colors/font_color = Color(0.95, 0.90, 0.80, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
 text = ">> Breeding"
