@@ -42,7 +42,7 @@ func _process(delta: float) -> void:
 	if not _is_building:
 		return
 
-	if not _player_in_range or not Input.is_action_pressed("interact"):
+	if not _player_in_range or not _has_interaction_focus() or not Input.is_action_pressed("interact"):
 		_cancel_build()
 		return
 
@@ -70,7 +70,7 @@ func _process(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not _player_in_range or _is_built or DayNightCycle.is_night():
+	if not _player_in_range or not _has_interaction_focus() or _is_built or DayNightCycle.is_night():
 		return
 
 	if event.is_action_pressed("interact") and not _is_building:
@@ -152,7 +152,7 @@ func _cancel_build() -> void:
 	_is_building = false
 	_build_progress = 0.0
 	_set_progress_visible(false)
-	if _player_in_range and not _is_built and not DayNightCycle.is_night():
+	if _player_in_range and _has_interaction_focus() and not _is_built and not DayNightCycle.is_night():
 		_refresh_prompt()
 
 
@@ -162,7 +162,7 @@ func _cleanup_structure() -> void:
 	_built_structure = null
 	_is_built = false
 	_update_visual()
-	if _player_in_range:
+	if _player_in_range and _has_interaction_focus():
 		_refresh_prompt()
 
 
@@ -216,7 +216,7 @@ func _get_cost_string() -> String:
 func _cycle_type(direction: int) -> void:
 	var count: int = StructureType.size()
 	_selected_type = StructureType.values()[(_selected_type + direction + count) % count]
-	if _player_in_range:
+	if _player_in_range and _has_interaction_focus():
 		_refresh_prompt()
 
 

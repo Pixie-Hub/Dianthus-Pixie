@@ -6,7 +6,11 @@ const PROMPT_STATUS_NORMAL: int = 0
 const PROMPT_STATUS_DISABLED: int = 2
 const PROMPT_STATUS_SUCCESS: int = 3
 
+static var _candidate_spots: Array = []
+static var _focused_spot: BaseBuildSpot = null
+
 var _player_in_range: bool = false
+var _player_body: Node2D = null
 var _build_progress: float = 0.0
 var _is_building: bool = false
 
@@ -23,12 +27,10 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	if not _player_in_range or not _is_building:
+	if not _player_in_range or not _has_interaction_focus() or not _is_building:
 		return
 	if not _can_interact():
-		_is_building = false
-		_build_progress = 0.0
-		_set_progress_visible(false)
+		_cancel_active_interaction()
 		_refresh_prompt()
 		return
 	_build_progress += delta / _get_build_time()
@@ -49,8 +51,13 @@ func _process(delta: float) -> void:
 		_on_interact_completed()
 
 
+func _physics_process(_delta: float) -> void:
+	if not _candidate_spots.is_empty():
+		_update_focused_spot()
+
+
 func _unhandled_input(event: InputEvent) -> void:
-	if not _player_in_range:
+	if not _player_in_range or not _has_interaction_focus():
 		return
 	if event.is_action_pressed("interact"):
 		if _can_interact():
@@ -68,19 +75,28 @@ func _unhandled_input(event: InputEvent) -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):
 		_player_in_range = true
+		_player_body = body
+		_register_focus_candidate()
 		_on_player_entered()
-		_refresh_prompt()
+		_update_focused_spot()
 
 
 func _on_body_exited(body: Node2D) -> void:
 	if body.is_in_group("player"):
 		_player_in_range = false
-		if _is_building:
-			_is_building = false
-			_build_progress = 0.0
-			_set_progress_visible(false)
+		_player_body = null
+		_unregister_focus_candidate()
+		_cancel_active_interaction()
 		_on_player_exited()
 		_hide_prompt()
+		_update_focused_spot()
+
+
+func _exit_tree() -> void:
+	_unregister_focus_candidate()
+	if _focused_spot == self:
+		_focused_spot = null
+		_update_focused_spot()
 
 
 # --- Virtuals ---
@@ -117,6 +133,77 @@ func _on_player_exited() -> void:
 	pass
 
 
+# --- Shared focus helpers ---
+
+func _register_focus_candidate() -> void:
+	if not _candidate_spots.has(self):
+		_candidate_spots.append(self)
+
+
+func _unregister_focus_candidate() -> void:
+	_candidate_spots.erase(self)
+
+
+static func _update_focused_spot() -> void:
+	var best_spot: BaseBuildSpot = null
+	var best_distance_sq: float = INF
+	var current_still_valid: bool = false
+	var live_candidates: Array = []
+
+	for candidate in _candidate_spots:
+		var spot: BaseBuildSpot = candidate as BaseBuildSpot
+		if spot == null or not is_instance_valid(spot) or not spot._player_in_range:
+			continue
+		var player: Node2D = spot._get_focus_player()
+		if player == null:
+			continue
+		live_candidates.append(spot)
+		if spot == _focused_spot:
+			current_still_valid = true
+		var distance_sq: float = spot.global_position.distance_squared_to(player.global_position)
+		if distance_sq < best_distance_sq:
+			best_distance_sq = distance_sq
+			best_spot = spot
+
+	_candidate_spots = live_candidates
+	if best_spot == _focused_spot and current_still_valid:
+		return
+
+	var previous_spot: BaseBuildSpot = _focused_spot
+	_focused_spot = best_spot
+	if is_instance_valid(previous_spot):
+		previous_spot._on_interaction_focus_lost()
+	if is_instance_valid(_focused_spot):
+		_focused_spot._on_interaction_focus_gained()
+
+
+func _get_focus_player() -> Node2D:
+	if is_instance_valid(_player_body):
+		return _player_body
+	if GameManager.player is Node2D:
+		return GameManager.player as Node2D
+	return null
+
+
+func _has_interaction_focus() -> bool:
+	return _focused_spot == self and _player_in_range
+
+
+func _on_interaction_focus_gained() -> void:
+	_refresh_prompt()
+
+
+func _on_interaction_focus_lost() -> void:
+	_cancel_active_interaction()
+	_hide_prompt()
+
+
+func _cancel_active_interaction() -> void:
+	_is_building = false
+	_build_progress = 0.0
+	_set_progress_visible(false)
+
+
 # --- Shared prompt helpers ---
 
 func _setup_interaction_prompt() -> void:
@@ -134,6 +221,9 @@ func _setup_interaction_prompt() -> void:
 
 
 func _show_prompt(title: String, body: String = "", key_text: String = "", hint: String = "", accent: Color = Color(1.0, 0.78, 0.28, 1.0), status: int = PROMPT_STATUS_NORMAL, progress: float = -1.0) -> void:
+	if not _has_interaction_focus():
+		_hide_prompt()
+		return
 	if is_instance_valid(_interaction_prompt):
 		_interaction_prompt.show_interaction(title, body, key_text, hint, accent, status, progress)
 		return
