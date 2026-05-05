@@ -41,6 +41,7 @@ SfxManager="*res://audio/sfx_manager.tscn"
 MusicManager="*res://audio/music_manager.tscn"
 Dialogic="*uid://ds2q0uclmolvu"
 TutorialManager="*res://accessibility/tutorial/tutorial_manager.gd"
+GardenStructureManager="*res://world/garden/garden_structure_manager.gd"
 
 [dialogic]
 

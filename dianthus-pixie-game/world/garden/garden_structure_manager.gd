@@ -1,4 +1,3 @@
-class_name GardenStructureManager
 extends Node
 
 signal storage_upgraded(new_tier: int)
@@ -89,9 +88,7 @@ func build_watchtower() -> bool:
 func _notify_map_view_watchtower() -> void:
 	if not watchtower_built:
 		return
-	var map_view: Node = get_tree().current_scene.find_child("Minimap", true, false)
-	if map_view != null and map_view.has_method("set_watchtower_active"):
-		map_view.set_watchtower_active(true)
+	get_tree().call_group("minimap", "set_watchtower_active", true)
 
 
 func get_storage_next_tier_data() -> Dictionary:

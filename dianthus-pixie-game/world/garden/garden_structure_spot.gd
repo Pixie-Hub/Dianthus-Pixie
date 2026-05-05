@@ -5,23 +5,15 @@ const BUILD_TIME: float = 4.0
 
 @export var structure_id: StringName = &"storage_shed"
 
-var _struct_mgr = null
-
 @onready var _visual: ColorRect = $Visual
 
 
 func _ready() -> void:
 	super._ready()
-	_find_struct_mgr()
 	SaveManager.load_completed.connect(_on_load_completed)
 
 
-func _find_struct_mgr() -> void:
-	_struct_mgr = get_tree().current_scene.find_child("GardenStructureManager", true, false)
-
-
 func _on_load_completed(_ok: bool) -> void:
-	_find_struct_mgr()
 	_refresh_visual()
 	_refresh_prompt()
 
@@ -43,16 +35,15 @@ func _get_build_accent_color() -> Color:
 
 
 func _on_player_entered() -> void:
-	if _struct_mgr == null:
-		_find_struct_mgr()
+	super._on_player_entered()
 
 
 func _on_interact_completed() -> void:
 	var success: bool = false
 	if structure_id == &"storage_shed":
-		success = _struct_mgr.build_storage()
+		success = GardenStructureManager.build_storage()
 	elif structure_id == &"watchtower":
-		success = _struct_mgr.build_watchtower()
+		success = GardenStructureManager.build_watchtower()
 	if success:
 		SfxManager.play("fortification_built")
 		var label: String = "Storage Shed upgraded!" if structure_id == &"storage_shed" else "Watchtower built!"
@@ -62,22 +53,18 @@ func _on_interact_completed() -> void:
 
 
 func _can_build_now() -> bool:
-	if _struct_mgr == null:
-		return false
 	if structure_id == &"storage_shed":
-		return _struct_mgr.can_build_storage()
+		return GardenStructureManager.can_build_storage()
 	elif structure_id == &"watchtower":
-		return _struct_mgr.can_build_watchtower()
+		return GardenStructureManager.can_build_watchtower()
 	return false
 
 
 func _is_already_built() -> bool:
-	if _struct_mgr == null:
-		return false
 	if structure_id == &"storage_shed":
-		return _struct_mgr.storage_tier >= _struct_mgr.STORAGE_TIERS.size()
+		return GardenStructureManager.storage_tier >= GardenStructureManager.STORAGE_TIERS.size()
 	elif structure_id == &"watchtower":
-		return _struct_mgr.watchtower_built
+		return GardenStructureManager.watchtower_built
 	return false
 
 
@@ -94,9 +81,6 @@ func _refresh_prompt() -> void:
 	if not _player_in_range:
 		_hide_prompt()
 		return
-	if _struct_mgr == null:
-		_hide_prompt()
-		return
 	var display_name: String = "Storage Shed" if structure_id == &"storage_shed" else "Watchtower"
 	if _is_already_built() and structure_id == &"watchtower":
 		_show_prompt(
@@ -108,7 +92,7 @@ func _refresh_prompt() -> void:
 			PROMPT_STATUS_SUCCESS
 		)
 		return
-	if structure_id == &"storage_shed" and _struct_mgr.storage_tier >= _struct_mgr.STORAGE_TIERS.size():
+	if structure_id == &"storage_shed" and GardenStructureManager.storage_tier >= GardenStructureManager.STORAGE_TIERS.size():
 		_show_prompt(
 			"Storage Shed",
 			"[Max Level]",
@@ -132,7 +116,7 @@ func _refresh_prompt() -> void:
 	var cost_sap: int = 0
 	var day_req: int = 1
 	if structure_id == &"storage_shed":
-		var next: Dictionary = _struct_mgr.get_storage_next_tier_data()
+		var next: Dictionary = GardenStructureManager.get_storage_next_tier_data()
 		if next.is_empty():
 			_hide_prompt()
 			return
@@ -140,9 +124,9 @@ func _refresh_prompt() -> void:
 		cost_sap = int(next.get("cost_sap", 0))
 		day_req = int(next.get("min_day", 1))
 	else:
-		cost_stone = _struct_mgr.WATCHTOWER_COST_STONE
-		cost_sap = _struct_mgr.WATCHTOWER_COST_SAP
-		day_req = _struct_mgr.WATCHTOWER_MIN_DAY
+		cost_stone = GardenStructureManager.WATCHTOWER_COST_STONE
+		cost_sap = GardenStructureManager.WATCHTOWER_COST_SAP
+		day_req = GardenStructureManager.WATCHTOWER_MIN_DAY
 	if DayNightCycle.day_count < day_req:
 		_show_prompt(
 			"%s" % display_name,

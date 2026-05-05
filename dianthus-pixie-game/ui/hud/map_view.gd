@@ -38,6 +38,7 @@ var _watchtower_active: bool = false
 
 
 func _ready() -> void:
+	add_to_group("minimap")
 	custom_minimum_size = map_size
 	call_deferred("refresh_references")
 

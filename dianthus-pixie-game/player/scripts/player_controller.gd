@@ -307,6 +307,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				InventoryManager.add_item("melati_emas_seed", 1)
 				InventoryManager.add_item("baja_kuning_seed", 1)
 				InventoryManager.add_item("aether_bloom", 2)
+				InventoryManager.add_item("stone", 10)
 				print("DEBUG: Added crafting + plant seed + ability test materials (Shift+Insert).")
 			else:
 				InventoryManager.add_item("petal_shard", 5)
