@@ -24,6 +24,7 @@ func _ready() -> void:
 	visible = false
 	_build_grid()
 	InventoryManager.inventory_changed.connect(_refresh)
+	GardenStructureManager.storage_upgraded.connect(_on_storage_upgraded)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -46,10 +47,13 @@ func _toggle() -> void:
 
 func _build_grid() -> void:
 	_grid.columns = COLUMNS
+	for child: Node in _grid.get_children():
+		_grid.remove_child(child)
+		child.queue_free()
 	_slot_panels.clear()
 	_slot_labels.clear()
 	_slot_icons.clear()
-	for i: int in range(InventoryManager.max_slots):
+	for i: int in range(InventoryManager.get_max_slots()):
 		var panel: PanelContainer = PanelContainer.new()
 		panel.custom_minimum_size = Vector2(SLOT_SIZE, SLOT_SIZE)
 		panel.mouse_entered.connect(_on_slot_hover.bind(i))
@@ -93,6 +97,8 @@ func _get_icon(path: String) -> Texture2D:
 
 
 func _refresh() -> void:
+	if _slot_panels.size() != InventoryManager.get_max_slots():
+		_build_grid()
 	for i: int in range(_slot_panels.size()):
 		var slot: Dictionary = InventoryManager.get_slot(i)
 		var panel: PanelContainer = _slot_panels[i]
@@ -132,3 +138,7 @@ func _on_slot_hover(index: int) -> void:
 
 func _on_slot_exit() -> void:
 	_tooltip.visible = false
+
+
+func _on_storage_upgraded(_new_tier: int) -> void:
+	_refresh()

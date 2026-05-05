@@ -116,6 +116,10 @@ func get_slot(index: int) -> Dictionary:
 	return slots[index]
 
 
+func get_max_slots() -> int:
+	return max_slots
+
+
 func swap_slots(a: int, b: int) -> void:
 	if a < 0 or a >= slots.size() or b < 0 or b >= slots.size():
 		return
