@@ -386,6 +386,42 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_4 and event.ctrl_pressed and event.shift_pressed:
 			var rank: int = EndlessLeaderboard.submit_score(DayNightCycle.day_count)
 			print("DEBUG: Ctrl+Shift+4 — Submitted Day %d to leaderboard. Rank: #%d. Best: Day %d." % [DayNightCycle.day_count, rank, EndlessLeaderboard.get_best_day()])
+		elif event.keycode == KEY_5 and event.ctrl_pressed and not event.shift_pressed:
+			var spawner: WaveSpawner = get_tree().current_scene.find_child("WaveSpawner", true, false) as WaveSpawner
+			if spawner != null:
+				spawner._start_devourer_fight()
+				print("DEBUG: Ctrl+5 — Force-started Devourer fight.")
+			else:
+				push_warning("DEBUG: Ctrl+5 — WaveSpawner not found.")
+		elif event.keycode == KEY_6 and event.ctrl_pressed and not event.shift_pressed:
+			var devourers: Array[Node] = get_tree().get_nodes_in_group(&"devourer")
+			if devourers.is_empty():
+				print("DEBUG: Ctrl+6 — No active Devourer found.")
+			else:
+				var devourer: TheDevourer = devourers[0] as TheDevourer
+				if devourer != null:
+					var next_phase: int = devourer.get_current_phase() + 1
+					if next_phase > 3:
+						next_phase = 1
+					var fsm: Node = devourer.get_node_or_null("StateMachine")
+					if fsm != null and fsm.has_method("transition_to"):
+						fsm.transition_to(StringName("Phase%d" % next_phase))
+						devourer.set("_current_phase", next_phase)
+					print("DEBUG: Ctrl+6 — Devourer forced to Phase %d." % next_phase)
+		elif event.keycode == KEY_7 and event.ctrl_pressed and not event.shift_pressed:
+			var devourers: Array[Node] = get_tree().get_nodes_in_group(&"devourer")
+			if devourers.is_empty():
+				print("DEBUG: Ctrl+7 — No active Devourer found.")
+			else:
+				var devourer: TheDevourer = devourers[0] as TheDevourer
+				if devourer != null:
+					var summoned: Array = devourer.get("_summoned_minions")
+					var killed: int = 0
+					for minion in summoned:
+						if is_instance_valid(minion) and not minion.is_dead:
+							minion.die()
+							killed += 1
+					print("DEBUG: Ctrl+7 — Killed %d summoned Devourer minions." % killed)
 		elif event.keycode == KEY_5 and event.ctrl_pressed and event.shift_pressed:
 			QuestManager.start_quest(&"story_01_whispers")
 			print("DEBUG: Ctrl+Shift+5 — Force-started story_01_whispers.")

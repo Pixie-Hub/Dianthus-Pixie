@@ -4,8 +4,12 @@ extends Node
 signal wave_started()
 signal wave_cleared()
 signal enemy_spawned(enemy: EnemyBase)
+signal boss_spawned(boss: EnemyBase)
+signal boss_defeated()
 
 @export var enemy_scene: PackedScene = preload("res://enemies/shadowling/shadowling.tscn")  # Fallback — ENEMY_POOL takes priority.
+
+const DEVOURER_SCENE: PackedScene = preload("res://enemies/devourer/the_devourer.tscn")
 
 const ENEMY_SCENES: Dictionary = {
 	"shadowling": preload("res://enemies/shadowling/shadowling.tscn"),
@@ -52,6 +56,8 @@ var _wave_active: bool = false
 var _spawned_enemies: Array[EnemyBase] = []
 var _enemy_container: Node = null
 var _counted_dead: Dictionary = {}
+var _is_boss_fight: bool = false
+var _active_boss: EnemyBase = null
 
 
 func _ready() -> void:
@@ -71,7 +77,10 @@ func _ready() -> void:
 
 func _on_phase_changed(phase: String) -> void:
 	if phase == "NIGHT":
-		start_wave()
+		if QuestManager.is_active(&"story_07_devourer"):
+			_start_devourer_fight()
+		else:
+			start_wave()
 	elif phase == "DAY":
 		_cleanup_wave()
 
@@ -265,6 +274,84 @@ func _pick_enemy_type() -> String:
 		if roll <= cumulative:
 			return entry["type"]
 	return pool.back()["type"]
+
+
+func _start_devourer_fight() -> void:
+	if _wave_active:
+		return
+	if _spawn_point_markers.is_empty():
+		push_warning("[WaveSpawner] Cannot start Devourer fight — no spawn markers.")
+		return
+	_wave_active = true
+	_is_boss_fight = true
+	_enemies_alive = 0
+	_enemies_spawned = 0
+	_spawn_timer = 0.0
+	_spawned_enemies.clear()
+	_counted_dead.clear()
+	var boss: EnemyBase = DEVOURER_SCENE.instantiate() as EnemyBase
+	if boss == null:
+		push_warning("[WaveSpawner] Failed to instantiate Devourer scene.")
+		_wave_active = false
+		_is_boss_fight = false
+		return
+	var spawn_marker: Marker2D = _spawn_point_markers[randi() % _spawn_point_markers.size()]
+	boss.global_position = spawn_marker.global_position
+	# Apply difficulty tier multipliers — skip per-day growth (boss_hp_multiplier = 1.0).
+	var hp_mult: float = DifficultyManager.get_hp_multiplier()
+	if hp_mult != 1.0:
+		boss.max_hp = int(round(boss.max_hp * hp_mult))
+		boss.current_hp = boss.max_hp
+	var dmg_mult: float = DifficultyManager.get_dmg_multiplier()
+	if dmg_mult != 1.0:
+		boss.damage = int(round(boss.damage * dmg_mult))
+	var spd_mult: float = DifficultyManager.get_speed_multiplier()
+	if spd_mult != 1.0:
+		boss.move_speed *= spd_mult
+	_enemy_container.add_child(boss)
+	if boss.has_method("activate"):
+		boss.activate()
+	_active_boss = boss
+	_enemies_alive = 1
+	_enemies_spawned = 1
+	_current_wave_total = 1
+	_spawned_enemies.append(boss)
+	_counted_dead[boss] = false
+	boss.enemy_died.connect(_on_boss_died)
+	boss.tree_exiting.connect(_on_enemy_removed.bind(boss))
+	MusicManager.play_boss_music()
+	wave_started.emit()
+	SfxManager.play("wave_start")
+	boss_spawned.emit(boss)
+	print("[WaveSpawner] Devourer fight started! HP: %d  DMG: %d" % [boss.max_hp, boss.damage])
+
+
+func _on_boss_died(boss: EnemyBase) -> void:
+	if _counted_dead.get(boss, true):
+		return
+	_counted_dead[boss] = true
+	_enemies_alive -= 1
+	_active_boss = null
+	_is_boss_fight = false
+	boss_defeated.emit()
+	MusicManager.stop_music(true)
+	print("[WaveSpawner] Devourer defeated!")
+	_check_wave_cleared()
+
+
+func is_boss_fight_active() -> bool:
+	return _is_boss_fight
+
+
+func get_active_boss() -> EnemyBase:
+	return _active_boss
+
+
+func predict_spawn_direction() -> Vector2:
+	if _spawn_point_markers.is_empty():
+		return Vector2.DOWN
+	var marker: Marker2D = _spawn_point_markers[randi() % _spawn_point_markers.size()]
+	return marker.global_position
 
 
 # TODO (DIFF-02): Add override_entry_point_count(n: int) for Surge Night to force all 4 entry points.
