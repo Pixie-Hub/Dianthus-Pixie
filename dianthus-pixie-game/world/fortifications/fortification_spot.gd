@@ -5,6 +5,9 @@ const INTERACT_RADIUS: float = 28.0
 const BARRICADE_BUILD_TIME: float = 4.0
 const TRAP_BUILD_TIME: float = 3.0
 
+const BARRICADE_MIN_DAY: int = 3
+const TRAP_MIN_DAY: int = 5
+
 const BARRICADE_COST: Dictionary = {"petal_shard": 3, "verdant_sap": 2}
 const TRAP_COST: Dictionary = {"verdant_sap": 2, "moonspore": 1}
 
@@ -46,7 +49,7 @@ func _process(delta: float) -> void:
 		_cancel_build()
 		return
 
-	if not _can_afford():
+	if not _can_build_selected_type():
 		_cancel_build()
 		_refresh_prompt()
 		return
@@ -74,6 +77,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 
 	if event.is_action_pressed("interact") and not _is_building:
+		if not _can_build_selected_type():
+			_refresh_prompt()
+			get_viewport().set_input_as_handled()
+			return
 		_is_building = true
 		_build_progress = 0.0
 		_set_progress_visible(true)
@@ -110,6 +117,18 @@ func _can_afford() -> bool:
 		if not InventoryManager.has_item(item_id, cost[item_id]):
 			return false
 	return true
+
+
+func _can_build_selected_type() -> bool:
+	return DayNightCycle.is_day() and _is_selected_type_unlocked() and _can_afford()
+
+
+func _is_selected_type_unlocked() -> bool:
+	return DayNightCycle.day_count >= _get_selected_min_day()
+
+
+func _get_selected_min_day() -> int:
+	return BARRICADE_MIN_DAY if _selected_type == StructureType.BARRICADE else TRAP_MIN_DAY
 
 
 func _finish_build() -> void:
@@ -186,6 +205,17 @@ func _refresh_prompt() -> void:
 		return
 	var type_name: String = "Thorn Barricade" if _selected_type == StructureType.BARRICADE else "Spore Trap"
 	var cost_str: String = _get_cost_string()
+	var day_req: int = _get_selected_min_day()
+	if DayNightCycle.day_count < day_req:
+		_show_prompt(
+			"Build %s" % type_name,
+			"Requires Day %d" % day_req,
+			"",
+			"< / >  or  Scroll  \u00b7  Switch type",
+			Color(1.0, 0.45, 0.25, 1.0),
+			PROMPT_STATUS_DISABLED
+		)
+		return
 	if not _can_afford():
 		_show_prompt(
 			"Build %s" % type_name,
