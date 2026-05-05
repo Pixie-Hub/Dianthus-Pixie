@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bus7tpqc35dit"]
 
 [ext_resource type="Script" uid="uid://dni0tinrfdh80" path="res://world/garden/garden_structure_spot.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://dgjlo3k80moau" path="res://ui/components/interaction_prompt.tscn" id="2_interactprompt"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_interact"]
 radius = 32.0
@@ -46,3 +47,9 @@ offset_right = 80.0
 offset_bottom = -16.0
 horizontal_alignment = 1
 autowrap_mode = 3
+
+[node name="InteractionPrompt" parent="." instance=ExtResource("2_interactprompt")]
+unique_name_in_owner = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]

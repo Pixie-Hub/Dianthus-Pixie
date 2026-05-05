@@ -1,5 +1,5 @@
 class_name FortificationSpot
-extends Area2D
+extends BaseBuildSpot
 
 const INTERACT_RADIUS: float = 28.0
 const BARRICADE_BUILD_TIME: float = 4.0
@@ -10,40 +10,23 @@ const TRAP_COST: Dictionary = {"verdant_sap": 2, "moonspore": 1}
 
 const BARRICADE_SCENE: String = "res://world/fortifications/thorn_barricade.tscn"
 const TRAP_SCENE: String = "res://world/fortifications/spore_trap.tscn"
-const INTERACTION_PROMPT_SCENE: PackedScene = preload("res://ui/components/interaction_prompt.tscn")
-const PROMPT_STATUS_NORMAL: int = 0
-const PROMPT_STATUS_DISABLED: int = 2
-const PROMPT_STATUS_SUCCESS: int = 3
 
 enum StructureType { BARRICADE, TRAP }
 
 @export var spot_label: String = "Fortification Spot"
 @export var barricade_sideways: bool = false
 
-var _player_in_range: bool = false
 var _is_built: bool = false
 var _built_structure: Node = null
 var _selected_type: StructureType = StructureType.BARRICADE
-var _is_building: bool = false
-var _build_timer: float = 0.0
 
 @onready var _visual: ColorRect = $Visual
-@onready var _prompt_label: Label = %PromptLabel
-@onready var _progress_bg: ColorRect = %ProgressBg
-@onready var _progress_bar: ColorRect = %ProgressBar
-
-var _interaction_prompt = null
 
 
 func _ready() -> void:
-	collision_layer = 0
-	collision_mask = CollisionLayers.PLAYER
-	body_entered.connect(_on_body_entered)
-	body_exited.connect(_on_body_exited)
+	super._ready()
 	DayNightCycle.phase_changed.connect(_on_phase_changed)
-	_setup_interaction_prompt()
 	_update_visual()
-	_hide_prompt()
 
 
 func _process(delta: float) -> void:
@@ -68,21 +51,21 @@ func _process(delta: float) -> void:
 		_refresh_prompt()
 		return
 
-	_build_timer += delta
 	var build_time: float = BARRICADE_BUILD_TIME if _selected_type == StructureType.BARRICADE else TRAP_BUILD_TIME
-	_update_progress_bar(_build_timer / build_time)
+	_build_progress += delta / build_time
+	_update_progress_bar()
 	var type_name: String = "Thorn Barricade" if _selected_type == StructureType.BARRICADE else "Spore Trap"
 	_show_prompt(
 		"Building %s" % type_name,
-		"Progress: %.0f%%" % ((_build_timer / build_time) * 100.0),
+		"Progress: %.0f%%" % (_build_progress * 100.0),
 		"Hold E",
 		"Release E to cancel",
 		Color(1.0, 0.78, 0.28, 1.0),
 		PROMPT_STATUS_NORMAL,
-		_build_timer / build_time
+		_build_progress
 	)
 
-	if _build_timer >= build_time:
+	if _build_progress >= 1.0:
 		_finish_build()
 
 
@@ -92,8 +75,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	if event.is_action_pressed("interact") and not _is_building:
 		_is_building = true
-		_build_timer = 0.0
-		_update_progress_bar(0.0)
+		_build_progress = 0.0
+		_set_progress_visible(true)
 		get_viewport().set_input_as_handled()
 		return
 
@@ -111,19 +94,6 @@ func _unhandled_input(event: InputEvent) -> void:
 			_cycle_type(-1)
 			get_viewport().set_input_as_handled()
 			return
-
-
-func _on_body_entered(body: Node2D) -> void:
-	if body == GameManager.player:
-		_player_in_range = true
-		_refresh_prompt()
-
-
-func _on_body_exited(body: Node2D) -> void:
-	if body == GameManager.player:
-		_player_in_range = false
-		_cancel_build()
-		_hide_prompt()
 
 
 func _on_phase_changed(phase: String) -> void:
@@ -144,8 +114,8 @@ func _can_afford() -> bool:
 
 func _finish_build() -> void:
 	_is_building = false
-	_build_timer = 0.0
-	_update_progress_bar(0.0)
+	_build_progress = 0.0
+	_set_progress_visible(false)
 
 	var cost: Dictionary = BARRICADE_COST if _selected_type == StructureType.BARRICADE else TRAP_COST
 	for item_id: String in cost:
@@ -180,8 +150,8 @@ func _finish_build() -> void:
 
 func _cancel_build() -> void:
 	_is_building = false
-	_build_timer = 0.0
-	_update_progress_bar(0.0)
+	_build_progress = 0.0
+	_set_progress_visible(false)
 	if _player_in_range and not _is_built and not DayNightCycle.is_night():
 		_refresh_prompt()
 
@@ -200,21 +170,6 @@ func _update_visual() -> void:
 	if not is_instance_valid(_visual):
 		return
 	_visual.modulate = Color(0.5, 0.5, 0.5, 0.5) if _is_built else Color.WHITE
-
-
-func _setup_interaction_prompt() -> void:
-	if is_instance_valid(_prompt_label):
-		_prompt_label.visible = false
-	if is_instance_valid(_progress_bg):
-		_progress_bg.visible = false
-	if is_instance_valid(_progress_bar):
-		_progress_bar.visible = false
-
-	_interaction_prompt = get_node_or_null("%InteractionPrompt")
-	if _interaction_prompt == null:
-		_interaction_prompt = INTERACTION_PROMPT_SCENE.instantiate()
-		_interaction_prompt.name = "InteractionPrompt"
-		add_child(_interaction_prompt)
 
 
 func _refresh_prompt() -> void:
@@ -250,32 +205,6 @@ func _refresh_prompt() -> void:
 		)
 
 
-func _show_prompt(title: String, body: String = "", key_text: String = "", hint: String = "", accent: Color = Color(1.0, 0.78, 0.28, 1.0), status: int = PROMPT_STATUS_NORMAL, progress: float = -1.0) -> void:
-	if is_instance_valid(_interaction_prompt):
-		_interaction_prompt.show_interaction(title, body, key_text, hint, accent, status, progress)
-		return
-	if is_instance_valid(_prompt_label):
-		var lines: PackedStringArray = PackedStringArray([title])
-		if not body.is_empty():
-			lines.append(body)
-		if not hint.is_empty():
-			lines.append(hint)
-		_prompt_label.text = "\n".join(lines)
-		_prompt_label.visible = true
-
-
-func _hide_prompt() -> void:
-	if is_instance_valid(_interaction_prompt):
-		_interaction_prompt.hide_prompt()
-	if is_instance_valid(_prompt_label):
-		_prompt_label.text = ""
-		_prompt_label.visible = false
-	if is_instance_valid(_progress_bg):
-		_progress_bg.visible = false
-	if is_instance_valid(_progress_bar):
-		_progress_bar.visible = false
-
-
 func _get_cost_string() -> String:
 	var cost: Dictionary = BARRICADE_COST if _selected_type == StructureType.BARRICADE else TRAP_COST
 	var parts: PackedStringArray = PackedStringArray()
@@ -289,17 +218,6 @@ func _cycle_type(direction: int) -> void:
 	_selected_type = StructureType.values()[(_selected_type + direction + count) % count]
 	if _player_in_range:
 		_refresh_prompt()
-
-
-func _update_progress_bar(ratio: float) -> void:
-	if is_instance_valid(_interaction_prompt):
-		_interaction_prompt.set_progress(ratio)
-		return
-	if not is_instance_valid(_progress_bar) or not is_instance_valid(_progress_bg):
-		return
-	_progress_bar.size.x = _progress_bg.size.x * clampf(ratio, 0.0, 1.0)
-	_progress_bar.visible = ratio > 0.0
-	_progress_bg.visible = ratio > 0.0
 
 
 func _show_build_popup(text: String) -> void:

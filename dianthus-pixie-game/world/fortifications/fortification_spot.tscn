@@ -1,11 +1,14 @@
 [gd_scene format=3 uid="uid://cxjh5m0cebb67"]
 
 [ext_resource type="Script" uid="uid://dbirylfa8h4q6" path="res://world/fortifications/fortification_spot.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://dgjlo3k80moau" path="res://ui/components/interaction_prompt.tscn" id="2_interactprompt"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_interact"]
 radius = 24.020824
 
 [node name="FortificationSpot" type="Area2D" unique_id=582512456]
+collision_layer = 0
+collision_mask = 4
 script = ExtResource("1_script")
 
 [node name="InteractionShape" type="CollisionShape2D" parent="." unique_id=966261158]
@@ -38,9 +41,16 @@ color = Color(1, 0.75, 0.2, 1)
 
 [node name="PromptLabel" type="Label" parent="." unique_id=691864094]
 unique_name_in_owner = true
+visible = false
 offset_left = -80.0
 offset_top = -44.0
 offset_right = 80.0
 offset_bottom = -16.0
 horizontal_alignment = 1
 autowrap_mode = 3
+
+[node name="InteractionPrompt" parent="." instance=ExtResource("2_interactprompt")]
+unique_name_in_owner = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]
