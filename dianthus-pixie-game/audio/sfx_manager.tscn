@@ -693,6 +693,55 @@ panning_strength = 0.0
 bus = &"SFX"
 metadata/pitch_rand_range = 0.04
 
+[node name="devourer_slam" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700001001]
+stream = ExtResource("sfx_enemy_hit")
+volume_db = 6.0
+max_distance = 1000000.0
+panning_strength = 0.0
+bus = &"SFX"
+
+[node name="devourer_dark_pulse_charge" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700001002]
+stream = ExtResource("sfx_phantom_weaver_teleport")
+volume_db = -4.0
+max_distance = 1000000.0
+panning_strength = 0.0
+bus = &"SFX"
+
+[node name="devourer_dark_pulse_fire" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700001003]
+stream = ExtResource("sfx_void_grenade_detonate")
+volume_db = -6.0
+max_distance = 1000000.0
+panning_strength = 0.0
+bus = &"SFX"
+
+[node name="devourer_surge_channel" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700001004]
+stream = ExtResource("sfx_rafflesia_miasma_hum")
+volume_db = 0.0
+max_distance = 1000000.0
+panning_strength = 0.0
+bus = &"SFX"
+
+[node name="devourer_surge_interrupt" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700001005]
+stream = ExtResource("sfx_player_take_damage")
+volume_db = -4.0
+max_distance = 1000000.0
+panning_strength = 0.0
+bus = &"SFX"
+
+[node name="devourer_phase_transition" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700001006]
+stream = ExtResource("sfx_surge_night_warning")
+volume_db = 0.0
+max_distance = 1000000.0
+panning_strength = 0.0
+bus = &"SFX"
+
+[node name="devourer_death" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700001007]
+stream = ExtResource("sfx_core_destroyed")
+volume_db = 4.0
+max_distance = 1000000.0
+panning_strength = 0.0
+bus = &"SFX"
+
 [node name="SpatialPlayers" type="Node" parent="." unique_id=495815009]
 
 [node name="thorn_sword_swing" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=876271441]

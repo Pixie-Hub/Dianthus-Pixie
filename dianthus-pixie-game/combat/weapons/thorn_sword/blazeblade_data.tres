@@ -10,3 +10,4 @@ damage = 20
 cooldown = 0.4
 attack_range = 24.0
 arc_degrees = 90.0
+is_pollen_weapon = true

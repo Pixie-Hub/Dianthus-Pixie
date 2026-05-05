@@ -23,6 +23,9 @@ extends CanvasLayer
 @onready var _skip_confirm_panel: PanelContainer = %SkipConfirmPanel
 @onready var _skip_confirm_yes: Button = %SkipConfirmYes
 @onready var _skip_confirm_no: Button = %SkipConfirmNo
+@onready var _boss_panel: PanelContainer = %BossHPPanel
+@onready var _boss_bar: ProgressBar = %BossHPBar
+@onready var _boss_label: Label = %BossHPLabel
 
 const HOTBAR_SELECTED_COLOR: Color = Color(0.9, 0.75, 0.2, 1)
 const HOTBAR_NORMAL_COLOR: Color = Color(0.3, 0.3, 0.3, 1)
@@ -42,6 +45,7 @@ var _core_danger_tween: Tween = null
 var _core_in_danger: bool = false
 var _return_tween: Tween = null
 var _confirm_visible: bool = false
+var _active_boss: Node = null
 
 
 func _ready() -> void:
@@ -60,9 +64,16 @@ func _ready() -> void:
 	_skip_confirm_panel.visible = false
 	_skip_confirm_yes.pressed.connect(_on_skip_confirm_yes)
 	_skip_confirm_no.pressed.connect(_on_skip_confirm_no)
+	call_deferred("_connect_wave_spawner")
 
 
 func _process(_delta: float) -> void:
+	if is_instance_valid(_active_boss) and _boss_panel.visible:
+		var hp: int = _active_boss.current_hp
+		var max_hp: int = _active_boss.max_hp
+		_boss_bar.value = float(hp)
+		_boss_label.text = "%d / %d" % [hp, max_hp]
+
 	var is_night: bool = DayNightCycle.is_night()
 	var remaining: float = DayNightCycle.get_time_remaining()
 	var should_show: bool = not is_night and remaining <= RETURN_WARNING_THRESHOLD
@@ -131,6 +142,36 @@ func _on_loadout_changed(weapon_slots: Array, skill_id: String, selected_slot: i
 	_apply_hotbar_border(_slot2_panel, selected_slot == 1)
 
 
+func _connect_wave_spawner() -> void:
+	var spawner: Node = get_tree().get_first_node_in_group(&"wave_spawners")
+	if spawner == null:
+		return
+	if spawner.has_signal(&"boss_spawned") and not spawner.boss_spawned.is_connected(_on_boss_spawned):
+		spawner.boss_spawned.connect(_on_boss_spawned)
+	if spawner.has_signal(&"boss_defeated") and not spawner.boss_defeated.is_connected(_on_boss_defeated):
+		spawner.boss_defeated.connect(_on_boss_defeated)
+
+
+func _on_boss_spawned(boss: Node) -> void:
+	_active_boss = boss
+	if boss.has_signal(&"enemy_died"):
+		boss.enemy_died.connect(_on_boss_enemy_died)
+	_boss_bar.max_value = float(boss.max_hp)
+	_boss_bar.value = float(boss.current_hp)
+	_boss_label.text = "%d / %d" % [boss.current_hp, boss.max_hp]
+	_boss_panel.visible = true
+
+
+func _on_boss_enemy_died(_boss: Node) -> void:
+	_boss_panel.visible = false
+	_active_boss = null
+
+
+func _on_boss_defeated() -> void:
+	_boss_panel.visible = false
+	_active_boss = null
+
+
 func _on_phase_changed_hud(phase: String) -> void:
 	var is_night: bool = (phase == "NIGHT")
 	var tint: Color = HOTBAR_LOCKED_COLOR if is_night else Color.WHITE
@@ -141,6 +182,9 @@ func _on_phase_changed_hud(phase: String) -> void:
 		_stop_return_pulse()
 	_skip_day_button.visible = not is_night
 	_on_skip_confirm_no()
+	if not is_night:
+		_boss_panel.visible = false
+		_active_boss = null
 
 
 func _on_skip_day_pressed() -> void:

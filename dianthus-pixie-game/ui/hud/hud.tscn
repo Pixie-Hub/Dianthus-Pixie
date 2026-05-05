@@ -161,18 +161,6 @@ corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_confirm_yes_hover"]
-bg_color = Color(0.18, 0.38, 0.14, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.4, 0.8, 0.28, 1)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_confirm_yes_pressed"]
 bg_color = Color(0.08, 0.18, 0.06, 1)
 border_width_left = 1
@@ -185,8 +173,32 @@ corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_confirm_yes_hover"]
+bg_color = Color(0.18, 0.38, 0.14, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.4, 0.8, 0.28, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_confirm_no_normal"]
 bg_color = Color(0.28, 0.1, 0.08, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.6, 0.22, 0.18, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_confirm_no_pressed"]
+bg_color = Color(0.18, 0.06, 0.04, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
@@ -209,17 +221,33 @@ corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_confirm_no_pressed"]
-bg_color = Color(0.18, 0.06, 0.04, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.6, 0.22, 0.18, 1)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_boss_panel"]
+bg_color = Color(0.18, 0.08, 0.22, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.72, 0.25, 0.85, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_size = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_boss_bg"]
+bg_color = Color(0.1, 0.05, 0.15, 0.9)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_boss_fill"]
+bg_color = Color(0.7, 0.15, 0.9, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
 
 [node name="HUD" type="CanvasLayer" unique_id=416668404]
 layer = 10
@@ -781,12 +809,12 @@ layout_mode = 2
 size_flags_horizontal = 3
 mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0.8, 1, 0.6, 1)
-theme_override_colors/font_hover_color = Color(0.9, 1, 0.75, 1)
 theme_override_colors/font_pressed_color = Color(0.6, 0.85, 0.45, 1)
+theme_override_colors/font_hover_color = Color(0.9, 1, 0.75, 1)
 theme_override_font_sizes/font_size = 7
 theme_override_styles/normal = SubResource("StyleBoxFlat_confirm_yes_normal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_confirm_yes_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_confirm_yes_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_confirm_yes_hover")
 text = "Yes"
 
 [node name="SkipConfirmNo" type="Button" parent="SkipConfirmPanel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=700000016]
@@ -795,10 +823,60 @@ layout_mode = 2
 size_flags_horizontal = 3
 mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(1, 0.7, 0.65, 1)
-theme_override_colors/font_hover_color = Color(1, 0.82, 0.78, 1)
 theme_override_colors/font_pressed_color = Color(0.85, 0.55, 0.5, 1)
+theme_override_colors/font_hover_color = Color(1, 0.82, 0.78, 1)
 theme_override_font_sizes/font_size = 7
 theme_override_styles/normal = SubResource("StyleBoxFlat_confirm_no_normal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_confirm_no_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_confirm_no_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_confirm_no_hover")
 text = "No"
+
+[node name="BossHPPanel" type="PanelContainer" parent="." unique_id=700000020]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -110.0
+offset_top = 40.0
+offset_right = 110.0
+offset_bottom = 68.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_boss_panel")
+
+[node name="MarginContainer" type="MarginContainer" parent="BossHPPanel" unique_id=700000021]
+layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="BossHPPanel/MarginContainer" unique_id=700000022]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="BossNameLabel" type="Label" parent="BossHPPanel/MarginContainer/VBoxContainer" unique_id=700000023]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.65, 1.0, 1)
+theme_override_font_sizes/font_size = 7
+text = "THE DEVOURER"
+horizontal_alignment = 1
+
+[node name="BossHPBar" type="ProgressBar" parent="BossHPPanel/MarginContainer/VBoxContainer" unique_id=700000024]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(192, 8)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_boss_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_boss_fill")
+max_value = 1200.0
+value = 1200.0
+show_percentage = false
+
+[node name="BossHPLabel" type="Label" parent="BossHPPanel/MarginContainer/VBoxContainer" unique_id=700000025]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.55, 0.9, 1)
+theme_override_font_sizes/font_size = 6
+text = "1200 / 1200"
+horizontal_alignment = 1

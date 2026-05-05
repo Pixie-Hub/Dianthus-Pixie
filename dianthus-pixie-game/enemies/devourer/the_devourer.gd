@@ -81,8 +81,10 @@ func _is_pollen_weapon_equipped() -> bool:
 	var weapon_id: String = slots[selected]
 	if weapon_id.is_empty():
 		return false
-	var pollen_weapons: Array[String] = ["void_grenade", "blazeblade"]
-	return weapon_id in pollen_weapons
+	var data: WeaponData = CraftingManager.get_weapon_data(weapon_id)
+	if data == null:
+		return false
+	return data.is_pollen_weapon
 
 
 func take_damage(amount: int) -> void:
@@ -106,10 +108,12 @@ func _check_phase_transition() -> void:
 	if _current_phase == 1 and ratio <= PHASE2_THRESHOLD:
 		_current_phase = 2
 		SfxManager.play("devourer_phase_transition")
+		MusicManager.seek_to_boss_phase(2)
 		fsm.transition_to(&"Phase2")
 	elif _current_phase == 2 and ratio <= PHASE3_THRESHOLD:
 		_current_phase = 3
 		SfxManager.play("devourer_phase_transition")
+		MusicManager.seek_to_boss_phase(3)
 		fsm.transition_to(&"Phase3")
 
 

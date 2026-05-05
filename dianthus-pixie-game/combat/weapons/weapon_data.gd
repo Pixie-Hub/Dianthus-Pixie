@@ -7,3 +7,4 @@ extends Resource
 @export var cooldown: float = 0.5
 @export var attack_range: float = 24.0
 @export var arc_degrees: float = 90.0
+@export var is_pollen_weapon: bool = false

@@ -78,6 +78,8 @@ func play_music(track_id: String) -> void:
 	play_track(track_id)
 
 
+const BOSS_PHASE_SEGMENT_DURATION: float = 30.0
+
 func play_boss_music() -> void:
 	play_devourer_boss()
 
@@ -85,6 +87,14 @@ func play_boss_music() -> void:
 func play_devourer_boss() -> void:
 	play_track("devourer_boss", true)
 	_set_intense(false, false)
+
+
+func seek_to_boss_phase(phase: int) -> void:
+	if _current_track != "devourer_boss":
+		return
+	var target_position: float = float(clamp(phase - 1, 0, 2)) * BOSS_PHASE_SEGMENT_DURATION
+	if is_instance_valid(_active_player) and _active_player.playing:
+		_active_player.seek(target_position)
 
 
 func stop_music(fade: bool = true) -> void:
