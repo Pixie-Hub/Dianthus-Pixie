@@ -2,7 +2,7 @@ extends StaticBody2D
 
 @onready var _prompt_label: Label = $PromptLabel
 @onready var _interaction_zone: Area2D = $InteractionZone
-@onready var _bench_visual: ColorRect = $BenchVisual
+@onready var _bench_visual: Sprite2D = $BenchVisual
 
 var _player_in_range: bool = false
 var _tutorial_hint_tween: Tween = null
@@ -14,7 +14,7 @@ func _ready() -> void:
 	add_to_group("breeding_benches")
 	collision_layer = CollisionLayers.INTERACTABLE
 	collision_mask = 0
-	_base_visual_color = _bench_visual.color
+	_base_visual_color = _bench_visual.modulate
 	_prompt_label.visible = false
 	_interaction_zone.body_entered.connect(_on_body_entered)
 	_interaction_zone.body_exited.connect(_on_body_exited)
@@ -65,15 +65,15 @@ func set_tutorial_hint_active(active: bool) -> void:
 			TutorialManager.report_breeding_bench_range_changed(true)
 		if is_instance_valid(_tutorial_hint_tween):
 			return
-		_bench_visual.color = Color(0.95, 0.72, 0.18, 1.0)
+		_bench_visual.modulate = Color(0.95, 0.72, 0.18, 1.0)
 		_tutorial_hint_tween = create_tween().set_loops()
-		_tutorial_hint_tween.tween_property(_bench_visual, "color", Color(1.0, 0.92, 0.38, 1.0), 0.45)
-		_tutorial_hint_tween.tween_property(_bench_visual, "color", Color(0.65, 0.38, 0.12, 1.0), 0.45)
+		_tutorial_hint_tween.tween_property(_bench_visual, "modulate", Color(1.0, 0.92, 0.38, 1.0), 0.45)
+		_tutorial_hint_tween.tween_property(_bench_visual, "modulate", Color(0.65, 0.38, 0.12, 1.0), 0.45)
 		return
 	if is_instance_valid(_tutorial_hint_tween):
 		_tutorial_hint_tween.kill()
 	_tutorial_hint_tween = null
-	_bench_visual.color = _base_visual_color
+	_bench_visual.modulate = _base_visual_color
 	_refresh_quest_highlight()
 
 
@@ -83,16 +83,16 @@ func set_quest_highlight_active(active: bool) -> void:
 			return
 		if is_instance_valid(_quest_hint_tween):
 			return
-		_bench_visual.color = Color(0.12, 0.55, 0.52, 1.0)
+		_bench_visual.modulate = Color(0.12, 0.55, 0.52, 1.0)
 		_quest_hint_tween = create_tween().set_loops()
-		_quest_hint_tween.tween_property(_bench_visual, "color", Color(0.25, 0.95, 0.85, 1.0), 0.55)
-		_quest_hint_tween.tween_property(_bench_visual, "color", Color(0.08, 0.40, 0.38, 1.0), 0.55)
+		_quest_hint_tween.tween_property(_bench_visual, "modulate", Color(0.25, 0.95, 0.85, 1.0), 0.55)
+		_quest_hint_tween.tween_property(_bench_visual, "modulate", Color(0.08, 0.40, 0.38, 1.0), 0.55)
 		return
 	if is_instance_valid(_quest_hint_tween):
 		_quest_hint_tween.kill()
 	_quest_hint_tween = null
 	if not is_instance_valid(_tutorial_hint_tween):
-		_bench_visual.color = _base_visual_color
+		_bench_visual.modulate = _base_visual_color
 
 
 func _refresh_quest_highlight() -> void:

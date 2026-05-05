@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://dbirylfa8h4q6" path="res://world/fortifications/fortification_spot.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://dgjlo3k80moau" path="res://ui/components/interaction_prompt.tscn" id="2_interactprompt"]
+[ext_resource type="Texture2D" uid="uid://cjy52q6txhmqi" path="res://assets/aseprite/interactables/Fortification Spot Buildable.png" id="3_buildable"]
+[ext_resource type="Texture2D" uid="uid://cg2q0kw2lrj3s" path="res://assets/aseprite/interactables/Fortification Spot Unbuildable.png" id="4_unbuildable"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_interact"]
 radius = 24.020824
@@ -10,33 +12,32 @@ radius = 24.020824
 collision_layer = 0
 collision_mask = 4
 script = ExtResource("1_script")
+buildable_texture = ExtResource("3_buildable")
+unbuildable_texture = ExtResource("4_unbuildable")
 
 [node name="InteractionShape" type="CollisionShape2D" parent="." unique_id=966261158]
 shape = SubResource("CircleShape2D_interact")
 
-[node name="Visual" type="ColorRect" parent="." unique_id=2062739599]
-offset_left = -8.0
-offset_top = -8.0
-offset_right = 8.0
-offset_bottom = 8.0
-color = Color(0.6, 0.5, 0.3, 0.7)
+[node name="Visual" type="Sprite2D" parent="." unique_id=2062739599]
+texture_filter = 1
+texture = ExtResource("3_buildable")
 
 [node name="ProgressBg" type="ColorRect" parent="." unique_id=1497032188]
 unique_name_in_owner = true
 visible = false
 offset_left = -16.0
-offset_top = 10.0
+offset_top = 16.0
 offset_right = 16.0
-offset_bottom = 14.0
+offset_bottom = 20.0
 color = Color(0.2, 0.2, 0.2, 0.9)
 
 [node name="ProgressBar" type="ColorRect" parent="." unique_id=488925937]
 unique_name_in_owner = true
 visible = false
 offset_left = -16.0
-offset_top = 10.0
+offset_top = 16.0
 offset_right = 16.0
-offset_bottom = 14.0
+offset_bottom = 20.0
 color = Color(1, 0.75, 0.2, 1)
 
 [node name="PromptLabel" type="Label" parent="." unique_id=691864094]

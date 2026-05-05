@@ -1,35 +1,34 @@
-[gd_scene format=4 uid="uid://thorn_barricade01"]
+[gd_scene format=3 uid="uid://cn0ajjb1dyyth"]
 
-[ext_resource type="Script" path="res://world/fortifications/thorn_barricade.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://beb5nlg3e37px" path="res://world/fortifications/thorn_barricade.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://cf34h2m2lrn4a" path="res://assets/aseprite/interactables/Thorn Barricade.png" id="2_texture"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
-size = Vector2(24.0, 8.0)
+size = Vector2(24, 8)
 
-[node name="ThornBarricade" type="StaticBody2D"]
+[node name="ThornBarricade" type="StaticBody2D" unique_id=683493417]
 script = ExtResource("1_script")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=94533675]
 shape = SubResource("RectangleShape2D_wall")
 
-[node name="Visual" type="ColorRect" parent="."]
-offset_left = -12.0
-offset_top = -4.0
-offset_right = 12.0
-offset_bottom = 4.0
-color = Color(0.35, 0.22, 0.08, 1)
+[node name="Visual" type="Sprite2D" parent="." unique_id=397977221]
+texture_filter = 1
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_texture")
 
-[node name="HpBarBg" type="ColorRect" parent="."]
+[node name="HpBarBg" type="ColorRect" parent="." unique_id=1477734731]
+unique_name_in_owner = true
 offset_left = -12.0
-offset_top = 6.0
+offset_top = 18.0
 offset_right = 12.0
-offset_bottom = 9.0
+offset_bottom = 21.0
 color = Color(0.15, 0.15, 0.15, 0.9)
-unique_name_in_owner = true
 
-[node name="HpBar" type="ColorRect" parent="."]
-offset_left = -12.0
-offset_top = 6.0
-offset_right = 12.0
-offset_bottom = 9.0
-color = Color(0.8, 0.4, 0.1, 1)
+[node name="HpBar" type="ColorRect" parent="." unique_id=942186549]
 unique_name_in_owner = true
+offset_left = -12.0
+offset_top = 18.0
+offset_right = 12.0
+offset_bottom = 21.0
+color = Color(0.8, 0.4, 0.1, 1)

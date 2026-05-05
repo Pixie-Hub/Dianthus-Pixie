@@ -18,12 +18,14 @@ enum StructureType { BARRICADE, TRAP }
 
 @export var spot_label: String = "Fortification Spot"
 @export var barricade_sideways: bool = false
+@export var buildable_texture: Texture2D
+@export var unbuildable_texture: Texture2D
 
 var _is_built: bool = false
 var _built_structure: Node = null
 var _selected_type: StructureType = StructureType.BARRICADE
 
-@onready var _visual: ColorRect = $Visual
+@onready var _visual: Sprite2D = $Visual
 
 
 func _ready() -> void:
@@ -108,6 +110,7 @@ func _on_phase_changed(phase: String) -> void:
 		_cleanup_structure()
 	elif phase == "NIGHT":
 		_cancel_build()
+		_update_visual()
 		_hide_prompt()
 
 
@@ -188,10 +191,16 @@ func _cleanup_structure() -> void:
 func _update_visual() -> void:
 	if not is_instance_valid(_visual):
 		return
-	_visual.modulate = Color(0.5, 0.5, 0.5, 0.5) if _is_built else Color.WHITE
+	if _is_built:
+		_visual.texture = buildable_texture
+		_visual.modulate = Color(0.5, 0.5, 0.5, 0.5)
+		return
+	_visual.texture = buildable_texture if _can_build_selected_type() else unbuildable_texture
+	_visual.modulate = Color.WHITE
 
 
 func _refresh_prompt() -> void:
+	_update_visual()
 	if _is_built:
 		var built_name: String = "Thorn Barricade" if _selected_type == StructureType.BARRICADE else "Spore Trap"
 		_show_prompt(
@@ -246,6 +255,7 @@ func _get_cost_string() -> String:
 func _cycle_type(direction: int) -> void:
 	var count: int = StructureType.size()
 	_selected_type = StructureType.values()[(_selected_type + direction + count) % count]
+	_update_visual()
 	if _player_in_range and _has_interaction_focus():
 		_refresh_prompt()
 

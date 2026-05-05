@@ -10,7 +10,7 @@ var _touching_enemies: Array[EnemyBase] = []
 var _dmg_accumulator: float = 0.0
 var _hit_cooldowns: Dictionary = {}
 
-@onready var _visual: ColorRect = $Visual
+@onready var _visual: Sprite2D = $Visual
 @onready var _hp_bar: ColorRect = %HpBar
 @onready var _hp_bar_bg: ColorRect = %HpBarBg
 
