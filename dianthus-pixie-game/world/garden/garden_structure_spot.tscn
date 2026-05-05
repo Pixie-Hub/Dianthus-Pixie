@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://garden_structure_01"]
+[gd_scene format=3 uid="uid://bus7tpqc35dit"]
 
-[ext_resource type="Script" uid="uid://garden_structure_gd01" path="res://world/garden/garden_structure_spot.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://dni0tinrfdh80" path="res://world/garden/garden_structure_spot.gd" id="1_script"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_interact"]
 radius = 32.0
@@ -35,7 +35,7 @@ offset_left = -16.0
 offset_top = 12.0
 offset_right = 16.0
 offset_bottom = 16.0
-color = Color(1.0, 0.8, 0.3, 1.0)
+color = Color(1, 0.8, 0.3, 1)
 
 [node name="PromptLabel" type="Label" parent="." unique_id=410100006]
 unique_name_in_owner = true

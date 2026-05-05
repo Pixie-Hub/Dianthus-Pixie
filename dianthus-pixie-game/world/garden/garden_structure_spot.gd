@@ -2,6 +2,10 @@ class_name GardenStructureSpot
 extends Area2D
 
 const BUILD_TIME: float = 4.0
+const INTERACTION_PROMPT_SCENE: PackedScene = preload("res://ui/components/interaction_prompt.tscn")
+const PROMPT_STATUS_NORMAL: int = 0
+const PROMPT_STATUS_DISABLED: int = 2
+const PROMPT_STATUS_SUCCESS: int = 3
 
 @export var structure_id: StringName = &"storage_shed"
 
@@ -15,13 +19,16 @@ var _struct_mgr: GardenStructureManager = null
 @onready var _progress_bar: ColorRect = %ProgressBar
 @onready var _visual: ColorRect = $Visual
 
+var _interaction_prompt = null
+
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 	_find_struct_mgr()
 	SaveManager.load_completed.connect(_on_load_completed)
-	_refresh_prompt()
+	_setup_interaction_prompt()
+	_hide_prompt()
 
 
 func _find_struct_mgr() -> void:
@@ -45,6 +52,16 @@ func _process(delta: float) -> void:
 		return
 	_build_progress += delta / BUILD_TIME
 	_update_progress_bar()
+	var display_name: String = "Storage Shed" if structure_id == &"storage_shed" else "Watchtower"
+	_show_prompt(
+		"Building %s" % display_name,
+		"Progress: %.0f%%" % (_build_progress * 100.0),
+		"Hold E",
+		"Release E to cancel",
+		Color(1.0, 0.78, 0.28, 1.0),
+		PROMPT_STATUS_NORMAL,
+		_build_progress
+	)
 	if _build_progress >= 1.0:
 		_finish_build()
 
@@ -117,7 +134,7 @@ func _on_body_exited(body: Node2D) -> void:
 			_is_building = false
 			_build_progress = 0.0
 			_set_progress_visible(false)
-		_refresh_prompt()
+		_hide_prompt()
 
 
 func _refresh_visual() -> void:
@@ -129,24 +146,55 @@ func _refresh_visual() -> void:
 		_visual.color = Color(0.3, 0.3, 0.55, 0.8)
 
 
-func _refresh_prompt() -> void:
-	if not is_instance_valid(_prompt_label):
-		return
-	if _struct_mgr == null:
+func _setup_interaction_prompt() -> void:
+	if is_instance_valid(_prompt_label):
 		_prompt_label.visible = false
+	if is_instance_valid(_progress_bg):
+		_progress_bg.visible = false
+	if is_instance_valid(_progress_bar):
+		_progress_bar.visible = false
+
+	_interaction_prompt = get_node_or_null("%InteractionPrompt")
+	if _interaction_prompt == null:
+		_interaction_prompt = INTERACTION_PROMPT_SCENE.instantiate()
+		_interaction_prompt.name = "InteractionPrompt"
+		add_child(_interaction_prompt)
+
+
+func _refresh_prompt() -> void:
+	if _struct_mgr == null:
+		_hide_prompt()
 		return
 	var display_name: String = "Storage Shed" if structure_id == &"storage_shed" else "Watchtower"
 	if _is_already_built() and structure_id == &"watchtower":
-		_prompt_label.text = "%s\n[Built]" % display_name
-		_prompt_label.visible = _player_in_range
+		_show_prompt(
+			"%s Ready" % display_name,
+			"[Built]",
+			"",
+			"",
+			Color(0.45, 0.95, 0.58, 1.0),
+			PROMPT_STATUS_SUCCESS
+		)
 		return
 	if structure_id == &"storage_shed" and _struct_mgr.storage_tier >= _struct_mgr.STORAGE_TIERS.size():
-		_prompt_label.text = "Storage Shed\n[Max Level]"
-		_prompt_label.visible = _player_in_range
+		_show_prompt(
+			"Storage Shed",
+			"[Max Level]",
+			"",
+			"",
+			Color(0.45, 0.95, 0.58, 1.0),
+			PROMPT_STATUS_SUCCESS
+		)
 		return
 	if not DayNightCycle.is_day():
-		_prompt_label.text = "%s\n(DAY only)" % display_name
-		_prompt_label.visible = _player_in_range
+		_show_prompt(
+			"%s" % display_name,
+			"(DAY only)",
+			"",
+			"",
+			Color(1.0, 0.45, 0.25, 1.0),
+			PROMPT_STATUS_DISABLED
+		)
 		return
 	var cost_stone: int = 0
 	var cost_sap: int = 0
@@ -154,7 +202,7 @@ func _refresh_prompt() -> void:
 	if structure_id == &"storage_shed":
 		var next: Dictionary = _struct_mgr.get_storage_next_tier_data()
 		if next.is_empty():
-			_prompt_label.visible = false
+			_hide_prompt()
 			return
 		cost_stone = int(next.get("cost_stone", 0))
 		cost_sap = int(next.get("cost_sap", 0))
@@ -164,21 +212,67 @@ func _refresh_prompt() -> void:
 		cost_sap = _struct_mgr.WATCHTOWER_COST_SAP
 		day_req = _struct_mgr.WATCHTOWER_MIN_DAY
 	if DayNightCycle.day_count < day_req:
-		_prompt_label.text = "%s\n(requires Day %d)" % [display_name, day_req]
-		_prompt_label.visible = _player_in_range
+		_show_prompt(
+			"%s" % display_name,
+			"Requires Day %d" % day_req,
+			"",
+			"",
+			Color(1.0, 0.45, 0.25, 1.0),
+			PROMPT_STATUS_DISABLED
+		)
 		return
 	var stone_have: int = InventoryManager.get_total_count("stone")
 	var sap_have: int = InventoryManager.get_total_count("verdant_sap")
+	var cost_str: String = "Stone %d/%d  Sap %d/%d" % [stone_have, cost_stone, sap_have, cost_sap]
 	if _can_build_now():
-		_prompt_label.text = "Hold E: Build %s\nStone %d/%d  Sap %d/%d" % [
-			display_name, stone_have, cost_stone, sap_have, cost_sap]
+		_show_prompt(
+			"Build %s" % display_name,
+			"Cost: %s" % cost_str,
+			"Hold E",
+			"",
+			Color(1.0, 0.78, 0.28, 1.0)
+		)
 	else:
-		_prompt_label.text = "Build %s\nNeed Stone %d/%d  Sap %d/%d" % [
-			display_name, stone_have, cost_stone, sap_have, cost_sap]
-	_prompt_label.visible = _player_in_range
+		_show_prompt(
+			"Build %s" % display_name,
+			"Need: %s" % cost_str,
+			"Hold E",
+			"Not enough materials",
+			Color(1.0, 0.45, 0.25, 1.0),
+			PROMPT_STATUS_DISABLED
+		)
+
+
+func _show_prompt(title: String, body: String = "", key_text: String = "", hint: String = "", accent: Color = Color(1.0, 0.78, 0.28, 1.0), status: int = PROMPT_STATUS_NORMAL, progress: float = -1.0) -> void:
+	if is_instance_valid(_interaction_prompt):
+		_interaction_prompt.show_interaction(title, body, key_text, hint, accent, status, progress)
+		return
+	if is_instance_valid(_prompt_label):
+		var lines: PackedStringArray = PackedStringArray([title])
+		if not body.is_empty():
+			lines.append(body)
+		if not hint.is_empty():
+			lines.append(hint)
+		_prompt_label.text = "\n".join(lines)
+		_prompt_label.visible = true
+
+
+func _hide_prompt() -> void:
+	if is_instance_valid(_interaction_prompt):
+		_interaction_prompt.hide_prompt()
+	if is_instance_valid(_prompt_label):
+		_prompt_label.text = ""
+		_prompt_label.visible = false
+	if is_instance_valid(_progress_bg):
+		_progress_bg.visible = false
+	if is_instance_valid(_progress_bar):
+		_progress_bar.visible = false
 
 
 func _set_progress_visible(visible_flag: bool) -> void:
+	if is_instance_valid(_interaction_prompt):
+		_interaction_prompt.set_progress(0.0 if visible_flag else -1.0)
+		return
 	if is_instance_valid(_progress_bg):
 		_progress_bg.visible = visible_flag
 	if is_instance_valid(_progress_bar):
@@ -186,6 +280,9 @@ func _set_progress_visible(visible_flag: bool) -> void:
 
 
 func _update_progress_bar() -> void:
+	if is_instance_valid(_interaction_prompt):
+		_interaction_prompt.set_progress(_build_progress)
+		return
 	if not is_instance_valid(_progress_bar):
 		return
 	var bg_width: float = 32.0

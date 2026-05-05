@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://garden_expansion_01"]
+[gd_scene format=3 uid="uid://wpnx4gh6p6rs"]
 
-[ext_resource type="Script" uid="uid://garden_expansion_gd01" path="res://world/garden/garden_expansion_spot.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://bu3bd186b8xf6" path="res://world/garden/garden_expansion_spot.gd" id="1_script"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_interact"]
 radius = 32.0
@@ -35,7 +35,7 @@ offset_left = -16.0
 offset_top = 12.0
 offset_right = 16.0
 offset_bottom = 16.0
-color = Color(0.3, 1.0, 0.4, 1.0)
+color = Color(0.3, 1, 0.4, 1)
 
 [node name="PromptLabel" type="Label" parent="." unique_id=400100006]
 unique_name_in_owner = true
