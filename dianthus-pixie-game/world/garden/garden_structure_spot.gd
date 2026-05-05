@@ -12,7 +12,7 @@ const PROMPT_STATUS_SUCCESS: int = 3
 var _player_in_range: bool = false
 var _build_progress: float = 0.0
 var _is_building: bool = false
-var _struct_mgr: GardenStructureManager = null
+var _struct_mgr = null
 
 @onready var _prompt_label: Label = %PromptLabel
 @onready var _progress_bg: ColorRect = %ProgressBg
@@ -32,7 +32,7 @@ func _ready() -> void:
 
 
 func _find_struct_mgr() -> void:
-	_struct_mgr = get_tree().current_scene.find_child("GardenStructureManager", true, false) as GardenStructureManager
+	_struct_mgr = get_tree().current_scene.get_node_or_null("GardenStructureManager")
 
 
 func _on_load_completed(_ok: bool) -> void:
