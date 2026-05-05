@@ -71,6 +71,7 @@ var _saved_damage_reduction: float = 0.0
 var is_harvesting: bool = false
 
 func _ready() -> void:
+	add_to_group("player")
 	PlayerAnimationBuilder.build(%AnimationPlayer, "Sprite2D")
 	PlayerAnimationBuilder.build_tree(%AnimationTree)
 	_anim_tree.active = true

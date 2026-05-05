@@ -162,6 +162,9 @@ func _setup_interaction_prompt() -> void:
 
 
 func _refresh_prompt() -> void:
+	if not _player_in_range:
+		_hide_prompt()
+		return
 	if _struct_mgr == null:
 		_hide_prompt()
 		return

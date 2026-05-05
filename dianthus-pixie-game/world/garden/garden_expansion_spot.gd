@@ -130,6 +130,9 @@ func _setup_interaction_prompt() -> void:
 
 
 func _refresh_prompt() -> void:
+	if not _player_in_range:
+		_hide_prompt()
+		return
 	if _placement_manager == null:
 		_hide_prompt()
 		return
