@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://wpnx4gh6p6rs"]
+[gd_scene format=3 uid="uid://wpnx4gh6p6rs"]
 
 [ext_resource type="Script" uid="uid://bu3bd186b8xf6" path="res://world/garden/garden_expansion_spot.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://dgjlo3k80moau" path="res://ui/components/interaction_prompt.tscn" id="2_interactprompt"]
@@ -19,7 +19,7 @@ shape = SubResource("CircleShape2D_interact")
 
 [node name="Visual" type="Sprite2D" parent="." unique_id=400100003]
 texture_filter = 1
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.7, 0.7)
 texture = ExtResource("3_buildable")
 
 [node name="ProgressBg" type="ColorRect" parent="." unique_id=400100004]
@@ -50,7 +50,7 @@ offset_bottom = -16.0
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="InteractionPrompt" parent="." instance=ExtResource("2_interactprompt")]
+[node name="InteractionPrompt" parent="." unique_id=1365348735 instance=ExtResource("2_interactprompt")]
 unique_name_in_owner = true
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

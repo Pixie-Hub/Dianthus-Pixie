@@ -1,17 +1,16 @@
-[gd_scene load_steps=4 format=4 uid="uid://spore_trap01"]
+[gd_scene format=3 uid="uid://wwjyh1vug21g"]
 
-[ext_resource type="Script" path="res://world/fortifications/spore_trap.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://dsmvvy1jktwm4" path="res://world/fortifications/spore_trap.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://ct13xaqrdv3j6" path="res://assets/aseprite/interactables/Spore Trap.png" id="2_texture"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_trigger"]
-radius = 10.0
 
-[node name="SporeTrap" type="Area2D"]
+[node name="SporeTrap" type="Area2D" unique_id=1424053110]
 script = ExtResource("1_script")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_trigger")
-
-[node name="Visual" type="Sprite2D" parent="."]
+[node name="Visual" type="Sprite2D" parent="." unique_id=2096478833]
 texture_filter = 1
 texture = ExtResource("2_texture")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=753449108]
+shape = SubResource("CircleShape2D_trigger")

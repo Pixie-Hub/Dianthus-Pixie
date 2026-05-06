@@ -9,13 +9,13 @@ size = Vector2(24, 8)
 [node name="ThornBarricade" type="StaticBody2D" unique_id=683493417]
 script = ExtResource("1_script")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=94533675]
-shape = SubResource("RectangleShape2D_wall")
-
 [node name="Visual" type="Sprite2D" parent="." unique_id=397977221]
 texture_filter = 1
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_texture")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=94533675]
+shape = SubResource("RectangleShape2D_wall")
 
 [node name="HpBarBg" type="ColorRect" parent="." unique_id=1477734731]
 unique_name_in_owner = true

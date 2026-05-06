@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bus7tpqc35dit"]
+[gd_scene format=3 uid="uid://bus7tpqc35dit"]
 
 [ext_resource type="Script" uid="uid://dni0tinrfdh80" path="res://world/garden/garden_structure_spot.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://dgjlo3k80moau" path="res://ui/components/interaction_prompt.tscn" id="2_interactprompt"]
@@ -25,7 +25,7 @@ shape = SubResource("CircleShape2D_interact")
 
 [node name="Visual" type="Sprite2D" parent="." unique_id=410100003]
 texture_filter = 1
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.7, 0.7)
 texture = ExtResource("3_buildable")
 
 [node name="ProgressBg" type="ColorRect" parent="." unique_id=410100004]

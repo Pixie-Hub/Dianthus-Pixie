@@ -1,45 +1,43 @@
-[gd_scene load_steps=4 format=4 uid="uid://daytime_resonance01"]
+[gd_scene format=3 uid="uid://bkay277kxwg5c"]
 
-[ext_resource type="Script" path="res://world/events/dianthus_resonance_event.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://bu17hbmlbiixv" path="res://world/events/dianthus_resonance_event.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://dgcpn3rina1um" path="res://assets/aseprite/interactables/Dianthus Resonance Event.png" id="2_texture"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_interact"]
 radius = 28.0
 
-[node name="DianthusResonanceEvent" type="Area2D"]
+[node name="DianthusResonanceEvent" type="Area2D" unique_id=818431589]
 script = ExtResource("1_script")
 
-[node name="InteractionShape" type="CollisionShape2D" parent="."]
+[node name="InteractionShape" type="CollisionShape2D" parent="." unique_id=695797352]
 shape = SubResource("CircleShape2D_interact")
 
-[node name="Visual" type="Sprite2D" parent="."]
+[node name="Visual" type="Sprite2D" parent="." unique_id=1182147297]
 texture_filter = 1
-scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_texture")
 
-[node name="ProgressBg" type="ColorRect" parent="."]
+[node name="ProgressBg" type="ColorRect" parent="." unique_id=1756315164]
+unique_name_in_owner = true
+visible = false
 offset_left = -14.0
 offset_top = 11.0
 offset_right = 14.0
 offset_bottom = 15.0
 color = Color(0.2, 0.2, 0.2, 0.9)
-visible = false
-unique_name_in_owner = true
 
-[node name="ProgressBar" type="ColorRect" parent="."]
+[node name="ProgressBar" type="ColorRect" parent="." unique_id=1428447990]
+unique_name_in_owner = true
+visible = false
 offset_left = -14.0
 offset_top = 11.0
 offset_right = 14.0
 offset_bottom = 15.0
-color = Color(1.0, 0.55, 0.8, 1)
-visible = false
-unique_name_in_owner = true
+color = Color(1, 0.55, 0.8, 1)
 
-[node name="PromptLabel" type="Label" parent="."]
+[node name="PromptLabel" type="Label" parent="." unique_id=1857068384]
+unique_name_in_owner = true
 offset_left = -72.0
 offset_top = -32.0
 offset_right = 72.0
 offset_bottom = -20.0
-text = ""
 horizontal_alignment = 1
-unique_name_in_owner = true

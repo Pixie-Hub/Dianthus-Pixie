@@ -1,44 +1,45 @@
-[gd_scene load_steps=4 format=4 uid="uid://daytime_seedling01"]
+[gd_scene format=3 uid="uid://b2ekphnp0qi4t"]
 
-[ext_resource type="Script" path="res://world/events/wild_seedling_event.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://d4as0838mvknb" path="res://world/events/wild_seedling_event.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://b0dmsyugjg1l7" path="res://assets/aseprite/interactables/Wild Seedling Event.png" id="2_texture"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_interact"]
 radius = 28.0
 
-[node name="WildSeedlingEvent" type="Area2D"]
+[node name="WildSeedlingEvent" type="Area2D" unique_id=178589733]
 script = ExtResource("1_script")
 
-[node name="InteractionShape" type="CollisionShape2D" parent="."]
+[node name="InteractionShape" type="CollisionShape2D" parent="." unique_id=549549322]
+position = Vector2(0, -10)
 shape = SubResource("CircleShape2D_interact")
 
-[node name="Visual" type="Sprite2D" parent="."]
+[node name="Visual" type="Sprite2D" parent="." unique_id=2124368639]
 texture_filter = 1
+position = Vector2(0, -10)
 texture = ExtResource("2_texture")
 
-[node name="ProgressBg" type="ColorRect" parent="."]
+[node name="ProgressBg" type="ColorRect" parent="." unique_id=915078275]
+unique_name_in_owner = true
+visible = false
 offset_left = -14.0
 offset_top = 10.0
 offset_right = 14.0
 offset_bottom = 14.0
 color = Color(0.2, 0.2, 0.2, 0.9)
-visible = false
-unique_name_in_owner = true
 
-[node name="ProgressBar" type="ColorRect" parent="."]
+[node name="ProgressBar" type="ColorRect" parent="." unique_id=1676968802]
+unique_name_in_owner = true
+visible = false
 offset_left = -14.0
 offset_top = 10.0
 offset_right = 14.0
 offset_bottom = 14.0
 color = Color(0.2, 0.9, 0.4, 1)
-visible = false
-unique_name_in_owner = true
 
-[node name="PromptLabel" type="Label" parent="."]
+[node name="PromptLabel" type="Label" parent="." unique_id=946670398]
+unique_name_in_owner = true
 offset_left = -64.0
 offset_top = -28.0
 offset_right = 64.0
 offset_bottom = -16.0
-text = ""
 horizontal_alignment = 1
-unique_name_in_owner = true
