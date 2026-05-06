@@ -8,7 +8,7 @@ const TRIGGER_RADIUS: float = 10.0
 
 var _triggered: bool = false
 
-@onready var _visual: ColorRect = $Visual
+@onready var _visual: Sprite2D = $Visual
 
 
 func _ready() -> void:

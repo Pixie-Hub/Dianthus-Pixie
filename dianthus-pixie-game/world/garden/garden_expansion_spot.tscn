@@ -1,7 +1,9 @@
-[gd_scene format=3 uid="uid://wpnx4gh6p6rs"]
+[gd_scene load_steps=5 format=3 uid="uid://wpnx4gh6p6rs"]
 
 [ext_resource type="Script" uid="uid://bu3bd186b8xf6" path="res://world/garden/garden_expansion_spot.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://dgjlo3k80moau" path="res://ui/components/interaction_prompt.tscn" id="2_interactprompt"]
+[ext_resource type="Texture2D" uid="uid://bgb6oxiaaafsr" path="res://assets/aseprite/interactables/Expansion Spot Buildable.png" id="3_buildable"]
+[ext_resource type="Texture2D" uid="uid://cb8ekwcoimu0t" path="res://assets/aseprite/interactables/Expansion Spot Unbuildable.png" id="4_unbuildable"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_interact"]
 radius = 32.0
@@ -9,16 +11,16 @@ radius = 32.0
 [node name="GardenExpansionSpot" type="Area2D" unique_id=400100001]
 collision_mask = 4
 script = ExtResource("1_script")
+buildable_texture = ExtResource("3_buildable")
+unbuildable_texture = ExtResource("4_unbuildable")
 
 [node name="InteractionShape" type="CollisionShape2D" parent="." unique_id=400100002]
 shape = SubResource("CircleShape2D_interact")
 
-[node name="Visual" type="ColorRect" parent="." unique_id=400100003]
-offset_left = -10.0
-offset_top = -10.0
-offset_right = 10.0
-offset_bottom = 10.0
-color = Color(0.3, 0.55, 0.2, 0.8)
+[node name="Visual" type="Sprite2D" parent="." unique_id=400100003]
+texture_filter = 1
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_buildable")
 
 [node name="ProgressBg" type="ColorRect" parent="." unique_id=400100004]
 unique_name_in_owner = true

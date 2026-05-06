@@ -19,7 +19,7 @@ var _player_in_range: bool = false
 var _is_complete: bool = false
 var _prompt_progress: float = -1.0
 
-@onready var _visual: ColorRect = $Visual
+@onready var _visual: CanvasItem = $Visual
 @onready var _prompt_label: Label = %PromptLabel
 @onready var _interaction_shape: CollisionShape2D = $InteractionShape
 
@@ -32,7 +32,6 @@ func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 	DayNightCycle.phase_changed.connect(_on_phase_changed)
-	_visual.color = event_color
 	_setup_interaction_prompt()
 	_update_prompt("")
 

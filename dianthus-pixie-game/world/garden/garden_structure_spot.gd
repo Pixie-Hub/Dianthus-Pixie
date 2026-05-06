@@ -4,13 +4,19 @@ extends BaseBuildSpot
 const BUILD_TIME: float = 4.0
 
 @export var structure_id: StringName = &"storage_shed"
+@export var buildable_texture: Texture2D
+@export var unbuildable_texture: Texture2D
+@export var storage_tier_1_texture: Texture2D
+@export var storage_tier_2_texture: Texture2D
+@export var watchtower_texture: Texture2D
 
-@onready var _visual: ColorRect = $Visual
+@onready var _visual: Sprite2D = $Visual
 
 
 func _ready() -> void:
 	super._ready()
 	SaveManager.load_completed.connect(_on_load_completed)
+	_refresh_visual()
 
 
 func _on_load_completed(_ok: bool) -> void:
@@ -71,13 +77,23 @@ func _is_already_built() -> bool:
 func _refresh_visual() -> void:
 	if not is_instance_valid(_visual):
 		return
-	if _is_already_built():
-		_visual.color = Color(0.6, 0.45, 0.2, 0.9)
-	else:
-		_visual.color = Color(0.3, 0.3, 0.55, 0.8)
+	_visual.texture = _get_visual_texture()
+	_visual.modulate = Color.WHITE
+
+
+func _get_visual_texture() -> Texture2D:
+	if structure_id == &"storage_shed":
+		if GardenStructureManager.storage_tier >= 2 and storage_tier_2_texture != null:
+			return storage_tier_2_texture
+		if GardenStructureManager.storage_tier >= 1 and storage_tier_1_texture != null:
+			return storage_tier_1_texture
+	elif structure_id == &"watchtower" and GardenStructureManager.watchtower_built and watchtower_texture != null:
+		return watchtower_texture
+	return buildable_texture if _can_build_now() else unbuildable_texture
 
 
 func _refresh_prompt() -> void:
+	_refresh_visual()
 	if not _player_in_range:
 		_hide_prompt()
 		return

@@ -1,6 +1,7 @@
-[gd_scene format=4 uid="uid://daytime_fissure01"]
+[gd_scene load_steps=4 format=4 uid="uid://daytime_fissure01"]
 
 [ext_resource type="Script" path="res://world/events/void_fissure_event.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://o271u4rnfyo8" path="res://assets/aseprite/interactables/Void Fissure Event.png" id="2_texture"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_interact"]
 radius = 28.0
@@ -11,12 +12,10 @@ script = ExtResource("1_script")
 [node name="InteractionShape" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_interact")
 
-[node name="Visual" type="ColorRect" parent="."]
-offset_left = -9.0
-offset_top = -9.0
-offset_right = 9.0
-offset_bottom = 9.0
-color = Color(0.15, 0.05, 0.35, 1)
+[node name="Visual" type="Sprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_texture")
 
 [node name="RadiusVisual" type="ColorRect" parent="."]
 offset_left = -40.0

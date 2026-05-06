@@ -1,7 +1,12 @@
-[gd_scene format=3 uid="uid://bus7tpqc35dit"]
+[gd_scene load_steps=9 format=3 uid="uid://bus7tpqc35dit"]
 
 [ext_resource type="Script" uid="uid://dni0tinrfdh80" path="res://world/garden/garden_structure_spot.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://dgjlo3k80moau" path="res://ui/components/interaction_prompt.tscn" id="2_interactprompt"]
+[ext_resource type="Texture2D" uid="uid://lwmb4sda6xu5" path="res://assets/aseprite/interactables/Structure Spot Buildable.png" id="3_buildable"]
+[ext_resource type="Texture2D" uid="uid://cc7juwqly51jb" path="res://assets/aseprite/interactables/Structure Spot Unbuildable.png" id="4_unbuildable"]
+[ext_resource type="Texture2D" uid="uid://dp83pqhw2nqi5" path="res://assets/aseprite/interactables/Storage Shed Tier 1.png" id="5_storage1"]
+[ext_resource type="Texture2D" uid="uid://c43i078u0oayu" path="res://assets/aseprite/interactables/Storage Shed Tier 2.png" id="6_storage2"]
+[ext_resource type="Texture2D" uid="uid://ctkcbatp6ucpk" path="res://assets/aseprite/interactables/Watchtower.png" id="7_watchtower"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_interact"]
 radius = 32.0
@@ -9,16 +14,19 @@ radius = 32.0
 [node name="GardenStructureSpot" type="Area2D" unique_id=410100001]
 collision_mask = 4
 script = ExtResource("1_script")
+buildable_texture = ExtResource("3_buildable")
+unbuildable_texture = ExtResource("4_unbuildable")
+storage_tier_1_texture = ExtResource("5_storage1")
+storage_tier_2_texture = ExtResource("6_storage2")
+watchtower_texture = ExtResource("7_watchtower")
 
 [node name="InteractionShape" type="CollisionShape2D" parent="." unique_id=410100002]
 shape = SubResource("CircleShape2D_interact")
 
-[node name="Visual" type="ColorRect" parent="." unique_id=410100003]
-offset_left = -10.0
-offset_top = -10.0
-offset_right = 10.0
-offset_bottom = 10.0
-color = Color(0.3, 0.3, 0.55, 0.8)
+[node name="Visual" type="Sprite2D" parent="." unique_id=410100003]
+texture_filter = 1
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_buildable")
 
 [node name="ProgressBg" type="ColorRect" parent="." unique_id=410100004]
 unique_name_in_owner = true

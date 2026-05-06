@@ -3,13 +3,19 @@ extends BaseBuildSpot
 
 const BUILD_TIME: float = 3.0
 
+@export var buildable_texture: Texture2D
+@export var unbuildable_texture: Texture2D
+
 var _placement_manager: Node = null
+
+@onready var _visual: Sprite2D = $Visual
 
 
 func _ready() -> void:
 	super._ready()
 	_find_placement_manager()
 	SaveManager.load_completed.connect(_on_load_completed)
+	_refresh_visual()
 
 
 func _find_placement_manager() -> void:
@@ -18,6 +24,7 @@ func _find_placement_manager() -> void:
 
 func _on_load_completed(_ok: bool) -> void:
 	_find_placement_manager()
+	_refresh_visual()
 	_refresh_prompt()
 
 
@@ -49,10 +56,19 @@ func _on_interact_completed() -> void:
 		_placement_manager.call("expand_garden")
 	SfxManager.play("fortification_built")
 	_show_popup("+1 Garden Tier!", Color(0.3, 1.0, 0.4))
+	_refresh_visual()
 	_refresh_prompt()
 
 
+func _refresh_visual() -> void:
+	if not is_instance_valid(_visual):
+		return
+	_visual.texture = buildable_texture if _can_interact() else unbuildable_texture
+	_visual.modulate = Color.WHITE
+
+
 func _refresh_prompt() -> void:
+	_refresh_visual()
 	if not _player_in_range:
 		_hide_prompt()
 		return
