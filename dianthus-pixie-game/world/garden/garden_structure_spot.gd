@@ -16,12 +16,34 @@ const BUILD_TIME: float = 4.0
 func _ready() -> void:
 	super._ready()
 	SaveManager.load_completed.connect(_on_load_completed)
+	DayNightCycle.phase_changed.connect(_on_phase_changed)
+	InventoryManager.inventory_changed.connect(_on_inventory_changed)
+	GardenStructureManager.storage_upgraded.connect(_on_structure_state_changed)
+	GardenStructureManager.watchtower_constructed.connect(_on_structure_state_changed)
 	_refresh_visual()
 
 
 func _on_load_completed(_ok: bool) -> void:
 	_refresh_visual()
 	_refresh_prompt()
+
+
+func _on_phase_changed(_phase: String) -> void:
+	_refresh_visual()
+	if _player_in_range and _has_interaction_focus():
+		_refresh_prompt()
+
+
+func _on_inventory_changed() -> void:
+	_refresh_visual()
+	if _player_in_range and _has_interaction_focus():
+		_refresh_prompt()
+
+
+func _on_structure_state_changed(_new_tier: int = 0) -> void:
+	_refresh_visual()
+	if _player_in_range and _has_interaction_focus():
+		_refresh_prompt()
 
 
 func _can_interact() -> bool:

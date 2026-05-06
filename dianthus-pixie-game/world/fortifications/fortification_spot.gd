@@ -31,6 +31,7 @@ var _selected_type: StructureType = StructureType.BARRICADE
 func _ready() -> void:
 	super._ready()
 	DayNightCycle.phase_changed.connect(_on_phase_changed)
+	InventoryManager.inventory_changed.connect(_on_inventory_changed)
 	_update_visual()
 
 
@@ -112,6 +113,12 @@ func _on_phase_changed(phase: String) -> void:
 		_cancel_build()
 		_update_visual()
 		_hide_prompt()
+
+
+func _on_inventory_changed() -> void:
+	_update_visual()
+	if _player_in_range and _has_interaction_focus():
+		_refresh_prompt()
 
 
 func _can_afford() -> bool:

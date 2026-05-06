@@ -15,6 +15,8 @@ func _ready() -> void:
 	super._ready()
 	_find_placement_manager()
 	SaveManager.load_completed.connect(_on_load_completed)
+	DayNightCycle.phase_changed.connect(_on_phase_changed)
+	InventoryManager.inventory_changed.connect(_on_inventory_changed)
 	_refresh_visual()
 
 
@@ -26,6 +28,18 @@ func _on_load_completed(_ok: bool) -> void:
 	_find_placement_manager()
 	_refresh_visual()
 	_refresh_prompt()
+
+
+func _on_phase_changed(_phase: String) -> void:
+	_refresh_visual()
+	if _player_in_range and _has_interaction_focus():
+		_refresh_prompt()
+
+
+func _on_inventory_changed() -> void:
+	_refresh_visual()
+	if _player_in_range and _has_interaction_focus():
+		_refresh_prompt()
 
 
 func _can_interact() -> bool:
