@@ -1644,6 +1644,9 @@ barricade_sideways = true
 [node name="BreedingBench" parent="YSortLayer" unique_id=62907201 instance=ExtResource("12_bench")]
 position = Vector2(832, 848)
 
+[node name="DaytimeEventSpawner" parent="YSortLayer" unique_id=1891234567 instance=ExtResource("21_events")]
+event_parent_path = NodePath("..")
+
 [node name="DebugOverlay" type="CanvasLayer" parent="." unique_id=674103109]
 layer = 10
 
@@ -1714,8 +1717,6 @@ enemy_container_path = NodePath("../YSortLayer")
 [node name="FullMapScreen" parent="." unique_id=1782765435 instance=ExtResource("20_fullmap")]
 
 [node name="EndingScreen" parent="." unique_id=1708759462 instance=ExtResource("19_ending")]
-
-[node name="DaytimeEventSpawner" parent="." unique_id=1891234567 instance=ExtResource("21_events")]
 
 [node name="GardenExpansionSpot" parent="YSortLayer" unique_id=500100001 instance=ExtResource("23_expansion")]
 position = Vector2(624, 832)

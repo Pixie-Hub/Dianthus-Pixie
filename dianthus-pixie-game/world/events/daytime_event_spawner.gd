@@ -40,6 +40,8 @@ const EVENT_POSITIONS: Dictionary = {
 
 const DESPAWN_TIME_REMAINING: float = 30.0
 
+@export var event_parent_path: NodePath = NodePath("")
+
 var _active_event: DaytimeEvent = null
 var _last_event_id: StringName = &""
 var _completed_day: int = -1
@@ -49,7 +51,7 @@ var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 func _ready() -> void:
 	DayNightCycle.phase_changed.connect(_on_phase_changed)
 	if DayNightCycle.get_phase_name() == "DAY":
-		_spawn_event()
+		_spawn_initial_event.call_deferred()
 
 
 func _on_phase_changed(phase: String) -> void:
@@ -57,6 +59,11 @@ func _on_phase_changed(phase: String) -> void:
 		_spawn_event()
 	elif phase == "NIGHT":
 		_despawn_active()
+
+
+func _spawn_initial_event() -> void:
+	if DayNightCycle.get_phase_name() == "DAY":
+		_spawn_event()
 
 
 func _process(_delta: float) -> void:
@@ -101,12 +108,11 @@ func deserialize(data: Dictionary) -> void:
 			if event != null:
 				var pos_x: float = float(data.get("active_event_pos_x", 0.0))
 				var pos_y: float = float(data.get("active_event_pos_y", 0.0))
-				event.global_position = Vector2(pos_x, pos_y)
 				event.event_completed.connect(_on_event_completed)
 				event.event_despawned.connect(_on_event_despawned)
 				if event.has_signal("spawn_sealed"):
 					event.spawn_sealed.connect(_on_spawn_sealed)
-				add_child(event)
+				_add_event_to_sort_parent(event, Vector2(pos_x, pos_y))
 				event.activate()
 				_active_event = event
 				active_event_position_changed.emit(event.global_position)
@@ -144,13 +150,12 @@ func _spawn_event() -> void:
 	if event == null:
 		return
 
-	event.global_position = chosen_pos
 	event.event_completed.connect(_on_event_completed)
 	event.event_despawned.connect(_on_event_despawned)
 	if event.has_signal("spawn_sealed"):
 		event.spawn_sealed.connect(_on_spawn_sealed)
 
-	add_child(event)
+	_add_event_to_sort_parent(event, chosen_pos)
 	event.activate()
 	_active_event = event
 	active_event_position_changed.emit(chosen_pos)
@@ -219,8 +224,25 @@ func force_spawn_event(event_id: StringName) -> void:
 	event.event_despawned.connect(_on_event_despawned)
 	if event.has_signal("spawn_sealed"):
 		event.spawn_sealed.connect(_on_spawn_sealed)
-	add_child(event)
+	_add_event_to_sort_parent(event, positions[0])
 	event.activate()
 	_active_event = event
 	active_event_position_changed.emit(event.global_position)
 	print("[DaytimeEventSpawner] Force-spawned: %s" % event_id)
+
+
+func _add_event_to_sort_parent(event: DaytimeEvent, world_position: Vector2) -> void:
+	var event_parent: Node = _get_event_parent()
+	event_parent.add_child(event)
+	event.global_position = world_position
+
+
+func _get_event_parent() -> Node:
+	if event_parent_path != NodePath(""):
+		var configured_parent: Node = get_node_or_null(event_parent_path)
+		if configured_parent != null:
+			return configured_parent
+	var parent_node: Node = get_parent()
+	if parent_node != null:
+		return parent_node
+	return self
