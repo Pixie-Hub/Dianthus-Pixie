@@ -56,6 +56,10 @@ func _get_build_display_name() -> String:
 	return "Garden"
 
 
+func _get_build_progress_title() -> String:
+	return "Expanding Garden"
+
+
 func _get_build_accent_color() -> Color:
 	return Color(0.3, 1.0, 0.4, 1.0)
 

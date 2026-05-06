@@ -36,7 +36,7 @@ func _process(delta: float) -> void:
 	_build_progress += delta / _get_build_time()
 	_update_progress_bar()
 	_show_prompt(
-		"Building %s" % _get_build_display_name(),
+		_get_build_progress_title(),
 		"Progress: %.0f%%" % (_build_progress * 100.0),
 		"Hold E",
 		"Release E to cancel",
@@ -111,6 +111,10 @@ func _get_build_time() -> float:
 
 func _get_build_display_name() -> String:
 	return ""
+
+
+func _get_build_progress_title() -> String:
+	return "Building %s" % _get_build_display_name()
 
 
 func _get_build_accent_color() -> Color:
