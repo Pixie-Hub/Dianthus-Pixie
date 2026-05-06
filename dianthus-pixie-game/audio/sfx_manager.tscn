@@ -24,9 +24,17 @@
 [ext_resource type="AudioStream" uid="uid://dar4qdte07gnw" path="res://audio/sfx/crafting_ui/Crafting Success.wav" id="sfx_crafting_success"]
 [ext_resource type="AudioStream" uid="uid://deuh7dtsnkyvs" path="res://audio/sfx/combat/player_attack/Crystal Lash crack.wav" id="sfx_crystal_lash_crack"]
 [ext_resource type="AudioStream" uid="uid://h6acnxatvs0h" path="res://audio/sfx/night_wave_events/Dawn Transition.wav" id="sfx_dawn_transition"]
+[ext_resource type="AudioStream" uid="uid://c6gg25l6lipen" path="res://audio/sfx/enemies/Devourer Channel.wav" id="sfx_devourer_channel"]
+[ext_resource type="AudioStream" uid="uid://ca46ipkidi83q" path="res://audio/sfx/enemies/Devourer Dark Pulse.wav" id="sfx_devourer_dark_pulse"]
+[ext_resource type="AudioStream" uid="uid://bfvy6w3x4jfpo" path="res://audio/sfx/enemies/Devourer Dark Pulse Charge.wav" id="sfx_devourer_dark_pulse_charge"]
+[ext_resource type="AudioStream" uid="uid://bowwkjmxgn1ge" path="res://audio/sfx/enemies/Devourer Death.wav" id="sfx_devourer_death"]
+[ext_resource type="AudioStream" uid="uid://corqupb0jyj85" path="res://audio/sfx/enemies/Devourer Phase Transition.wav" id="sfx_devourer_phase_transition"]
+[ext_resource type="AudioStream" uid="uid://dlratw377g4t8" path="res://audio/sfx/enemies/Devourer Slam.wav" id="sfx_devourer_slam"]
+[ext_resource type="AudioStream" uid="uid://bhlyudnfh3lr1" path="res://audio/sfx/enemies/Devourer Summon.wav" id="sfx_devourer_summon"]
 [ext_resource type="AudioStream" uid="uid://b3ch335v2xcin" path="res://audio/sfx/quest_story/ending_screen.wav" id="sfx_ending_screen"]
 [ext_resource type="AudioStream" uid="uid://dk38dd8fiygm1" path="res://audio/sfx/quest_story/endless_mode_activate.wav" id="sfx_endless_mode_activate"]
 [ext_resource type="AudioStream" uid="uid://dmf1dfu1givlc" path="res://audio/sfx/enemies/Enemy Hit (Generic).wav" id="sfx_enemy_hit"]
+[ext_resource type="AudioStream" uid="uid://bsxwnbcvgevsi" path="res://audio/sfx/crafting_ui/Fortification Build.wav" id="sfx_fortification_built"]
 [ext_resource type="AudioStream" uid="uid://do3qcwp7jp4rl" path="res://audio/sfx/minigames/Harvest QTE Fail.wav" id="sfx_harvest_qte_fail"]
 [ext_resource type="AudioStream" uid="uid://cvkpex2q0yedl" path="res://audio/sfx/minigames/Harvest QTE Prompt.wav" id="sfx_harvest_qte_prompt"]
 [ext_resource type="AudioStream" uid="uid://d2hn7vrf4g58a" path="res://audio/sfx/minigames/Harvest QTE Success.wav" id="sfx_harvest_qte_success"]
@@ -693,50 +701,56 @@ panning_strength = 0.0
 bus = &"SFX"
 metadata/pitch_rand_range = 0.04
 
+[node name="fortification_built" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700002001]
+stream = ExtResource("sfx_fortification_built")
+max_distance = 1000000.0
+panning_strength = 0.0
+bus = &"SFX"
+metadata/pitch_rand_range = 0.03
+
 [node name="devourer_slam" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700001001]
-stream = ExtResource("sfx_enemy_hit")
+stream = ExtResource("sfx_devourer_slam")
 volume_db = 6.0
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
 
 [node name="devourer_dark_pulse_charge" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700001002]
-stream = ExtResource("sfx_phantom_weaver_teleport")
+stream = ExtResource("sfx_devourer_dark_pulse_charge")
 volume_db = -4.0
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
 
-[node name="devourer_dark_pulse_fire" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700001003]
-stream = ExtResource("sfx_void_grenade_detonate")
+[node name="devourer_dark_pulse" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700001003]
+stream = ExtResource("sfx_devourer_dark_pulse")
 volume_db = -6.0
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
 
-[node name="devourer_surge_channel" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700001004]
-stream = ExtResource("sfx_rafflesia_miasma_hum")
+[node name="devourer_channel" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700001004]
+stream = ExtResource("sfx_devourer_channel")
 volume_db = 0.0
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
 
-[node name="devourer_surge_interrupt" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700001005]
-stream = ExtResource("sfx_player_take_damage")
-volume_db = -4.0
+[node name="devourer_summon" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700001005]
+stream = ExtResource("sfx_devourer_summon")
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
 
 [node name="devourer_phase_transition" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700001006]
-stream = ExtResource("sfx_surge_night_warning")
+stream = ExtResource("sfx_devourer_phase_transition")
 volume_db = 0.0
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
 
 [node name="devourer_death" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700001007]
-stream = ExtResource("sfx_core_destroyed")
+stream = ExtResource("sfx_devourer_death")
 volume_db = 4.0
 max_distance = 1000000.0
 panning_strength = 0.0
@@ -1174,3 +1188,40 @@ stream = ExtResource("sfx_harvest_qte_fail")
 volume_db = 16.0
 bus = &"SFX"
 metadata/pitch_rand_range = 0.04
+
+[node name="fortification_built" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=700002101]
+stream = ExtResource("sfx_fortification_built")
+bus = &"SFX"
+metadata/pitch_rand_range = 0.03
+
+[node name="devourer_slam" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=700002102]
+stream = ExtResource("sfx_devourer_slam")
+volume_db = 6.0
+bus = &"SFX"
+
+[node name="devourer_dark_pulse_charge" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=700002103]
+stream = ExtResource("sfx_devourer_dark_pulse_charge")
+volume_db = -4.0
+bus = &"SFX"
+
+[node name="devourer_dark_pulse" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=700002104]
+stream = ExtResource("sfx_devourer_dark_pulse")
+volume_db = -6.0
+bus = &"SFX"
+
+[node name="devourer_channel" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=700002105]
+stream = ExtResource("sfx_devourer_channel")
+bus = &"SFX"
+
+[node name="devourer_summon" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=700002106]
+stream = ExtResource("sfx_devourer_summon")
+bus = &"SFX"
+
+[node name="devourer_phase_transition" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=700002107]
+stream = ExtResource("sfx_devourer_phase_transition")
+bus = &"SFX"
+
+[node name="devourer_death" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=700002108]
+stream = ExtResource("sfx_devourer_death")
+volume_db = 4.0
+bus = &"SFX"

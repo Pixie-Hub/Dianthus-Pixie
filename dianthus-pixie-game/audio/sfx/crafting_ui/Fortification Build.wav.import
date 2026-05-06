@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bsxwnbcvgevsi"
+path="res://.godot/imported/Fortification Build.wav-1869f68a72aab7886dfa26482393270a.sample"
+
+[deps]
+
+source_file="res://audio/sfx/crafting_ui/Fortification Build.wav"
+dest_files=["res://.godot/imported/Fortification Build.wav-1869f68a72aab7886dfa26482393270a.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2
