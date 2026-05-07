@@ -5,17 +5,17 @@
 
 [sub_resource type="Resource" id="Resource_obj1"]
 script = ExtResource("2_qobj")
-objective_id = &"survive_2_nights"
-description = "Survive 2 nights"
+objective_id = &"survive_3_nights"
+description = "Survive 3 nights"
 event_id = &"day_survived"
-target_count = 2
+target_count = 3
 filter = {}
 
 [resource]
 script = ExtResource("1_qdata")
 quest_id = &"story_01_whispers"
 display_name = "Whispers of the Void"
-description = "Something stirs beyond the garden. Survive 2 nights and prove the Dianthus Core can endure what the darkness sends."
+description = "Something stirs beyond the garden. Survive 3 nights and prove the Dianthus Core can endure what the darkness sends."
 quest_type = 3
 objectives = Array[ExtResource("2_qobj")]([SubResource("Resource_obj1")])
 reward_items = {"aether_bloom": 1}
