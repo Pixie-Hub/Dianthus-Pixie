@@ -1,0 +1,8 @@
+label story_06_complete (Petals of Power Complete)
+[style name="Gameplay"]
+"Dianthus Core" (Default): You gathered my pollen and shaped it into purpose.
+"Dianthus Core": The Blazeblade carries sunlight through thorn and metal. Against the Devourer, ordinary steel would only remember fear.
+"Dianthus Core": The Core Sanctum opens because you have learned the cost of touching sacred growth.
+"Dianthus Core": When night calls again, answer with everything this garden has become.
+[signal arg="quest_start:story_07_devourer"]
+[end_timeline]

@@ -1,0 +1,8 @@
+label story_02_complete (An Ill Omen Complete)
+[style name="Gameplay"]
+"Dianthus Core" (Default): Ten shadows have fallen into the soil. Their silence is not peace.
+"Dianthus Core": Moonspore clings to them because even void-born things carry traces of night-blooming life.
+"Dianthus Core": I feel an old road waking beyond the meadow. The Ruins of Veld remember what the darkness took.
+"Dianthus Core": Follow that memory while the day still belongs to us.
+[signal arg="quest_start:story_03_journey"]
+[end_timeline]

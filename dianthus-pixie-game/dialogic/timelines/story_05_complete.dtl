@@ -1,0 +1,8 @@
+label story_05_complete (The Voidlord Stirs Complete)
+[style name="Gameplay"]
+"Dianthus Core" (Default): The Voidlord has fallen. I felt its name tear loose from the roots of the night.
+"Dianthus Core": It was only a herald, but heralds carry maps. Its shadow pointed toward the Devourer.
+"Dianthus Core": My pollen is no longer only a blessing. It is a key, a blade-edge, and the last seed of my hidden strength.
+"Dianthus Core": Harvest it when the light steadies. Forge something worthy of the final bloom.
+[signal arg="quest_start:story_06_pollen"]
+[end_timeline]

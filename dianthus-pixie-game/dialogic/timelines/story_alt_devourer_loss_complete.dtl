@@ -1,0 +1,7 @@
+label story_alt_devourer_loss_complete (The Lingering Bloom Complete)
+[style name="Gameplay"]
+"Dianthus Core" (Default): The Devourer still stirs, but we are not yet swallowed.
+"Dianthus Core": The lingering bloom is fragile. Fragile things still split stone when they keep growing.
+"Dianthus Core": Carry this light forward. Every night survived becomes a seed the dark failed to eat.
+[signal arg="story_alt_complete:devourer_loss"]
+[end_timeline]

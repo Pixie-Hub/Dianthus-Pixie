@@ -46,7 +46,22 @@ GardenStructureManager="*res://world/garden/garden_structure_manager.gd"
 [dialogic]
 
 directories/dtl_directory={
-"interactive_tutorial": "res://dialogic/timelines/interactive_tutorial.dtl"
+"interactive_tutorial": "res://dialogic/timelines/interactive_tutorial.dtl",
+"story_01_complete": "res://dialogic/timelines/story_01_complete.dtl",
+"story_02_complete": "res://dialogic/timelines/story_02_complete.dtl",
+"story_02_fail": "res://dialogic/timelines/story_02_fail.dtl",
+"story_03_complete": "res://dialogic/timelines/story_03_complete.dtl",
+"story_03_fail": "res://dialogic/timelines/story_03_fail.dtl",
+"story_04_complete": "res://dialogic/timelines/story_04_complete.dtl",
+"story_04_fail": "res://dialogic/timelines/story_04_fail.dtl",
+"story_05_complete": "res://dialogic/timelines/story_05_complete.dtl",
+"story_05_fail": "res://dialogic/timelines/story_05_fail.dtl",
+"story_06_complete": "res://dialogic/timelines/story_06_complete.dtl",
+"story_07_complete": "res://dialogic/timelines/story_07_complete.dtl",
+"story_07_fail": "res://dialogic/timelines/story_07_fail.dtl",
+"story_alt_devourer_loss_complete": "res://dialogic/timelines/story_alt_devourer_loss_complete.dtl",
+"story_alt_lost_complete": "res://dialogic/timelines/story_alt_lost_complete.dtl",
+"story_alt_voidlord_loss_complete": "res://dialogic/timelines/story_alt_voidlord_loss_complete.dtl"
 }
 directories/dch_directory={
 "Dianthus Core": "res://dialogic/characters/Dianthus Core.dch"

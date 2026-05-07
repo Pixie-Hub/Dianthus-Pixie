@@ -1,0 +1,8 @@
+label story_03_complete (The Long Road Complete)
+[style name="Gameplay"]
+"Dianthus Core" (Default): You reached the Ruins of Veld. I can feel their stones through your breath.
+"Dianthus Core": Once, roots crossed there without fear. Now the cracks drink shadow and return only hunger.
+"Dianthus Core": Take care among the broken walls. Shadow Resin gathers where old life was pressed too long beneath void.
+"Dianthus Core": Bring back proof, and I will teach the garden how to answer ruin with craft.
+[signal arg="quest_start:story_04_ruins"]
+[end_timeline]

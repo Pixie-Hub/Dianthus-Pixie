@@ -1,0 +1,7 @@
+label story_alt_voidlord_loss_complete (Shadow Triumphant Complete)
+[style name="Gameplay"]
+"Dianthus Core" (Default): The Voidlord's shadow rules more of the night now, but it does not rule your hands.
+"Dianthus Core": Three days of resistance are three wounds in its certainty.
+"Dianthus Core": If this is the shape survival must take, then we will make survival thorned, stubborn, and bright enough to hurt.
+[signal arg="story_alt_complete:voidlord_loss"]
+[end_timeline]

@@ -1,0 +1,7 @@
+label story_alt_lost_complete (A Path Forsaken Complete)
+[style name="Gameplay"]
+"Dianthus Core" (Default): Five more days. Five more dawns pulled from a path we thought was gone.
+"Dianthus Core": The old chain is broken, but your hands did not stop tending life.
+"Dianthus Core": This is not the true bloom I dreamed of. It is still a garden, and it still stands because of you.
+[signal arg="story_alt_complete:lost"]
+[end_timeline]

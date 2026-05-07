@@ -1,0 +1,8 @@
+label story_07_fail (The Final Bloom Failed)
+[style name="Gameplay"]
+"Dianthus Core" (Default): The Devourer has not been stopped.
+"Dianthus Core": I can feel its hunger moving beneath every root, patient and vast.
+"Dianthus Core": Still, a lingering bloom is not nothing. If we cannot win the dawn, we can make the dark pay for every breath it takes.
+"Dianthus Core": Stay with me. We endure as long as one petal remembers light.
+[signal arg="quest_start:story_alt_devourer_loss"]
+[end_timeline]
