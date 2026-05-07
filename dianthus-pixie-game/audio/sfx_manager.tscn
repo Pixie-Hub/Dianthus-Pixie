@@ -710,28 +710,26 @@ metadata/pitch_rand_range = 0.03
 
 [node name="devourer_slam" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700001001]
 stream = ExtResource("sfx_devourer_slam")
-volume_db = 6.0
+volume_db = -4.0
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
 
 [node name="devourer_dark_pulse_charge" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700001002]
 stream = ExtResource("sfx_devourer_dark_pulse_charge")
-volume_db = -4.0
+volume_db = -6.0
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
 
 [node name="devourer_dark_pulse" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700001003]
 stream = ExtResource("sfx_devourer_dark_pulse")
-volume_db = -6.0
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
 
 [node name="devourer_channel" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700001004]
 stream = ExtResource("sfx_devourer_channel")
-volume_db = 0.0
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
@@ -744,14 +742,13 @@ bus = &"SFX"
 
 [node name="devourer_phase_transition" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700001006]
 stream = ExtResource("sfx_devourer_phase_transition")
-volume_db = 0.0
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
 
 [node name="devourer_death" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700001007]
 stream = ExtResource("sfx_devourer_death")
-volume_db = 4.0
+volume_db = -2.0
 max_distance = 1000000.0
 panning_strength = 0.0
 bus = &"SFX"
@@ -1196,17 +1193,16 @@ metadata/pitch_rand_range = 0.03
 
 [node name="devourer_slam" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=700002102]
 stream = ExtResource("sfx_devourer_slam")
-volume_db = 6.0
+volume_db = -4.0
 bus = &"SFX"
 
 [node name="devourer_dark_pulse_charge" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=700002103]
 stream = ExtResource("sfx_devourer_dark_pulse_charge")
-volume_db = -4.0
+volume_db = -6.0
 bus = &"SFX"
 
 [node name="devourer_dark_pulse" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=700002104]
 stream = ExtResource("sfx_devourer_dark_pulse")
-volume_db = -6.0
 bus = &"SFX"
 
 [node name="devourer_channel" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=700002105]
@@ -1223,5 +1219,5 @@ bus = &"SFX"
 
 [node name="devourer_death" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=700002108]
 stream = ExtResource("sfx_devourer_death")
-volume_db = 4.0
+volume_db = -2.0
 bus = &"SFX"
