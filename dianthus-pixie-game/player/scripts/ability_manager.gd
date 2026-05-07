@@ -88,6 +88,7 @@ func _ability_dash(player: CharacterBody2D) -> void:
 	var dir: Vector2 = Vector2(player.get("last_direction"))
 	if dir == Vector2.ZERO:
 		dir = Vector2.DOWN
+	SfxManager.play_at("ability_dash", player.global_position)
 	player.set("is_invincible", true)
 	var tween: Tween = player.create_tween()
 	tween.set_ease(Tween.EASE_OUT)
@@ -100,11 +101,13 @@ func _ability_dash(player: CharacterBody2D) -> void:
 
 
 func _ability_heal_pulse(player: CharacterBody2D) -> void:
+	SfxManager.play_at("ability_heal_pulse", player.global_position)
 	if player.has_method("heal"):
 		player.heal(HEAL_PULSE_AMOUNT)
 
 
 func _ability_thorn_burst(player: CharacterBody2D) -> void:
+	SfxManager.play_at("ability_thorn_burst", player.global_position)
 	var hit_count: int = 0
 	for body in player.get_tree().get_nodes_in_group(&"enemies"):
 		if body is EnemyBase and not body.is_dead:

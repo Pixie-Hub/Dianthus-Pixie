@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://c23x1p75j5mst"]
 
 [ext_resource type="Script" uid="uid://2v6xeclupx3j" path="res://audio/sfx_manager.gd" id="1_sfx_manager"]
+[ext_resource type="AudioStream" uid="uid://dckckn0exga7o" path="res://audio/sfx/combat/player_attack/Ability Dash.wav" id="sfx_ability_dash"]
+[ext_resource type="AudioStream" uid="uid://c72m0npkej3h6" path="res://audio/sfx/combat/player_attack/Ability Heal Pulse.wav" id="sfx_ability_heal_pulse"]
+[ext_resource type="AudioStream" uid="uid://tc1qpxs3yyug" path="res://audio/sfx/combat/player_attack/Ability Thorn Burst.wav" id="sfx_ability_thorn_burst"]
 [ext_resource type="AudioStream" uid="uid://c2vtnan6nhyjq" path="res://audio/sfx/plants/Baja Kuning Armor Buff.wav" id="sfx_baja_kuning_armor_buff"]
 [ext_resource type="AudioStream" uid="uid://dklcy4rg7abts" path="res://audio/sfx/plants/beringin_root_wall_break.wav" id="sfx_beringin_wall_break"]
 [ext_resource type="AudioStream" uid="uid://blw8stanpj" path="res://audio/sfx/plants/beringin_root_wall_spawn.wav" id="sfx_beringin_wall_spawn"]
@@ -99,6 +102,28 @@
 script = ExtResource("1_sfx_manager")
 
 [node name="GlobalPlayers" type="Node" parent="." unique_id=1088028909]
+
+[node name="ability_dash" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700003001]
+stream = ExtResource("sfx_ability_dash")
+volume_db = -4.0
+max_distance = 1000000.0
+panning_strength = 0.0
+bus = &"SFX"
+metadata/pitch_rand_range = 0.04
+
+[node name="ability_heal_pulse" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700003002]
+stream = ExtResource("sfx_ability_heal_pulse")
+max_distance = 1000000.0
+panning_strength = 0.0
+bus = &"SFX"
+
+[node name="ability_thorn_burst" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=700003003]
+stream = ExtResource("sfx_ability_thorn_burst")
+volume_db = -2.0
+max_distance = 1000000.0
+panning_strength = 0.0
+bus = &"SFX"
+metadata/pitch_rand_range = 0.03
 
 [node name="thorn_sword_swing" type="AudioStreamPlayer2D" parent="GlobalPlayers" unique_id=518379084]
 stream = ExtResource("sfx_thorn_sword_swing")
@@ -754,6 +779,22 @@ panning_strength = 0.0
 bus = &"SFX"
 
 [node name="SpatialPlayers" type="Node" parent="." unique_id=495815009]
+
+[node name="ability_dash" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=700003101]
+stream = ExtResource("sfx_ability_dash")
+volume_db = -4.0
+bus = &"SFX"
+metadata/pitch_rand_range = 0.04
+
+[node name="ability_heal_pulse" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=700003102]
+stream = ExtResource("sfx_ability_heal_pulse")
+bus = &"SFX"
+
+[node name="ability_thorn_burst" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=700003103]
+stream = ExtResource("sfx_ability_thorn_burst")
+volume_db = -2.0
+bus = &"SFX"
+metadata/pitch_rand_range = 0.03
 
 [node name="thorn_sword_swing" type="AudioStreamPlayer2D" parent="SpatialPlayers" unique_id=876271441]
 stream = ExtResource("sfx_thorn_sword_swing")
