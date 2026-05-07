@@ -6,7 +6,6 @@ signal enemy_died(enemy: EnemyBase)
 signal damage_dealt(target: Node, amount: int)
 
 const FLIP_DEADZONE: float = 5.0
-const _SEED_PICKUP: PackedScene = preload("res://inventory/pickups/resource_pickup.tscn")
 const EnemyCatalog = preload("res://ui/codex/enemy_registry.gd")
 
 @export var max_hp: int = 40
@@ -36,8 +35,11 @@ func _ready() -> void:
 	var enemy_id: String = EnemyCatalog.get_enemy_id_for_node(self)
 	if not enemy_id.is_empty():
 		CodexManager.discover_enemy(enemy_id)
-	collision_layer = CollisionLayers.ENEMY
-	collision_mask = CollisionLayers.MASK_ENEMY
+	# Enemy scenes own their body physics masks; this only fills script-created defaults.
+	if collision_layer == 1:
+		collision_layer = CollisionLayers.ENEMY
+	if collision_mask == 1:
+		collision_mask = CollisionLayers.MASK_ENEMY
 
 
 func take_damage(amount: int) -> void:
@@ -64,7 +66,7 @@ func die() -> void:
 		fsm.set_physics_process(false)
 	enemy_died.emit(self)
 	remove_from_group(&"enemies")
-	_try_drop_seed()
+	_try_grant_seed_drop()
 	if is_instance_valid(GameManager.player) and GameManager.player.has_method("add_energy"):
 		GameManager.player.add_energy(10)
 	_play_death_animation()
@@ -243,16 +245,43 @@ func _get_seed_drop_table() -> Array[Dictionary]:
 	return []
 
 
-func _try_drop_seed() -> void:
+func _try_grant_seed_drop() -> void:
 	for entry: Dictionary in _get_seed_drop_table():
 		if randf() < float(entry.get("chance", 0.0)):
-			var pickup: Node2D = _SEED_PICKUP.instantiate() as Node2D
-			pickup.set("item_id", entry.get("item", ""))
-			pickup.set("amount", 1)
-			var drop_pos: Vector2 = global_position
-			get_parent().call_deferred("add_child", pickup)
-			pickup.set_deferred("global_position", drop_pos)
+			var item_id: String = str(entry.get("item", ""))
+			var amount: int = int(entry.get("amount", 1))
+			if item_id.is_empty() or amount <= 0:
+				return
+			var overflow: int = InventoryManager.add_item(item_id, amount)
+			var granted: int = amount - overflow
+			if granted > 0:
+				_show_drop_popup(
+					"+%d %s" % [granted, ItemDatabase.get_display_name(item_id)],
+					Color(1.0, 1.0, 0.6)
+				)
+			if overflow > 0:
+				_show_drop_popup("Inventory Full!", Color(1.0, 0.4, 0.4))
 			return
+
+
+func _show_drop_popup(text: String, color: Color) -> void:
+	var target_parent: Node = get_parent()
+	if target_parent == null:
+		target_parent = get_tree().current_scene
+	if target_parent == null:
+		return
+	var label: Label = Label.new()
+	label.text = text
+	label.modulate = color
+	label.position = Vector2(-24, -16)
+	label.z_index = 10
+	target_parent.add_child(label)
+	label.global_position = global_position + Vector2(-24, -16)
+	var tween: Tween = label.create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(label, "position:y", label.position.y - 20.0, 0.8)
+	tween.tween_property(label, "modulate:a", 0.0, 0.8)
+	tween.chain().tween_callback(label.queue_free)
 
 
 func play_animation(anim_name: StringName) -> void:
