@@ -7,6 +7,7 @@ signal damage_dealt(target: Node, amount: int)
 
 const FLIP_DEADZONE: float = 5.0
 const _SEED_PICKUP: PackedScene = preload("res://inventory/pickups/resource_pickup.tscn")
+const EnemyCatalog = preload("res://ui/codex/enemy_registry.gd")
 
 @export var max_hp: int = 40
 @export var damage: int = 8
@@ -32,6 +33,9 @@ var _pull_tween: Tween = null
 func _ready() -> void:
 	current_hp = max_hp
 	add_to_group(&"enemies")
+	var enemy_id: String = EnemyCatalog.get_enemy_id_for_node(self)
+	if not enemy_id.is_empty():
+		CodexManager.discover_enemy(enemy_id)
 	collision_layer = CollisionLayers.ENEMY
 	collision_mask = CollisionLayers.MASK_ENEMY
 

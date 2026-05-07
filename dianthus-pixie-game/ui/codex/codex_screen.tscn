@@ -1,14 +1,92 @@
-[gd_scene format=3 uid="uid://bouxl6lh77c11"]
+[gd_scene load_steps=10 format=3 uid="uid://bouxl6lh77c11"]
 
 [ext_resource type="Script" uid="uid://bwrxwtn37t0ih" path="res://ui/codex/codex_screen.gd" id="1_script"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-bg_color = Color(0.08, 0.08, 0.1, 0.97)
+bg_color = Color(0.18, 0.12, 0.07, 0.98)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.72, 0.55, 0.22, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color(0, 0, 0, 0.4)
+shadow_size = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_row"]
+bg_color = Color(0.14, 0.09, 0.055, 0.96)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.35, 0.35, 0.4, 1)
+border_color = Color(0.38, 0.3, 0.14, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_row_selected"]
+bg_color = Color(0.22, 0.14, 0.075, 0.98)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.8, 0.25, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_normal"]
+bg_color = Color(0.18, 0.12, 0.07, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.72, 0.55, 0.22, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_hover"]
+bg_color = Color(0.28, 0.18, 0.1, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 0.8, 0.25, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_pressed"]
+bg_color = Color(0.1, 0.07, 0.04, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.8, 0.25, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_disabled"]
+bg_color = Color(0.35, 0.3, 0.25, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.42, 0.36, 0.25, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [node name="CodexScreen" type="CanvasLayer" unique_id=2105516701]
 script = ExtResource("1_script")
@@ -18,59 +96,310 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-color = Color(0, 0, 0, 0.6)
+color = Color(0, 0, 0, 0.65)
 
 [node name="Panel" type="PanelContainer" parent="." unique_id=462515565]
-offset_left = 112.0
-offset_top = 38.0
-offset_right = 528.0
-offset_bottom = 322.0
+offset_left = 84.0
+offset_top = 24.0
+offset_right = 556.0
+offset_bottom = 336.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=876742948]
 layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=875492470]
+[node name="RootVBox" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=875492470]
 layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=2071716378]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 9
-text = "PLANT CODEX  (0 / 11 discovered)"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=189435196]
-layout_mode = 2
-size_flags_vertical = 3
 theme_override_constants/separation = 8
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1202944247]
-custom_minimum_size = Vector2(145, 0)
+[node name="Header" type="HBoxContainer" parent="Panel/MarginContainer/RootVBox"]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
+theme_override_constants/separation = 8
 
-[node name="PlantList" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer/ScrollContainer" unique_id=595080001]
+[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/RootVBox/Header" unique_id=2071716378]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.25, 1)
+theme_override_font_sizes/font_size = 14
+text = "PLANT CODEX  (0 / 11 discovered)"
 
-[node name="DetailPanel" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1624435535]
-unique_name_in_owner = true
+[node name="CategoryTabs" type="HBoxContainer" parent="Panel/MarginContainer/RootVBox/Header"]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
 theme_override_constants/separation = 4
 
-[node name="CloseHint" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=2145736164]
-modulate = Color(0.5, 0.5, 0.5, 1)
+[node name="PlantsTabButton" type="Button" parent="Panel/MarginContainer/RootVBox/Header/CategoryTabs"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(76, 24)
 layout_mode = 2
-theme_override_font_sizes/font_size = 7
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.8, 0.25, 1)
+theme_override_colors/font_hover_color = Color(1, 0.8, 0.25, 1)
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_button_disabled")
+toggle_mode = true
+button_pressed = true
+text = "Plants"
+
+[node name="EnemiesTabButton" type="Button" parent="Panel/MarginContainer/RootVBox/Header/CategoryTabs"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(76, 24)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.8, 0.25, 1)
+theme_override_colors/font_hover_color = Color(1, 0.8, 0.25, 1)
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_button_disabled")
+toggle_mode = true
+text = "Enemies"
+
+[node name="Content" type="HBoxContainer" parent="Panel/MarginContainer/RootVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/MarginContainer/RootVBox/Content" unique_id=1202944247]
+custom_minimum_size = Vector2(155, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="EntryList" type="VBoxContainer" parent="Panel/MarginContainer/RootVBox/Content/ScrollContainer" unique_id=595080001]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 3
+
+[node name="DetailRoot" type="MarginContainer" parent="Panel/MarginContainer/RootVBox/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 0
+
+[node name="PlantDetailPanel" type="VBoxContainer" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="PlantNameLabel" type="Label" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/PlantDetailPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 14
+text = "Select a plant."
+
+[node name="PlantRoleLabel" type="Label" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/PlantDetailPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.65, 0.55, 1)
+theme_override_font_sizes/font_size = 10
+
+[node name="PlantSeparator" type="HSeparator" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/PlantDetailPanel"]
+layout_mode = 2
+modulate = Color(0.72, 0.55, 0.22, 1)
+
+[node name="PlantEffectLabel" type="Label" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/PlantDetailPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 10
+autowrap_mode = 3
+
+[node name="PlantRadiusLabel" type="Label" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/PlantDetailPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.65, 0.55, 1)
+theme_override_font_sizes/font_size = 9
+
+[node name="PlantRecipeLabel" type="Label" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/PlantDetailPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.25, 1)
+theme_override_font_sizes/font_size = 9
+autowrap_mode = 3
+
+[node name="PlantHintLabel" type="Label" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/PlantDetailPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.65, 0.55, 1)
+theme_override_font_sizes/font_size = 9
+autowrap_mode = 3
+
+[node name="PlantSpacer" type="Control" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/PlantDetailPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PlantSprite" type="TextureRect" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/PlantDetailPanel"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(112, 96)
+layout_mode = 2
+size_flags_horizontal = 8
+texture_filter = 1
+stretch_mode = 5
+
+[node name="EnemyDetailPanel" type="VBoxContainer" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="EnemyNameLabel" type="Label" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/EnemyDetailPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 14
+text = "Select an enemy."
+
+[node name="EnemyRoleLabel" type="Label" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/EnemyDetailPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.65, 0.55, 1)
+theme_override_font_sizes/font_size = 10
+
+[node name="EnemySeparator" type="HSeparator" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/EnemyDetailPanel"]
+layout_mode = 2
+modulate = Color(0.72, 0.55, 0.22, 1)
+
+[node name="EnemyStatsGrid" type="GridContainer" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/EnemyDetailPanel"]
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 2
+columns = 2
+
+[node name="EnemyHPLabel" type="Label" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/EnemyDetailPanel/EnemyStatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.25, 1)
+theme_override_font_sizes/font_size = 10
+text = "HP"
+
+[node name="EnemyHPValue" type="Label" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/EnemyDetailPanel/EnemyStatsGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 10
+text = "-"
+
+[node name="EnemyDamageLabel" type="Label" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/EnemyDetailPanel/EnemyStatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.25, 1)
+theme_override_font_sizes/font_size = 10
+text = "Damage"
+
+[node name="EnemyDamageValue" type="Label" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/EnemyDetailPanel/EnemyStatsGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 10
+text = "-"
+
+[node name="EnemySpeedLabel" type="Label" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/EnemyDetailPanel/EnemyStatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.25, 1)
+theme_override_font_sizes/font_size = 10
+text = "Speed"
+
+[node name="EnemySpeedValue" type="Label" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/EnemyDetailPanel/EnemyStatsGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 10
+text = "-"
+
+[node name="EnemyDropsLabel" type="Label" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/EnemyDetailPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 10
+autowrap_mode = 3
+
+[node name="EnemyLoreLabel" type="Label" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/EnemyDetailPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 10
+autowrap_mode = 3
+
+[node name="EnemyHintLabel" type="Label" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/EnemyDetailPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.65, 0.55, 1)
+theme_override_font_sizes/font_size = 9
+autowrap_mode = 3
+
+[node name="EnemySpacer" type="Control" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/EnemyDetailPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="EnemySprite" type="TextureRect" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/EnemyDetailPanel"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(112, 96)
+layout_mode = 2
+size_flags_horizontal = 8
+texture_filter = 1
+stretch_mode = 5
+
+[node name="CloseHint" type="Label" parent="Panel/MarginContainer/RootVBox" unique_id=2145736164]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.65, 0.55, 1)
+theme_override_font_sizes/font_size = 9
 text = "Press J to close"
+horizontal_alignment = 1
+
+[node name="ListTemplates" type="Control" parent="."]
+visible = false
+
+[node name="EntryRowTemplate" type="PanelContainer" parent="ListTemplates"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 24)
+theme_override_styles/panel = SubResource("StyleBoxFlat_row")
+
+[node name="RowMargin" type="MarginContainer" parent="ListTemplates/EntryRowTemplate"]
+layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 4
+
+[node name="RowHBox" type="HBoxContainer" parent="ListTemplates/EntryRowTemplate/RowMargin"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="EntrySwatch" type="ColorRect" parent="ListTemplates/EntryRowTemplate/RowMargin/RowHBox"]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+color = Color(0.25, 0.23, 0.2, 1)
+
+[node name="EntryNameLabel" type="Label" parent="ListTemplates/EntryRowTemplate/RowMargin/RowHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 10
+text = "Entry"
+clip_text = true
+
+[node name="EntryRowSelectedTemplate" type="PanelContainer" parent="ListTemplates"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 24)
+theme_override_styles/panel = SubResource("StyleBoxFlat_row_selected")
+
+[node name="SectionDividerTemplate" type="Label" parent="ListTemplates"]
+unique_name_in_owner = true
+theme_override_colors/font_color = Color(1, 0.8, 0.25, 1)
+theme_override_font_sizes/font_size = 9
+text = "SECTION"
 horizontal_alignment = 1
