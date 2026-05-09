@@ -137,10 +137,18 @@ func _animation_prefix_for_state(state: String) -> String:
 		"vine_whip", "crystal_lash":
 			if state in ["idle", "walk", "attack"]:
 				return "vine_whip_"
-		"petal_shield", "iron_bloom_shield":
+		"petal_shield":
 			if state in ["idle", "walk"]:
 				return "petal_shield_"
+		"iron_bloom_shield":
+			if state in ["idle", "walk"]:
+				return "iron_bloom_shield_"
 	return ""
+
+func _shield_animation_state(state: String) -> String:
+	if _current_weapon != null and _current_weapon.weapon_id == "iron_bloom_shield":
+		return "iron_bloom_shield_%s" % state
+	return "petal_shield_%s" % state
 
 func _travel(state: String, force: bool = false) -> void:
 	var prefix: String = _animation_prefix_for_state(state)
@@ -153,7 +161,7 @@ func _travel(state: String, force: bool = false) -> void:
 	if current == target_state:
 		return
 	if not force:
-		if current == &"hurt" or current == &"death" or current == &"attack" or current == &"thornsword_attack" or current == &"vine_whip_attack" or current == &"spore_bomb_attack" or current == &"petal_shield_block" or current == &"petal_shield_counter":
+		if current == &"hurt" or current == &"death" or current == &"attack" or current == &"thornsword_attack" or current == &"vine_whip_attack" or current == &"spore_bomb_attack" or current == &"petal_shield_block" or current == &"petal_shield_counter" or current == &"iron_bloom_shield_block" or current == &"iron_bloom_shield_counter":
 			return
 	_state_machine.travel(target_state)
 
@@ -211,12 +219,20 @@ func _update_blend_position() -> void:
 		_anim_tree["parameters/petal_shield_idle/blend_position"] = blend
 	if root.has_node(&"petal_shield_walk"):
 		_anim_tree["parameters/petal_shield_walk/blend_position"] = blend
+	if root.has_node(&"iron_bloom_shield_idle"):
+		_anim_tree["parameters/iron_bloom_shield_idle/blend_position"] = blend
+	if root.has_node(&"iron_bloom_shield_walk"):
+		_anim_tree["parameters/iron_bloom_shield_walk/blend_position"] = blend
 	if root.has_node(&"spore_bomb_attack"):
 		_anim_tree["parameters/spore_bomb_attack/blend_position"] = blend
 	if root.has_node(&"petal_shield_block"):
 		_anim_tree["parameters/petal_shield_block/blend_position"] = blend
 	if root.has_node(&"petal_shield_counter"):
 		_anim_tree["parameters/petal_shield_counter/blend_position"] = blend
+	if root.has_node(&"iron_bloom_shield_block"):
+		_anim_tree["parameters/iron_bloom_shield_block/blend_position"] = blend
+	if root.has_node(&"iron_bloom_shield_counter"):
+		_anim_tree["parameters/iron_bloom_shield_counter/blend_position"] = blend
 
 func set_camera_limits(left: int, top: int, right: int, bottom: int) -> void:
 	_camera.limit_left = left
@@ -788,7 +804,7 @@ func _raise_block() -> void:
 	_block_raised_time = Time.get_ticks_msec() / 1000.0
 	_saved_damage_reduction = damage_reduction
 	damage_reduction = max(damage_reduction, PETAL_SHIELD_DR)
-	_travel("petal_shield_block", true)
+	_travel(_shield_animation_state("block"), true)
 	_update_blend_position()
 	_sprite.modulate = Color(0.8, 0.9, 1.0)
 	var _raise_sfx: String = "iron_bloom_shield_raise" if _current_weapon.weapon_id == "iron_bloom_shield" else "petal_shield_raise"
@@ -806,7 +822,7 @@ func _drop_block() -> void:
 
 
 func _trigger_petal_counter() -> void:
-	_travel("petal_shield_counter", true)
+	_travel(_shield_animation_state("counter"), true)
 	_update_blend_position()
 	SfxManager.play("petal_shield_counter")
 	var radius: float = _current_weapon.attack_range

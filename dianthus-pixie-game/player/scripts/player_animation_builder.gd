@@ -118,6 +118,24 @@ const ANIM_DEFS: Array[Dictionary] = [
 		"frame_size": WEAPON_FRAME_SIZE,
 	},
 	{
+		"prefix": "iron_bloom_shield_idle",
+		"sheet": "res://player/sprites/PNG/IronBloomShield_Idle/iron_bloom_shield_idle_full.png",
+		"columns": 6,
+		"frames": [6, 6, 6, 6],
+		"loop": true,
+		"duration": 0.6,
+		"frame_size": WEAPON_FRAME_SIZE,
+	},
+	{
+		"prefix": "iron_bloom_shield_walk",
+		"sheet": "res://player/sprites/PNG/IronBloomShield_Walk/iron_bloom_shield_walk_full.png",
+		"columns": 6,
+		"frames": [6, 6, 6, 6],
+		"loop": true,
+		"duration": 0.6,
+		"frame_size": WEAPON_FRAME_SIZE,
+	},
+	{
 		"prefix": "thornsword_attack",
 		"sheet": "res://player/sprites/PNG/ThornSword_Attack/thornsword_attack_full.png",
 		"columns": 8,
@@ -157,6 +175,25 @@ const ANIM_DEFS: Array[Dictionary] = [
 	{
 		"prefix": "petal_shield_counter",
 		"sheet": "res://player/sprites/PNG/PetalShield_Attack/petal_shield_attack_full.png",
+		"columns": 8,
+		"frames": [5, 5, 5, 5],
+		"start_frame": 3,
+		"loop": false,
+		"duration": 0.3,
+		"frame_size": WEAPON_FRAME_SIZE,
+	},
+	{
+		"prefix": "iron_bloom_shield_block",
+		"sheet": "res://player/sprites/PNG/IronBloomShield_Attack/iron_bloom_shield_attack_full.png",
+		"columns": 8,
+		"frames": [3, 3, 3, 3],
+		"loop": false,
+		"duration": 0.15,
+		"frame_size": WEAPON_FRAME_SIZE,
+	},
+	{
+		"prefix": "iron_bloom_shield_counter",
+		"sheet": "res://player/sprites/PNG/IronBloomShield_Attack/iron_bloom_shield_attack_full.png",
 		"columns": 8,
 		"frames": [5, 5, 5, 5],
 		"start_frame": 3,
@@ -242,6 +279,7 @@ static func build_tree(anim_tree: AnimationTree) -> void:
 		"spore_bomb_idle", "spore_bomb_walk",
 		"vine_whip_idle", "vine_whip_walk",
 		"petal_shield_idle", "petal_shield_walk",
+		"iron_bloom_shield_idle", "iron_bloom_shield_walk",
 	]
 
 	for def: Dictionary in ANIM_DEFS:
@@ -300,22 +338,26 @@ static func build_tree(anim_tree: AnimationTree) -> void:
 	spore_attack_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
 	sm.add_transition("spore_bomb_attack", "spore_bomb_idle", spore_attack_to_idle)
 
-	for src: String in movement_states:
-		sm.add_transition(src, "petal_shield_block", AnimationNodeStateMachineTransition.new())
+	for shield_prefix: String in ["petal_shield", "iron_bloom_shield"]:
+		var block_state: String = "%s_block" % shield_prefix
+		var counter_state: String = "%s_counter" % shield_prefix
+		var idle_state: String = "%s_idle" % shield_prefix
+		for src: String in movement_states:
+			sm.add_transition(src, block_state, AnimationNodeStateMachineTransition.new())
 
-	var petal_block_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
-	petal_block_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
-	petal_block_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
-	sm.add_transition("petal_shield_block", "petal_shield_idle", petal_block_to_idle)
+		var block_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
+		block_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
+		block_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
+		sm.add_transition(block_state, idle_state, block_to_idle)
 
-	for src: String in movement_states:
-		sm.add_transition(src, "petal_shield_counter", AnimationNodeStateMachineTransition.new())
-	sm.add_transition("petal_shield_block", "petal_shield_counter", AnimationNodeStateMachineTransition.new())
+		for src: String in movement_states:
+			sm.add_transition(src, counter_state, AnimationNodeStateMachineTransition.new())
+		sm.add_transition(block_state, counter_state, AnimationNodeStateMachineTransition.new())
 
-	var petal_counter_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
-	petal_counter_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
-	petal_counter_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
-	sm.add_transition("petal_shield_counter", "petal_shield_idle", petal_counter_to_idle)
+		var counter_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
+		counter_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
+		counter_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
+		sm.add_transition(counter_state, idle_state, counter_to_idle)
 
 	sm.set_graph_offset(Vector2(0, 0))
 	anim_tree.tree_root = sm
