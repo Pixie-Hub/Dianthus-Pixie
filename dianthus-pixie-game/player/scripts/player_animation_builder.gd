@@ -91,6 +91,25 @@ const ANIM_DEFS: Array[Dictionary] = [
 		"duration": 0.2,
 		"frame_size": SPORE_BOMB_THROW_FRAME_SIZE,
 	},
+	{
+		"prefix": "petal_shield_block",
+		"sheet": "res://player/sprites/PNG/PetalShield_Attack/petal_shield_attack_full.png",
+		"columns": 8,
+		"frames": [3, 3, 3, 3],
+		"loop": false,
+		"duration": 0.15,
+		"frame_size": WEAPON_FRAME_SIZE,
+	},
+	{
+		"prefix": "petal_shield_counter",
+		"sheet": "res://player/sprites/PNG/PetalShield_Attack/petal_shield_attack_full.png",
+		"columns": 8,
+		"frames": [5, 5, 5, 5],
+		"start_frame": 3,
+		"loop": false,
+		"duration": 0.3,
+		"frame_size": WEAPON_FRAME_SIZE,
+	},
 ]
 
 const BLEND_POSITIONS: Dictionary = {
@@ -115,6 +134,7 @@ static func build(anim_player: AnimationPlayer, sprite_path: String) -> void:
 			var row_idx: int = dir_idx
 			if def.has("rows"):
 				row_idx = int(def["rows"][dir_idx])
+			var start_frame: int = int(def["start_frame"]) if def.has("start_frame") else 0
 
 			var anim: Animation = Animation.new()
 			anim.length = total_time
@@ -138,7 +158,7 @@ static func build(anim_player: AnimationPlayer, sprite_path: String) -> void:
 
 			for f: int in frame_count:
 				var rect: Rect2 = Rect2(
-					f * frame_size.x,
+					(start_frame + f) * frame_size.x,
 					row_idx * frame_size.y,
 					frame_size.x,
 					frame_size.y
@@ -223,6 +243,22 @@ static func build_tree(anim_tree: AnimationTree) -> void:
 	spore_attack_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
 	spore_attack_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
 	sm.add_transition("spore_bomb_attack", "idle", spore_attack_to_idle)
+
+	for src: String in ["idle", "walk", "thornsword_idle", "thornsword_walk"]:
+		sm.add_transition(src, "petal_shield_block", AnimationNodeStateMachineTransition.new())
+
+	var petal_block_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
+	petal_block_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
+	petal_block_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
+	sm.add_transition("petal_shield_block", "idle", petal_block_to_idle)
+
+	for src: String in ["idle", "walk", "thornsword_idle", "thornsword_walk", "petal_shield_block"]:
+		sm.add_transition(src, "petal_shield_counter", AnimationNodeStateMachineTransition.new())
+
+	var petal_counter_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
+	petal_counter_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
+	petal_counter_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
+	sm.add_transition("petal_shield_counter", "idle", petal_counter_to_idle)
 
 	sm.set_graph_offset(Vector2(0, 0))
 	anim_tree.tree_root = sm

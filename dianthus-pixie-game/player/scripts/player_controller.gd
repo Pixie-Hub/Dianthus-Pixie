@@ -146,7 +146,7 @@ func _travel(state: String, force: bool = false) -> void:
 	if current == target_state:
 		return
 	if not force:
-		if current == &"hurt" or current == &"death" or current == &"attack" or current == &"thornsword_attack" or current == &"vine_whip_attack" or current == &"spore_bomb_attack":
+		if current == &"hurt" or current == &"death" or current == &"attack" or current == &"thornsword_attack" or current == &"vine_whip_attack" or current == &"spore_bomb_attack" or current == &"petal_shield_block" or current == &"petal_shield_counter":
 			return
 	_state_machine.travel(target_state)
 
@@ -186,6 +186,10 @@ func _update_blend_position() -> void:
 		_anim_tree["parameters/vine_whip_attack/blend_position"] = blend
 	if root.has_node(&"spore_bomb_attack"):
 		_anim_tree["parameters/spore_bomb_attack/blend_position"] = blend
+	if root.has_node(&"petal_shield_block"):
+		_anim_tree["parameters/petal_shield_block/blend_position"] = blend
+	if root.has_node(&"petal_shield_counter"):
+		_anim_tree["parameters/petal_shield_counter/blend_position"] = blend
 
 func set_camera_limits(left: int, top: int, right: int, bottom: int) -> void:
 	_camera.limit_left = left
@@ -757,6 +761,8 @@ func _raise_block() -> void:
 	_block_raised_time = Time.get_ticks_msec() / 1000.0
 	_saved_damage_reduction = damage_reduction
 	damage_reduction = max(damage_reduction, PETAL_SHIELD_DR)
+	_travel("petal_shield_block", true)
+	_update_blend_position()
 	_sprite.modulate = Color(0.8, 0.9, 1.0)
 	var _raise_sfx: String = "iron_bloom_shield_raise" if _current_weapon.weapon_id == "iron_bloom_shield" else "petal_shield_raise"
 	SfxManager.play(_raise_sfx)
@@ -768,10 +774,13 @@ func _drop_block() -> void:
 	_block_raised_time = -1.0
 	damage_reduction = _saved_damage_reduction
 	_sprite.modulate = Color.WHITE
+	_travel("idle", true)
 	print("[Player] Block dropped")
 
 
 func _trigger_petal_counter() -> void:
+	_travel("petal_shield_counter", true)
+	_update_blend_position()
 	SfxManager.play("petal_shield_counter")
 	var radius: float = _current_weapon.attack_range
 	var dmg: int = _current_weapon.damage
