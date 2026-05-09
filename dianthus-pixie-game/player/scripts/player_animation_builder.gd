@@ -64,7 +64,7 @@ const ANIM_DEFS: Array[Dictionary] = [
 	},
 	{
 		"prefix": "thornsword_attack",
-		"sheet": "res://player/sprites/PNG/Sword_Attack/thornsword_attack_full.png",
+		"sheet": "res://player/sprites/PNG/ThornSword_Attack/thornsword_attack_full.png",
 		"columns": 8,
 		"frames": [8, 8, 8, 8],
 		"loop": false,

@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://j7klkuqnhq8m" path="res://player/sprites/PNG/Unarmed_Hurt/Unarmed_Hurt_full.png" id="4_4qt65"]
 [ext_resource type="Script" uid="uid://rvutvdjb0moo" path="res://player/scripts/smooth_camera.gd" id="4_cam"]
 [ext_resource type="Texture2D" uid="uid://bhbl6u0jh6uqp" path="res://player/sprites/PNG/Unarmed_Walk/player_walk_full.png" id="6_6g3n5"]
-[ext_resource type="Texture2D" uid="uid://c870m25gvj2y8" path="res://player/sprites/PNG/Sword_attack/Sword_attack_full.png" id="7_sword"]
+[ext_resource type="Texture2D" uid="uid://c870m25gvj2y8" path="res://player/sprites/PNG/ThornSword_Attack/thornsword_attack_full.png" id="7_sword"]
 
 [sub_resource type="Animation" id="Animation_mgvvd"]
 length = 0.001
