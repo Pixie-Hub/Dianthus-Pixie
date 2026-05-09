@@ -73,6 +73,15 @@ const ANIM_DEFS: Array[Dictionary] = [
 		"frame_size": WEAPON_FRAME_SIZE,
 	},
 	{
+		"prefix": "vine_whip_attack",
+		"sheet": "res://player/sprites/PNG/VineWhip_Attack/vine_whip_attack_full.png",
+		"columns": 8,
+		"frames": [8, 8, 8, 8],
+		"loop": false,
+		"duration": 0.4,
+		"frame_size": WEAPON_FRAME_SIZE,
+	},
+	{
 		"prefix": "spore_bomb_attack",
 		"sheet": "res://player/sprites/PNG/SporeBomb_Attack/spore_bomb_throw_full.png",
 		"columns": 8,
@@ -198,6 +207,14 @@ static func build_tree(anim_tree: AnimationTree) -> void:
 	ts_attack_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
 	ts_attack_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
 	sm.add_transition("thornsword_attack", "thornsword_idle", ts_attack_to_idle)
+
+	for src: String in ["idle", "walk", "thornsword_idle", "thornsword_walk"]:
+		sm.add_transition(src, "vine_whip_attack", AnimationNodeStateMachineTransition.new())
+
+	var vine_attack_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
+	vine_attack_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
+	vine_attack_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
+	sm.add_transition("vine_whip_attack", "idle", vine_attack_to_idle)
 
 	for src: String in ["idle", "walk", "thornsword_idle", "thornsword_walk"]:
 		sm.add_transition(src, "spore_bomb_attack", AnimationNodeStateMachineTransition.new())

@@ -129,6 +129,8 @@ func _animation_prefix_for_state(state: String) -> String:
 		return ""
 	if _current_weapon.weapon_id in ["thorn_sword", "blazeblade"]:
 		return "thornsword_"
+	if state == "attack" and _current_weapon.weapon_id in ["vine_whip", "crystal_lash"]:
+		return "vine_whip_"
 	if state == "attack" and _current_weapon.weapon_id in ["spore_bomb", "void_grenade"]:
 		return "spore_bomb_"
 	return ""
@@ -144,7 +146,7 @@ func _travel(state: String, force: bool = false) -> void:
 	if current == target_state:
 		return
 	if not force:
-		if current == &"hurt" or current == &"death" or current == &"attack" or current == &"thornsword_attack" or current == &"spore_bomb_attack":
+		if current == &"hurt" or current == &"death" or current == &"attack" or current == &"thornsword_attack" or current == &"vine_whip_attack" or current == &"spore_bomb_attack":
 			return
 	_state_machine.travel(target_state)
 
@@ -180,6 +182,8 @@ func _update_blend_position() -> void:
 		_anim_tree["parameters/thornsword_walk/blend_position"] = blend
 	if root.has_node(&"thornsword_attack"):
 		_anim_tree["parameters/thornsword_attack/blend_position"] = blend
+	if root.has_node(&"vine_whip_attack"):
+		_anim_tree["parameters/vine_whip_attack/blend_position"] = blend
 	if root.has_node(&"spore_bomb_attack"):
 		_anim_tree["parameters/spore_bomb_attack/blend_position"] = blend
 
