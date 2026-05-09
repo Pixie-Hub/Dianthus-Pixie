@@ -3,6 +3,7 @@ class_name PlayerAnimationBuilder
 
 const UNARMED_FRAME_SIZE: Vector2i = Vector2i(64, 80)
 const WEAPON_FRAME_SIZE: Vector2i = Vector2i(80, 96)
+const SPORE_BOMB_THROW_FRAME_SIZE: Vector2i = Vector2i(64, 64)
 
 const DIR_DOWN: int = 0
 const DIR_LEFT: int = 1
@@ -71,6 +72,16 @@ const ANIM_DEFS: Array[Dictionary] = [
 		"duration": 0.4,
 		"frame_size": WEAPON_FRAME_SIZE,
 	},
+	{
+		"prefix": "spore_bomb_attack",
+		"sheet": "res://player/sprites/PNG/SporeBomb_Attack/spore_bomb_throw_full.png",
+		"columns": 8,
+		"frames": [8, 8, 8, 8],
+		"rows": [0, 3, 1, 2],
+		"loop": false,
+		"duration": 0.2,
+		"frame_size": SPORE_BOMB_THROW_FRAME_SIZE,
+	},
 ]
 
 const BLEND_POSITIONS: Dictionary = {
@@ -92,6 +103,9 @@ static func build(anim_player: AnimationPlayer, sprite_path: String) -> void:
 			var total_time: float = def["duration"]
 			var frame_dur: float = total_time / float(frame_count)
 			var frame_size: Vector2i = def["frame_size"] if def.has("frame_size") else UNARMED_FRAME_SIZE
+			var row_idx: int = dir_idx
+			if def.has("rows"):
+				row_idx = int(def["rows"][dir_idx])
 
 			var anim: Animation = Animation.new()
 			anim.length = total_time
@@ -116,7 +130,7 @@ static func build(anim_player: AnimationPlayer, sprite_path: String) -> void:
 			for f: int in frame_count:
 				var rect: Rect2 = Rect2(
 					f * frame_size.x,
-					dir_idx * frame_size.y,
+					row_idx * frame_size.y,
 					frame_size.x,
 					frame_size.y
 				)
@@ -184,6 +198,14 @@ static func build_tree(anim_tree: AnimationTree) -> void:
 	ts_attack_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
 	ts_attack_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
 	sm.add_transition("thornsword_attack", "thornsword_idle", ts_attack_to_idle)
+
+	for src: String in ["idle", "walk", "thornsword_idle", "thornsword_walk"]:
+		sm.add_transition(src, "spore_bomb_attack", AnimationNodeStateMachineTransition.new())
+
+	var spore_attack_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
+	spore_attack_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
+	spore_attack_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
+	sm.add_transition("spore_bomb_attack", "idle", spore_attack_to_idle)
 
 	sm.set_graph_offset(Vector2(0, 0))
 	anim_tree.tree_root = sm

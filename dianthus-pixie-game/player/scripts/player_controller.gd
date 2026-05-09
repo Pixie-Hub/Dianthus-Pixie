@@ -64,6 +64,8 @@ var bonus_melee_damage: int = 0
 const PETAL_SHIELD_DR: float = 0.8
 const PETAL_SHIELD_PERFECT_WINDOW: float = 0.2
 const PETAL_SHIELD_COUNTER_STUN: float = 0.6
+const SPORE_BOMB_RELEASE_TIME: float = 0.08
+const SPORE_BOMB_ATTACK_TIME: float = 0.2
 
 var is_blocking: bool = false
 var _block_raised_time: float = -1.0
@@ -122,11 +124,17 @@ func _dominant_direction(dir: Vector2) -> Vector2:
 		return Vector2.RIGHT if dir.x > 0.0 else Vector2.LEFT
 	return Vector2.DOWN if dir.y > 0.0 else Vector2.UP
 
-func _travel(state: String, force: bool = false) -> void:
-	var prefix: String = ""
-	if _current_weapon != null and _current_weapon.weapon_id in ["thorn_sword", "blazeblade"]:
-		prefix = "thornsword_"
+func _animation_prefix_for_state(state: String) -> String:
+	if _current_weapon == null:
+		return ""
+	if _current_weapon.weapon_id in ["thorn_sword", "blazeblade"]:
+		return "thornsword_"
+	if state == "attack" and _current_weapon.weapon_id in ["spore_bomb", "void_grenade"]:
+		return "spore_bomb_"
+	return ""
 
+func _travel(state: String, force: bool = false) -> void:
+	var prefix: String = _animation_prefix_for_state(state)
 	var target_state: StringName = StringName(prefix + state)
 	var root: AnimationNodeStateMachine = _anim_tree.tree_root as AnimationNodeStateMachine
 	if root != null and not root.has_node(target_state):
@@ -136,7 +144,7 @@ func _travel(state: String, force: bool = false) -> void:
 	if current == target_state:
 		return
 	if not force:
-		if current == &"hurt" or current == &"death" or current == &"attack" or current == &"thornsword_attack":
+		if current == &"hurt" or current == &"death" or current == &"attack" or current == &"thornsword_attack" or current == &"spore_bomb_attack":
 			return
 	_state_machine.travel(target_state)
 
@@ -172,6 +180,8 @@ func _update_blend_position() -> void:
 		_anim_tree["parameters/thornsword_walk/blend_position"] = blend
 	if root.has_node(&"thornsword_attack"):
 		_anim_tree["parameters/thornsword_attack/blend_position"] = blend
+	if root.has_node(&"spore_bomb_attack"):
+		_anim_tree["parameters/spore_bomb_attack/blend_position"] = blend
 
 func set_camera_limits(left: int, top: int, right: int, bottom: int) -> void:
 	_camera.limit_left = left
@@ -699,28 +709,34 @@ func _attack_vine_whip() -> void:
 
 func _attack_spore_bomb() -> void:
 	is_attacking = true
+	var attack_weapon: WeaponData = _current_weapon
 	_travel("attack", true)
+	_update_blend_position()
+	await get_tree().create_timer(SPORE_BOMB_RELEASE_TIME).timeout
+	if is_dead or attack_weapon == null:
+		is_attacking = false
+		return
 	SfxManager.play("spore_bomb_throw")
 	var target: Vector2 = get_global_mouse_position()
 	var dir: Vector2 = target - global_position
-	if dir.length() > _current_weapon.attack_range:
-		target = global_position + dir.normalized() * _current_weapon.attack_range
+	if dir.length() > attack_weapon.attack_range:
+		target = global_position + dir.normalized() * attack_weapon.attack_range
 	var proj: SporeBombProjectile = preload(
 		"res://combat/projectiles/spore_bomb_projectile.tscn").instantiate()
-	proj.damage = _current_weapon.damage
-	proj.aoe_radius = _current_weapon.attack_range * 0.4
+	proj.damage = attack_weapon.damage
+	proj.aoe_radius = attack_weapon.attack_range * 0.4
 	proj.launch(global_position, target)
 	var proj_parent: Node = get_tree().current_scene.get_node_or_null("YSortLayer")
 	if proj_parent == null:
 		proj_parent = get_tree().current_scene
 	proj_parent.add_child(proj)
 	print("DEBUG: Spore Bomb launched! Damage: %d, AoE: %.0f, Target: %s" % [
-		_current_weapon.damage, _current_weapon.attack_range * 0.4, target])
-	await get_tree().create_timer(0.2).timeout
+		attack_weapon.damage, attack_weapon.attack_range * 0.4, target])
+	await get_tree().create_timer(SPORE_BOMB_ATTACK_TIME - SPORE_BOMB_RELEASE_TIME).timeout
 	is_attacking = false
 	if is_dead:
 		return
-	_attack_cooldown_timer = _current_weapon.cooldown * (1.0 - attack_speed_bonus)
+	_attack_cooldown_timer = attack_weapon.cooldown * (1.0 - attack_speed_bonus)
 	_travel("idle", true)
 
 

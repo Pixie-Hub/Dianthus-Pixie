@@ -8,10 +8,23 @@ extends Area2D
 @export var slow_duration: float = 2.0
 @export var arc_height: float = 24.0
 
+const PROJECTILE_FRAME_SIZE: Vector2i = Vector2i(16, 16)
+const PROJECTILE_FRAMES: int = 8
+const PROJECTILE_FRAME_TIME: float = 0.08
+const DETONATION_FRAME_SIZE: Vector2i = Vector2i(64, 64)
+const DETONATION_FRAMES: int = 8
+const DETONATION_FRAME_TIME: float = 0.06
+
 var _start_pos: Vector2
 var _target_pos: Vector2
 var _t: float = 0.0
 var _exploded: bool = false
+@onready var _visual: Sprite2D = %Visual
+@onready var _detonation_vfx: Sprite2D = %DetonationVfx
+
+func _ready() -> void:
+	_set_projectile_frame(0)
+	_set_detonation_frame(0)
 
 func launch(from_pos: Vector2, to_pos: Vector2) -> void:
 	_start_pos = from_pos
@@ -27,6 +40,8 @@ func _physics_process(delta: float) -> void:
 	var lin: Vector2 = _start_pos.lerp(_target_pos, u)
 	lin.y -= sin(u * PI) * arc_height
 	global_position = lin
+	var frame: int = int(floor(_t / PROJECTILE_FRAME_TIME)) % PROJECTILE_FRAMES
+	_set_projectile_frame(frame)
 	if _t >= fuse_time:
 		_explode()
 
@@ -43,20 +58,40 @@ func _explode() -> void:
 				body.apply_timed_slow(slow_multiplier, slow_duration)
 				if is_instance_valid(GameManager.player):
 					GameManager.player.add_energy(GameManager.player.ENERGY_PER_HIT)
-	_spawn_explosion_vfx()
+	await _play_detonation_vfx()
 	print("[SporeBomb] Exploded at %s — radius %.0f, dmg %d" % [global_position, aoe_radius, damage])
-	await get_tree().create_timer(0.4).timeout
 	queue_free()
 
 
-func _spawn_explosion_vfx() -> void:
-	# TODO (VFX-05): Replace with real explosion particle effect.
-	var ring: ColorRect = ColorRect.new()
-	ring.color = Color(0.4, 0.8, 0.2, 0.6)
-	var size: float = aoe_radius * 2.0
-	ring.size = Vector2(size, size)
-	ring.position = -Vector2(size * 0.5, size * 0.5)
-	add_child(ring)
-	var tween: Tween = create_tween()
-	tween.tween_property(ring, "modulate:a", 0.0, 0.35)
-	tween.tween_callback(ring.queue_free)
+func _set_projectile_frame(frame: int) -> void:
+	if _visual == null:
+		return
+	_visual.region_rect = Rect2(
+		frame * PROJECTILE_FRAME_SIZE.x,
+		0,
+		PROJECTILE_FRAME_SIZE.x,
+		PROJECTILE_FRAME_SIZE.y
+	)
+
+
+func _set_detonation_frame(frame: int) -> void:
+	if _detonation_vfx == null:
+		return
+	_detonation_vfx.region_rect = Rect2(
+		frame * DETONATION_FRAME_SIZE.x,
+		0,
+		DETONATION_FRAME_SIZE.x,
+		DETONATION_FRAME_SIZE.y
+	)
+
+
+func _play_detonation_vfx() -> void:
+	if _visual != null:
+		_visual.visible = false
+	if _detonation_vfx == null:
+		await get_tree().create_timer(0.4).timeout
+		return
+	_detonation_vfx.visible = true
+	for frame: int in DETONATION_FRAMES:
+		_set_detonation_frame(frame)
+		await get_tree().create_timer(DETONATION_FRAME_TIME).timeout

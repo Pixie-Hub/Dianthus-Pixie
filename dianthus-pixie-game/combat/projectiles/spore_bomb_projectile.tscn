@@ -1,6 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://spore_bomb_proj01"]
+[gd_scene load_steps=5 format=3 uid="uid://spore_bomb_proj01"]
 
 [ext_resource type="Script" path="res://combat/projectiles/spore_bomb_projectile.gd" id="1_proj"]
+[ext_resource type="Texture2D" path="res://combat/projectiles/spore_bomb_projectile_spritesheet.png" id="2_projectile"]
+[ext_resource type="Texture2D" path="res://vfx/animations/spore_bomb_detonation_vfx.png" id="3_detonation"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1"]
 radius = 4.0
@@ -8,13 +10,20 @@ radius = 4.0
 [node name="SporeBombProjectile" type="Area2D"]
 script = ExtResource("1_proj")
 
-[node name="Visual" type="ColorRect" parent="."]
+[node name="Visual" type="Sprite2D" parent="."]
 unique_name_in_owner = true
-offset_left = -4.0
-offset_top = -4.0
-offset_right = 4.0
-offset_bottom = 4.0
-color = Color(0.4, 0.8, 0.2, 1)
+texture_filter = 1
+texture = ExtResource("2_projectile")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 16)
+
+[node name="DetonationVfx" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+visible = false
+texture_filter = 1
+texture = ExtResource("3_detonation")
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 64)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_1")
