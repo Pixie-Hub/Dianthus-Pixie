@@ -64,6 +64,24 @@ const ANIM_DEFS: Array[Dictionary] = [
 		"frame_size": WEAPON_FRAME_SIZE,
 	},
 	{
+		"prefix": "blazeblade_idle",
+		"sheet": "res://player/sprites/PNG/Blazeblade_Idle/blazeblade_idle_full.png",
+		"columns": 6,
+		"frames": [6, 6, 6, 6],
+		"loop": true,
+		"duration": 0.6,
+		"frame_size": WEAPON_FRAME_SIZE,
+	},
+	{
+		"prefix": "blazeblade_walk",
+		"sheet": "res://player/sprites/PNG/Blazeblade_Walk/blazeblade_walk_full.png",
+		"columns": 6,
+		"frames": [6, 6, 6, 6],
+		"loop": true,
+		"duration": 0.6,
+		"frame_size": WEAPON_FRAME_SIZE,
+	},
+	{
 		"prefix": "spore_bomb_idle",
 		"sheet": "res://player/sprites/PNG/SporeBomb_Idle/spore_bomb_idle_full.png",
 		"columns": 6,
@@ -82,6 +100,24 @@ const ANIM_DEFS: Array[Dictionary] = [
 		"frame_size": WEAPON_FRAME_SIZE,
 	},
 	{
+		"prefix": "void_grenade_idle",
+		"sheet": "res://player/sprites/PNG/VoidGrenade_Idle/void_grenade_idle_full.png",
+		"columns": 6,
+		"frames": [6, 6, 6, 6],
+		"loop": true,
+		"duration": 0.6,
+		"frame_size": WEAPON_FRAME_SIZE,
+	},
+	{
+		"prefix": "void_grenade_walk",
+		"sheet": "res://player/sprites/PNG/VoidGrenade_Walk/void_grenade_walk_full.png",
+		"columns": 6,
+		"frames": [6, 6, 6, 6],
+		"loop": true,
+		"duration": 0.6,
+		"frame_size": WEAPON_FRAME_SIZE,
+	},
+	{
 		"prefix": "vine_whip_idle",
 		"sheet": "res://player/sprites/PNG/VineWhip_Idle/vine_whip_idle_full.png",
 		"columns": 6,
@@ -93,6 +129,24 @@ const ANIM_DEFS: Array[Dictionary] = [
 	{
 		"prefix": "vine_whip_walk",
 		"sheet": "res://player/sprites/PNG/VineWhip_Walk/vine_whip_walk_full.png",
+		"columns": 6,
+		"frames": [6, 6, 6, 6],
+		"loop": true,
+		"duration": 0.6,
+		"frame_size": WEAPON_FRAME_SIZE,
+	},
+	{
+		"prefix": "crystal_lash_idle",
+		"sheet": "res://player/sprites/PNG/CrystalLash_Idle/crystal_lash_idle_full.png",
+		"columns": 6,
+		"frames": [6, 6, 6, 6],
+		"loop": true,
+		"duration": 0.6,
+		"frame_size": WEAPON_FRAME_SIZE,
+	},
+	{
+		"prefix": "crystal_lash_walk",
+		"sheet": "res://player/sprites/PNG/CrystalLash_Walk/crystal_lash_walk_full.png",
 		"columns": 6,
 		"frames": [6, 6, 6, 6],
 		"loop": true,
@@ -145,6 +199,15 @@ const ANIM_DEFS: Array[Dictionary] = [
 		"frame_size": WEAPON_FRAME_SIZE,
 	},
 	{
+		"prefix": "blazeblade_attack",
+		"sheet": "res://player/sprites/PNG/Blazeblade_Attack/blazeblade_attack_full.png",
+		"columns": 8,
+		"frames": [8, 8, 8, 8],
+		"loop": false,
+		"duration": 0.4,
+		"frame_size": WEAPON_FRAME_SIZE,
+	},
+	{
 		"prefix": "vine_whip_attack",
 		"sheet": "res://player/sprites/PNG/VineWhip_Attack/vine_whip_attack_full.png",
 		"columns": 8,
@@ -154,8 +217,27 @@ const ANIM_DEFS: Array[Dictionary] = [
 		"frame_size": WEAPON_FRAME_SIZE,
 	},
 	{
+		"prefix": "crystal_lash_attack",
+		"sheet": "res://player/sprites/PNG/CrystalLash_Attack/crystal_lash_attack_full.png",
+		"columns": 8,
+		"frames": [8, 8, 8, 8],
+		"loop": false,
+		"duration": 0.4,
+		"frame_size": WEAPON_FRAME_SIZE,
+	},
+	{
 		"prefix": "spore_bomb_attack",
 		"sheet": "res://player/sprites/PNG/SporeBomb_Attack/spore_bomb_throw_full.png",
+		"columns": 8,
+		"frames": [8, 8, 8, 8],
+		"rows": [0, 3, 1, 2],
+		"loop": false,
+		"duration": 0.2,
+		"frame_size": SPORE_BOMB_THROW_FRAME_SIZE,
+	},
+	{
+		"prefix": "void_grenade_attack",
+		"sheet": "res://player/sprites/PNG/VoidGrenade_Attack/void_grenade_throw_full.png",
 		"columns": 8,
 		"frames": [8, 8, 8, 8],
 		"rows": [0, 3, 1, 2],
@@ -276,8 +358,11 @@ static func build_tree(anim_tree: AnimationTree) -> void:
 	var movement_states: Array[String] = [
 		"idle", "walk",
 		"thornsword_idle", "thornsword_walk",
+		"blazeblade_idle", "blazeblade_walk",
 		"spore_bomb_idle", "spore_bomb_walk",
+		"void_grenade_idle", "void_grenade_walk",
 		"vine_whip_idle", "vine_whip_walk",
+		"crystal_lash_idle", "crystal_lash_walk",
 		"petal_shield_idle", "petal_shield_walk",
 		"iron_bloom_shield_idle", "iron_bloom_shield_walk",
 	]
@@ -323,6 +408,14 @@ static func build_tree(anim_tree: AnimationTree) -> void:
 	sm.add_transition("thornsword_attack", "thornsword_idle", ts_attack_to_idle)
 
 	for src: String in movement_states:
+		sm.add_transition(src, "blazeblade_attack", AnimationNodeStateMachineTransition.new())
+
+	var blaze_attack_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
+	blaze_attack_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
+	blaze_attack_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
+	sm.add_transition("blazeblade_attack", "blazeblade_idle", blaze_attack_to_idle)
+
+	for src: String in movement_states:
 		sm.add_transition(src, "vine_whip_attack", AnimationNodeStateMachineTransition.new())
 
 	var vine_attack_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
@@ -331,12 +424,28 @@ static func build_tree(anim_tree: AnimationTree) -> void:
 	sm.add_transition("vine_whip_attack", "vine_whip_idle", vine_attack_to_idle)
 
 	for src: String in movement_states:
+		sm.add_transition(src, "crystal_lash_attack", AnimationNodeStateMachineTransition.new())
+
+	var crystal_attack_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
+	crystal_attack_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
+	crystal_attack_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
+	sm.add_transition("crystal_lash_attack", "crystal_lash_idle", crystal_attack_to_idle)
+
+	for src: String in movement_states:
 		sm.add_transition(src, "spore_bomb_attack", AnimationNodeStateMachineTransition.new())
 
 	var spore_attack_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
 	spore_attack_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
 	spore_attack_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
 	sm.add_transition("spore_bomb_attack", "spore_bomb_idle", spore_attack_to_idle)
+
+	for src: String in movement_states:
+		sm.add_transition(src, "void_grenade_attack", AnimationNodeStateMachineTransition.new())
+
+	var void_attack_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
+	void_attack_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
+	void_attack_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
+	sm.add_transition("void_grenade_attack", "void_grenade_idle", void_attack_to_idle)
 
 	for shield_prefix: String in ["petal_shield", "iron_bloom_shield"]:
 		var block_state: String = "%s_block" % shield_prefix

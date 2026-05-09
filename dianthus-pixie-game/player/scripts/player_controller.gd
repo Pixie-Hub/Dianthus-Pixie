@@ -129,14 +129,22 @@ func _animation_prefix_for_state(state: String) -> String:
 	if _current_weapon == null:
 		return ""
 	match _current_weapon.weapon_id:
-		"thorn_sword", "blazeblade":
+		"thorn_sword":
 			return "thornsword_"
-		"spore_bomb", "void_grenade":
+		"blazeblade":
+			return "blazeblade_"
+		"spore_bomb":
 			if state in ["idle", "walk", "attack"]:
 				return "spore_bomb_"
-		"vine_whip", "crystal_lash":
+		"void_grenade":
+			if state in ["idle", "walk", "attack"]:
+				return "void_grenade_"
+		"vine_whip":
 			if state in ["idle", "walk", "attack"]:
 				return "vine_whip_"
+		"crystal_lash":
+			if state in ["idle", "walk", "attack"]:
+				return "crystal_lash_"
 		"petal_shield":
 			if state in ["idle", "walk"]:
 				return "petal_shield_"
@@ -161,7 +169,7 @@ func _travel(state: String, force: bool = false) -> void:
 	if current == target_state:
 		return
 	if not force:
-		if current == &"hurt" or current == &"death" or current == &"attack" or current == &"thornsword_attack" or current == &"vine_whip_attack" or current == &"spore_bomb_attack" or current == &"petal_shield_block" or current == &"petal_shield_counter" or current == &"iron_bloom_shield_block" or current == &"iron_bloom_shield_counter":
+		if current == &"hurt" or current == &"death" or current == &"attack" or current == &"thornsword_attack" or current == &"blazeblade_attack" or current == &"vine_whip_attack" or current == &"crystal_lash_attack" or current == &"spore_bomb_attack" or current == &"void_grenade_attack" or current == &"petal_shield_block" or current == &"petal_shield_counter" or current == &"iron_bloom_shield_block" or current == &"iron_bloom_shield_counter":
 			return
 	_state_machine.travel(target_state)
 
@@ -205,16 +213,34 @@ func _update_blend_position() -> void:
 		_anim_tree["parameters/thornsword_walk/blend_position"] = blend
 	if root.has_node(&"thornsword_attack"):
 		_anim_tree["parameters/thornsword_attack/blend_position"] = blend
+	if root.has_node(&"blazeblade_idle"):
+		_anim_tree["parameters/blazeblade_idle/blend_position"] = blend
+	if root.has_node(&"blazeblade_walk"):
+		_anim_tree["parameters/blazeblade_walk/blend_position"] = blend
+	if root.has_node(&"blazeblade_attack"):
+		_anim_tree["parameters/blazeblade_attack/blend_position"] = blend
 	if root.has_node(&"spore_bomb_idle"):
 		_anim_tree["parameters/spore_bomb_idle/blend_position"] = blend
 	if root.has_node(&"spore_bomb_walk"):
 		_anim_tree["parameters/spore_bomb_walk/blend_position"] = blend
+	if root.has_node(&"void_grenade_idle"):
+		_anim_tree["parameters/void_grenade_idle/blend_position"] = blend
+	if root.has_node(&"void_grenade_walk"):
+		_anim_tree["parameters/void_grenade_walk/blend_position"] = blend
+	if root.has_node(&"void_grenade_attack"):
+		_anim_tree["parameters/void_grenade_attack/blend_position"] = blend
 	if root.has_node(&"vine_whip_attack"):
 		_anim_tree["parameters/vine_whip_attack/blend_position"] = blend
 	if root.has_node(&"vine_whip_idle"):
 		_anim_tree["parameters/vine_whip_idle/blend_position"] = blend
 	if root.has_node(&"vine_whip_walk"):
 		_anim_tree["parameters/vine_whip_walk/blend_position"] = blend
+	if root.has_node(&"crystal_lash_idle"):
+		_anim_tree["parameters/crystal_lash_idle/blend_position"] = blend
+	if root.has_node(&"crystal_lash_walk"):
+		_anim_tree["parameters/crystal_lash_walk/blend_position"] = blend
+	if root.has_node(&"crystal_lash_attack"):
+		_anim_tree["parameters/crystal_lash_attack/blend_position"] = blend
 	if root.has_node(&"petal_shield_idle"):
 		_anim_tree["parameters/petal_shield_idle/blend_position"] = blend
 	if root.has_node(&"petal_shield_walk"):
