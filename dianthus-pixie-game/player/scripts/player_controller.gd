@@ -66,6 +66,8 @@ const PETAL_SHIELD_PERFECT_WINDOW: float = 0.2
 const PETAL_SHIELD_COUNTER_STUN: float = 0.6
 const SPORE_BOMB_RELEASE_TIME: float = 0.08
 const SPORE_BOMB_ATTACK_TIME: float = 0.2
+const SPORE_BOMB_PROJECTILE_SCENE: PackedScene = preload("res://combat/projectiles/spore_bomb_projectile.tscn")
+const VOID_GRENADE_PROJECTILE_SCENE: PackedScene = preload("res://combat/projectiles/void_grenade_projectile.tscn")
 
 var is_blocking: bool = false
 var _block_raised_time: float = -1.0
@@ -798,8 +800,12 @@ func _attack_spore_bomb() -> void:
 	var dir: Vector2 = target - global_position
 	if dir.length() > attack_weapon.attack_range:
 		target = global_position + dir.normalized() * attack_weapon.attack_range
-	var proj: SporeBombProjectile = preload(
-		"res://combat/projectiles/spore_bomb_projectile.tscn").instantiate()
+	var projectile_scene: PackedScene = (
+		VOID_GRENADE_PROJECTILE_SCENE
+		if attack_weapon.weapon_id == "void_grenade"
+		else SPORE_BOMB_PROJECTILE_SCENE
+	)
+	var proj: SporeBombProjectile = projectile_scene.instantiate()
 	proj.damage = attack_weapon.damage
 	proj.aoe_radius = attack_weapon.attack_range * 0.4
 	proj.launch(global_position, target)

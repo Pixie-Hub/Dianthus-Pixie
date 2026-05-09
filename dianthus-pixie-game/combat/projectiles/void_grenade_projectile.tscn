@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" uid="uid://dl65hm4wk7f5v" path="res://combat/projectiles/spore_bomb_projectile.gd" id="1_proj"]
+[ext_resource type="Texture2D" uid="uid://cktbsj67k00iv" path="res://combat/projectiles/spore_bomb_projectile_spritesheet.png" id="2_projectile"]
+[ext_resource type="Texture2D" uid="uid://rdm8h5n3578w" path="res://vfx/animations/void_grenade_detonation_vfx.png" id="3_detonation"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1"]
+radius = 4.0
+
+[node name="VoidGrenadeProjectile" type="Area2D"]
+script = ExtResource("1_proj")
+
+[node name="Visual" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+texture_filter = 1
+texture = ExtResource("2_projectile")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 16)
+
+[node name="DetonationVfx" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+visible = false
+texture_filter = 1
+texture = ExtResource("3_detonation")
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 64)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_1")
+disabled = true
