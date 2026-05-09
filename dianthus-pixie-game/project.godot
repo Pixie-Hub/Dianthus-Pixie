@@ -61,7 +61,7 @@ directories/dtl_directory={
 "story_07_fail": "res://dialogic/timelines/story_07_fail.dtl",
 "story_alt_devourer_loss_complete": "res://dialogic/timelines/story_alt_devourer_loss_complete.dtl",
 "story_alt_lost_complete": "res://dialogic/timelines/story_alt_lost_complete.dtl",
-"story_alt_voidlord_loss_complete": "res://dialogic/timelines/story_alt_voidlord_loss_complete.dtl"
+"story_alt_shadow_loss_complete": "res://dialogic/timelines/story_alt_shadow_loss_complete.dtl"
 }
 directories/dch_directory={
 "Dianthus Core": "res://dialogic/characters/Dianthus Core.dch"

@@ -439,8 +439,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			ZoneTracker.enter_zone("ruins_of_veld")
 			print("DEBUG: Shift+5 — Emitted zone_entered{zone_id=ruins_of_veld}.")
 		elif event.keycode == KEY_6 and event.shift_pressed:
-			QuestManager._on_voidlord_defeated()
-			print("DEBUG: Shift+6 — Emitted voidlord_defeated.")
+			QuestManager._on_devourer_omen_deciphered()
+			print("DEBUG: Shift+6 — Emitted devourer_omen_deciphered.")
 		elif event.keycode == KEY_7 and event.shift_pressed:
 			QuestManager._on_devourer_defeated()
 			print("DEBUG: Shift+7 — Emitted devourer_defeated.")

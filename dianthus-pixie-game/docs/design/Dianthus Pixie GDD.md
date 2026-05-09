@@ -175,10 +175,10 @@ Sistem cross-breeding bersifat semi-deterministik:
 - Hari 15-29 (Late): HP +12% per hari, multi-wave per malam, campuran enemy types
 - Hari 30+ (Endless): Scaling eksponensial — x1.5 HP dan damage tiap 5 hari
 
-### **Spike Nights (Boss Waves)**
+### **Spike Nights and Final Boss**
 
 - Setiap malam ke-7: wave khusus 'Surge Night' — jumlah musuh 3x normal, semua enemy satu tier lebih kuat
-- Malam ke-21: Mini-boss Voidlord muncul sebagai pendahulu The Devourer
+- Malam ke-21: Surge Night besar dengan tekanan enemy late-game; tidak ada named precursor atau boss unik
 - Malam Final (tergantarkan oleh story quest): The Devourer — boss bermekanik 3 fase
 
 # **9. Player Stats & Progression**
@@ -365,7 +365,7 @@ Dialog NPC dan cutscene story diimplementasikan menggunakan **Dialogic** (addon 
 | Daily Quest | Kumpulkan 10 Petal Shard; Kalahkan 5 Shadowling | Resource Common/Uncommon |
 | Progress Quest | Bertahan hingga Hari 10; Buka semua zone sebelum Hari 15 | Aether Bloom, upgrade unlock |
 | Discovery Quest | Temukan Nightbloom melalui breeding; Coba 5 kombinasi baru | Codex entry, resep baru |
-| Story Quest | Selidiki Ruins of Veld; Hadapi Voidlord | Cerita lanjut, area baru terbuka |
+| Story Quest | Selidiki Ruins of Veld; Ungkap tanda The Devourer | Cerita lanjut, area baru terbuka |
 
 # **17. Minigames**
 

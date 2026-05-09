@@ -67,7 +67,6 @@ Enemy types can be framed as different ways the Void misunderstands life:
 | Stonehusk | Possession of old earth. Ruin-stone and dead root made heavy and stubborn. |
 | Phantom Weaver | The Void learning craft. It spins doors, snares, and false memories in ruined places. |
 | Swarm Larva | Corruption multiplying before it understands shape. Many mouths, little will. |
-| Voidlord | A named herald. The first sign that the night has an organized will behind it. |
 | The Devourer | The Void's appetite given body. It does not want to conquer the garden; it wants to swallow the idea that gardens can return. |
 
 ### The Core Conflict
@@ -157,8 +156,8 @@ Avoid separating "story time" from "game time" too strongly. A good lore drop sh
 | Story 04: Echoes Beneath the Stones | Gather Shadow Resin, defeat Phantom Weavers | The Void has been weaving a door beneath the ruins. Shadow Resin is condensed life pressed too long under darkness. | Ruin tablets, resin item lore, Phantom Weaver death echoes. |
 | Garden Expansion | Larger placement grid, more defenses, stronger nightly pressure | The Pixie is not decorating a base; they are reclaiming severed root territory. | Soil changes, Core pulse lines, new root patterns at plot edges. |
 | Rare Events | Corrupted Root, Wild Seedling, Void Fissure, Resonance Bloom | Daytime is no longer fully safe. The conflict leaks into exploration, but the garden also sends help outward. | Event-specific micro-lore and environmental aftermath. |
-| Voidlord Buildup | Night 21 precursor threat | The Void has named itself through a herald. The night now has strategy, not just hunger. | Pre-fight omen, Core tremor, ruined tablet final warning. |
-| Story 05: The Voidlord Stirs | Defeat the Voidlord | The herald falls, revealing the Devourer as the true appetite behind the attacks. | Core post-fight revelation, black root map burning into soil. |
+| Devourer Omen | Night 21 pressure spike, no named precursor | The Void no longer needs a herald. Veld reveals that the Devourer has been directing the hunger all along. | Core tremor, ruined tablet final warning, black root map burning into soil. |
+| Story 05: The Door Beneath Veld | Decipher the Devourer omen | The ruins reveal a breach-door instead of a named enemy fight. The next step is preparation, not another combat gate. | Veld landmark interaction, Core revelation, pollen-craft warning. |
 | Story 06: Petals of Power | Acquire Dianthus Pollen, craft Blazeblade | The Core trusts the Pixie with its sacred pollen. Crafting becomes covenant, not just utility. | Core Sanctum glimpse, pollen harvest ritual, weapon lore. |
 | Story 07: The Final Bloom | Defeat The Devourer | Every loop action converges: gathered shards, bred plants, crafted weapons, expanded garden, and defended nights become one final answer. | Final-night cutscene, boss phase barks, ending scene. |
 
@@ -281,11 +280,11 @@ The Devourer should not feel like a random final boss. It should feel like the a
 
 Can a small garden become bright enough that the dark must reveal its true shape?
 
-The buildup begins with small nighttime attacks. At first, the Void sends creatures without identity. Then it sends faster forms, heavier forms, weaving forms, and swarms. The player learns the Void is adapting. By the Ruins of Veld, the Phantom Weavers reveal that the Void has been constructing a door. By the Voidlord encounter, the player learns that something behind the door is commanding the attacks.
+The buildup begins with small nighttime attacks. At first, the Void sends creatures without identity. Then it sends faster forms, heavier forms, weaving forms, and swarms. The player learns the Void is adapting. By the Ruins of Veld, the Phantom Weavers reveal that the Void has been constructing a door. The revelation should come from the door, the tablets, the Core's pain, and the enemy patterns themselves, not from a named precursor fight.
 
-The Voidlord is the herald, not the master. Its defeat does not end the threat because its death carries a map back to the source. That map points toward the Devourer.
+There are no precursor bosses in this story path. The Devourer is the only named boss escalation. Story 05 should therefore function as a breach-revelation and preparation gate: the Pixie learns what is coming, the Core understands why Dianthus Pollen must be risked, and the next objective turns toward crafting a weapon for the Final Bloom.
 
-TODO: DIFF-03 - When the Voidlord mini-boss design is finalized, define its specific omen scene, defeat revelation, and how it visually points toward The Devourer.
+TODO: WORLD-02 - When the Veld story landmark is authored, define the specific omen interaction that emits `devourer_omen_deciphered` and starts the final preparation step.
 
 ### Why The Devourer Appears
 

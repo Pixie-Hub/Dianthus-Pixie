@@ -5,7 +5,7 @@ const _ENDING_COPY: Dictionary = {
 		"title": "TRUE ENDING — Bloom Eternal",
 		"subtitle": "The Devourer falls. The garden breathes again.",
 		"accent": Color(1.0, 0.85, 0.3, 1),
-		"body": "Dianthus's full potential blossoms across the meadow. Light returns to every petal you tended. The Voidlord's shadow is no more, and a new dawn rests on the horizon.",
+		"body": "Dianthus's full potential blossoms across the meadow. Light returns to every petal you tended. The Devourer's breach is sealed, and a new dawn rests on the horizon.",
 	},
 	"survival": {
 		"title": "SURVIVAL ENDING — Open Skies",

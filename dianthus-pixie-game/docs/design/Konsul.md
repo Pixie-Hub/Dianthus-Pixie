@@ -90,7 +90,7 @@ All combat VFX (`VFX-01` through `VFX-05`) use `ColorRect` tween placeholders wi
 |---|---|---|
 | Enemies | ENEMY-04 (Swarm Larva), ENEMY-05 (Devourer) | ENEMY-04 FSM unclear (shared vs. independent) |
 | Worlds | WORLD-01 through WORLD-06 | All zones are empty |
-| Difficulty | DIFF-02 (Surge Night), DIFF-03 (Voidlord Night 21) | DIFF-02 affects spawn logic |
+| Difficulty | DIFF-02 (Surge Night), DIFF-03 (Night 21 Surge Escalation) | DIFF-02 affects spawn logic; DIFF-03 no longer adds a named boss |
 | Minigames | MINI-01, MINI-02, MINI-03 | All folders empty |
 | Audio | AUDIO-01, 02, 03 | No music system exists yet |
 | VFX | VFX-01 through VFX-05 | All placeholders |

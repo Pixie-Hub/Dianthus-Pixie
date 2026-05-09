@@ -1,7 +1,7 @@
-label story_05_fail (The Voidlord Stirs Failed)
+label story_05_fail (The Door Beneath Veld Failed)
 [style name="Gameplay"]
-"Dianthus Core" (Default): The Voidlord remains, and its shadow has learned our scent.
+"Dianthus Core" (Default): The door beneath Veld widens, and the dark has learned our scent.
 "Dianthus Core": I will not lie to you. The garden's future has narrowed.
 "Dianthus Core": Yet even a narrow path can carry a living root. Hold the line, and let every day stolen from the dark matter.
-[signal arg="quest_start:story_alt_voidlord_loss"]
+[signal arg="quest_start:story_alt_shadow_loss"]
 [end_timeline]

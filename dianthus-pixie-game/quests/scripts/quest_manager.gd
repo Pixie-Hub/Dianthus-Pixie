@@ -466,9 +466,9 @@ func _maybe_start_story_chain() -> void:
 		start_quest(&"story_01_whispers")
 
 
-func _on_voidlord_defeated() -> void:
-	# TODO: DIFF-03 — call this from Voidlord boss _die()
-	report_event(&"voidlord_defeated", 1, {})
+func _on_devourer_omen_deciphered() -> void:
+	# TODO: WORLD-02 — call this from the Veld story landmark interaction.
+	report_event(&"devourer_omen_deciphered", 1, {})
 
 
 func _on_devourer_defeated() -> void:
