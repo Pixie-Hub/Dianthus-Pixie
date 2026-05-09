@@ -83,6 +83,7 @@ func _ready() -> void:
 	energy_changed.emit(current_energy, max_energy)
 	if not weapon_slots[0].is_empty():
 		_current_weapon = CraftingManager.get_weapon_data(weapon_slots[0])
+		_refresh_weapon_pose(true)
 	_sword_hitbox.body_entered.connect(_on_sword_hitbox_body_entered)
 	CraftingManager.weapon_crafted.connect(_on_weapon_crafted)
 	_setup_core_energy_tick_timer()
@@ -127,12 +128,18 @@ func _dominant_direction(dir: Vector2) -> Vector2:
 func _animation_prefix_for_state(state: String) -> String:
 	if _current_weapon == null:
 		return ""
-	if _current_weapon.weapon_id in ["thorn_sword", "blazeblade"]:
-		return "thornsword_"
-	if state == "attack" and _current_weapon.weapon_id in ["vine_whip", "crystal_lash"]:
-		return "vine_whip_"
-	if state == "attack" and _current_weapon.weapon_id in ["spore_bomb", "void_grenade"]:
-		return "spore_bomb_"
+	match _current_weapon.weapon_id:
+		"thorn_sword", "blazeblade":
+			return "thornsword_"
+		"spore_bomb", "void_grenade":
+			if state in ["idle", "walk", "attack"]:
+				return "spore_bomb_"
+		"vine_whip", "crystal_lash":
+			if state in ["idle", "walk", "attack"]:
+				return "vine_whip_"
+		"petal_shield", "iron_bloom_shield":
+			if state in ["idle", "walk"]:
+				return "petal_shield_"
 	return ""
 
 func _travel(state: String, force: bool = false) -> void:
@@ -149,6 +156,14 @@ func _travel(state: String, force: bool = false) -> void:
 		if current == &"hurt" or current == &"death" or current == &"attack" or current == &"thornsword_attack" or current == &"vine_whip_attack" or current == &"spore_bomb_attack" or current == &"petal_shield_block" or current == &"petal_shield_counter":
 			return
 	_state_machine.travel(target_state)
+
+
+func _refresh_weapon_pose(force: bool = false) -> void:
+	if _state_machine == null or is_dead or is_attacking or is_harvesting or is_blocking:
+		return
+	var movement_state: String = "walk" if velocity.length_squared() > 0.0 else "idle"
+	_travel(movement_state, force)
+	_update_blend_position()
 
 func _direction_to_blend() -> Vector2:
 	if last_direction == Vector2.DOWN:
@@ -182,8 +197,20 @@ func _update_blend_position() -> void:
 		_anim_tree["parameters/thornsword_walk/blend_position"] = blend
 	if root.has_node(&"thornsword_attack"):
 		_anim_tree["parameters/thornsword_attack/blend_position"] = blend
+	if root.has_node(&"spore_bomb_idle"):
+		_anim_tree["parameters/spore_bomb_idle/blend_position"] = blend
+	if root.has_node(&"spore_bomb_walk"):
+		_anim_tree["parameters/spore_bomb_walk/blend_position"] = blend
 	if root.has_node(&"vine_whip_attack"):
 		_anim_tree["parameters/vine_whip_attack/blend_position"] = blend
+	if root.has_node(&"vine_whip_idle"):
+		_anim_tree["parameters/vine_whip_idle/blend_position"] = blend
+	if root.has_node(&"vine_whip_walk"):
+		_anim_tree["parameters/vine_whip_walk/blend_position"] = blend
+	if root.has_node(&"petal_shield_idle"):
+		_anim_tree["parameters/petal_shield_idle/blend_position"] = blend
+	if root.has_node(&"petal_shield_walk"):
+		_anim_tree["parameters/petal_shield_walk/blend_position"] = blend
 	if root.has_node(&"spore_bomb_attack"):
 		_anim_tree["parameters/spore_bomb_attack/blend_position"] = blend
 	if root.has_node(&"petal_shield_block"):
@@ -920,6 +947,7 @@ func select_weapon_slot(index: int) -> void:
 		_current_weapon = CraftingManager.get_weapon_data(wid)
 	SfxManager.play("weapon_equipped")
 	loadout_changed.emit(weapon_slots, active_skill_id, selected_weapon_slot)
+	_refresh_weapon_pose(true)
 	print("[Player] Selected weapon slot %d: %s" % [index, wid if not wid.is_empty() else "[Empty]"])
 
 
@@ -937,6 +965,7 @@ func equip_weapon(slot: int, weapon_id: String) -> void:
 		else:
 			_current_weapon = CraftingManager.get_weapon_data(weapon_id)
 	loadout_changed.emit(weapon_slots, active_skill_id, selected_weapon_slot)
+	_refresh_weapon_pose(true)
 
 
 func set_active_skill(skill_id: String) -> void:

@@ -64,6 +64,60 @@ const ANIM_DEFS: Array[Dictionary] = [
 		"frame_size": WEAPON_FRAME_SIZE,
 	},
 	{
+		"prefix": "spore_bomb_idle",
+		"sheet": "res://player/sprites/PNG/SporeBomb_Idle/spore_bomb_idle_full.png",
+		"columns": 6,
+		"frames": [6, 6, 6, 6],
+		"loop": true,
+		"duration": 0.6,
+		"frame_size": WEAPON_FRAME_SIZE,
+	},
+	{
+		"prefix": "spore_bomb_walk",
+		"sheet": "res://player/sprites/PNG/SporeBomb_Walk/spore_bomb_walk_full.png",
+		"columns": 6,
+		"frames": [6, 6, 6, 6],
+		"loop": true,
+		"duration": 0.6,
+		"frame_size": WEAPON_FRAME_SIZE,
+	},
+	{
+		"prefix": "vine_whip_idle",
+		"sheet": "res://player/sprites/PNG/VineWhip_Idle/vine_whip_idle_full.png",
+		"columns": 6,
+		"frames": [6, 6, 6, 6],
+		"loop": true,
+		"duration": 0.6,
+		"frame_size": WEAPON_FRAME_SIZE,
+	},
+	{
+		"prefix": "vine_whip_walk",
+		"sheet": "res://player/sprites/PNG/VineWhip_Walk/vine_whip_walk_full.png",
+		"columns": 6,
+		"frames": [6, 6, 6, 6],
+		"loop": true,
+		"duration": 0.6,
+		"frame_size": WEAPON_FRAME_SIZE,
+	},
+	{
+		"prefix": "petal_shield_idle",
+		"sheet": "res://player/sprites/PNG/PetalShield_Idle/petal_shield_idle_full.png",
+		"columns": 6,
+		"frames": [6, 6, 6, 6],
+		"loop": true,
+		"duration": 0.6,
+		"frame_size": WEAPON_FRAME_SIZE,
+	},
+	{
+		"prefix": "petal_shield_walk",
+		"sheet": "res://player/sprites/PNG/PetalShield_Walk/petal_shield_walk_full.png",
+		"columns": 6,
+		"frames": [6, 6, 6, 6],
+		"loop": true,
+		"duration": 0.6,
+		"frame_size": WEAPON_FRAME_SIZE,
+	},
+	{
 		"prefix": "thornsword_attack",
 		"sheet": "res://player/sprites/PNG/ThornSword_Attack/thornsword_attack_full.png",
 		"columns": 8,
@@ -182,6 +236,13 @@ static func build(anim_player: AnimationPlayer, sprite_path: String) -> void:
 
 static func build_tree(anim_tree: AnimationTree) -> void:
 	var sm: AnimationNodeStateMachine = AnimationNodeStateMachine.new()
+	var movement_states: Array[String] = [
+		"idle", "walk",
+		"thornsword_idle", "thornsword_walk",
+		"spore_bomb_idle", "spore_bomb_walk",
+		"vine_whip_idle", "vine_whip_walk",
+		"petal_shield_idle", "petal_shield_walk",
+	]
 
 	for def: Dictionary in ANIM_DEFS:
 		var bs: AnimationNodeBlendSpace2D = AnimationNodeBlendSpace2D.new()
@@ -197,30 +258,25 @@ static func build_tree(anim_tree: AnimationTree) -> void:
 
 		sm.add_node(def["prefix"], bs)
 
-	sm.add_transition("idle", "walk", AnimationNodeStateMachineTransition.new())
-	sm.add_transition("walk", "idle", AnimationNodeStateMachineTransition.new())
+	for src: String in movement_states:
+		for dst: String in movement_states:
+			if src != dst:
+				sm.add_transition(src, dst, AnimationNodeStateMachineTransition.new())
 
-	sm.add_transition("thornsword_idle", "thornsword_walk", AnimationNodeStateMachineTransition.new())
-	sm.add_transition("thornsword_walk", "thornsword_idle", AnimationNodeStateMachineTransition.new())
-
-	sm.add_transition("idle", "thornsword_idle", AnimationNodeStateMachineTransition.new())
-	sm.add_transition("thornsword_idle", "idle", AnimationNodeStateMachineTransition.new())
-	sm.add_transition("walk", "thornsword_walk", AnimationNodeStateMachineTransition.new())
-	sm.add_transition("thornsword_walk", "walk", AnimationNodeStateMachineTransition.new())
-
-	for src: String in ["idle", "walk", "thornsword_idle", "thornsword_walk"]:
+	for src: String in movement_states:
 		sm.add_transition(src, "hurt", AnimationNodeStateMachineTransition.new())
 
 	var hurt_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
 	hurt_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
 	sm.add_transition("hurt", "idle", hurt_to_idle)
 
-	for src: String in ["idle", "walk", "hurt", "thornsword_idle", "thornsword_walk"]:
+	for src: String in movement_states:
 		sm.add_transition(src, "death", AnimationNodeStateMachineTransition.new())
+	sm.add_transition("hurt", "death", AnimationNodeStateMachineTransition.new())
 
 	sm.add_transition("death", "idle", AnimationNodeStateMachineTransition.new())
 
-	for src: String in ["thornsword_idle", "thornsword_walk"]:
+	for src: String in movement_states:
 		sm.add_transition(src, "thornsword_attack", AnimationNodeStateMachineTransition.new())
 
 	var ts_attack_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
@@ -228,37 +284,38 @@ static func build_tree(anim_tree: AnimationTree) -> void:
 	ts_attack_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
 	sm.add_transition("thornsword_attack", "thornsword_idle", ts_attack_to_idle)
 
-	for src: String in ["idle", "walk", "thornsword_idle", "thornsword_walk"]:
+	for src: String in movement_states:
 		sm.add_transition(src, "vine_whip_attack", AnimationNodeStateMachineTransition.new())
 
 	var vine_attack_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
 	vine_attack_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
 	vine_attack_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
-	sm.add_transition("vine_whip_attack", "idle", vine_attack_to_idle)
+	sm.add_transition("vine_whip_attack", "vine_whip_idle", vine_attack_to_idle)
 
-	for src: String in ["idle", "walk", "thornsword_idle", "thornsword_walk"]:
+	for src: String in movement_states:
 		sm.add_transition(src, "spore_bomb_attack", AnimationNodeStateMachineTransition.new())
 
 	var spore_attack_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
 	spore_attack_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
 	spore_attack_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
-	sm.add_transition("spore_bomb_attack", "idle", spore_attack_to_idle)
+	sm.add_transition("spore_bomb_attack", "spore_bomb_idle", spore_attack_to_idle)
 
-	for src: String in ["idle", "walk", "thornsword_idle", "thornsword_walk"]:
+	for src: String in movement_states:
 		sm.add_transition(src, "petal_shield_block", AnimationNodeStateMachineTransition.new())
 
 	var petal_block_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
 	petal_block_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
 	petal_block_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
-	sm.add_transition("petal_shield_block", "idle", petal_block_to_idle)
+	sm.add_transition("petal_shield_block", "petal_shield_idle", petal_block_to_idle)
 
-	for src: String in ["idle", "walk", "thornsword_idle", "thornsword_walk", "petal_shield_block"]:
+	for src: String in movement_states:
 		sm.add_transition(src, "petal_shield_counter", AnimationNodeStateMachineTransition.new())
+	sm.add_transition("petal_shield_block", "petal_shield_counter", AnimationNodeStateMachineTransition.new())
 
 	var petal_counter_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
 	petal_counter_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
 	petal_counter_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
-	sm.add_transition("petal_shield_counter", "idle", petal_counter_to_idle)
+	sm.add_transition("petal_shield_counter", "petal_shield_idle", petal_counter_to_idle)
 
 	sm.set_graph_offset(Vector2(0, 0))
 	anim_tree.tree_root = sm
