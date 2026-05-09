@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dg3wcm8ad484i"
-path="res://.godot/imported/thornsword_attack_full.png-9802fdc74287552954777a53e8d33b04.ctex"
+uid="uid://cktbsj67k00iv"
+path="res://.godot/imported/spore_bomb_projectile_spritesheet.png-be62852e28bd0bcac2197adaf758b18f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://player/sprites/PNG/Sword_Attack/thornsword_attack_full.png"
-dest_files=["res://.godot/imported/thornsword_attack_full.png-9802fdc74287552954777a53e8d33b04.ctex"]
+source_file="res://combat/projectiles/spore_bomb_projectile_spritesheet.png"
+dest_files=["res://.godot/imported/spore_bomb_projectile_spritesheet.png-be62852e28bd0bcac2197adaf758b18f.ctex"]
 
 [params]
 

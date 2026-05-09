@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c870m25gvj2y8"
-path="res://.godot/imported/Sword_attack_full.png-c1192d6bab0ac4eeef0269f8f8f2a8b5.ctex"
+uid="uid://qs084vlvlqvs"
+path="res://.godot/imported/spore_bomb_throw_full.png-72b6cde4038be4ae650b4b2a4f3fc190.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://player/sprites/PNG/Sword_Attack/Sword_attack_full.png"
-dest_files=["res://.godot/imported/Sword_attack_full.png-c1192d6bab0ac4eeef0269f8f8f2a8b5.ctex"]
+source_file="res://player/sprites/PNG/SporeBomb_Attack/spore_bomb_throw_full.png"
+dest_files=["res://.godot/imported/spore_bomb_throw_full.png-72b6cde4038be4ae650b4b2a4f3fc190.ctex"]
 
 [params]
 

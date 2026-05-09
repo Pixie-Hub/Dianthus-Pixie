@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cl76q34i0mgqy"
-path="res://.godot/imported/thornsword_attack_down-Sheet.png-e5973e6476569998444c27a73637108d.ctex"
+uid="uid://c870m25gvj2y8"
+path="res://.godot/imported/Sword_attack_full.png-6021c9092bc91db68460ae0ab77eb9b9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://player/sprites/PNG/Sword_Attack/thornsword_attack_down-Sheet.png"
-dest_files=["res://.godot/imported/thornsword_attack_down-Sheet.png-e5973e6476569998444c27a73637108d.ctex"]
+source_file="res://player/sprites/PNG/ThornSword_Attack/Sword_attack_full.png"
+dest_files=["res://.godot/imported/Sword_attack_full.png-6021c9092bc91db68460ae0ab77eb9b9.ctex"]
 
 [params]
 
