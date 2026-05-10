@@ -67,7 +67,7 @@ func _start_new_game() -> void:
 	UnlockFlags.reset_state()
 	CodexManager.reset_state()
 	EndingManager.reset_state()
-	get_tree().change_scene_to_file("res://world/zones/meadow_edge/meadow_edge.tscn")
+	get_tree().change_scene_to_file("res://core/cutscenes/opening_cutscene.tscn")
 
 
 func _on_settings_pressed() -> void:

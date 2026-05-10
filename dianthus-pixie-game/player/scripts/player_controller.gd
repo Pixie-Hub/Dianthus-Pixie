@@ -370,8 +370,12 @@ func _unhandled_input(event: InputEvent) -> void:
 				var ok: bool = SaveManager.save_to_slot(true)
 				print("DEBUG: Manual save %s" % ("OK" if ok else "BLOCKED (not in EXPLORATION)"))
 		elif event.keycode == KEY_F12:
-			var ok: bool = SaveManager.load_from_slot()
-			print("DEBUG: Load save %s" % ("OK" if ok else "FAILED"))
+			if event.shift_pressed:
+				get_tree().change_scene_to_file("res://core/cutscenes/opening_cutscene.tscn")
+				print("DEBUG: Shift+F12 — Replaying opening cutscene.")
+			else:
+				var ok: bool = SaveManager.load_from_slot()
+				print("DEBUG: Load save %s" % ("OK" if ok else "FAILED"))
 		elif event.keycode == KEY_INSERT:
 			if event.shift_pressed:
 				InventoryManager.add_item("bougainvillea_extract", 1)
