@@ -466,9 +466,12 @@ func _maybe_start_story_chain() -> void:
 		start_quest(&"story_01_whispers")
 
 
-func _on_devourer_omen_deciphered() -> void:
-	# TODO: WORLD-02 — call this from the Veld story landmark interaction.
+func decipher_devourer_omen() -> void:
 	report_event(&"devourer_omen_deciphered", 1, {})
+
+
+func _on_devourer_omen_deciphered() -> void:
+	decipher_devourer_omen()
 
 
 func _on_devourer_defeated() -> void:

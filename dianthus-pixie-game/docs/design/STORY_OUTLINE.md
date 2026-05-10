@@ -284,7 +284,7 @@ The buildup begins with small nighttime attacks. At first, the Void sends creatu
 
 There are no precursor bosses in this story path. The Devourer is the only named boss escalation. Story 05 should therefore function as a breach-revelation and preparation gate: the Pixie learns what is coming, the Core understands why Dianthus Pollen must be risked, and the next objective turns toward crafting a weapon for the Final Bloom.
 
-TODO: WORLD-02 - When the Veld story landmark is authored, define the specific omen interaction that emits `devourer_omen_deciphered` and starts the final preparation step.
+WORLD-02 implementation note: the Ruins of Veld now contain an Ancient Omen landmark. Interacting with it using **E** emits `devourer_omen_deciphered` for `story_05_devourer_omens` and starts the final preparation step.
 
 ### Why The Devourer Appears
 

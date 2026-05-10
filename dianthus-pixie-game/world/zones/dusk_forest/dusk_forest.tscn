@@ -4251,6 +4251,9 @@ position = Vector2(520, 880)
 [node name="DefaultSpawn" type="Marker2D" parent="EntryMarkers" unique_id=1021321552]
 position = Vector2(520, 880)
 
+
+[node name="FromRuinsOfVeld" type="Marker2D" parent="EntryMarkers"]
+position = Vector2(760, 268)
 [node name="YSortLayer" type="Node2D" parent="." unique_id=412915871]
 y_sort_enabled = true
 
@@ -4266,6 +4269,17 @@ target_entry_marker = &"FromDuskForest"
 display_name = "Meadow Edge"
 prompt_body = "Return to Meadow Edge."
 
+
+[node name="RuinsOfVeldGate" parent="YSortLayer" instance=ExtResource("5_5gonc")]
+position = Vector2(760, 228)
+target_scene = "res://world/zones/ruins_of_veld/ruins_of_veld.tscn"
+target_entry_marker = &"FromDuskForest"
+required_day = 7
+required_unlock_flag = &"unlock_zone_ruins"
+required_active_quest = &"story_03_journey"
+display_name = "Ruins of Veld"
+prompt_body = "Follow the old road into Veld."
+disabled_prompt = "Requires Day 7 and story progress."
 [node name="DecorLayer" type="TileMapLayer" parent="YSortLayer" unique_id=1130609805]
 modulate = Color(0.32, 0.41, 0.29, 1)
 z_index = -18
