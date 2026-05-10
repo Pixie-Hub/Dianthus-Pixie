@@ -56,7 +56,7 @@ const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
 		"prefix": "ForestMoonspore",
 		"item_id": "moonspore",
 		"amount": 1,
-		"minimum_count": 0,
+		"minimum_count": 1,
 		"min_day": 3,
 		"positions": [
 			Vector2(400, 640),
@@ -111,6 +111,7 @@ const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
 @onready var _phase_label: Label = $DebugOverlay/PhaseLabel
 @onready var _day_label: Label = $DebugOverlay/DayLabel
 @onready var _timer_label: Label = $DebugOverlay/TimerLabel
+@onready var _player: CharacterBody2D = $YSortLayer/Player
 @onready var _pickup_container: Node2D = $YSortLayer/PickupContainer
 
 var _collected_pickup_names: Array[String] = []
@@ -122,6 +123,9 @@ func _ready() -> void:
 	DayNightCycle.phase_changed.connect(_on_phase_changed)
 	_update_debug_labels()
 	_setup_camera()
+	_restore_player_position()
+	if is_instance_valid(_player):
+		GameManager.register_player(_player)
 	_spawn_daytime_resources()
 	ZoneTracker.enter_zone("dusk_forest")
 
@@ -140,9 +144,33 @@ func get_map_display_name() -> String:
 
 
 func _setup_camera() -> void:
-	var player: Node = get_tree().get_first_node_in_group("player")
-	if is_instance_valid(player) and player.has_method("set_camera_limits"):
-		player.call("set_camera_limits", 0, 0, MAP_WIDTH, MAP_HEIGHT)
+	if is_instance_valid(_player) and _player.has_method("set_camera_limits"):
+		_player.call("set_camera_limits", 0, 0, MAP_WIDTH, MAP_HEIGHT)
+
+
+func _restore_player_position() -> void:
+	if not is_instance_valid(_player):
+		return
+	var target_entry_marker: String = str(GameManager.player_data.get("target_entry_marker", ""))
+	if not target_entry_marker.is_empty():
+		var marker: Marker2D = _find_entry_marker(target_entry_marker)
+		if marker != null:
+			_player.global_position = marker.global_position
+			GameManager.player_data["position"] = marker.global_position
+			GameManager.player_data["target_entry_marker"] = ""
+			return
+		GameManager.player_data["target_entry_marker"] = ""
+
+	var last_zone: String = str(GameManager.player_data.get("last_zone", ""))
+	if last_zone != "" and last_zone != scene_file_path:
+		var restored_position: Variant = GameManager.player_data.get("position", _player.global_position)
+		if restored_position is Vector2:
+			_player.global_position = restored_position
+
+
+func _find_entry_marker(marker_name: String) -> Marker2D:
+	var marker: Node = find_child(marker_name, true, false)
+	return marker as Marker2D
 
 
 func _on_phase_changed(_phase: String) -> void:
@@ -218,7 +246,7 @@ func _is_spawn_point_clear(pos: Vector2) -> bool:
 		return true
 	var params: PhysicsPointQueryParameters2D = PhysicsPointQueryParameters2D.new()
 	params.position = pos
-	params.collision_mask = 1
+	params.collision_mask = CollisionLayers.TERRAIN
 	params.collide_with_bodies = true
 	params.collide_with_areas = false
 	var results: Array[Dictionary] = space_state.intersect_point(params, 1)

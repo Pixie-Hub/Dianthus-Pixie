@@ -1,23 +1,23 @@
-[gd_scene load_steps=5 format=3 uid="uid://spore_bomb_proj01"]
+[gd_scene format=3 uid="uid://bnjje1s62hrs1"]
 
-[ext_resource type="Script" path="res://combat/projectiles/spore_bomb_projectile.gd" id="1_proj"]
-[ext_resource type="Texture2D" path="res://combat/projectiles/spore_bomb_projectile_spritesheet.png" id="2_projectile"]
-[ext_resource type="Texture2D" path="res://vfx/animations/spore_bomb_detonation_vfx.png" id="3_detonation"]
+[ext_resource type="Script" uid="uid://dl65hm4wk7f5v" path="res://combat/projectiles/spore_bomb_projectile.gd" id="1_proj"]
+[ext_resource type="Texture2D" uid="uid://cktbsj67k00iv" path="res://combat/projectiles/spore_bomb_projectile_spritesheet.png" id="2_projectile"]
+[ext_resource type="Texture2D" uid="uid://cb021grluekqp" path="res://vfx/animations/spore_bomb_detonation_vfx.png" id="3_detonation"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1"]
 radius = 4.0
 
-[node name="SporeBombProjectile" type="Area2D"]
+[node name="SporeBombProjectile" type="Area2D" unique_id=508189299]
 script = ExtResource("1_proj")
 
-[node name="Visual" type="Sprite2D" parent="."]
+[node name="Visual" type="Sprite2D" parent="." unique_id=1586070655]
 unique_name_in_owner = true
 texture_filter = 1
 texture = ExtResource("2_projectile")
 region_enabled = true
 region_rect = Rect2(0, 0, 16, 16)
 
-[node name="DetonationVfx" type="Sprite2D" parent="."]
+[node name="DetonationVfx" type="Sprite2D" parent="." unique_id=1144647631]
 unique_name_in_owner = true
 visible = false
 texture_filter = 1
@@ -25,6 +25,6 @@ texture = ExtResource("3_detonation")
 region_enabled = true
 region_rect = Rect2(0, 0, 64, 64)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=230258580]
 shape = SubResource("CircleShape2D_1")
 disabled = true

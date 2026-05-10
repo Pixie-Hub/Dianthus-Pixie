@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" path="res://world/transitions/zone_transition_gate.tscn" id="5_5gonc"]
 [ext_resource type="Texture2D" uid="uid://cwxoaaut65hl5" path="res://world/tilesets/Sprout Lands - Sprites - Basic pack/Tilled_Dirt_Wide.png" id="5_bpy2o"]
 [ext_resource type="PackedScene" uid="uid://shyr5xnjuqkr" path="res://ui/hud/hud.tscn" id="6_bpy2o"]
+[ext_resource type="Texture2D" uid="uid://e6e704ywlftt" path="res://world/obstacles/east_dense_woods_blocker.png" id="7_bpy2o"]
 [ext_resource type="PackedScene" uid="uid://do43bmhqxi163" path="res://ui/menus/pause_menu.tscn" id="7_l61tn"]
 [ext_resource type="PackedScene" uid="uid://ceejuwh64gc3d" path="res://ui/screens/inventory_screen.tscn" id="8_1tdcx"]
 [ext_resource type="PackedScene" uid="uid://bouxl6lh77c11" path="res://ui/codex/codex_screen.tscn" id="9_g5riq"]
@@ -15,7 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://bma7njjcese1p" path="res://ui/quests/quest_log_screen.tscn" id="11_o27fp"]
 [ext_resource type="PackedScene" uid="uid://ckly87alm222s" path="res://ui/screens/full_map_screen.tscn" id="12_l368x"]
 [ext_resource type="Script" uid="uid://b523pk78qj4qj" path="res://world/zones/dusk_forest/dusk_forest.gd" id="13_dskfst"]
-[ext_resource type="Texture2D" path="res://world/obstacles/meadow_dusk_blocker_atlas.png" id="14_blockers"]
+[ext_resource type="Texture2D" uid="uid://jnshnvts5ei2" path="res://world/obstacles/meadow_dusk_blocker_atlas.png" id="14_blockers"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_l61tn"]
 texture = ExtResource("1_0kbcj")
@@ -2593,13 +2594,10 @@ size = Vector2(32, 960)
 size = Vector2(32, 960)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cdcy4"]
-size = Vector2(260, 900)
+size = Vector2(280, 960)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6krur"]
-size = Vector2(300, 900)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_hb2e3"]
-size = Vector2(280, 140)
+size = Vector2(320, 960)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fj7ia"]
 size = Vector2(360, 140)
@@ -2611,19 +2609,19 @@ size = Vector2(300, 160)
 size = Vector2(270, 260)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_f3kvu"]
-size = Vector2(52, 160)
+size = Vector2(50, 96)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1tuwm"]
-size = Vector2(50, 180)
+size = Vector2(57, 106)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_66q3y"]
-size = Vector2(180, 26)
+size = Vector2(96, 32)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3hjcy"]
-size = Vector2(80, 30)
+size = Vector2(72, 47)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cfwn8"]
-size = Vector2(96, 30)
+size = Vector2(96, 47)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0e6ua"]
 texture = ExtResource("1_0kbcj")
@@ -3887,194 +3885,334 @@ polygon = PackedVector2Array(804, 472, 799.4972, 491.15906, 786.42957, 508.4427,
 color = Color(0.72, 0.36, 0.24, 0.35)
 polygon = PackedVector2Array(764, 232, 759.8991, 244.99677, 748.091, 256.42593, 730, 264.90897, 707.8081, 269.4227, 684.1919, 269.4227, 662, 264.90897, 643.909, 256.42593, 632.1009, 244.99677, 628, 232, 632.1009, 219.00323, 643.909, 207.57407, 662, 199.09103, 684.1919, 194.5773, 707.8081, 194.5773, 730, 199.09103, 748.091, 207.57407, 759.8991, 219.00323)
 
-[node name="WestTreeMass" type="Node2D" parent="ForestMapVisuals" unique_id=60580618]
-
-[node name="CanopyTop" type="Sprite2D" parent="ForestMapVisuals/WestTreeMass"]
+[node name="EastTreeMass" type="Sprite2D" parent="ForestMapVisuals" unique_id=546298966]
 texture_filter = 1
-position = Vector2(150, 95)
-scale = Vector2(1, 1)
-texture = ExtResource("14_blockers")
+position = Vector2(1121, 544)
+texture = ExtResource("7_bpy2o")
 offset = Vector2(0, -64)
-region_enabled = true
-region_rect = Rect2(384, 384, 128, 128)
-region_filter_clip_enabled = true
 
-[node name="WallModule0" type="Sprite2D" parent="ForestMapVisuals/WestTreeMass"]
+[node name="WestTreeMass" type="Sprite2D" parent="ForestMapVisuals" unique_id=1532183652]
 texture_filter = 1
-position = Vector2(150, 230)
-scale = Vector2(1, 1)
-texture = ExtResource("14_blockers")
+position = Vector2(120, 544)
+texture = ExtResource("7_bpy2o")
 offset = Vector2(0, -64)
-region_enabled = true
-region_rect = Rect2(0, 256, 128, 128)
-region_filter_clip_enabled = true
 
-[node name="SideEdge0" type="Sprite2D" parent="ForestMapVisuals/WestTreeMass"]
+[node name="NWCanopy" type="Node2D" parent="ForestMapVisuals" unique_id=222323508]
+
+[node name="NorthWestCanopy" type="Sprite2D" parent="ForestMapVisuals/NWCanopy" unique_id=1414794698]
 texture_filter = 1
-position = Vector2(150, 365)
-scale = Vector2(1, 1)
-texture = ExtResource("14_blockers")
-offset = Vector2(0, -64)
-region_enabled = true
-region_rect = Rect2(512, 384, 128, 128)
-region_filter_clip_enabled = true
-
-[node name="WallModule1" type="Sprite2D" parent="ForestMapVisuals/WestTreeMass"]
-texture_filter = 1
-position = Vector2(150, 500)
-scale = Vector2(1, 1)
-texture = ExtResource("14_blockers")
-offset = Vector2(0, -64)
-region_enabled = true
-region_rect = Rect2(0, 256, 128, 128)
-region_filter_clip_enabled = true
-
-[node name="SideEdge1" type="Sprite2D" parent="ForestMapVisuals/WestTreeMass"]
-texture_filter = 1
-position = Vector2(150, 635)
-scale = Vector2(1, 1)
-texture = ExtResource("14_blockers")
-offset = Vector2(0, -64)
-region_enabled = true
-region_rect = Rect2(512, 384, 128, 128)
-region_filter_clip_enabled = true
-
-[node name="WallModule2" type="Sprite2D" parent="ForestMapVisuals/WestTreeMass"]
-texture_filter = 1
-position = Vector2(150, 770)
-scale = Vector2(1, 1)
-texture = ExtResource("14_blockers")
-offset = Vector2(0, -64)
-region_enabled = true
-region_rect = Rect2(0, 256, 128, 128)
-region_filter_clip_enabled = true
-
-[node name="RootBase" type="Sprite2D" parent="ForestMapVisuals/WestTreeMass"]
-texture_filter = 1
-position = Vector2(150, 875)
-scale = Vector2(1, 1)
-texture = ExtResource("14_blockers")
-offset = Vector2(0, -64)
-region_enabled = true
-region_rect = Rect2(128, 256, 128, 128)
-region_filter_clip_enabled = true
-
-[node name="EastTreeMass" type="Node2D" parent="ForestMapVisuals" unique_id=1678984643]
-
-[node name="CanopyTop" type="Sprite2D" parent="ForestMapVisuals/EastTreeMass"]
-texture_filter = 1
-position = Vector2(1110, 95)
-scale = Vector2(1, 1)
-texture = ExtResource("14_blockers")
-offset = Vector2(0, -64)
-region_enabled = true
-region_rect = Rect2(384, 384, 128, 128)
-region_filter_clip_enabled = true
-
-[node name="WallModule0" type="Sprite2D" parent="ForestMapVisuals/EastTreeMass"]
-texture_filter = 1
-position = Vector2(1110, 230)
-scale = Vector2(1, 1)
-texture = ExtResource("14_blockers")
-offset = Vector2(0, -64)
-region_enabled = true
-region_rect = Rect2(0, 256, 128, 128)
-region_filter_clip_enabled = true
-
-[node name="SideEdge0" type="Sprite2D" parent="ForestMapVisuals/EastTreeMass"]
-texture_filter = 1
-position = Vector2(1110, 365)
-scale = Vector2(1, 1)
-texture = ExtResource("14_blockers")
-offset = Vector2(0, -64)
-region_enabled = true
-region_rect = Rect2(512, 384, 128, 128)
-region_filter_clip_enabled = true
-
-[node name="WallModule1" type="Sprite2D" parent="ForestMapVisuals/EastTreeMass"]
-texture_filter = 1
-position = Vector2(1110, 500)
-scale = Vector2(1, 1)
-texture = ExtResource("14_blockers")
-offset = Vector2(0, -64)
-region_enabled = true
-region_rect = Rect2(0, 256, 128, 128)
-region_filter_clip_enabled = true
-
-[node name="SideEdge1" type="Sprite2D" parent="ForestMapVisuals/EastTreeMass"]
-texture_filter = 1
-position = Vector2(1110, 635)
-scale = Vector2(1, 1)
-texture = ExtResource("14_blockers")
-offset = Vector2(0, -64)
-region_enabled = true
-region_rect = Rect2(512, 384, 128, 128)
-region_filter_clip_enabled = true
-
-[node name="WallModule2" type="Sprite2D" parent="ForestMapVisuals/EastTreeMass"]
-texture_filter = 1
-position = Vector2(1110, 770)
-scale = Vector2(1, 1)
-texture = ExtResource("14_blockers")
-offset = Vector2(0, -64)
-region_enabled = true
-region_rect = Rect2(0, 256, 128, 128)
-region_filter_clip_enabled = true
-
-[node name="RootBase" type="Sprite2D" parent="ForestMapVisuals/EastTreeMass"]
-texture_filter = 1
-position = Vector2(1110, 875)
-scale = Vector2(1, 1)
-texture = ExtResource("14_blockers")
-offset = Vector2(0, -64)
-region_enabled = true
-region_rect = Rect2(128, 256, 128, 128)
-region_filter_clip_enabled = true
-
-[node name="SouthWestCanopy" type="Sprite2D" parent="ForestMapVisuals" unique_id=342558018]
-texture_filter = 1
-position = Vector2(160, 850)
-scale = Vector2(1, 1)
-texture = ExtResource("14_blockers")
-offset = Vector2(0, -64)
-region_enabled = true
-region_rect = Rect2(256, 256, 128, 128)
-region_filter_clip_enabled = true
-
-[node name="SouthEastCanopy" type="Sprite2D" parent="ForestMapVisuals" unique_id=1673068632]
-texture_filter = 1
-position = Vector2(1060, 850)
-scale = Vector2(1, 1)
-texture = ExtResource("14_blockers")
-offset = Vector2(0, -64)
-region_enabled = true
-region_rect = Rect2(256, 256, 128, 128)
-region_filter_clip_enabled = true
-
-[node name="NorthWestCanopy" type="Sprite2D" parent="ForestMapVisuals" unique_id=1414794698]
-texture_filter = 1
-position = Vector2(386, 112)
-scale = Vector2(1, 1)
+position = Vector2(488, 128)
 texture = ExtResource("14_blockers")
 offset = Vector2(0, -64)
 region_enabled = true
 region_rect = Rect2(384, 256, 128, 128)
 region_filter_clip_enabled = true
 
-[node name="NorthEastCanopy" type="Sprite2D" parent="ForestMapVisuals" unique_id=103529589]
+[node name="NorthWestCanopy2" type="Sprite2D" parent="ForestMapVisuals/NWCanopy" unique_id=1064458228]
+texture_filter = 1
+position = Vector2(488, 176)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(384, 256, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthWestCanopy3" type="Sprite2D" parent="ForestMapVisuals/NWCanopy" unique_id=1124659103]
+texture_filter = 1
+position = Vector2(472, 192)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(384, 256, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthWestCanopy4" type="Sprite2D" parent="ForestMapVisuals/NWCanopy" unique_id=232334805]
+texture_filter = 1
+position = Vector2(408, 192)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(384, 256, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthWestCanopy5" type="Sprite2D" parent="ForestMapVisuals/NWCanopy" unique_id=816852934]
+texture_filter = 1
+position = Vector2(424, 144)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(384, 256, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthWestCanopy6" type="Sprite2D" parent="ForestMapVisuals/NWCanopy" unique_id=816895731]
+texture_filter = 1
+position = Vector2(408, 128)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(384, 256, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthWestCanopy7" type="Sprite2D" parent="ForestMapVisuals/NWCanopy" unique_id=613378909]
+texture_filter = 1
+position = Vector2(344, 136)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(384, 256, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthWestCanopy8" type="Sprite2D" parent="ForestMapVisuals/NWCanopy" unique_id=37761970]
+texture_filter = 1
+position = Vector2(288, 128)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(384, 256, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthWestCanopy9" type="Sprite2D" parent="ForestMapVisuals/NWCanopy" unique_id=1915052829]
+texture_filter = 1
+position = Vector2(288, 200)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(384, 256, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthWestCanopy10" type="Sprite2D" parent="ForestMapVisuals/NWCanopy" unique_id=1228525862]
+texture_filter = 1
+position = Vector2(360, 184)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(384, 256, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NECanopy" type="Node2D" parent="ForestMapVisuals" unique_id=792654695]
+
+[node name="NorthEastCanopy" type="Sprite2D" parent="ForestMapVisuals/NECanopy" unique_id=103529589]
 texture_filter = 1
 position = Vector2(944, 150)
-scale = Vector2(1, 1)
 texture = ExtResource("14_blockers")
 offset = Vector2(0, -64)
 region_enabled = true
 region_rect = Rect2(640, 384, 128, 128)
 region_filter_clip_enabled = true
 
+[node name="NorthEastCanopy2" type="Sprite2D" parent="ForestMapVisuals/NECanopy" unique_id=1548195401]
+texture_filter = 1
+position = Vector2(848, 96)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(640, 384, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthEastCanopy3" type="Sprite2D" parent="ForestMapVisuals/NECanopy" unique_id=1126802007]
+texture_filter = 1
+position = Vector2(888, 104)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(640, 384, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthEastCanopy4" type="Sprite2D" parent="ForestMapVisuals/NECanopy" unique_id=1626082213]
+texture_filter = 1
+position = Vector2(936, 96)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(640, 384, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthEastCanopy5" type="Sprite2D" parent="ForestMapVisuals/NECanopy" unique_id=1695029489]
+texture_filter = 1
+position = Vector2(968, 112)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(640, 384, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthEastCanopy6" type="Sprite2D" parent="ForestMapVisuals/NECanopy" unique_id=720127371]
+texture_filter = 1
+position = Vector2(848, 168)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(640, 384, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthEastCanopy7" type="Sprite2D" parent="ForestMapVisuals/NECanopy" unique_id=16084156]
+texture_filter = 1
+position = Vector2(848, 152)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(640, 384, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthEastCanopy8" type="Sprite2D" parent="ForestMapVisuals/NECanopy" unique_id=1216203269]
+texture_filter = 1
+position = Vector2(856, 232)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(640, 384, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthEastCanopy9" type="Sprite2D" parent="ForestMapVisuals/NECanopy" unique_id=2027740657]
+texture_filter = 1
+position = Vector2(848, 280)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(128, 256, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthEastCanopy10" type="Sprite2D" parent="ForestMapVisuals/NECanopy" unique_id=1994507179]
+texture_filter = 1
+position = Vector2(888, 208)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(640, 384, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthEastCanopy11" type="Sprite2D" parent="ForestMapVisuals/NECanopy" unique_id=1898564243]
+texture_filter = 1
+position = Vector2(904, 280)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(512, 384, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthEastCanopy12" type="Sprite2D" parent="ForestMapVisuals/NECanopy" unique_id=1391965256]
+texture_filter = 1
+position = Vector2(936, 280)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(640, 384, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthEastCanopy13" type="Sprite2D" parent="ForestMapVisuals/NECanopy" unique_id=2018866332]
+texture_filter = 1
+position = Vector2(952, 240)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(640, 384, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthEastCanopy14" type="Sprite2D" parent="ForestMapVisuals/NECanopy" unique_id=2136537280]
+texture_filter = 1
+position = Vector2(904, 224)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(640, 384, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthEastCanopy15" type="Sprite2D" parent="ForestMapVisuals/NECanopy" unique_id=560950715]
+texture_filter = 1
+position = Vector2(904, 224)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(640, 384, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthEastCanopy16" type="Sprite2D" parent="ForestMapVisuals/NECanopy" unique_id=1033152399]
+texture_filter = 1
+position = Vector2(960, 192)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(384, 256, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthEastCanopy17" type="Sprite2D" parent="ForestMapVisuals/NECanopy" unique_id=1056840301]
+texture_filter = 1
+position = Vector2(912, 168)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(640, 384, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="NorthEastCanopy18" type="Sprite2D" parent="ForestMapVisuals/NECanopy" unique_id=596110936]
+texture_filter = 1
+position = Vector2(888, 136)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(640, 384, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="SECanopy" type="Node2D" parent="ForestMapVisuals" unique_id=1335330842]
+position = Vector2(160, 850)
+
+[node name="SouthEastCanopy" type="Sprite2D" parent="ForestMapVisuals/SECanopy" unique_id=1673068632]
+texture_filter = 1
+position = Vector2(900, 0)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(256, 256, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="SouthEastCanopy2" type="Sprite2D" parent="ForestMapVisuals/SECanopy" unique_id=444835580]
+texture_filter = 1
+position = Vector2(784, -10)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(256, 256, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="SouthEastCanopy3" type="Sprite2D" parent="ForestMapVisuals/SECanopy" unique_id=1882717274]
+texture_filter = 1
+position = Vector2(800, 22)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(256, 256, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="SouthEastCanopy4" type="Sprite2D" parent="ForestMapVisuals/SECanopy" unique_id=2130081083]
+texture_filter = 1
+position = Vector2(792, 54)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(256, 256, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="SouthEastCanopy5" type="Sprite2D" parent="ForestMapVisuals/SECanopy" unique_id=133696587]
+texture_filter = 1
+position = Vector2(808, 78)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(256, 256, 128, 128)
+region_filter_clip_enabled = true
+
+[node name="SouthEastCanopy6" type="Sprite2D" parent="ForestMapVisuals/SECanopy" unique_id=293696080]
+texture_filter = 1
+position = Vector2(784, 70)
+texture = ExtResource("14_blockers")
+offset = Vector2(0, -64)
+region_enabled = true
+region_rect = Rect2(256, 256, 128, 128)
+region_filter_clip_enabled = true
+
 [node name="CentralFallenLog" type="Sprite2D" parent="ForestMapVisuals" unique_id=1745807492]
 texture_filter = 1
 position = Vector2(575, 610)
-scale = Vector2(1, 1)
 texture = ExtResource("14_blockers")
 offset = Vector2(0, -64)
 region_enabled = true
@@ -4084,7 +4222,6 @@ region_filter_clip_enabled = true
 [node name="DeepRootWallWest" type="Sprite2D" parent="ForestMapVisuals" unique_id=1281979433]
 texture_filter = 1
 position = Vector2(530, 300)
-scale = Vector2(1, 1)
 texture = ExtResource("14_blockers")
 offset = Vector2(0, -64)
 region_enabled = true
@@ -4094,7 +4231,6 @@ region_filter_clip_enabled = true
 [node name="DeepRootWallEast" type="Sprite2D" parent="ForestMapVisuals" unique_id=1525263485]
 texture_filter = 1
 position = Vector2(760, 300)
-scale = Vector2(1, 1)
 texture = ExtResource("14_blockers")
 offset = Vector2(0, -64)
 region_enabled = true
@@ -4103,8 +4239,7 @@ region_filter_clip_enabled = true
 
 [node name="WestMoonsporeThicket" type="Sprite2D" parent="ForestMapVisuals" unique_id=1782487264]
 texture_filter = 1
-position = Vector2(300, 590)
-scale = Vector2(1, 1)
+position = Vector2(304, 616)
 texture = ExtResource("14_blockers")
 offset = Vector2(0, -64)
 region_enabled = true
@@ -4114,7 +4249,6 @@ region_filter_clip_enabled = true
 [node name="EastMoonsporeThicket" type="Sprite2D" parent="ForestMapVisuals" unique_id=462501712]
 texture_filter = 1
 position = Vector2(805, 500)
-scale = Vector2(1, 1)
 texture = ExtResource("14_blockers")
 offset = Vector2(0, -64)
 region_enabled = true
@@ -4161,6 +4295,7 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ForestMapCollision/WestDenseWoodsBlocker" unique_id=524680941]
+position = Vector2(-10, 0)
 shape = SubResource("RectangleShape2D_cdcy4")
 
 [node name="EastDenseWoodsBlocker" type="StaticBody2D" parent="ForestMapCollision" unique_id=1766200970]
@@ -4169,15 +4304,8 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ForestMapCollision/EastDenseWoodsBlocker" unique_id=368256172]
+position = Vector2(10, 0)
 shape = SubResource("RectangleShape2D_6krur")
-
-[node name="SouthWestCanopyBlocker" type="StaticBody2D" parent="ForestMapCollision" unique_id=231076972]
-position = Vector2(160, 850)
-collision_layer = 2
-collision_mask = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ForestMapCollision/SouthWestCanopyBlocker" unique_id=2108717665]
-shape = SubResource("RectangleShape2D_hb2e3")
 
 [node name="SouthEastCanopyBlocker" type="StaticBody2D" parent="ForestMapCollision" unique_id=819615201]
 position = Vector2(1060, 850)
@@ -4209,6 +4337,7 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ForestMapCollision/WestMoonsporeThicketBlocker" unique_id=345412722]
+position = Vector2(3, -22)
 shape = SubResource("RectangleShape2D_f3kvu")
 
 [node name="EastMoonsporeThicketBlocker" type="StaticBody2D" parent="ForestMapCollision" unique_id=517960086]
@@ -4217,6 +4346,7 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ForestMapCollision/EastMoonsporeThicketBlocker" unique_id=1052404216]
+position = Vector2(-0.5, -49)
 shape = SubResource("RectangleShape2D_1tuwm")
 
 [node name="CentralFallenLogBlocker" type="StaticBody2D" parent="ForestMapCollision" unique_id=1539946094]
@@ -4225,6 +4355,7 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ForestMapCollision/CentralFallenLogBlocker" unique_id=597816817]
+position = Vector2(1, -18)
 shape = SubResource("RectangleShape2D_66q3y")
 
 [node name="DeepRootWallWestBlocker" type="StaticBody2D" parent="ForestMapCollision" unique_id=874591680]
@@ -4233,6 +4364,7 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ForestMapCollision/DeepRootWallWestBlocker" unique_id=820982016]
+position = Vector2(2, -19.5)
 shape = SubResource("RectangleShape2D_3hjcy")
 
 [node name="DeepRootWallEastBlocker" type="StaticBody2D" parent="ForestMapCollision" unique_id=1503134122]
@@ -4241,6 +4373,7 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ForestMapCollision/DeepRootWallEastBlocker" unique_id=1568432439]
+position = Vector2(0, -19.5)
 shape = SubResource("RectangleShape2D_cfwn8")
 
 [node name="EntryMarkers" type="Node2D" parent="." unique_id=440852517]
@@ -4251,9 +4384,9 @@ position = Vector2(520, 880)
 [node name="DefaultSpawn" type="Marker2D" parent="EntryMarkers" unique_id=1021321552]
 position = Vector2(520, 880)
 
-
 [node name="FromRuinsOfVeld" type="Marker2D" parent="EntryMarkers"]
 position = Vector2(760, 268)
+
 [node name="YSortLayer" type="Node2D" parent="." unique_id=412915871]
 y_sort_enabled = true
 
@@ -4269,7 +4402,6 @@ target_entry_marker = &"FromDuskForest"
 display_name = "Meadow Edge"
 prompt_body = "Return to Meadow Edge."
 
-
 [node name="RuinsOfVeldGate" parent="YSortLayer" instance=ExtResource("5_5gonc")]
 position = Vector2(760, 228)
 target_scene = "res://world/zones/ruins_of_veld/ruins_of_veld.tscn"
@@ -4280,10 +4412,11 @@ required_active_quest = &"story_03_journey"
 display_name = "Ruins of Veld"
 prompt_body = "Follow the old road into Veld."
 disabled_prompt = "Requires Day 7 and story progress."
+
 [node name="DecorLayer" type="TileMapLayer" parent="YSortLayer" unique_id=1130609805]
 modulate = Color(0.32, 0.41, 0.29, 1)
 z_index = -18
-tile_map_data = PackedByteArray("AAADAAIAAgADAAAAAAAhAAIAAgACAAAAAAAsAAIAAgAFAAAAAAA/AAIAAgABAAAAAABKAAIAAgAEAAAAAAAlAAMAAgAFAAAAAAAqAAMAAgADAAAAAAAvAAMAAgABAAAAAAAmAAQAAgAEAAAAAAAtAAQAAgACAAAAAAA0AAQAAgAAAAAAAAApAAUAAgAAAAAAAAA0AAUAAgABAAAAAAA/AAUAAgACAAAAAABKAAUAAgADAAAAAAARAAYAAgAEAAAAAAATAAYAAgABAAAAAAAyAAYAAgAFAAAAAAA0AAYAAgACAAAAAAARAAcAAgABAAAAAAATAAcAAgAEAAAAAAAyAAcAAgAAAAAAAAA0AAcAAgADAAAAAAApAAgAAgAFAAAAAAA0AAgAAgAEAAAAAAA/AAgAAgADAAAAAABKAAgAAgACAAAAAAAmAAkAAgABAAAAAAAtAAkAAgADAAAAAAA0AAkAAgAFAAAAAAAlAAoAAgAAAAAAAAAqAAoAAgACAAAAAAAvAAoAAgAEAAAAAAADAAsAAgACAAAAAAAhAAsAAgADAAAAAAAsAAsAAgAAAAAAAAA/AAsAAgAEAAAAAABKAAsAAgABAAAAAAA9AAwAAgAFAAAAAABAAAwAAgAEAAAAAABDAAwAAgADAAAAAABGAAwAAgACAAAAAABJAAwAAgABAAAAAABMAAwAAgAAAAAAAAAxAA0AAgABAAAAAAA+AA0AAgACAAAAAABLAA0AAgADAAAAAAAJAA4AAgACAAAAAAAbAA4AAgADAAAAAAA/AA4AAgAFAAAAAABKAA4AAgAAAAAAAAAIAA8AAgAAAAAAAAAMAA8AAgABAAAAAAAQAA8AAgACAAAAAAAUAA8AAgADAAAAAAAYAA8AAgAEAAAAAAAcAA8AAgAFAAAAAAACABAAAgABAAAAAAALABAAAgAFAAAAAAAZABAAAgAAAAAAAAAiABAAAgAEAAAAAAA5ABAAAgADAAAAAAAKABEAAgADAAAAAAAaABEAAgACAAAAAAA6ABEAAgAAAAAAAAAPABIAAgAAAAAAAAAVABIAAgAFAAAAAAA7ABIAAgADAAAAAAAOABMAAgAEAAAAAAAWABMAAgABAAAAAAAtABMAAgAFAAAAAAA1ABMAAgACAAAAAAADABQAAgABAAAAAAANABQAAgACAAAAAAAXABQAAgADAAAAAAAhABQAAgAEAAAAAAALABUAAgABAAAAAAAZABUAAgAEAAAAAAA2ABUAAgADAAAAAAAFABYAAgAEAAAAAAAGABYAAgAAAAAAAAAeABYAAgAFAAAAAAAfABYAAgABAAAAAAA4ABYAAgACAAAAAABCABcAAgAFAAAAAABDABcAAgAEAAAAAABEABcAAgADAAAAAABFABcAAgACAAAAAABGABcAAgABAAAAAABHABcAAgAAAAAAAAAsABgAAgAEAAAAAAAIABkAAgADAAAAAAAcABkAAgACAAAAAAAwABkAAgABAAAAAABEABkAAgAAAAAAAABFABkAAgAFAAAAAAAMABoAAgAFAAAAAAAYABoAAgAAAAAAAAA+ABoAAgABAAAAAABLABoAAgAEAAAAAAAEABsAAgAAAAAAAAAgABsAAgAFAAAAAAAyABsAAgABAAAAAAAHABwAAgAAAAAAAAAdABwAAgAFAAAAAABBABwAAgAEAAAAAABIABwAAgABAAAAAAADAB0AAgAAAAAAAAAJAB0AAgABAAAAAAAPAB0AAgACAAAAAAAVAB0AAgADAAAAAAAbAB0AAgAEAAAAAAAhAB0AAgAFAAAAAAA4AB4AAgAFAAAAAAA9AB4AAgAEAAAAAABCAB4AAgADAAAAAABHAB4AAgACAAAAAABMAB4AAgABAAAAAAAHAB8AAgACAAAAAAAdAB8AAgADAAAAAAAzAB8AAgAEAAAAAABAAB8AAgAAAAAAAABJAB8AAgAFAAAAAAAQACAAAgABAAAAAAAUACAAAgAEAAAAAAAzACAAAgACAAAAAAA3ACAAAgAFAAAAAAAzACEAAgAAAAAAAAA6ACEAAgABAAAAAABBACEAAgACAAAAAABIACEAAgADAAAAAAAHACIAAgAEAAAAAAAwACIAAgADAAAAAABDACIAAgAFAAAAAABGACIAAgAAAAAAAAAFACMAAgACAAAAAAA2ACMAAgAAAAAAAAA5ACMAAgAEAAAAAAAGACQAAgABAAAAAAAOACQAAgACAAAAAAAWACQAAgADAAAAAAAmACQAAgAFAAAAAAACACUAAgADAAAAAAAnACUAAgAFAAAAAABCACUAAgABAAAAAABHACUAAgAEAAAAAAAKACYAAgAEAAAAAAAxACYAAgADAAAAAABBACYAAgAAAAAAAABIACYAAgAFAAAAAAAEACcAAgABAAAAAAAvACcAAgACAAAAAAA+ACcAAgAAAAAAAABLACcAAgAFAAAAAAANACgAAgAFAAAAAAAPACgAAgAEAAAAAAARACgAAgADAAAAAAATACgAAgACAAAAAAARACkAAgAAAAAAAAATACkAAgAFAAAAAAAmACkAAgACAAAAAAA7ACkAAgAEAAAAAAAuACoAAgAFAAAAAAA3ACoAAgAEAAAAAABAACoAAgADAAAAAABJACoAAgACAAAAAAAMACsAAgACAAAAAAAkACsAAgAEAAAAAAAwACsAAgAFAAAAAAAJACwAAgAAAAAAAAAoACwAAgADAAAAAAA1ACwAAgABAAAAAAALAC0AAgACAAAAAAAnAC0AAgAEAAAAAAA1AC0AAgAFAAAAAAApAC4AAgABAAAAAAAsAC4AAgADAAAAAAAvAC4AAgAFAAAAAAANAC8AAgABAAAAAAAyAC8AAgACAAAAAAA8AC8AAgAFAAAAAABNAC8AAgAAAAAAAAAFADAAAgAAAAAAAAAuADAAAgAEAAAAAAA9ADAAAgADAAAAAABMADAAAgACAAAAAAAQADEAAgAAAAAAAAAUADEAAgAFAAAAAAAlADEAAgABAAAAAAA6ADEAAgACAAAAAAAGADIAAgACAAAAAAA2ADIAAgAEAAAAAAA7ADIAAgAAAAAAAAAEADMAAgACAAAAAAAxADMAAgAAAAAAAAA8ADMAAgAEAAAAAABNADMAAgABAAAAAAAIADQAAgABAAAAAAAcADQAAgAEAAAAAAA3ADQAAgADAAAAAAAOADUAAgAAAAAAAAAWADUAAgAFAAAAAAAnADUAAgADAAAAAAA4ADUAAgABAAAAAAAuADYAAgADAAAAAAA5ADYAAgAFAAAAAAAKADcAAgAAAAAAAAAaADcAAgAFAAAAAAArADcAAgAEAAAAAAA8ADcAAgADAAAAAABNADcAAgACAAAAAAACADgAAgAAAAAAAABEADgAAgAEAAAAAABFADgAAgABAAAAAAAeADYAAgAEAAAAAAAjADQAAgAEAAAAAAAoABAAAgAEAAAAAAAsAA4AAgAEAAAAAAAZACgAAgAEAAAAAAAtAB4AAgAEAAAAAAA=")
+tile_map_data = PackedByteArray("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")
 tile_set = SubResource("TileSet_fj7ia")
 
 [node name="DebugOverlay" type="CanvasLayer" parent="." unique_id=317549277]

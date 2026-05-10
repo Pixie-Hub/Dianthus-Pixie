@@ -13,7 +13,7 @@ func _ready() -> void:
 	add_child(_overlay)
 	_fade_in()
 
-func transition_to(target_scene: String) -> void:
+func transition_to(target_scene: String, target_entry_marker: StringName = &"") -> void:
 	if _busy:
 		return
 	if GameManager.current_state == GameManager.GameState.DEFENSE:
@@ -24,9 +24,29 @@ func transition_to(target_scene: String) -> void:
 	if is_instance_valid(player):
 		GameManager.player_data["position"] = player.global_position
 		GameManager.player_data["last_zone"] = get_tree().current_scene.scene_file_path
+	GameManager.player_data["target_entry_marker"] = str(target_entry_marker)
 	get_tree().change_scene_to_file(target_scene)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	_place_player_at_entry_marker(target_entry_marker)
 	await _fade_in()
 	_busy = false
+
+
+func _place_player_at_entry_marker(target_entry_marker: StringName) -> void:
+	if target_entry_marker == &"":
+		return
+	var scene_root: Node = get_tree().current_scene
+	if scene_root == null:
+		return
+	var marker: Node2D = scene_root.find_child(str(target_entry_marker), true, false) as Node2D
+	var player: Node2D = get_tree().get_first_node_in_group("player") as Node2D
+	if marker == null or player == null:
+		GameManager.player_data["target_entry_marker"] = ""
+		return
+	player.global_position = marker.global_position
+	GameManager.player_data["position"] = marker.global_position
+	GameManager.player_data["target_entry_marker"] = ""
 
 func _fade_out() -> void:
 	if _tween:

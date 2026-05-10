@@ -222,10 +222,27 @@ func _setup_camera() -> void:
 		_player.set_camera_limits(0, 0, MAP_WIDTH, MAP_HEIGHT)
 
 func _restore_player_position() -> void:
-	var last_zone: String = GameManager.player_data["last_zone"]
+	var target_entry_marker: String = str(GameManager.player_data.get("target_entry_marker", ""))
+	if not target_entry_marker.is_empty():
+		var marker: Marker2D = _find_entry_marker(target_entry_marker)
+		if marker != null and is_instance_valid(_player):
+			_player.global_position = marker.global_position
+			GameManager.player_data["position"] = marker.global_position
+			GameManager.player_data["target_entry_marker"] = ""
+			return
+		GameManager.player_data["target_entry_marker"] = ""
+
+	var last_zone: String = str(GameManager.player_data.get("last_zone", ""))
 	if last_zone != "" and last_zone != scene_file_path:
 		if is_instance_valid(_player):
-			_player.global_position = GameManager.player_data["position"]
+			var restored_position: Variant = GameManager.player_data.get("position", _player.global_position)
+			if restored_position is Vector2:
+				_player.global_position = restored_position
+
+
+func _find_entry_marker(marker_name: String) -> Marker2D:
+	var marker: Node = find_child(marker_name, true, false)
+	return marker as Marker2D
 
 func _on_phase_changed(_phase: String) -> void:
 	_update_debug_labels()

@@ -1262,34 +1262,34 @@ size = Vector2(32, 1152)
 size = Vector2(32, 1152)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_a1wle"]
-size = Vector2(54, 180)
+size = Vector2(48, 99)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wblqx"]
-size = Vector2(206, 76)
+size = Vector2(161, 76)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_krmwn"]
-size = Vector2(282, 34)
+size = Vector2(126, 38)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7pqfq"]
-size = Vector2(58, 188)
+size = Vector2(58, 97)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ed012"]
-size = Vector2(78, 112)
+size = Vector2(70, 79)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_katji"]
-size = Vector2(150, 30)
+size = Vector2(95, 36)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3o7tk"]
-size = Vector2(150, 30)
+size = Vector2(95, 38)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_k7hc5"]
-size = Vector2(44, 150)
+size = Vector2(44, 98)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fjplb"]
-size = Vector2(44, 150)
+size = Vector2(44, 95)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ewag2"]
-size = Vector2(234, 30)
+size = Vector2(129, 39)
 
 [node name="MeadowEdge" type="Node2D" unique_id=570344602]
 script = ExtResource("1_script")
@@ -1427,7 +1427,6 @@ polygon = PackedVector2Array(380, 596, 378.82535, 601.5623, 375.4164, 606.58014,
 [node name="SapGroveFallenTree" type="Sprite2D" parent="ExpeditionMapVisuals" unique_id=53270750]
 texture_filter = 1
 position = Vector2(1219, 503)
-scale = Vector2(1, 1)
 texture = ExtResource("25_blockers")
 offset = Vector2(0, -64)
 region_enabled = true
@@ -1436,8 +1435,8 @@ region_filter_clip_enabled = true
 
 [node name="SapGrovePond" type="Sprite2D" parent="ExpeditionMapVisuals" unique_id=354022932]
 texture_filter = 1
-position = Vector2(1165, 728)
-scale = Vector2(1, 1)
+position = Vector2(1167, 766)
+scale = Vector2(1.6640625, 1.6640625)
 texture = ExtResource("25_blockers")
 offset = Vector2(0, -64)
 region_enabled = true
@@ -1450,8 +1449,7 @@ polygon = PackedVector2Array(808, 342, 806.6631, 348.59863, 802.69293, 354.99677
 
 [node name="OldRootWestWall" type="Sprite2D" parent="ExpeditionMapVisuals" unique_id=300326579]
 texture_filter = 1
-position = Vector2(640, 347)
-scale = Vector2(1, 1)
+position = Vector2(641, 366)
 texture = ExtResource("25_blockers")
 offset = Vector2(0, -64)
 region_enabled = true
@@ -1460,8 +1458,7 @@ region_filter_clip_enabled = true
 
 [node name="OldRootEastWall" type="Sprite2D" parent="ExpeditionMapVisuals" unique_id=764717237]
 texture_filter = 1
-position = Vector2(890, 347)
-scale = Vector2(1, 1)
+position = Vector2(889, 366)
 texture = ExtResource("25_blockers")
 offset = Vector2(0, -64)
 region_enabled = true
@@ -1470,8 +1467,7 @@ region_filter_clip_enabled = true
 
 [node name="RuinGlimmerWestPillar" type="Sprite2D" parent="ExpeditionMapVisuals" unique_id=2064923809]
 texture_filter = 1
-position = Vector2(664, 225)
-scale = Vector2(1, 1)
+position = Vector2(664, 276)
 texture = ExtResource("25_blockers")
 offset = Vector2(0, -64)
 region_enabled = true
@@ -1480,8 +1476,7 @@ region_filter_clip_enabled = true
 
 [node name="RuinGlimmerEastPillar" type="Sprite2D" parent="ExpeditionMapVisuals" unique_id=857855059]
 texture_filter = 1
-position = Vector2(854, 225)
-scale = Vector2(1, 1)
+position = Vector2(854, 277)
 texture = ExtResource("25_blockers")
 offset = Vector2(0, -64)
 region_enabled = true
@@ -1490,8 +1485,8 @@ region_filter_clip_enabled = true
 
 [node name="RuinGlimmerArchTop" type="Sprite2D" parent="ExpeditionMapVisuals" unique_id=448869221]
 texture_filter = 1
-position = Vector2(750, 144)
-scale = Vector2(1, 1)
+position = Vector2(758, 186.00002)
+scale = Vector2(1.0156244, 1.0156244)
 texture = ExtResource("25_blockers")
 offset = Vector2(0, -64)
 region_enabled = true
@@ -1505,7 +1500,6 @@ polygon = PackedVector2Array(802, 226, 801.36194, 229.82027, 799.4671, 233.52444
 [node name="WestThicketMarker" type="Sprite2D" parent="ExpeditionMapVisuals" unique_id=1178468229]
 texture_filter = 1
 position = Vector2(547, 712)
-scale = Vector2(1, 1)
 texture = ExtResource("25_blockers")
 offset = Vector2(0, -64)
 region_enabled = true
@@ -1514,8 +1508,7 @@ region_filter_clip_enabled = true
 
 [node name="SapThicketMarker" type="Sprite2D" parent="ExpeditionMapVisuals" unique_id=366409203]
 texture_filter = 1
-position = Vector2(957, 686)
-scale = Vector2(1, 1)
+position = Vector2(957, 761)
 texture = ExtResource("25_blockers")
 offset = Vector2(0, -64)
 region_enabled = true
@@ -1524,8 +1517,7 @@ region_filter_clip_enabled = true
 
 [node name="NorthThicketMarker" type="Sprite2D" parent="ExpeditionMapVisuals" unique_id=496547363]
 texture_filter = 1
-position = Vector2(991, 416)
-scale = Vector2(1, 1)
+position = Vector2(993, 453)
 texture = ExtResource("25_blockers")
 offset = Vector2(0, -64)
 region_enabled = true
@@ -1572,6 +1564,7 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="@CollisionShape2D@6" type="CollisionShape2D" parent="ExpeditionMapCollision/WestThicketBlocker" unique_id=1867948823]
+position = Vector2(0, -47.5)
 shape = SubResource("RectangleShape2D_a1wle")
 
 [node name="SapGrovePondBlocker" type="StaticBody2D" parent="ExpeditionMapCollision" unique_id=100864637]
@@ -1580,6 +1573,7 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="@CollisionShape2D@7" type="CollisionShape2D" parent="ExpeditionMapCollision/SapGrovePondBlocker" unique_id=1544973973]
+position = Vector2(0.5, 0)
 shape = SubResource("RectangleShape2D_wblqx")
 
 [node name="SapFallenTreeBlocker" type="StaticBody2D" parent="ExpeditionMapCollision" unique_id=1940381459]
@@ -1588,6 +1582,7 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="@CollisionShape2D@8" type="CollisionShape2D" parent="ExpeditionMapCollision/SapFallenTreeBlocker" unique_id=268471588]
+position = Vector2(-1, -20)
 shape = SubResource("RectangleShape2D_krmwn")
 
 [node name="SapThicketBlocker" type="StaticBody2D" parent="ExpeditionMapCollision" unique_id=998253762]
@@ -1596,6 +1591,7 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="@CollisionShape2D@9" type="CollisionShape2D" parent="ExpeditionMapCollision/SapThicketBlocker" unique_id=819749575]
+position = Vector2(0, 27.5)
 shape = SubResource("RectangleShape2D_7pqfq")
 
 [node name="NorthThicketBlocker" type="StaticBody2D" parent="ExpeditionMapCollision" unique_id=1602203969]
@@ -1604,6 +1600,7 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="@CollisionShape2D@10" type="CollisionShape2D" parent="ExpeditionMapCollision/NorthThicketBlocker" unique_id=1957621195]
+position = Vector2(2, -3.5)
 shape = SubResource("RectangleShape2D_ed012")
 
 [node name="OldRootWestBlocker" type="StaticBody2D" parent="ExpeditionMapCollision" unique_id=592839584]
@@ -1612,6 +1609,7 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="@CollisionShape2D@11" type="CollisionShape2D" parent="ExpeditionMapCollision/OldRootWestBlocker" unique_id=253104413]
+position = Vector2(2.5, -1)
 shape = SubResource("RectangleShape2D_katji")
 
 [node name="OldRootEastBlocker" type="StaticBody2D" parent="ExpeditionMapCollision" unique_id=1530866370]
@@ -1620,6 +1618,7 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="@CollisionShape2D@12" type="CollisionShape2D" parent="ExpeditionMapCollision/OldRootEastBlocker" unique_id=871677039]
+position = Vector2(-1.5, -1)
 shape = SubResource("RectangleShape2D_3o7tk")
 
 [node name="RuinWestPillarBlocker" type="StaticBody2D" parent="ExpeditionMapCollision" unique_id=1125553018]
@@ -1628,6 +1627,7 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="@CollisionShape2D@13" type="CollisionShape2D" parent="ExpeditionMapCollision/RuinWestPillarBlocker" unique_id=1167567340]
+position = Vector2(0, 3)
 shape = SubResource("RectangleShape2D_k7hc5")
 
 [node name="RuinEastPillarBlocker" type="StaticBody2D" parent="ExpeditionMapCollision" unique_id=532358083]
@@ -1636,6 +1636,7 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="@CollisionShape2D@14" type="CollisionShape2D" parent="ExpeditionMapCollision/RuinEastPillarBlocker" unique_id=1678385702]
+position = Vector2(0, 1.5)
 shape = SubResource("RectangleShape2D_fjplb")
 
 [node name="RuinArchTopBlocker" type="StaticBody2D" parent="ExpeditionMapCollision" unique_id=1820098140]
@@ -1644,6 +1645,7 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="@CollisionShape2D@15" type="CollisionShape2D" parent="ExpeditionMapCollision/RuinArchTopBlocker" unique_id=283577742]
+position = Vector2(2.5, 0.5)
 shape = SubResource("RectangleShape2D_ewag2")
 
 [node name="EntryMarkers" type="Node2D" parent="." unique_id=2126967276]
@@ -1671,12 +1673,34 @@ rotation = -0.42
 bramble_id = &"sap_grove_pocket"
 
 [node name="OldRootHollowBramble" parent="YSortLayer/ObstacleContainer" unique_id=476826904 instance=ExtResource("19_bramble")]
-position = Vector2(760, 346)
+position = Vector2(721, 335)
+bramble_id = &"old_root_hollow_pocket"
+
+[node name="OldRootHollowBramble4" parent="YSortLayer/ObstacleContainer" unique_id=1493925874 instance=ExtResource("19_bramble")]
+position = Vector2(764, 363)
+bramble_id = &"old_root_hollow_pocket"
+
+[node name="OldRootHollowBramble5" parent="YSortLayer/ObstacleContainer" unique_id=740324994 instance=ExtResource("19_bramble")]
+position = Vector2(820, 348)
+bramble_id = &"old_root_hollow_pocket"
+
+[node name="OldRootHollowBramble3" parent="YSortLayer/ObstacleContainer" unique_id=723602665 instance=ExtResource("19_bramble")]
+position = Vector2(858, 302)
+rotation = 4.712389
+bramble_id = &"old_root_hollow_pocket"
+
+[node name="OldRootHollowBramble2" parent="YSortLayer/ObstacleContainer" unique_id=848667118 instance=ExtResource("19_bramble")]
+position = Vector2(666, 304)
 rotation = 1.5708
 bramble_id = &"old_root_hollow_pocket"
 
 [node name="SouthReturnShortcutBramble" parent="YSortLayer/ObstacleContainer" unique_id=2021396491 instance=ExtResource("19_bramble")]
-position = Vector2(1006, 800)
+position = Vector2(1016.00006, 736)
+rotation = 0.34
+bramble_id = &"south_return_shortcut"
+
+[node name="SouthReturnShortcutBramble2" parent="YSortLayer/ObstacleContainer" unique_id=968646386 instance=ExtResource("19_bramble")]
+position = Vector2(1060, 722.00006)
 rotation = 0.34
 bramble_id = &"south_return_shortcut"
 
