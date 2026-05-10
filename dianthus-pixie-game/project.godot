@@ -46,8 +46,8 @@ GardenStructureManager="*res://world/garden/garden_structure_manager.gd"
 [dialogic]
 
 directories/dtl_directory={
-"opening_cutscene": "res://dialogic/timelines/opening_cutscene.dtl",
 "interactive_tutorial": "res://dialogic/timelines/interactive_tutorial.dtl",
+"opening_cutscene": "res://dialogic/timelines/opening_cutscene.dtl",
 "story_01_complete": "res://dialogic/timelines/story_01_complete.dtl",
 "story_02_complete": "res://dialogic/timelines/story_02_complete.dtl",
 "story_02_fail": "res://dialogic/timelines/story_02_fail.dtl",

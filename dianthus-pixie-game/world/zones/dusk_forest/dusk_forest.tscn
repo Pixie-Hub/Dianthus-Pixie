@@ -4384,7 +4384,7 @@ position = Vector2(520, 880)
 [node name="DefaultSpawn" type="Marker2D" parent="EntryMarkers" unique_id=1021321552]
 position = Vector2(520, 880)
 
-[node name="FromRuinsOfVeld" type="Marker2D" parent="EntryMarkers"]
+[node name="FromRuinsOfVeld" type="Marker2D" parent="EntryMarkers" unique_id=595002732]
 position = Vector2(760, 268)
 
 [node name="YSortLayer" type="Node2D" parent="." unique_id=412915871]
@@ -4402,7 +4402,7 @@ target_entry_marker = &"FromDuskForest"
 display_name = "Meadow Edge"
 prompt_body = "Return to Meadow Edge."
 
-[node name="RuinsOfVeldGate" parent="YSortLayer" instance=ExtResource("5_5gonc")]
+[node name="RuinsOfVeldGate" parent="YSortLayer" unique_id=100176740 instance=ExtResource("5_5gonc")]
 position = Vector2(760, 228)
 target_scene = "res://world/zones/ruins_of_veld/ruins_of_veld.tscn"
 target_entry_marker = &"FromDuskForest"
@@ -4462,7 +4462,6 @@ text = "Time: 120.0s"
 horizontal_alignment = 2
 
 [node name="HUD" parent="." unique_id=416668404 instance=ExtResource("6_bpy2o")]
-visible = false
 
 [node name="PauseMenu" parent="." unique_id=1754209912 instance=ExtResource("7_l61tn")]
 visible = false

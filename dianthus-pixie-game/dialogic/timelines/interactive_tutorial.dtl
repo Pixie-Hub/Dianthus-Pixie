@@ -12,8 +12,9 @@ label day_1_movement (Day 1 Morning - Movement)
 [signal arg="quest_start:tutorial_day1_movement"]
 [style name="Gameplay"]
 [signal arg="tutorial_start"]
-"Dianthus Core": Wake, little alchemist.
-"Dianthus Core": The meadow is safe while the sun is high, but safety is something we cultivate before night tests it.
+"Dianthus Core": Wake, little alchemist. The storm has passed and the sun has found us.
+"Dianthus Core": I spent the night keeping the shadows at bay, but my strength is less than it was. We cannot rely on that mercy again.
+"Dianthus Core": The meadow is safe while the sun is high, but we must earn our safety before night returns.
 "Dianthus Core": Move with [color=#F0DD4C]WASD[/color] or the arrow keys. Feel the edges of the garden, then gather anything that catches the light.
 "Dianthus Core": Open your pack with [color=#F0DD4C]I[/color] when you want to check what you have found.
 "Dianthus Core": Goal\: move around, open the inventory, and collect 3 Petal Shards and 2 Verdant Sap.

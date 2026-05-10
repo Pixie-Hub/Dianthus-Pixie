@@ -161,7 +161,7 @@ func _on_dialogic_ended() -> void:
 
 
 func _show_final_narration() -> void:
-	_narration_label.text = "Night is close. The first dawn must be earned."
+	_narration_label.text = "The light holds through the dark. Morning will come."
 	_beat_tween = create_tween()
 	_beat_tween.tween_property(_narration_label, "modulate:a", 1.0, 1.0)
 	_beat_tween.tween_interval(2.5)
