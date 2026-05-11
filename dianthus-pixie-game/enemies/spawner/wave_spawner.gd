@@ -41,7 +41,6 @@ const SWARM_BATCH_MIN: int = 5
 const SWARM_BATCH_MAX: int = 10
 const FORECAST_SEED_BASE: int = 73031
 const FORECAST_SEED_DAY_STEP: int = 9973
-const SPAWN_INSET_MARGIN: float = 24.0
 
 const ENEMY_DISPLAY_NAMES: Dictionary = {
 	"shadowling": "Shadowling",
@@ -60,7 +59,6 @@ const ENEMY_DISPLAY_NAMES: Dictionary = {
 
 var _spawn_point_markers: Array[Marker2D] = []
 var _active_spawn_points: Array[Vector2] = []
-var _map_bounds: Rect2 = Rect2()
 var _enemies_alive: int = 0
 var _enemies_spawned: int = 0
 var _current_wave_total: int = 0
@@ -87,9 +85,6 @@ func _ready() -> void:
 		_enemy_container = get_node_or_null(enemy_container_path)
 		if _enemy_container == null:
 			_enemy_container = get_tree().current_scene
-	var zone: Node = get_tree().current_scene
-	if zone != null and zone.has_method("get_map_bounds"):
-		_map_bounds = zone.call("get_map_bounds") as Rect2
 	DayNightCycle.phase_changed.connect(_on_phase_changed)
 	if QuestManager.has_signal(&"quest_started"):
 		QuestManager.quest_started.connect(_on_forecast_relevant_quest_changed)
@@ -196,7 +191,6 @@ func _spawn_single_enemy(scene: PackedScene, base_pos: Vector2) -> void:
 	if rand_dir != Vector2.ZERO:
 		rand_dir = rand_dir.normalized()
 	var spawn_pos: Vector2 = base_pos + rand_dir * randf_range(0.0, spawn_offset_radius)
-	spawn_pos = _clamp_spawn_position(spawn_pos)
 	var enemy: EnemyBase = scene.instantiate() as EnemyBase
 	if enemy == null:
 		push_warning("[WaveSpawner] Failed to instantiate enemy scene as EnemyBase.")
@@ -224,6 +218,7 @@ func _spawn_single_enemy(scene: PackedScene, base_pos: Vector2) -> void:
 	if spd_mult != 1.0:
 		enemy.move_speed *= spd_mult
 	_enemy_container.add_child(enemy)
+	enemy.spawn_grace_period()
 	if enemy.has_method("activate"):
 		enemy.activate()
 	enemy.enemy_died.connect(_on_enemy_died)
@@ -234,16 +229,6 @@ func _spawn_single_enemy(scene: PackedScene, base_pos: Vector2) -> void:
 	_counted_dead[enemy] = false
 	enemy_spawned.emit(enemy)
 	print("[WaveSpawner] Spawned enemy %d/%d at %s" % [_enemies_spawned, _current_wave_total, spawn_pos])
-
-
-func _clamp_spawn_position(pos: Vector2) -> Vector2:
-	if _map_bounds.size == Vector2.ZERO:
-		return pos
-	var inset: Rect2 = _map_bounds.grow(-SPAWN_INSET_MARGIN)
-	return Vector2(
-		clampf(pos.x, inset.position.x, inset.end.x),
-		clampf(pos.y, inset.position.y, inset.end.y)
-	)
 
 
 func _get_batch_size(enemy_type: String) -> int:
@@ -368,6 +353,7 @@ func _start_devourer_fight() -> void:
 	if spd_mult != 1.0:
 		boss.move_speed *= spd_mult
 	_enemy_container.add_child(boss)
+	boss.spawn_grace_period()
 	if boss.has_method("activate"):
 		boss.activate()
 	_active_boss = boss
