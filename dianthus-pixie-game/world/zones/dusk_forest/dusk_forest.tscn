@@ -2627,7 +2627,7 @@ size = Vector2(72, 47)
 size = Vector2(96, 47)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bwh_barrier"]
-size = Vector2(48, 16)
+size = Vector2(16, 160)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bwh_slow_a"]
 size = Vector2(96, 80)
@@ -4295,7 +4295,7 @@ shape = SubResource("RectangleShape2D_bwh_barrier")
 
 [node name="BarrierVisual" type="Polygon2D" parent="ForestMapVisuals/BlackwaterEntranceBarrier" unique_id=901000006]
 color = Color(0.35, 0.15, 0.08, 1)
-polygon = PackedVector2Array(-24, -8, 24, -8, 24, 8, -24, 8)
+polygon = PackedVector2Array(-8, -80, 8, -80, 8, 80, -8, 80)
 
 [node name="ForestMapCollision" type="Node2D" parent="." unique_id=1914565638]
 
