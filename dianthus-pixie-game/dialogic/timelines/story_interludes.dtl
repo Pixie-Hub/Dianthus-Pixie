@@ -1,0 +1,28 @@
+label day_2_dawn (Day 2 Dawn - The Garden Held)
+[style name="Gameplay"]
+"Dianthus Core": You came back.
+"Dianthus Core": I know that sounds like a small thing. It is not. The dark counts every footstep that does not return — and last night, yours did.
+"Dianthus Core": The soil remembers now. Where you walked, it holds a little warmer. The garden is starting to learn your shape, little alchemist.
+[signal arg="day_2_dawn_done"]
+[end_timeline]
+
+label first_plant_monologue (First Plant Placed - Internal Monologue)
+[style name="Gameplay"]
+"Pixie" (Thought): The soil warms around it — as if the garden has been waiting to be touched without fear.
+"Pixie" (Thought): Something is listening to me here. Not with words. With roots.
+[signal arg="first_plant_monologue_done"]
+[end_timeline]
+
+label dusk_forest_entry (First Dusk Forest Entry)
+[style name="Gameplay"]
+"Dianthus Core": The forest remembers night differently. Not as enemy — as habit. It was born learning to breathe in the dark.
+"Dianthus Core": The roots here are old. Some of them remember a time before the void pressed close. Listen to what they are still carrying.
+"Pixie" (Thought): It grows in darkness, but it does not feel cruel. The dim light catches something soft in the leaves. Alive — differently alive.
+[signal arg="dusk_forest_entry_done"]
+[end_timeline]
+
+label dusk_forest_unlocked (Dusk Forest Path Opened)
+[style name="Gameplay"]
+"Dianthus Core": The Dusk Forest path has opened. The old road is awake — but the day is still yours. Go when you are ready.
+[signal arg="dusk_forest_unlocked_done"]
+[end_timeline]

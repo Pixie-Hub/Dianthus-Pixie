@@ -33,6 +33,8 @@ const LABEL_DAY_1_CRAFTING_COMPLETE: String = "day_1_crafting_complete"
 const LABEL_NIGHT_1_COMBAT: String = "night_1_combat"
 const LABEL_NIGHT_1_COMBAT_COMPLETE: String = "night_1_combat_complete"
 const LABEL_DAY_3_DEFENSE: String = "day_3_garden_defense"
+const LABEL_DAY_2_DAWN: String = "day_2_dawn"
+const STORY_INTERLUDES: String = "story_interludes"
 const LABEL_TUTORIAL_COMPLETE: String = "tutorial_complete"
 const TARGET_CRAFTING_RECIPE: String = "thorn_sword"
 const TARGET_CRAFTING_WEAPON: String = "thorn_sword"
@@ -55,6 +57,7 @@ var tutorial_plant_placed: bool = false
 var plant_ability_triggered: bool = false
 var night_3_survived: bool = false
 var night_3_failed: bool = false
+var _day_2_dawn_played: bool = false
 
 var _core_glow_active: bool = false
 var _bench_hint_active: bool = false
@@ -436,6 +439,9 @@ func _try_start_tutorial_complete() -> void:
 	if not QuestManager.is_active(PHASE_TUTORIAL_COMPLETE) and not QuestManager.is_completed(PHASE_TUTORIAL_COMPLETE):
 		QuestManager.start_quest(PHASE_TUTORIAL_COMPLETE)
 	if _start_dialogic_label(LABEL_TUTORIAL_COMPLETE):
+		var dialogic_node: Node = get_node_or_null("/root/Dialogic")
+		if dialogic_node != null and dialogic_node.has_signal("timeline_ended"):
+			dialogic_node.timeline_ended.connect(_on_tutorial_complete_timeline_ended, CONNECT_ONE_SHOT)
 		return
 	var dialogic: Node = get_node_or_null("/root/Dialogic")
 	if dialogic == null:
@@ -581,6 +587,7 @@ func _on_day_night_phase_changed(phase: String) -> void:
 		return
 	if phase != "DAY":
 		return
+	_try_play_day_2_dawn()
 	if current_state == TutorialState.DAY_1_COMBAT:
 		if DayNightCycle.day_count != 2:
 			return
@@ -692,6 +699,26 @@ func _check_phase_4_complete() -> void:
 	if current_state == TutorialState.DAY_3_DEFENSE_COMPLETE:
 		_hide_hud()
 		_try_start_tutorial_complete()
+
+
+func _try_play_day_2_dawn() -> void:
+	if _day_2_dawn_played:
+		return
+	if DayNightCycle.day_count != 2:
+		return
+	if current_state < TutorialState.DAY_1_COMBAT_COMPLETE:
+		return
+	if current_state == TutorialState.DISABLED:
+		return
+	_day_2_dawn_played = true
+	var dialogic: Node = get_node_or_null("/root/Dialogic")
+	if dialogic == null:
+		return
+	if dialogic.get("current_timeline") != null:
+		await get_tree().create_timer(2.0).timeout
+	if not _day_2_dawn_played:
+		return
+	dialogic.start(STORY_INTERLUDES, LABEL_DAY_2_DAWN)
 
 
 func _complete_tutorial() -> void:
@@ -886,6 +913,10 @@ func _connect_dialogic_signal() -> void:
 	var callback: Callable = Callable(self, "_on_dialogic_signal")
 	if not dialogic.is_connected("signal_event", callback):
 		dialogic.connect("signal_event", callback)
+
+
+func _on_tutorial_complete_timeline_ended() -> void:
+	_complete_tutorial()
 
 
 func _on_dialogic_signal(arg: Variant) -> void:

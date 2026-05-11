@@ -12,6 +12,7 @@ enum Type { DAILY, PROGRESS, DISCOVERY, STORY }
 @export var reward_weapons: Array[String] = []
 @export var reward_unlock_flags: Array[String] = []
 @export var time_limit_days: int = 0
+@export var dialogic_timeline_on_start: String = ""
 @export var dialogic_timeline_on_complete: String = ""
 @export var dialogic_timeline_on_fail: String = ""
 @export var next_quest_id: StringName = &""

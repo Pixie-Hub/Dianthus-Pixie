@@ -43,6 +43,9 @@ func start_quest(id: StringName, play_sfx: bool = true) -> bool:
 	if play_sfx:
 		SfxManager.play("quest_accepted")
 	print("[QuestManager] Started: %s" % id)
+	var dialogic: Node = get_node_or_null("/root/Dialogic")
+	if dialogic != null and q.dialogic_timeline_on_start != "":
+		dialogic.start(q.dialogic_timeline_on_start)
 	return true
 
 

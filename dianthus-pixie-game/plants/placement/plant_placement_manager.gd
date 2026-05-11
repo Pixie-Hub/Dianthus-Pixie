@@ -57,6 +57,9 @@ const SEED_EFFECT_RADIUS: Dictionary = {
 	"kunyit_seed": 24.0,
 }
 
+const STORY_INTERLUDES: String = "story_interludes"
+const LABEL_FIRST_PLANT: String = "first_plant_monologue"
+
 var is_placement_mode: bool = false
 var selected_seed_id: String = ""
 var _ghost_grid_pos: Vector2i = Vector2i.ZERO
@@ -66,6 +69,7 @@ var _occupied_tiles: Dictionary = {}
 var _core_tile: Vector2i = Vector2i(-1, -1)
 var _palette_ui: Node = null
 var expansion_tier: int = 0
+var _first_plant_monologue_played: bool = false
 
 
 func _ready() -> void:
@@ -170,6 +174,7 @@ func _place_plant() -> void:
 	CodexManager.discover_plant(placed_plant_id)
 	SfxManager.play("plant_placed")
 	plant_placed.emit(selected_seed_id, _ghost_grid_pos)
+	_try_play_first_plant_monologue()
 	print("[PlantPlacement] Placed %s at grid %s (world %s)" % [
 		selected_seed_id, _ghost_grid_pos, plant.global_position])
 	if not InventoryManager.has_item(selected_seed_id):
@@ -177,6 +182,18 @@ func _place_plant() -> void:
 	if is_instance_valid(_palette_ui):
 		_palette_ui.refresh()
 	queue_redraw()
+
+
+func _try_play_first_plant_monologue() -> void:
+	if _first_plant_monologue_played:
+		return
+	_first_plant_monologue_played = true
+	var dialogic: Node = get_node_or_null("/root/Dialogic")
+	if dialogic == null:
+		return
+	if dialogic.get("current_timeline") != null:
+		await get_tree().create_timer(1.5).timeout
+	dialogic.start(STORY_INTERLUDES, LABEL_FIRST_PLANT)
 
 
 func _on_plant_destroyed(plant: PlantBase) -> void:

@@ -128,6 +128,7 @@ func _ready() -> void:
 		GameManager.register_player(_player)
 	_spawn_daytime_resources()
 	ZoneTracker.enter_zone("dusk_forest")
+	_try_play_entry_cutscene()
 
 
 func _process(_delta: float) -> void:
@@ -166,6 +167,18 @@ func _restore_player_position() -> void:
 		var restored_position: Variant = GameManager.player_data.get("position", _player.global_position)
 		if restored_position is Vector2:
 			_player.global_position = restored_position
+
+
+func _try_play_entry_cutscene() -> void:
+	const FLAG_ENTRY_SEEN: String = "flag_dusk_forest_entry_seen"
+	if UnlockFlags.has_flag(FLAG_ENTRY_SEEN):
+		return
+	UnlockFlags.set_flag(FLAG_ENTRY_SEEN)
+	var dialogic: Node = get_node_or_null("/root/Dialogic")
+	if dialogic == null:
+		return
+	await get_tree().create_timer(0.5).timeout
+	dialogic.start("story_interludes", "dusk_forest_entry")
 
 
 func _find_entry_marker(marker_name: String) -> Marker2D:
