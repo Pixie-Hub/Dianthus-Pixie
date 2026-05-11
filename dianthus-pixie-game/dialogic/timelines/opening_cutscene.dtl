@@ -1,9 +1,10 @@
 label opening_cutscene (Opening Cutscene)
 [style name="Cutscene"]
-"Dianthus Core" (Default): You heard me.
-"Dianthus Core": Good. Then there is still a road for the light.
-"Dianthus Core": Little alchemist… my roots are torn. My name is Dianthus. If I go out, the dark will learn how to bloom.
-"Dianthus Core": The shadows are already pressing close. Stay near my light — I can hold them until dawn.
-"Dianthus Core": Rest now. When the sun returns, we begin.
+"Dianthus Core" (Default): …you heard me.
+"Dianthus Core": Good. Then there is still one road left for the light to travel.
+"Dianthus Core": I am Dianthus. What remains of me. My roots are torn and my petals remember a warmth I can no longer hold alone.
+"Dianthus Core": Little alchemist — if my glow goes dark, the hunger beneath this soil will learn how to bloom in my place. That must not happen.
+"Dianthus Core": The shadows are already pressing their mouths against the garden wall. Stay close. My light can hold them until dawn, but only just.
+"Dianthus Core": Rest now. Let the petals settle around you. When the sun returns, we begin.
 [signal arg="opening_cutscene_done"]
 [end_timeline]

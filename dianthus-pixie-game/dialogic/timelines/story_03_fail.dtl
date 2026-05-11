@@ -1,7 +1,7 @@
 label story_03_fail (The Long Road Failed)
 [style name="Gameplay"]
-"Dianthus Core" (Default): The road to Veld has closed beneath the dark.
-"Dianthus Core": I felt the ruins vanish like a seed swallowed before spring.
-"Dianthus Core": We cannot chase that path now. Build where you stand, little alchemist, and let survival become our answer.
+"Dianthus Core" (Default): The road to Veld has closed. The dark folded over it like soil over a shallow grave.
+"Dianthus Core": I felt the ruins vanish from my roots — sudden, like a seed swallowed before it ever saw spring.
+"Dianthus Core": We cannot chase that path now. Build where you stand, little alchemist. Let survival become our answer, and let the answer have thorns.
 [signal arg="quest_start:story_alt_lost"]
 [end_timeline]

@@ -85,20 +85,20 @@ func _play_beat(beat: int) -> void:
 
 		Beat.NARRATION_1:
 			_show_narration(
-				"A storm without rain carries ash, seeds, and dying light.",
+				"A storm without rain. It carries ash, seeds, and the last breath of a dying light.",
 				Beat.NARRATION_2
 			)
 
 		Beat.NARRATION_2:
 			_show_narration(
-				"Below, a forgotten garden. Fences split. Soil choked with bramble.",
+				"Below — a forgotten garden. Fences split open. Soil choked with bramble and silence.",
 				Beat.NARRATION_3
 			)
 
 		Beat.NARRATION_3:
 			_start_pulse()
 			_show_narration(
-				"At its center — a faint glow. A flower-heart, pulsing like a tired lantern.",
+				"At its center, a faint glow. A flower-heart, pulsing like a lantern that has forgotten how to rest.",
 				Beat.CORE_VISUAL
 			)
 
@@ -161,7 +161,7 @@ func _on_dialogic_ended() -> void:
 
 
 func _show_final_narration() -> void:
-	_narration_label.text = "The light holds through the dark. Morning will come."
+	_narration_label.text = "The light holds. Not because it is strong — because something small chose to stay beside it."
 	_beat_tween = create_tween()
 	_beat_tween.tween_property(_narration_label, "modulate:a", 1.0, 1.0)
 	_beat_tween.tween_interval(2.5)

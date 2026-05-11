@@ -1,9 +1,9 @@
 label tutorial_complete (ACCESS-03 Complete)
 [style name="Gameplay"]
-"Dianthus Core": The garden breathes easier now.
-"Dianthus Core": You have walked its paths, shaped thorns into tools, faced the first shadow, and planted guardians around my heart.
-"Dianthus Core": From here, listen to the light in the leaves. Gather in the day, prepare before dusk, and defend when the dark arrives.
-"Dianthus Core": I will keep glowing as long as you keep choosing to return.
+"Dianthus Core": The garden breathes easier now. Can you feel it? The soil remembers your footsteps.
+"Dianthus Core": You walked its broken paths, shaped thorns into purpose, faced the first shadow with nothing but will — and planted guardians around my heart.
+"Dianthus Core": From here, the garden answers to your hands. Gather while the sun is generous. Prepare before dusk steals the color. Defend when the dark presses close.
+"Dianthus Core": I will keep glowing, little alchemist. As long as you keep choosing to come back.
 [signal arg="quest_complete:tutorial_complete"]
 [signal arg="tutorial_complete"]
 [end_timeline]
@@ -12,61 +12,62 @@ label day_1_movement (Day 1 Morning - Movement)
 [signal arg="quest_start:tutorial_day1_movement"]
 [style name="Gameplay"]
 [signal arg="tutorial_start"]
-"Dianthus Core": Wake, little alchemist. The storm has passed and the sun has found us.
-"Dianthus Core": I spent the night keeping the shadows at bay, but my strength is less than it was. We cannot rely on that mercy again.
-"Dianthus Core": The meadow is safe while the sun is high, but we must earn our safety before night returns.
-"Dianthus Core": Move with [color=#F0DD4C]WASD[/color] or the arrow keys. Feel the edges of the garden, then gather anything that catches the light.
-"Dianthus Core": Open your pack with [color=#F0DD4C]I[/color] when you want to check what you have found.
+"Dianthus Core": Wake, little alchemist. The storm has passed and the sun has found us — bruised, but breathing.
+"Dianthus Core": I spent the night pressing my light against the dark. It held, but the effort cost me. We cannot count on that mercy twice.
+"Dianthus Core": The meadow is safe while the sun rides high. But safety must be earned before the light turns low again.
+"Dianthus Core": Walk with [color=#F0DD4C]WASD[/color] or the arrow keys. Feel the edges of this garden. Then gather anything that catches the morning light — fallen petals, fresh sap, anything the soil offers.
+"Dianthus Core": Press [color=#F0DD4C]I[/color] to open your pack and see what you have found.
 "Dianthus Core": Goal\: move around, open the inventory, and collect 3 Petal Shards and 2 Verdant Sap.
 [end_timeline]
 
 label day_1_crafting (Day 1 Afternoon - Crafting)
 [signal arg="quest_start:tutorial_day1_crafting"]
 [style name="Gameplay"]
-"Dianthus Core": The sun leans west. This is preparation time.
-"Dianthus Core": Raw petals and sap are only promises until your hands give them shape.
-"Dianthus Core": Stand near the Breeding Bench and press [color=#F0DD4C]E[/color]. Craft a weapon before the first night settles in.
-"Dianthus Core": Thorn Sword is enough for tonight. Simple tools can still save a living garden.
+"Dianthus Core": The sun leans west. The color is going amber. This is preparation time, not wandering time.
+"Dianthus Core": Raw petals and sap are only promises — unfinished words. Your hands must give them shape before nightfall.
+"Dianthus Core": Stand near the Breeding Bench and press [color=#F0DD4C]E[/color]. Craft a weapon while the light still holds.
+"Dianthus Core": A Thorn Sword is enough for tonight. Simple tools can still save a living garden, if the hands behind them do not falter.
 "Dianthus Core": Goal\: open the crafting bench and craft your first weapon.
 [end_timeline]
 
 label day_1_crafting_complete (Day 1 Afternoon - Crafting Complete)
 [style name="Gameplay"]
-"Dianthus Core": You hold thorns that obey your hand. Good.
-"Dianthus Core": The light wanes. Gather more if you wish, but stay close when the sun sinks.
-"Dianthus Core": The shadowlings will come for my light soon.
+"Dianthus Core": You hold thorns that answer to your hand now. Good. That is more than I dared hope.
+"Dianthus Core": The light wanes. Gather more if you wish — but stay close when the last gold leaves the sky.
+"Dianthus Core": The shadowlings will come for my light. They always do.
 [end_timeline]
 
 label night_1_combat (Night 1 - First Defense)
 [signal arg="quest_start:tutorial_day1_combat"]
 [style name="Gameplay"]
-"Dianthus Core": The dark has found us.
-"Dianthus Core": Shadowlings will seek the Core before they understand you. Do not let them touch the heart of the garden.
-"Dianthus Core": Strike with [color=#F0DD4C]SPACE[/color] or the attack button. Stay close enough to protect me, but move before they surround you.
-"Dianthus Core": If your strength breaks, you will return near me after a breath. If my light breaks, the garden ends.
+"Dianthus Core": …the dark has found us.
+"Dianthus Core": Shadowlings will reach for the Core before they learn to fear you. Do not let them touch the heart of this garden.
+"Dianthus Core": Strike with [color=#F0DD4C]SPACE[/color]. Stay close enough to guard me, but keep moving — stand still and they will close around you like roots around a stone.
+"Dianthus Core": If your strength breaks, you will wake near me after a breath. But if my light breaks… the garden ends. Everything ends.
 "Dianthus Core": Goal\: hit a shadow creature and survive Night 1.
 [end_timeline]
 
 label night_1_combat_complete (Night 1 - Combat Complete)
 [style name="Gameplay"]
-"Dianthus Core": The first dark has broken. You stand, and so do I.
-"Dianthus Core": Rest now. Tomorrow, we must prepare to shape the garden itself.
+"Dianthus Core": The first dark has broken. You stand — and so do I.
+"Dianthus Core": That was not easy. But you did not run. The soil beneath us felt that.
+"Dianthus Core": Rest now. Tomorrow, we must learn to shape the garden itself into something the shadows cannot simply walk through.
 [end_timeline]
 
 label day_3_garden_defense (Day 3 Morning - Garden Defense)
 [signal arg="quest_start:tutorial_day3_defense"]
 [style name="Gameplay"]
-"Dianthus Core": You have survived more than fear. Now learn to make the garden fight beside you.
-"Dianthus Core": Place a plant with [color=#F0DD4C]P[/color] during preparation. Each root, thorn, and bloom changes the shape of the night.
-"Dianthus Core": Bougainvillea wounds enemies that come too close. Rafflesia slows their rush. Melati steadies your energy when you fight nearby.
-"Dianthus Core": At night, pull enemies through a plant's radius and its roots will answer when the wave presses hard.
+"Dianthus Core": You have survived more than fear now. You have earned the right to shape this place.
+"Dianthus Core": Press [color=#F0DD4C]P[/color] during daylight to enter placement mode. Every root, thorn, and bloom you plant changes the shape of the night to come.
+"Dianthus Core": Bougainvillea wounds those who come too close. Rafflesia slows the rush of hungry things. Melati steadies your breath when the fighting presses hard.
+"Dianthus Core": When darkness falls, lead the shadows through your garden. The roots will answer. They have been waiting to be asked.
 "Dianthus Core": Goal\: place a plant, trigger a plant ability at night, and survive through Night 3.
 [end_timeline]
 
 label skip_tutorial (Skip ACCESS-03)
 [style name="Gameplay"]
-"Dianthus Core": Tutorial guidance can be disabled in Settings.
-"Dianthus Core": If you already know how to tend a dangerous garden, I will not hold your hand.
-"Dianthus Core": The day is yours. Use it well.
+"Dianthus Core": Tutorial guidance can be turned off in Settings.
+"Dianthus Core": If you already know how to tend a dangerous garden, I will not slow your hands with instructions.
+"Dianthus Core": The day is yours, little alchemist. Use it before the shadows remember we are here.
 do TutorialManager.skip_tutorial()
 [end_timeline]

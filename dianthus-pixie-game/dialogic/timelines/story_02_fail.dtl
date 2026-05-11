@@ -1,7 +1,7 @@
 label story_02_fail (An Ill Omen Failed)
 [style name="Gameplay"]
-"Dianthus Core" (Default): The omen has rooted deeper than we could cut.
-"Dianthus Core": Do not mistake this for the end. Gardens survive by bending when the storm outruns the wall.
-"Dianthus Core": The main road is lost for now. Stay close, gather what still grows, and make each dawn harder for the dark to claim.
+"Dianthus Core" (Default): The omen has rooted deeper than we could cut. I felt it thicken in the soil while we were not looking.
+"Dianthus Core": Do not mistake this for the end. Gardens have survived worse than missed chances. They survive by bending when the storm outruns the wall.
+"Dianthus Core": The main road is lost for now — overgrown, swallowed back into the dark. But we are still here. Stay close. Gather what still grows. Make each dawn a little harder for the hunger to claim.
 [signal arg="quest_start:story_alt_lost"]
 [end_timeline]

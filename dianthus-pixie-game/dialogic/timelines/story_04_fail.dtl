@@ -1,7 +1,7 @@
 label story_04_fail (Echoes Beneath the Stones Failed)
 [style name="Gameplay"]
-"Dianthus Core" (Default): Veld's echoes have turned away from us.
-"Dianthus Core": The Weavers will spin their door in darkness, and we must live with what enters through it.
-"Dianthus Core": Do not spend your strength on regret. Plant, forge, and keep the Core breathing through the nights that remain.
+"Dianthus Core" (Default): Veld's echoes have turned away from us. The stones no longer answer when I reach for them.
+"Dianthus Core": The Weavers will finish their door in the dark, and we must live with whatever steps through it. That is the cost of time we did not have.
+"Dianthus Core": Do not spend your strength on regret, little alchemist. Regret does not grow roots. Plant, forge, and keep the Core breathing through the nights that remain.
 [signal arg="quest_start:story_alt_lost"]
 [end_timeline]

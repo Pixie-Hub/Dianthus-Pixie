@@ -1,8 +1,8 @@
 label story_07_complete (The Final Bloom Complete)
 [style name="Gameplay"]
-"Dianthus Core" (Default): The Devourer is gone.
-"Dianthus Core": For the first time since you found me, the dark is not pressing its mouth against the garden wall.
-"Dianthus Core": Every shard gathered, every weapon forged, every root planted in fear became part of this bloom.
-"Dianthus Core": Rest, little alchemist. The endless night has broken, and the Dianthus light belongs to the dawn.
+"Dianthus Core" (Default): …the Devourer is gone.
+"Dianthus Core": For the first time since you found me — bruised and fading in the dark — the hunger is not pressing its mouth against the garden wall. I can feel the silence. It is not empty. It is peace.
+"Dianthus Core": Every shard you gathered, every weapon you forged with shaking hands, every root you planted in soil you were afraid to touch — all of it became part of this bloom. All of it mattered.
+"Dianthus Core": Rest now, little alchemist. The endless night has broken, and the Dianthus light belongs to the dawn. You gave it back to us.
 [signal arg="story_complete:the_final_bloom"]
 [end_timeline]

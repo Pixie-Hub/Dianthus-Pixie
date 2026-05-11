@@ -1,7 +1,7 @@
 label story_alt_shadow_loss_complete (Shadow Triumphant Complete)
 [style name="Gameplay"]
-"Dianthus Core" (Default): The shadow from Veld rules more of the night now, but it does not rule your hands.
-"Dianthus Core": Three days of resistance are three wounds in its certainty.
-"Dianthus Core": If this is the shape survival must take, then we will make survival thorned, stubborn, and bright enough to hurt.
+"Dianthus Core" (Default): The shadow from Veld rules more of the night now. I can feel it spreading through root channels that once carried my warmth. But it does not rule your hands.
+"Dianthus Core": Three days of resistance are three wounds in its certainty. Three nights it expected to break us and could not.
+"Dianthus Core": If this is the shape survival must take, then we will make survival thorned, stubborn, and bright enough to hurt. The dark may own the night, little alchemist — but it will never own the garden.
 [signal arg="story_alt_complete:shadow_loss"]
 [end_timeline]

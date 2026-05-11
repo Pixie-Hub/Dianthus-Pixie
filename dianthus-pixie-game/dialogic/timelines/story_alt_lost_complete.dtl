@@ -1,7 +1,7 @@
 label story_alt_lost_complete (A Path Forsaken Complete)
 [style name="Gameplay"]
-"Dianthus Core" (Default): Five more days. Five more dawns pulled from a path we thought was gone.
-"Dianthus Core": The old chain is broken, but your hands did not stop tending life.
-"Dianthus Core": This is not the true bloom I dreamed of. It is still a garden, and it still stands because of you.
+"Dianthus Core" (Default): Five more days. Five more dawns pulled from a path we thought the dark had swallowed whole.
+"Dianthus Core": The old chain is broken. The road I dreamed of leading you down no longer exists. But your hands did not stop tending life — and that is its own kind of road.
+"Dianthus Core": This is not the true bloom I hoped for. It is still a garden. It still stands. And it stands because of you, little alchemist. That is enough. That has to be enough.
 [signal arg="story_alt_complete:lost"]
 [end_timeline]

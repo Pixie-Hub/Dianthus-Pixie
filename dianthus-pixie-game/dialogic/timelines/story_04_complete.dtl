@@ -1,8 +1,8 @@
 label story_04_complete (Echoes Beneath the Stones Complete)
 [style name="Gameplay"]
-"Dianthus Core" (Default): Shadow Resin stains your hands, but your hands still know how to make.
-"Dianthus Core": The Phantom Weavers were guarding more than rubble. Beneath Veld, the void was weaving a door.
-"Dianthus Core": The recipe now stirring in my roots is dangerous, but danger can defend life when guided carefully.
-"Dianthus Core": Craft for what comes next. A greater will moves behind the lesser shadows.
+"Dianthus Core" (Default): Shadow Resin stains your hands. But your hands still know how to shape, how to mend, how to make something useful from what the dark discards.
+"Dianthus Core": The Phantom Weavers were guarding more than rubble. Beneath Veld, the Void was weaving a door — thread by thread, night by night, while we fought its lesser mouths above.
+"Dianthus Core": A recipe is stirring in my oldest roots. It is dangerous. But danger guided by careful hands can defend life as fiercely as any wall.
+"Dianthus Core": Craft for what comes next, little alchemist. Something with a greater will moves behind the lesser shadows. I can feel it pressing its weight against the seal.
 [signal arg="quest_start:story_05_devourer_omens"]
 [end_timeline]

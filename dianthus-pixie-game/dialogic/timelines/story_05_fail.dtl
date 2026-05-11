@@ -1,7 +1,7 @@
 label story_05_fail (The Door Beneath Veld Failed)
 [style name="Gameplay"]
-"Dianthus Core" (Default): The door beneath Veld widens, and the dark has learned our scent.
-"Dianthus Core": I will not lie to you. The garden's future has narrowed.
-"Dianthus Core": Yet even a narrow path can carry a living root. Hold the line, and let every day stolen from the dark matter.
+"Dianthus Core" (Default): The door beneath Veld widens. I can feel it in my roots like a wound that will not close. The dark has learned our scent.
+"Dianthus Core": I will not lie to you, little alchemist. The garden's future has narrowed to a single stubborn thread.
+"Dianthus Core": But even a narrow path can carry a living root. Hold the line. Tend what remains. Let every day we steal from the dark matter — because each one is a seed the hunger failed to swallow.
 [signal arg="quest_start:story_alt_shadow_loss"]
 [end_timeline]
