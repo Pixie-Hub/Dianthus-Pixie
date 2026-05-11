@@ -24,6 +24,9 @@ func transition_to(target_scene: String, target_entry_marker: StringName = &"") 
 	if is_instance_valid(player):
 		GameManager.player_data["position"] = player.global_position
 		GameManager.player_data["last_zone"] = get_tree().current_scene.scene_file_path
+		GameManager.player_data["weapon_slots"] = (player.get("weapon_slots") as Array).duplicate()
+		GameManager.player_data["selected_weapon_slot"] = int(player.get("selected_weapon_slot"))
+		GameManager.player_data["active_skill_id"] = str(player.get("active_skill_id"))
 	GameManager.player_data["target_entry_marker"] = str(target_entry_marker)
 	get_tree().change_scene_to_file(target_scene)
 	await get_tree().process_frame

@@ -31,7 +31,13 @@ func _ready() -> void:
 	QuestManager.quest_failed.connect(_on_quest_failed)
 	QuestManager.quest_tracked.connect(_on_quest_tracked)
 	QuestManager.quest_untracked.connect(_on_quest_untracked)
-	visible = false
+	var already_tracked: StringName = QuestManager.get_tracked_quest()
+	if already_tracked != &"":
+		_tracked_id = already_tracked
+		_refresh_standard()
+		visible = true
+	else:
+		visible = false
 
 
 # ── Public API — Standard Quest Tracking ──────────────────────────────────────

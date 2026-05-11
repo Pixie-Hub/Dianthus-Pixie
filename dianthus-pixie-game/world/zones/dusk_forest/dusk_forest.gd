@@ -125,6 +125,7 @@ func _ready() -> void:
 	_setup_camera()
 	_restore_player_position()
 	if is_instance_valid(_player):
+		_restore_player_loadout()
 		GameManager.register_player(_player)
 	_spawn_daytime_resources()
 	ZoneTracker.enter_zone("dusk_forest")
@@ -179,6 +180,27 @@ func _try_play_entry_cutscene() -> void:
 		return
 	await get_tree().create_timer(0.5).timeout
 	dialogic.start("story_interludes", "dusk_forest_entry")
+
+
+func _restore_player_loadout() -> void:
+	if not is_instance_valid(_player):
+		return
+	var slots: Variant = GameManager.player_data.get("weapon_slots", null)
+	if slots is Array and (slots as Array).size() == _player.get("weapon_slots").size():
+		for i: int in range((slots as Array).size()):
+			_player.get("weapon_slots")[i] = str((slots as Array)[i])
+		var sel: int = int(GameManager.player_data.get("selected_weapon_slot", 0))
+		_player.set("selected_weapon_slot", sel)
+		var first_slot: String = str(_player.get("weapon_slots")[0])
+		if not first_slot.is_empty():
+			var weapon_data: WeaponData = CraftingManager.get_weapon_data(first_slot)
+			_player.set("_current_weapon", weapon_data)
+		else:
+			_player.set("_current_weapon", null)
+	var skill_id: Variant = GameManager.player_data.get("active_skill_id", null)
+	if skill_id is String and not (skill_id as String).is_empty():
+		if _player.has_method("set_active_skill"):
+			_player.call("set_active_skill", skill_id as String)
 
 
 func _find_entry_marker(marker_name: String) -> Marker2D:
