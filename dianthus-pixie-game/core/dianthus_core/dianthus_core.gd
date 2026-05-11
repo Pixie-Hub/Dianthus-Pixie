@@ -9,12 +9,19 @@ const DAYTIME_REGEN_RATE: float = 5.0 / 60.0
 const DEATH_FRAME_COUNT: int = 8
 const DEATH_FRAME_DURATION: float = 0.08
 
+const HARVEST_HOLD_TIME: float = 2.0
+const POLLEN_PER_HARVEST: int = 1
+const POLLEN_ITEM_ID: StringName = &"dianthus_pollen"
+
 var current_hp: int = MAX_HP
 
 @export var death_texture: Texture2D
 
 @onready var _aura_light: PointLight2D = %AuraLight
 @onready var _sprite: Sprite2D = %Sprite2D
+@onready var _harvest_area: Area2D = %HarvestArea
+@onready var _interaction_prompt: InteractionPrompt = %InteractionPrompt
+@onready var _pollen_particles: CPUParticles2D = %PollenParticles
 
 var _base_aura_energy: float = 1.5
 var _regen_accumulator: float = 0.0
@@ -25,14 +32,24 @@ var _tutorial_glow_active: bool = false
 var _death_tween: Tween = null
 var _is_destroyed: bool = false
 
+var _sacred_bloom_active: bool = false
+var _harvested_today: bool = false
+var _last_harvest_day: int = -1
+var _is_harvesting: bool = false
+var _harvest_progress: float = 0.0
+var _player_in_range: bool = false
+var _bloom_tween: Tween = null
+
 
 func _ready() -> void:
 	_base_aura_energy = _aura_light.energy
 	_base_sprite_scale = _sprite.scale
 	$DamageArea.body_entered.connect(_on_enemy_entered)
 	DayNightCycle.phase_changed.connect(_on_phase_changed)
+	UnlockFlags.flag_set.connect(_on_flag_set)
 	call_deferred("_emit_initial_hp")
 	call_deferred("_start_breathe_animation")
+	call_deferred("_init_sacred_bloom")
 
 
 func _process(delta: float) -> void:
@@ -44,6 +61,13 @@ func _process(delta: float) -> void:
 			var amount: int = int(_regen_accumulator)
 			_regen_accumulator -= float(amount)
 			heal(amount, false)
+	if _is_harvesting:
+		_harvest_progress += delta / HARVEST_HOLD_TIME
+		_interaction_prompt.set_progress(_harvest_progress)
+		if _harvest_progress >= 1.0:
+			_complete_harvest()
+		elif not _player_in_range:
+			_cancel_harvest()
 
 
 func take_damage(amount: int) -> void:
@@ -85,6 +109,14 @@ func _update_aura() -> void:
 func _destroy_core() -> void:
 	_is_destroyed = true
 	_regen_accumulator = 0.0
+	if is_instance_valid(_bloom_tween):
+		_bloom_tween.kill()
+		_bloom_tween = null
+	if _is_harvesting:
+		_cancel_harvest()
+	_harvest_area.set_deferred("monitoring", false)
+	_interaction_prompt.hide_prompt()
+	_pollen_particles.emitting = false
 	_stop_core_animation_tweens()
 	_play_death_animation()
 	SfxManager.play("core_destroyed")
@@ -130,6 +162,105 @@ func get_hp_ratio() -> float:
 	return float(current_hp) / float(MAX_HP)
 
 
+func _init_sacred_bloom() -> void:
+	if UnlockFlags.has_flag(StoryEndingFlags.unlock_core_sacred_bloom):
+		_activate_sacred_bloom()
+
+
+func _on_flag_set(flag_name: String) -> void:
+	if flag_name == StoryEndingFlags.unlock_core_sacred_bloom and not _sacred_bloom_active:
+		_activate_sacred_bloom()
+
+
+func _activate_sacred_bloom() -> void:
+	if _is_destroyed:
+		return
+	_sacred_bloom_active = true
+	_harvest_area.set_deferred("monitoring", true)
+	_pollen_particles.emitting = true
+	if is_instance_valid(_bloom_tween):
+		_bloom_tween.kill()
+	_bloom_tween = create_tween().set_loops()
+	_bloom_tween.tween_property(_aura_light, "energy", _base_aura_energy * 1.5, 1.2) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_bloom_tween.tween_property(_aura_light, "energy", _base_aura_energy * 0.9, 1.2) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_refresh_prompt()
+
+
+func _can_harvest() -> bool:
+	return _sacred_bloom_active and _player_in_range and not _harvested_today \
+			and not _is_destroyed and not _is_harvesting
+
+
+func _cancel_harvest() -> void:
+	_is_harvesting = false
+	_harvest_progress = 0.0
+	_interaction_prompt.set_progress(-1.0)
+	_refresh_prompt()
+
+
+func _complete_harvest() -> void:
+	_is_harvesting = false
+	_harvest_progress = 0.0
+	_interaction_prompt.set_progress(-1.0)
+	var remaining: int = InventoryManager.add_item(POLLEN_ITEM_ID, POLLEN_PER_HARVEST)
+	if remaining > 0:
+		_show_popup("Inventory full!")
+		_refresh_prompt()
+		return
+	_harvested_today = true
+	_last_harvest_day = DayNightCycle.day_count
+	_pollen_particles.restart()
+	_pollen_particles.emitting = true
+	SfxManager.play("item_pickup")
+	_show_popup("+1 Dianthus Pollen", Color(1.0, 0.8, 0.95))
+	_refresh_prompt()
+
+
+func _refresh_prompt() -> void:
+	if not _sacred_bloom_active or _is_destroyed or not _player_in_range:
+		_interaction_prompt.hide_prompt()
+		return
+	if _harvested_today:
+		_interaction_prompt.show_interaction("Sacred Bloom resting", "Come back tomorrow", "", "",
+				InteractionPrompt.DISABLED_ACCENT, InteractionPrompt.Status.DISABLED)
+		return
+	if _is_harvesting:
+		_interaction_prompt.show_interaction("Harvesting Pollen", "", "Hold E", "Release E to cancel",
+				InteractionPrompt.DEFAULT_ACCENT, InteractionPrompt.Status.NORMAL, _harvest_progress)
+		return
+	_interaction_prompt.show_interaction("Dianthus Core", "Sacred Bloom is ready", "Hold E", "Harvest Pollen")
+
+
+func _on_harvest_body_entered(body: Node2D) -> void:
+	if not body.is_in_group("player"):
+		return
+	_player_in_range = true
+	_refresh_prompt()
+
+
+func _on_harvest_body_exited(body: Node2D) -> void:
+	if not body.is_in_group("player"):
+		return
+	_player_in_range = false
+	if _is_harvesting:
+		_cancel_harvest()
+	_refresh_prompt()
+
+
+func _show_popup(text: String, color: Color = Color(1.0, 0.8, 0.3)) -> void:
+	var label: Label = Label.new()
+	label.text = text
+	label.add_theme_color_override("font_color", color)
+	label.position = Vector2(-50, -52)
+	add_child(label)
+	var tween: Tween = create_tween()
+	tween.tween_property(label, "position:y", label.position.y - 24.0, 0.9)
+	tween.parallel().tween_property(label, "modulate:a", 0.0, 0.9)
+	tween.tween_callback(label.queue_free)
+
+
 func set_tutorial_glow_active(active: bool) -> void:
 	if _tutorial_glow_active == active:
 		return
@@ -162,8 +293,12 @@ func _start_breathe_animation() -> void:
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 
-func _on_phase_changed(_phase: String) -> void:
+func _on_phase_changed(phase: String) -> void:
 	_regen_accumulator = 0.0
+	if phase == "DAY" and _sacred_bloom_active and not _is_destroyed:
+		if DayNightCycle.day_count > _last_harvest_day:
+			_harvested_today = false
+			_refresh_prompt()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -174,3 +309,14 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_F2:
 			heal(20)
 			print("DEBUG: Core healed 20. HP: %d/%d" % [current_hp, MAX_HP])
+	if not _player_in_range:
+		return
+	if event.is_action_pressed("interact"):
+		if _can_harvest():
+			_is_harvesting = true
+			_harvest_progress = 0.0
+			_refresh_prompt()
+			get_viewport().set_input_as_handled()
+	elif event.is_action_released("interact"):
+		if _is_harvesting:
+			_cancel_harvest()

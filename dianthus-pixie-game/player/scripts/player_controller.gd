@@ -411,6 +411,18 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.keycode == KEY_B and event.shift_pressed and not event.ctrl_pressed:
 			UnlockFlags.set_flag(StoryEndingFlags.unlock_blackwater_hollow)
 			print("[DEBUG] Shift+B — Blackwater Hollow unlocked")
+		if event.keycode == KEY_B and event.ctrl_pressed and not event.shift_pressed:
+			UnlockFlags.set_flag(StoryEndingFlags.unlock_core_sacred_bloom)
+			print("[DEBUG] Ctrl+B — Core Sacred Bloom unlocked")
+		if event.keycode == KEY_B and event.ctrl_pressed and event.shift_pressed:
+			var core_nodes: Array[Node] = get_tree().get_nodes_in_group("dianthus_core")
+			if not core_nodes.is_empty():
+				core_nodes[0].set("_harvested_today", false)
+				core_nodes[0].set("_last_harvest_day", -1)
+				core_nodes[0].call("_refresh_prompt")
+				print("[DEBUG] Ctrl+Shift+B — Core Sacred Bloom daily cooldown reset")
+			else:
+				push_warning("[DEBUG] Ctrl+Shift+B — DianthusCore not found in group 'dianthus_core'")
 		if event.keycode == KEY_A and event.shift_pressed and not event.ctrl_pressed:
 			CraftingManager.owned_abilities["dash"] = true
 			CraftingManager.owned_abilities["heal_pulse"] = true

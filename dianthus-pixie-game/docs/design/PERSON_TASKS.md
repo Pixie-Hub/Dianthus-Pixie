@@ -346,6 +346,8 @@ FOUND-01..06 (Done)
 | Ctrl+8 | Force expand garden (adds materials + bumps day if needed, then calls `expand_garden()`) | WORLD-05 |
 | Ctrl+9 | Force build Storage Shed upgrade (adds materials + bumps day, calls `build_storage()`) | WORLD-06 |
 | Ctrl+0 | Force build Watchtower (adds materials + bumps day, calls `build_watchtower()`) | WORLD-06 |
+| Ctrl+B | Set `unlock_core_sacred_bloom` flag → activates Sacred Bloom state on DianthusCore | WORLD-04 |
+| Ctrl+Shift+B | Reset Core Sacred Bloom daily cooldown (`_harvested_today=false`, `_last_harvest_day=-1`) | WORLD-04 |
 | Ctrl+Shift+5 | Force-start `story_01_whispers` quest (skips Day 2 wait) | QUEST-05 |
 
 ### Letter Keys

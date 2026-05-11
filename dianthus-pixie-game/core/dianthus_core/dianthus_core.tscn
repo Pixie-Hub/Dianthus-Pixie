@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://edo73p7wtn7o" path="res://core/dianthus_core/dianthus_core.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://lshj2x1akr8o" path="res://plants/sprites/Dianthus Core/Dianthus Core.png" id="2_fjt3g"]
 [ext_resource type="Texture2D" uid="uid://y815em0uf3j7" path="res://plants/sprites/Dianthus Core/dianthus_core_death.png" id="3_death"]
+[ext_resource type="PackedScene" uid="uid://dgjlo3k80moau" path="res://ui/components/interaction_prompt.tscn" id="4_prompt"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_body"]
 radius = 12.0
@@ -22,7 +23,10 @@ fill_to = Vector2(1, 0.5)
 [sub_resource type="CircleShape2D" id="CircleShape2D_damage"]
 radius = 16.0
 
-[node name="DianthusCore" type="StaticBody2D" unique_id=1007223560]
+[sub_resource type="CircleShape2D" id="CircleShape2D_harvest"]
+radius = 20.0
+
+[node name="DianthusCore" type="StaticBody2D" groups=["dianthus_core"] unique_id=1007223560]
 collision_mask = 0
 script = ExtResource("1_script")
 death_texture = ExtResource("3_death")
@@ -55,3 +59,41 @@ collision_mask = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DamageArea" unique_id=645376861]
 shape = SubResource("CircleShape2D_damage")
+
+[node name="HarvestArea" type="Area2D" parent="." unique_id=200100001]
+unique_name_in_owner = true
+position = Vector2(0, -18)
+collision_layer = 0
+collision_mask = 4
+monitoring = true
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HarvestArea" unique_id=200100002]
+shape = SubResource("CircleShape2D_harvest")
+
+[node name="InteractionPrompt" parent="." instance=ExtResource("4_prompt") unique_id=200100003]
+unique_name_in_owner = true
+visible = false
+offset_left = -94.0
+offset_top = -88.0
+offset_right = 94.0
+offset_bottom = -24.0
+
+[node name="PollenParticles" type="CPUParticles2D" parent="." unique_id=200100004]
+unique_name_in_owner = true
+emitting = false
+amount = 16
+lifetime = 1.6
+one_shot = false
+position = Vector2(0, -18)
+emission_shape = 1
+emission_sphere_radius = 6.0
+gravity = Vector2(0, -18)
+initial_velocity_min = 8.0
+initial_velocity_max = 20.0
+spread = 30.0
+color = Color(1, 0.88, 0.95, 1)
+color_ramp = null
+
+[connection signal="body_entered" from="HarvestArea" to="." method="_on_harvest_body_entered"]
+[connection signal="body_exited" from="HarvestArea" to="." method="_on_harvest_body_exited"]

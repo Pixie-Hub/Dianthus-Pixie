@@ -4,7 +4,7 @@ signal save_completed(success: bool, manual: bool)
 signal load_completed(success: bool)
 
 const SAVE_PATH: String = "user://savegame.json"
-const SCHEMA_VERSION: int = 17
+const SCHEMA_VERSION: int = 18
 const GAME_VERSION: String = "0.1.0"
 
 const PLANT_TYPE_TO_SCENE: Dictionary = {
@@ -188,9 +188,19 @@ func _gather_state(manual: bool) -> Dictionary:
 
 	# Core
 	var core_hp: int = 200
+	var core_harvested_today: bool = false
+	var core_last_harvest_day: int = -1
 	if is_instance_valid(GameManager.dianthus_core):
 		core_hp = GameManager.dianthus_core.current_hp
-	state["core"] = {"current_hp": core_hp}
+		core_harvested_today = GameManager.dianthus_core._harvested_today
+		core_last_harvest_day = GameManager.dianthus_core._last_harvest_day
+	state["core"] = {
+		"current_hp": core_hp,
+		"sacred_bloom": {
+			"harvested_today": core_harvested_today,
+			"last_harvest_day": core_last_harvest_day,
+		},
+	}
 
 	# Garden expansion tier
 	var ppm: Node = null
@@ -290,12 +300,17 @@ func _apply_state(state: Dictionary) -> void:
 
 	# 3. Dianthus Core HP.
 	if is_instance_valid(GameManager.dianthus_core):
-		GameManager.dianthus_core.current_hp = int(state.get("core", {}).get("current_hp", 200))
+		var core_data: Dictionary = state.get("core", {})
+		GameManager.dianthus_core.current_hp = int(core_data.get("current_hp", 200))
 		GameManager.dianthus_core._update_aura()
 		GameManager.dianthus_core.hp_changed.emit(
 			GameManager.dianthus_core.current_hp,
 			GameManager.dianthus_core.MAX_HP
 		)
+		var bloom_data: Dictionary = core_data.get("sacred_bloom", {})
+		GameManager.dianthus_core._harvested_today = bool(bloom_data.get("harvested_today", false))
+		GameManager.dianthus_core._last_harvest_day = int(bloom_data.get("last_harvest_day", -1))
+		GameManager.dianthus_core.call_deferred("_refresh_prompt")
 
 	# 4. Player position and HP.
 	if is_instance_valid(GameManager.player):
@@ -579,4 +594,14 @@ func _migrate(data: Dictionary) -> Dictionary:
 		if not data.has("garden_structures"):
 			data["garden_structures"] = {"storage_tier": 0, "watchtower_built": false}
 		data["schema_version"] = 17
+	# v17 -> v18: core sacred bloom harvest state added.
+	if version < 18:
+		print("[SaveManager] Migrated v17 -> v18 (core sacred bloom)")
+		var existing_core: Variant = data.get("core", {})
+		if existing_core is Dictionary:
+			var cd: Dictionary = existing_core as Dictionary
+			if not cd.has("sacred_bloom"):
+				cd["sacred_bloom"] = {"harvested_today": false, "last_harvest_day": -1}
+				data["core"] = cd
+		data["schema_version"] = 18
 	return data
