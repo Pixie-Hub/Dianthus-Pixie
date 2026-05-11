@@ -1,4 +1,5 @@
 extends CanvasLayer
+class_name CrossBreedingScreen
 
 const SLOT_EMPTY_BG: Color = Color(0.12, 0.08, 0.04, 1.0)
 const SLOT_EMPTY_BORDER: Color = Color(0.45, 0.35, 0.15, 1.0)
@@ -10,8 +11,12 @@ const PICKER_BTN_BG: Color = Color(0.16, 0.10, 0.05, 1.0)
 const PICKER_BTN_BORDER: Color = Color(0.38, 0.28, 0.12, 1.0)
 const PICKER_BTN_HOVER_BG: Color = Color(0.28, 0.19, 0.09, 1.0)
 const PICKER_BTN_HOVER_BORDER: Color = Color(1.0, 0.80, 0.25, 1.0)
-const BREED_DELAY: float = 4.0
+const BREED_DELAY: float = 1.5  # Reduced: only used when minigame is skipped.
 const MAX_BENCH_DISTANCE: float = 48.0
+const MINIGAME_SCENE: String = "res://minigames/plant_experimentation/plant_experimentation_screen.tscn"
+
+## Persisted across sessions via settings_screen.
+static var skip_breeding_minigame: bool = false
 
 @onready var _slot_a_label: Label = %SlotALabel
 @onready var _slot_b_label: Label = %SlotBLabel
@@ -30,6 +35,7 @@ var _is_breeding: bool = false
 var _breed_timer: float = 0.0
 var _bench_pos: Vector2 = Vector2(-99999.0, -99999.0)
 var _breed_progress: ProgressBar = null
+var _minigame_active: bool = false
 
 
 func _ready() -> void:
@@ -128,7 +134,7 @@ func _open_item_picker() -> void:
 	for child in _item_picker_list.get_children():
 		child.queue_free()
 	var has_items: bool = false
-	for i: int in range(30):
+	for i: int in range(InventoryManager.get_max_slots()):
 		var slot: Dictionary = InventoryManager.get_slot(i)
 		if slot.is_empty():
 			continue
@@ -243,13 +249,34 @@ func _on_breed_pressed() -> void:
 		return
 	if not BreedingManager.can_breed(_slot_a_item, _slot_b_item):
 		return
-	_is_breeding = true
-	_breed_timer = 0.0
-	if is_instance_valid(_breed_progress):
-		_breed_progress.value = 0.0
-		_breed_progress.visible = true
-	_breed_button.text = "CANCEL"
-	_breed_button.disabled = false
+	# Determine if we should skip the minigame.
+	var tutorial_done: bool = UnlockFlags.has_flag("flag_tutorial_complete")
+	var should_skip: bool = tutorial_done and CrossBreedingScreen.skip_breeding_minigame
+	if should_skip:
+		# Skip path: 1.5 s progress bar → Biasa.
+		_is_breeding = true
+		_breed_timer = 0.0
+		if is_instance_valid(_breed_progress):
+			_breed_progress.value = 0.0
+			_breed_progress.visible = true
+		_breed_button.text = "CANCEL"
+		_breed_button.disabled = false
+	else:
+		# Minigame path.
+		_minigame_active = true
+		_breed_button.disabled = true
+		var combo_id: String = BreedingManager.find_combo(_slot_a_item, _slot_b_item)
+		var mgScene: PackedScene = load(MINIGAME_SCENE) as PackedScene
+		if mgScene == null:
+			push_warning("[CrossBreeding] Could not load PlantExperimentationScreen scene.")
+			_minigame_active = false
+			return
+		var mg: Node = mgScene.instantiate()
+		get_tree().root.add_child(mg)
+		if mg.has_method("start_puzzle"):
+			mg.start_puzzle(combo_id, _slot_a_item, _slot_b_item)
+		if mg.has_signal("finished"):
+			mg.finished.connect(_on_experiment_finished, CONNECT_ONE_SHOT)
 
 
 func _cancel_breeding() -> void:
@@ -264,15 +291,32 @@ func _cancel_breeding() -> void:
 	_breed_button.disabled = _slot_a_item.is_empty() or _slot_b_item.is_empty() or not BreedingManager.can_breed(_slot_a_item, _slot_b_item)
 
 
-func _finish_breeding() -> void:
+func _finish_breeding(quality_tier: int = 0) -> void:
 	_is_breeding = false
 	_breed_timer = 0.0
 	if is_instance_valid(_breed_progress):
 		_breed_progress.visible = false
-	BreedingManager.breed(_slot_a_item, _slot_b_item)
+	BreedingManager.breed(_slot_a_item, _slot_b_item, quality_tier)
 
 
-func _on_breed_succeeded(_combo_id: String, result_item_id: String) -> void:
+func _on_experiment_finished(quality: int, success: bool) -> void:
+	_minigame_active = false
+	_breed_button.disabled = false
+	if success:
+		BreedingManager.breed(_slot_a_item, _slot_b_item, quality)
+	else:
+		# Failure: consume both inputs without producing a seed.
+		if InventoryManager.has_item(_slot_a_item, 1):
+			InventoryManager.remove_item(_slot_a_item, 1)
+		if InventoryManager.has_item(_slot_b_item, 1):
+			InventoryManager.remove_item(_slot_b_item, 1)
+		_show_breed_feedback("Failed!")
+		_slot_a_item = ""
+		_slot_b_item = ""
+		_refresh_slots()
+
+
+func _on_breed_succeeded(_combo_id: String, result_item_id: String, _quality_tier: int) -> void:
 	_output_label.text = ItemDatabase.get_display_name(result_item_id)
 	_show_breed_feedback("Success!")
 	_slot_a_item = ""
