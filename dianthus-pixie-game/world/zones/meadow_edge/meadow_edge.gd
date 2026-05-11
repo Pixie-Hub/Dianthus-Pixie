@@ -293,10 +293,10 @@ func _setup_wave_spawn_points() -> void:
 	if not is_instance_valid(_wave_spawner):
 		return
 	var spawn_positions: Dictionary = {
-		"SpawnNorth": Vector2(MAP_WIDTH * 0.5, -32.0),
-		"SpawnSouth": Vector2(MAP_WIDTH * 0.5, MAP_HEIGHT + 32.0),
-		"SpawnEast": Vector2(MAP_WIDTH + 32.0, 832.0),
-		"SpawnWest": Vector2(-32.0, 832.0),
+		"SpawnNorth": Vector2(MAP_WIDTH * 0.5, 48.0),
+		"SpawnSouth": Vector2(MAP_WIDTH * 0.5, MAP_HEIGHT - 48.0),
+		"SpawnEast": Vector2(MAP_WIDTH - 48.0, 832.0),
+		"SpawnWest": Vector2(48.0, 832.0),
 	}
 	for marker_name: String in spawn_positions:
 		var marker: Marker2D = _wave_spawner.get_node_or_null(marker_name) as Marker2D

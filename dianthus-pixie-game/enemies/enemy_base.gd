@@ -16,6 +16,10 @@ const EnemyCatalog = preload("res://ui/codex/enemy_registry.gd")
 @export var attack_cooldown: float = 1.0
 @export var ally_proximity_radius: float = 96.0
 
+const STUCK_TIMEOUT: float = 2.5
+const STUCK_MOVE_THRESHOLD: float = 1.0
+const STUCK_NUDGE_DISTANCE: float = 32.0
+
 var current_hp: int = 0
 var is_dead: bool = false
 var speed_modifier: float = 1.0
@@ -24,6 +28,8 @@ var _timed_slow_until: float = 0.0
 var _timed_slow_value: float = 1.0
 var _stun_until: float = 0.0
 var _pull_tween: Tween = null
+var _stuck_timer: float = 0.0
+var _stuck_last_pos: Vector2 = Vector2.ZERO
 
 @onready var _sprite: Sprite2D = %Sprite2D
 @onready var _anim_player: AnimationPlayer = %AnimationPlayer
@@ -209,11 +215,35 @@ func apply_pull(toward: Vector2, duration: float, distance: float) -> void:
 			fsm.set_physics_process(true)
 
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if is_stunned():
 		velocity = Vector2.ZERO
 		move_and_slide()
+		_stuck_timer = 0.0
+		_stuck_last_pos = global_position
+		_update_sprite_facing()
+		return
+	_check_stuck(delta)
 	_update_sprite_facing()
+
+
+func _check_stuck(delta: float) -> void:
+	if is_dead or velocity == Vector2.ZERO:
+		_stuck_timer = 0.0
+		_stuck_last_pos = global_position
+		return
+	if global_position.distance_to(_stuck_last_pos) < STUCK_MOVE_THRESHOLD:
+		_stuck_timer += delta
+		if _stuck_timer >= STUCK_TIMEOUT:
+			_stuck_timer = 0.0
+			var toward_core: Vector2 = (get_core_position() - global_position).normalized()
+			global_position += toward_core * STUCK_NUDGE_DISTANCE
+			var nav_agent: NavigationAgent2D = get_node_or_null("%NavigationAgent2D") as NavigationAgent2D
+			if is_instance_valid(nav_agent):
+				nav_agent.target_position = get_core_position()
+	else:
+		_stuck_timer = 0.0
+	_stuck_last_pos = global_position
 
 
 func _update_sprite_facing() -> void:
