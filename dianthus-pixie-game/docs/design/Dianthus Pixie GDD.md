@@ -84,7 +84,7 @@ Setelah menyelesaikan True Ending, mode Endless terbuka. Tidak ada target hari, 
 | Moonspore | Muncul malam hari di area tertentu | Uncommon | Crafting skill aktif, breeding khusus |
 | Shadow Resin | Drop dari musuh elite | Uncommon | Crafting pertahanan, upgrade Dianthus |
 | Aether Bloom | Reward quest, chest tersembunyi | Rare | Resep langka, upgrade Dianthus Core |
-| Dianthus Pollen | Khusus dari Dianthus Core (diambil 1x/hari) | Rare | Semua resep Dianthus hybrid |
+| Dianthus Pollen | Khusus dari Dianthus Core dalam Sacred Bloom state setelah Story 05 (diambil 1x/hari) | Rare | Semua resep Dianthus hybrid |
 
 ## **6.2 Inventory**
 
@@ -214,11 +214,13 @@ Tidak ada skill tree. Progression bersifat item-driven:
 
 | **Zone** | **Biome** | **Resource Unik** | **Unlock** |
 | --- | --- | --- | --- |
-| Meadow Edge | Padang rumput — zona awal | Petal Shard, Bougainvillea, Verdant Sap | Tersedia dari awal |
-| Dusk Forest | Hutan gelap — cahaya redup | Moonspore, Wijaya Kusuma, Rafflesia | Hari 3 |
-| Ruins of Veld | Reruntuhan kota kuno | Shadow Resin, Kunyit | Hari 7, quest |
-| Obsidian Bog | Rawa hitam — terrain sulit | Aether Bloom, Void materials | Hari 14 |
-| Core Sanctum | Area sakral Dianthus | Dianthus Pollen (unlimited) | Final quest |
+| Meadow Edge | Padang rumput — zona awal, home base, dan arena final | Petal Shard, Bougainvillea extract, Verdant Sap, Stone | Tersedia dari awal |
+| Dusk Forest | Hutan gelap — cahaya redup, "kegelapan bisa menampung kehidupan" | Moonspore, Shadow Resin (sebagian), Rafflesia extract, Beringin root, Melati seed, Wijaya Kusuma seed | Hari 3, setelah Story 02 (`unlock_zone_dusk_forest`) |
+| Ruins of Veld | Reruntuhan kota kuno — jalur pra-klimaks | Shadow Resin (utama), Kunyit seed, Kecombrang seed/extract, Aether Bloom (langka), Stone | Hari 7, setelah Story 03 (`unlock_zone_ruins`) |
+
+> **Catatan:** Dianthus Core dan semua pertahanan malam (night defense) hanya ada di Meadow Edge. Dusk Forest dan Ruins of Veld adalah zona eksplorasi siang hari — tidak ada Core dan tidak ada wave spawn di sana.
+>
+> **Sub-area:** Dusk Forest memiliki satu saku tersembunyi bernama **Blackwater Hollow** — sub-area terbuka setelah Story 04 selesai (~Day 8–9), sumber Aether Bloom dan Shadow Resin langka. Ditandai oleh air hitam yang diam mencerminkan bintang yang tidak ada di atas kepala.
 
 ## **10.2 The Garden (Home Base)**
 
@@ -226,6 +228,7 @@ Tidak ada skill tree. Progression bersifat item-driven:
 - Dianthus Core diposisikan di pusat kebun — dikelilingi oleh 4 designated plant slots
 - Pemain bisa membangun struktur di pinggir garden: Storage (+inventory slot), Breeding Bench (unlock resep baru), Watchtower (visualisasi spawn direction)
 - Garden bisa diperluas hingga 20x16 tile dengan material Verdant Sap dan Stone
+- Setelah Story 05 selesai, Dianthus Core memasuki Sacred Bloom state — pemain bisa memanen Dianthus Pollen langsung dari Core di Meadow Edge (1×/hari).
 
 ## **10.3 Enemy Spawn Points**
 
@@ -233,6 +236,7 @@ Tidak ada skill tree. Progression bersifat item-driven:
 - Setiap malam, 1-3 entry point aktif secara acak
 - Pemain bisa membangun barrier (Mosswarden Wall) di entry point — memperlambat musuh masuk
 - Pada Surge Night, semua 4 entry point aktif serentak
+- Night defense hanya terjadi di Meadow Edge. Dusk Forest dan Ruins of Veld adalah zona eksplorasi siang hari, tidak memiliki Core dan tidak memiliki wave spawn.
 
 # **11. UI / HUD & Save System**
 
@@ -365,7 +369,7 @@ Dialog NPC dan cutscene story diimplementasikan menggunakan **Dialogic** (addon 
 | Daily Quest | Kumpulkan 10 Petal Shard; Kalahkan 5 Shadowling | Resource Common/Uncommon |
 | Progress Quest | Bertahan hingga Hari 10; Buka semua zone sebelum Hari 15 | Aether Bloom, upgrade unlock |
 | Discovery Quest | Temukan Nightbloom melalui breeding; Coba 5 kombinasi baru | Codex entry, resep baru |
-| Story Quest | Selidiki Ruins of Veld; Ungkap tanda The Devourer | Cerita lanjut, area baru terbuka |
+| Story Quest | Selidiki Ruins of Veld; pecahkan Ancient Omen; panen Dianthus Pollen dari Sacred Bloom Core; kalahkan The Devourer di Meadow Edge | Cerita lanjut, area baru terbuka |
 
 # **17. Minigames**
 

@@ -61,11 +61,9 @@ dianthus-pixie-game/
 ├── world/                           # World zones, garden, and map structures
 │   ├── garden/                      # Garden base scenes & expansion
 │   ├── zones/
-│   │   ├── meadow_edge/             # Warm/vibrant daytime zone (Day 1)
-│   │   ├── dusk_forest/             # Dim-light biome (unlocks Day 3)
-│   │   ├── ruins_of_veld/           # Ruined-city biome (unlocks Day 7)
-│   │   ├── obsidian_bog/            # Black-swamp biome (unlocks Day 14)
-│   │   └── core_sanctum/           # Sacred biome (story-gated)
+│   │   ├── meadow_edge/             # Warm/vibrant daytime zone (Day 1) — home base, night defense
+│   │   ├── dusk_forest/             # Dim-light biome (unlocks Day 3) — includes Blackwater Hollow sub-area
+│   │   └── ruins_of_veld/           # Ruined-city biome (unlocks Day 7) — no Core, no night defense
 │   └── tilesets/                    # TileSet resources
 ├── quests/                          # Quest system architecture and quest data
 │   ├── scripts/                     # QuestManager, quest logic

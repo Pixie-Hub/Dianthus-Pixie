@@ -36,23 +36,14 @@ GDD §17 only says *"ritme sederhana / puzzle singkat"* — no input scheme, no 
 
 ---
 
-### D. Obsidian Bog Terrain Hazard — `WORLD-03`
-GDD §10.1 says "terrain sulit" but doesn't define the mechanic. Movement penalty? Periodic damage? Sink mechanic?
-
-> **Consult on:** What is the intended hazard? This determines whether it's a simple speed-modifier or a full damage-over-time system.
-
----
-
 ## 2. Content Gaps That Block Zone Progression
 
-All 4 new zones are **empty folders**:
+Final zone scope is **3 primary zones** (Meadow Edge, Dusk Forest, Ruins of Veld). Obsidian Bog is compressed into Dusk Forest's Blackwater Hollow sub-area; Core Sanctum is replaced by the Core Sacred Bloom interactable at Meadow Edge (see TASK_BREAKDOWN.md WORLD-03 and WORLD-04).
 
 | Zone | Task | Blocker |
 |---|---|---|
-| [dusk_forest/](cci:9://file:///c:/Users/Indra/Programming/GIGA/Dianthus%20Pixie/dianthus-pixie-game/world/zones/dusk_forest:0:0-0:0) | WORLD-01 | No tilemap, no resource pickups placed |
-| [ruins_of_veld/](cci:9://file:///c:/Users/Indra/Programming/GIGA/Dianthus%20Pixie/dianthus-pixie-game/world/zones/ruins_of_veld:0:0-0:0) | WORLD-02 | No tilemap, story-required landmark undefined |
-| [obsidian_bog/](cci:9://file:///c:/Users/Indra/Programming/GIGA/Dianthus%20Pixie/dianthus-pixie-game/world/zones/obsidian_bog:0:0-0:0) | WORLD-03 | Terrain hazard mechanic undefined |
-| [core_sanctum/](cci:9://file:///c:/Users/Indra/Programming/GIGA/Dianthus%20Pixie/dianthus-pixie-game/world/zones/core_sanctum:0:0-0:0) | WORLD-04 | Gated behind QUEST-05 + ENEMY-05 completion |
+| [dusk_forest/](cci:9://file:///c:/Users/Indra/Programming/GIGA/Dianthus%20Pixie/dianthus-pixie-game/world/zones/dusk_forest:0:0-0:0) | WORLD-01 | Tilemap and resource pickups in place; Blackwater Hollow entrance pending WORLD-03 |
+| [ruins_of_veld/](cci:9://file:///c:/Users/Indra/Programming/GIGA/Dianthus%20Pixie/dianthus-pixie-game/world/zones/ruins_of_veld:0:0-0:0) | WORLD-02 | Tilemap in place; story-required landmark content pending |
 
 Also: `WORLD-05` (garden expansion 12×10 → 20×16) and `WORLD-06` (Storage/Watchtower structures) are not started — these directly affect late-game strategy depth.
 

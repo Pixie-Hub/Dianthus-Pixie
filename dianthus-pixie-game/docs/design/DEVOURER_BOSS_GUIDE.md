@@ -74,7 +74,7 @@ These fill the GDD gaps. Review and adjust before implementation.
 - Attacks from any weapon crafted with Dianthus Pollen deal **1.5× damage** to The Devourer.
 - Currently no "Dianthus Pollen weapon" exists in the crafting system — this should be implemented as a damage multiplier check on the boss's `take_damage()`.
 - Possible implementation: check `CraftingManager` for whether the equipped weapon's recipe includes `dianthus_pollen`, or add a `is_pollen_weapon: bool` field to `WeaponData`.
-- Alternatively, treat `void_grenade` (which uses `aether_bloom`) as the pollen-aligned weapon, since the story quest `story_06_pollen` rewards `unlock_zone_core_sanctum` and involves collecting Dianthus Pollen.
+- Pollen-weapon crafting opens after Story 06 “Petals of Power”, which harvests Dianthus Pollen from the Sacred Bloom Core at Meadow Edge.
 
 ### 2.6 Trigger Condition
 

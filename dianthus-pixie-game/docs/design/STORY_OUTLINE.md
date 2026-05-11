@@ -23,7 +23,7 @@ The player is not saving an abstract kingdom. They are keeping one sacred garden
 
 ### What Is the Dianthus Core?
 
-The Dianthus Core is the heart-bloom of an ancient botanical network called the Living Root. Long before the game begins, the Living Root connected meadows, forests, ruins, bogs, and sanctums through a shared life current. Every healthy plant carried a faint echo of this current. Dianthus was the rarest bloom in that network: a flower able to gather life-energy, transform it into protective light, and teach other plants new shapes.
+The Dianthus Core is the heart-bloom of an ancient botanical network called the Living Root. Long before the game begins, the Living Root connected meadows, dusk forests, and ancient ruins, with the Dianthus Core as its sacred heart, through a shared life current. Every healthy plant carried a faint echo of this current. Dianthus was the rarest bloom in that network: a flower able to gather life-energy, transform it into protective light, and teach other plants new shapes.
 
 The Core is both:
 
@@ -158,7 +158,7 @@ Avoid separating "story time" from "game time" too strongly. A good lore drop sh
 | Rare Events | Corrupted Root, Wild Seedling, Void Fissure, Resonance Bloom | Daytime is no longer fully safe. The conflict leaks into exploration, but the garden also sends help outward. | Event-specific micro-lore and environmental aftermath. |
 | Devourer Omen | Night 21 pressure spike, no named precursor | The Void no longer needs a herald. Veld reveals that the Devourer has been directing the hunger all along. | Core tremor, ruined tablet final warning, black root map burning into soil. |
 | Story 05: The Door Beneath Veld | Decipher the Devourer omen | The ruins reveal a breach-door instead of a named enemy fight. The next step is preparation, not another combat gate. | Veld landmark interaction, Core revelation, pollen-craft warning. |
-| Story 06: Petals of Power | Acquire Dianthus Pollen, craft Blazeblade | The Core trusts the Pixie with its sacred pollen. Crafting becomes covenant, not just utility. | Core Sanctum glimpse, pollen harvest ritual, weapon lore. |
+| Story 06: Petals of Power | Acquire Dianthus Pollen, craft Blazeblade | The Core trusts the Pixie with its sacred pollen. Crafting becomes covenant, not just utility. The Core enters Sacred Bloom; the Pixie returns to the garden to harvest Pollen at the Core itself. | Core Sacred Bloom in the garden, pollen harvest ritual, weapon lore. |
 | Story 07: The Final Bloom | Defeat The Devourer | Every loop action converges: gathered shards, bred plants, crafted weapons, expanded garden, and defended nights become one final answer. | Final-night cutscene, boss phase barks, ending scene. |
 
 ### Plant Tier Lore
@@ -215,7 +215,7 @@ Use multiple short channels instead of long exposition scenes.
 
 #### Ancient Stone Tablets
 
-Best for Ruins of Veld and Core Sanctum.
+Best for Ruins of Veld and key Garden moments after Story 05.
 
 Tablet themes:
 
@@ -248,8 +248,7 @@ Best for zones and garden expansion.
 - Meadow Edge: safe color, scattered remains of old tending tools.
 - Dusk Forest: dim but alive, flowers that open only when the player stops moving.
 - Ruins of Veld: stone planters, broken irrigation channels, resin-black cracks.
-- Obsidian Bog: black water reflecting stars that are not overhead.
-- Core Sanctum: white-pink root arches, pollen motes moving like fireflies, silence without threat.
+- Dusk Forest deep hollow (Blackwater Hollow): black still water reflecting stars that aren't overhead — the garden's first hint that the Living Root once reached places the Pixie has not yet seen.
 
 #### Codex Entries
 
@@ -360,7 +359,7 @@ Concept:
 
 The Devourer falls, but the ending should not claim that darkness is erased forever. Instead, the Core restores balance. Night remains night. Shadows remain shadows. The difference is that the Void can no longer use the garden as a mouth into the world.
 
-The Dianthus Core opens into a full white-pink bloom. Its roots run beneath Meadow Edge, Dusk Forest, Veld, the Bog, and the Core Sanctum. Places that were isolated begin to answer each other again. Flowers bloom in ruined stone. Moonspores shine without corruption. Shadow Resin hardens into harmless black crystal along the old breach.
+The Dianthus Core opens into a full white-pink bloom. Its roots run beneath Meadow Edge, Dusk Forest, and the Ruins of Veld. Places that were isolated begin to answer each other again. Flowers bloom in ruined stone. Moonspores shine without corruption. Shadow Resin hardens into harmless black crystal along the old breach.
 
 The Pixie stands at the center of the garden at dawn. The Core says that every act of survival became part of the bloom: every shard gathered, every weapon forged, every root planted in fear. The final image is not a throne or victory pose, but the Pixie kneeling to plant one new seed in clean soil.
 

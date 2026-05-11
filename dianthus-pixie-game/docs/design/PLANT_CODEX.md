@@ -278,7 +278,7 @@ again, the player must breed another one.
 
 **Extracting Parent Materials:**
 - `verdant_sap` — common drop throughout Meadow Edge (no QTE needed).
-- `dianthus_pollen` — rare; found in the Core Sanctum zone (WORLD-04, story-gated) or as a rare Night Survived reward on Day 20+.
+- `dianthus_pollen` — Harvested from the Dianthus Core during its Sacred Bloom state, unlocked by completing Story 05 at Ruins of Veld; 1×/day cooldown. Also available as a rare Night Survived reward on Day 20+.
 
 ---
 

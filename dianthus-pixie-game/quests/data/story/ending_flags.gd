@@ -13,7 +13,8 @@ const flag_alt_ending_shadow: String = "flag_alt_ending_shadow"
 const flag_alt_ending_lingering: String = "flag_alt_ending_lingering"
 const unlock_zone_dusk_forest: String = "unlock_zone_dusk_forest"
 const unlock_zone_ruins: String = "unlock_zone_ruins"
-const unlock_zone_core_sanctum: String = "unlock_zone_core_sanctum"
+const unlock_core_sacred_bloom: String = "unlock_core_sacred_bloom"
+# const unlock_zone_core_sanctum = unlock_core_sacred_bloom # DEPRECATED alias — do not bump save schema; remove when no live saves reference this flag
 const unlock_recipe_void_grenade: String = "unlock_recipe_void_grenade"
 
 # Ending-seen one-shot flags
