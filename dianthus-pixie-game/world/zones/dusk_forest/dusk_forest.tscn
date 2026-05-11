@@ -2594,7 +2594,10 @@ size = Vector2(32, 960)
 size = Vector2(32, 960)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cdcy4"]
-size = Vector2(280, 960)
+size = Vector2(280, 304)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cdcy4_south"]
+size = Vector2(280, 496)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6krur"]
 size = Vector2(320, 960)
@@ -4334,8 +4337,12 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ForestMapCollision/WestDenseWoodsBlocker" unique_id=524680941]
-position = Vector2(-10, 0)
+position = Vector2(-10, -328)
 shape = SubResource("RectangleShape2D_cdcy4")
+
+[node name="CollisionShape2DSouth" type="CollisionShape2D" parent="ForestMapCollision/WestDenseWoodsBlocker" unique_id=524680942]
+position = Vector2(-10, 232)
+shape = SubResource("RectangleShape2D_cdcy4_south")
 
 [node name="EastDenseWoodsBlocker" type="StaticBody2D" parent="ForestMapCollision" unique_id=1766200970]
 position = Vector2(1110, 480)
