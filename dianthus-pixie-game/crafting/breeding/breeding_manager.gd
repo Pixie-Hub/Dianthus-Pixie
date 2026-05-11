@@ -1,6 +1,6 @@
 extends Node
 
-signal breed_succeeded(combo_id: String, result_item_id: String)
+signal breed_succeeded(combo_id: String, result_item_id: String, quality_tier: int)
 signal breed_failed(reason: String)
 signal combo_discovered(combo_id: String)
 signal combo_attempted(combo_id: String, success: bool)
@@ -62,7 +62,7 @@ func can_breed(item_a: String, item_b: String) -> bool:
 	return InventoryManager.has_item(item_a, 1) and InventoryManager.has_item(item_b, 1)
 
 
-func breed(item_a: String, item_b: String) -> bool:
+func breed(item_a: String, item_b: String, quality_tier: int = 0) -> bool:
 	if not can_breed(item_a, item_b):
 		SfxManager.play("breeding_fail")
 		combo_attempted.emit("", false)
@@ -79,23 +79,29 @@ func breed(item_a: String, item_b: String) -> bool:
 		combo_attempted.emit("", false)
 		breed_failed.emit("Unknown combination — resources lost.")
 		return true  # Resources still consumed per GDD §7.2
-	# TODO: MINI-01 — minigame score determines quality tier; always Biasa for now
+	var clamped_tier: int = clampi(quality_tier, 0, 2)
 	var result_item: String = str(COMBOS[combo_id].get("result_item", ""))
-	InventoryManager.add_item(result_item, 1)
-	var first_discovery: bool = not discovered_combos.has(combo_id)
-	discovered_combos[combo_id] = true
+	InventoryManager.add_item(result_item, 1, clamped_tier)
+	var prev_best: int = discovered_combos.get(combo_id, -1)
+	var first_discovery: bool = prev_best < 0
+	if clamped_tier > prev_best:
+		discovered_combos[combo_id] = clamped_tier
 	if first_discovery:
 		SfxManager.play("combo_discovered")
 		combo_discovered.emit(combo_id)
 	SfxManager.play("breeding_success")
 	combo_attempted.emit(combo_id, true)
-	breed_succeeded.emit(combo_id, result_item)
-	print("[BreedingManager] Bred: %s → %s" % [combo_id, result_item])
+	breed_succeeded.emit(combo_id, result_item, clamped_tier)
+	print("[BreedingManager] Bred: %s → %s (quality=%d)" % [combo_id, result_item, clamped_tier])
 	return true
 
 
 func is_discovered(combo_id: String) -> bool:
-	return discovered_combos.get(combo_id, false)
+	return discovered_combos.get(combo_id, -1) >= 0
+
+
+func get_best_tier(combo_id: String) -> int:
+	return int(discovered_combos.get(combo_id, -1))
 
 
 func get_combo(combo_id: String) -> Dictionary:
@@ -123,5 +129,10 @@ func deserialize(data: Dictionary) -> void:
 	var disc: Variant = data.get("discovered", {})
 	if disc is Dictionary:
 		for cid: String in (disc as Dictionary):
-			if (disc as Dictionary)[cid]:
-				discovered_combos[cid] = true
+			var val: Variant = (disc as Dictionary)[cid]
+			if val is bool:
+				# v18 migration: bool true → tier 0
+				if val:
+					discovered_combos[cid] = 0
+			elif val is int or val is float:
+				discovered_combos[cid] = int(val)

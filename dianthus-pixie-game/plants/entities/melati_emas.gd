@@ -28,14 +28,14 @@ func _process(delta: float) -> void:
 	if not is_instance_valid(GameManager.player):
 		return
 	var player: Node = GameManager.player
-	_hp_accumulator += hp_regen_per_sec * delta
+	_hp_accumulator += hp_regen_per_sec * quality_multiplier * delta
 	if _hp_accumulator >= 1.0:
 		var amount: int = int(_hp_accumulator)
 		_hp_accumulator -= float(amount)
 		if player.has_method("heal"):
 			player.heal(amount)
 			_report_ability_triggered(&"hp_regen")
-	_energy_accumulator += energy_regen_per_sec * delta
+	_energy_accumulator += energy_regen_per_sec * quality_multiplier * delta
 	if _energy_accumulator >= 1.0:
 		var amount: int = int(_energy_accumulator)
 		_energy_accumulator -= float(amount)

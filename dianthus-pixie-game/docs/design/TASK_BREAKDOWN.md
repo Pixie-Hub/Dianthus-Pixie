@@ -33,7 +33,7 @@
 
 | Task ID | Title | Category | Priority | Status | Dependencies | Assignee | Effort | Acceptance Criteria |
 |---------|-------|----------|----------|--------|--------------|----------|--------|---------------------|
-| CORE-01 | Meadow Edge Exploration Zone | World & Map | Critical | Not Started | FOUND-02 | [Unassigned] | M | • Zone tilemap renders with warm/vibrant daytime palette per GDD §12.1; • player walks entire zone without clipping; • Petal Shard and Verdant Sap pickup nodes placed |
+| CORE-01 | Meadow Edge Exploration Zone | World & Map | Critical | Done | FOUND-02 | [Unassigned] | M | • Zone tilemap renders with warm/vibrant daytime palette per GDD §12.1; • player walks entire zone without clipping; • Petal Shard and Verdant Sap pickup nodes placed |
 | CORE-02 | Resource Pickup System | Resource & Inventory | Critical | Done | CORE-01 | [Unassigned] | S | • Player collects Petal Shard and Verdant Sap on area overlap per GDD §6.1; • items added to 30-slot inventory data structure; • pickup confirmation feedback (SFX + item count update) |
 | CORE-03 | Dianthus Core Entity & HP | Core Mechanics | Critical | Done | FOUND-01 | [Unassigned] | M | • Core placed at garden center per GDD §10.2; • glowing pink-white aura renders and dims proportionally as HP falls per GDD §12.1; • Core HP bar displayed on HUD |
 | CORE-04 | Game Over on Core HP 0 | Core Mechanics | Critical | Done | CORE-03 | [Unassigned] | S | • Game Over screen appears immediately (no grace period) when Core HP reaches 0 per GDD §5.1; • screen shows days survived with Restart and Main Menu options; • no last-stand mechanic |
@@ -122,7 +122,7 @@
 
 | Task ID | Title | Category | Priority | Status | Dependencies | Assignee | Effort | Acceptance Criteria |
 |---------|-------|----------|----------|--------|--------------|----------|--------|---------------------|
-| MINI-01 | Plant Experimentation Minigame | Minigames | High | Not Started | PLANT-02 | [Unassigned] | L | • Rhythm/puzzle input determines breeding quality (Biasa/Superior/Masterwork) per GDD §17; • score < 30% → resource lost, no output per GDD §7.2; • skippable after tutorial ⚠️ *GDD §17 gives no input scheme, scoring algorithm, or visual layout — prototype two concepts before committing* |
+| MINI-01 | Plant Experimentation | Minigames | High | Done | PLANT-02 | [Unassigned] | L | • Rhythm/puzzle input determines breeding quality (Biasa/Superior/Masterwork) per GDD §17; • score < 30% → resource lost, no output per GDD §7.2; • skippable after tutorial ⚠️ *GDD §17 gives no input scheme, scoring algorithm, or visual layout — prototype two concepts before committing* |
 | MINI-02 | Crafting Assembly Minigame | Minigames | Medium | Not Started | PLANT-06 | [Unassigned] | L | • Drag-and-drop components in correct order per GDD §17; • perfect run awards +10% weapon damage; • playable with both mouse and controller |
 | MINI-03 | Harvest QTE Minigame | Minigames | Medium | Done | CORE-02 | [Unassigned] | M | • QTE fires on rare resource pickup per GDD §17; • failure = 50% yield; • input window scales with current difficulty setting |
 | AUDIO-01 | Exploration Phase Music | Audio/Visual | Medium | Done | FOUND-01 | [Unassigned] | M | • Light acoustic track plays during Morning/Exploration per GDD §12.3; • loops seamlessly; • volume respects audio settings |

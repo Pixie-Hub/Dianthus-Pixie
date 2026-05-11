@@ -38,7 +38,7 @@ func _recalculate_player_bonus_damage() -> void:
 	var total: int = 0
 	for plant in get_tree().get_nodes_in_group(&"kunyits"):
 		if plant is Kunyit and not plant.is_destroyed and not plant.is_wilted and plant._player_in_range:
-			total += plant.bonus_damage
+			total += int(plant.bonus_damage * plant.quality_multiplier)
 	GameManager.player.set("bonus_melee_damage", total)
 
 

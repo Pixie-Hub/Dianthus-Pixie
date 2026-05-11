@@ -4,7 +4,7 @@ signal save_completed(success: bool, manual: bool)
 signal load_completed(success: bool)
 
 const SAVE_PATH: String = "user://savegame.json"
-const SCHEMA_VERSION: int = 18
+const SCHEMA_VERSION: int = 19
 const GAME_VERSION: String = "0.1.0"
 
 const PLANT_TYPE_TO_SCENE: Dictionary = {
@@ -233,6 +233,7 @@ func _gather_state(manual: bool) -> Dictionary:
 			"position": {"x": pb.global_position.x, "y": pb.global_position.y},
 			"current_hp": pb.current_hp,
 			"vitality": pb.vitality,
+			"quality_tier": pb.quality_tier,
 			"is_destroyed": false,
 		})
 	state["garden"] = {"plants": plants_arr}
@@ -440,9 +441,12 @@ func _apply_state(state: Dictionary) -> void:
 			float(entry_pos.get("y", 0.0))
 		)
 		scene_root.add_child(plant)
-		# Set current_hp and vitality after _ready() so they are not overwritten by plant init.
+		# Set current_hp, vitality, and quality_tier after _ready() so they are not overwritten.
 		plant.current_hp = int(entry_dict.get("current_hp", plant.max_hp))
 		plant.vitality = float(entry_dict.get("vitality", 100.0))
+		var saved_quality: int = int(entry_dict.get("quality_tier", 0))
+		if plant.has_method("set_quality") and saved_quality > 0:
+			plant.set_quality(saved_quality)
 		plant._update_vitality_visual()
 
 	# 7. Done.
@@ -604,4 +608,25 @@ func _migrate(data: Dictionary) -> Dictionary:
 				cd["sacred_bloom"] = {"harvested_today": false, "last_harvest_day": -1}
 				data["core"] = cd
 		data["schema_version"] = 18
+	# v18 -> v19: inventory slot quality field + breeding discovered bool→int.
+	if version < 19:
+		print("[SaveManager] Migrating save from v%d to v19." % version)
+		var inv: Variant = data.get("inventory", [])
+		if inv is Array:
+			for slot: Variant in (inv as Array):
+				if slot is Dictionary and not (slot as Dictionary).has("quality"):
+					(slot as Dictionary)["quality"] = 0
+		var br: Dictionary = data.get("breeding", {})
+		var disc: Variant = br.get("discovered", {})
+		if disc is Dictionary:
+			var upgraded: Dictionary = {}
+			for cid: String in (disc as Dictionary):
+				var v_existing: Variant = (disc as Dictionary)[cid]
+				if v_existing is int or v_existing is float:
+					upgraded[cid] = int(v_existing)
+				else:
+					upgraded[cid] = 0  # bool=true → Biasa
+			br["discovered"] = upgraded
+			data["breeding"] = br
+		data["schema_version"] = 19
 	return data

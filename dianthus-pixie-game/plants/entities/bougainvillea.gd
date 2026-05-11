@@ -31,7 +31,7 @@ func _process(delta: float) -> void:
 		var triggered: bool = false
 		for enemy in _enemies_in_range.duplicate():
 			if is_instance_valid(enemy) and not enemy.is_dead:
-				enemy.take_damage(damage_per_tick)
+				enemy.take_damage(int(damage_per_tick * quality_multiplier))
 				triggered = true
 		if triggered:
 			_report_ability_triggered(&"thorn_tick")

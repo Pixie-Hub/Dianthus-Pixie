@@ -22,16 +22,18 @@ func _init_slots() -> void:
 
 # --- Public API ---
 
-func add_item(item_id: String, amount: int = 1) -> int:
+func add_item(item_id: String, amount: int = 1, quality: int = 0) -> int:
 	var remaining: int = amount
 	var max_stack: int = ItemDatabase.get_max_stack(item_id)
 
-	# 1. Stack into existing slots that already hold this item.
+	# 1. Stack into existing slots that already hold this item with matching quality.
 	for i: int in range(slots.size()):
 		if remaining <= 0:
 			break
 		var slot: Dictionary = slots[i]
 		if slot.is_empty() or slot.get("item_id", "") != item_id:
+			continue
+		if int(slot.get("quality", 0)) != quality:
 			continue
 		var space: int = max_stack - int(slot.get("count", 0))
 		if space <= 0:
@@ -49,7 +51,7 @@ func add_item(item_id: String, amount: int = 1) -> int:
 		if not slots[i].is_empty():
 			continue
 		var to_add: int = min(remaining, max_stack)
-		slots[i] = {"item_id": item_id, "count": to_add}
+		slots[i] = {"item_id": item_id, "count": to_add, "quality": quality}
 		remaining -= to_add
 		SfxManager.play("item_pickup")
 		item_added.emit(item_id, to_add)
@@ -63,8 +65,8 @@ func add_item(item_id: String, amount: int = 1) -> int:
 	return remaining
 
 
-func remove_item(item_id: String, amount: int = 1) -> bool:
-	if get_total_count(item_id) < amount:
+func remove_item(item_id: String, amount: int = 1, quality: int = -1) -> bool:
+	if get_total_count(item_id, quality) < amount:
 		return false
 	var remaining: int = amount
 	for i: int in range(slots.size()):
@@ -72,6 +74,8 @@ func remove_item(item_id: String, amount: int = 1) -> bool:
 			break
 		var slot: Dictionary = slots[i]
 		if slot.is_empty() or slot.get("item_id", "") != item_id:
+			continue
+		if quality >= 0 and int(slot.get("quality", 0)) != quality:
 			continue
 		var count: int = int(slot.get("count", 0))
 		var to_remove: int = min(remaining, count)
@@ -81,23 +85,38 @@ func remove_item(item_id: String, amount: int = 1) -> bool:
 			slots[i] = {}
 		else:
 			slot["count"] = count
+	var _ok: bool = true
 	inventory_changed.emit()
 	item_removed.emit(item_id, amount - remaining)
 	return true
 
 
-func has_item(item_id: String, amount: int = 1) -> bool:
-	return get_total_count(item_id) >= amount
+func has_item(item_id: String, amount: int = 1, quality: int = -1) -> bool:
+	return get_total_count(item_id, quality) >= amount
 
 
-func get_total_count(item_id: String) -> int:
+func get_total_count(item_id: String, quality: int = -1) -> int:
 	var total: int = 0
 	for slot: Dictionary in slots:
 		if slot.is_empty():
 			continue
-		if slot.get("item_id", "") == item_id:
-			total += int(slot.get("count", 0))
+		if slot.get("item_id", "") != item_id:
+			continue
+		if quality >= 0 and int(slot.get("quality", 0)) != quality:
+			continue
+		total += int(slot.get("count", 0))
 	return total
+
+
+func get_best_quality_slot(item_id: String) -> int:
+	var best: int = -1
+	for slot: Dictionary in slots:
+		if slot.is_empty() or slot.get("item_id", "") != item_id:
+			continue
+		var q: int = int(slot.get("quality", 0))
+		if q > best:
+			best = q
+	return best
 
 
 func can_accept_item(item_id: String) -> bool:
@@ -158,5 +177,9 @@ func deserialize(data: Array) -> void:
 	for i: int in range(count):
 		var entry: Variant = data[i]
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
-			slots[i] = (entry as Dictionary).duplicate()
+			var slot: Dictionary = (entry as Dictionary).duplicate()
+			if not slot.has("quality"):
+				slot["quality"] = 0
+			slots[i] = slot
+	var _ok: bool = true
 	inventory_changed.emit()

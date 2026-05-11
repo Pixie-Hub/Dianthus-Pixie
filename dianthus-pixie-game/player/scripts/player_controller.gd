@@ -43,6 +43,7 @@ var selected_weapon_slot: int = 0
 var _current_weapon: WeaponData = null
 var _debug_plant_cycle: int = 0
 var _debug_enemy_index: int = 0
+var _force_next_quality: int = -1
 var _ability_manager: AbilityManager = null
 
 const DEBUG_ENEMY_SCENES: Array[String] = [
@@ -346,6 +347,22 @@ func _unhandled_input(event: InputEvent) -> void:
 			var phase_before: String = DayNightCycle.get_phase_name()
 			DayNightCycle.debug_skip_phase()
 			print("DEBUG: Skipped phase %s." % phase_before)
+		elif event.keycode == KEY_M:
+			if event.ctrl_pressed:
+				var mgScene: PackedScene = load("res://minigames/plant_experimentation/plant_experimentation_screen.tscn")
+				if mgScene != null:
+					var mg: Node = mgScene.instantiate()
+					get_tree().root.add_child(mg)
+					if mg.has_method("start_puzzle"):
+						mg.start_puzzle("bunga_api", "bougainvillea_extract", "kecombrang_extract")
+					if mg.has_signal("finished"):
+						mg.finished.connect(func(q: int, s: bool) -> void: print("DEBUG Minigame result: tier=%d success=%s" % [q, s]))
+					print("DEBUG: Ctrl+M forced Plant Experimentation Minigame for bunga_api.")
+			elif event.shift_pressed:
+				_force_next_quality += 1
+				if _force_next_quality > 2:
+					_force_next_quality = -1
+				print("DEBUG: Shift+M set forced seed quality to: %s" % ("NONE" if _force_next_quality == -1 else str(_force_next_quality)))
 		elif event.keycode == KEY_F8:
 			var spawner: Node = get_tree().current_scene.find_child("WaveSpawner", true, false)
 			if spawner != null and spawner.has_method("start_wave"):
@@ -407,6 +424,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				InventoryManager.add_item("petal_shard", 5)
 				InventoryManager.add_item("verdant_sap", 2)
 				InventoryManager.add_item("moonspore", 1)
+				InventoryManager.add_item("dianthus_pollen", 1)
 				print("DEBUG: Added 5 Petal Shard, 2 Verdant Sap, 1 Moonspore to inventory.")
 		if event.keycode == KEY_B and event.shift_pressed and not event.ctrl_pressed:
 			UnlockFlags.set_flag(StoryEndingFlags.unlock_blackwater_hollow)

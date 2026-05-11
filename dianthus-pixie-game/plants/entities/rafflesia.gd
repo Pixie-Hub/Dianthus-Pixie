@@ -39,7 +39,9 @@ func _on_tracked_enemy_died(_enemy: EnemyBase, body: EnemyBase) -> void:
 
 
 func _apply_slow(enemy: EnemyBase) -> void:
-	enemy.speed_modifier = min(enemy.speed_modifier, slow_multiplier)
+	# Scaled slow: delta from 1.0 is multiplied by quality, higher tier = stronger slow.
+	var scaled: float = 1.0 - (1.0 - slow_multiplier) * quality_multiplier
+	enemy.speed_modifier = min(enemy.speed_modifier, scaled)
 	_report_ability_triggered(&"slow")
 
 
@@ -48,7 +50,8 @@ func _recalculate_slow(enemy: EnemyBase) -> void:
 	for plant in get_tree().get_nodes_in_group(&"rafflesias"):
 		if plant is Rafflesia and not plant.is_destroyed and not plant.is_wilted:
 			if plant._enemies_in_range.has(enemy):
-				strongest = min(strongest, plant.slow_multiplier)
+				var scaled: float = 1.0 - (1.0 - plant.slow_multiplier) * plant.quality_multiplier
+				strongest = min(strongest, scaled)
 	enemy.speed_modifier = strongest
 
 

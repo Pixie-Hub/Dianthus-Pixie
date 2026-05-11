@@ -34,7 +34,7 @@ func _process(delta: float) -> void:
 			var triggered: bool = false
 			for enemy in _enemies_in_range.duplicate():
 				if is_instance_valid(enemy) and not enemy.is_dead:
-					enemy.take_damage(damage_per_tick)
+					enemy.take_damage(int(damage_per_tick * quality_multiplier))
 					_start_burn(enemy)
 					triggered = true
 			if triggered:
@@ -52,7 +52,7 @@ func _process(delta: float) -> void:
 		_burn_accumulators[enemy] = _burn_accumulators.get(enemy, 0.0) + delta
 		if _burn_accumulators[enemy] >= 1.0:
 			_burn_accumulators[enemy] -= 1.0
-			(enemy as EnemyBase).take_damage(burn_damage_per_tick)
+			(enemy as EnemyBase).take_damage(int(burn_damage_per_tick * quality_multiplier))
 	for e in to_remove:
 		_burn_timers.erase(e)
 		_burn_accumulators.erase(e)

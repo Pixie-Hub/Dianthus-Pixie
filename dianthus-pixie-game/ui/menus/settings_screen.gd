@@ -10,6 +10,9 @@ const AUDIO_BUSES: Array[String] = ["Music", "SFX"]
 @onready var _colorblind_toggle: CheckButton = %ColorblindToggle
 @onready var _tutorial_toggle: CheckButton = %TutorialToggle
 @onready var _text_speed_option: OptionButton = %TextSpeedOption
+# TODO: MINI-01-SETTINGS — wire up SkipMinigameToggle node in settings_screen.tscn
+# When the node is added to the scene, remove the null guard below.
+var _skip_minigame_toggle: CheckButton = null
 
 
 func _ready() -> void:
@@ -29,6 +32,12 @@ func _ready() -> void:
 	_colorblind_toggle.toggled.connect(_on_colorblind_toggled)
 	_tutorial_toggle.toggled.connect(_on_tutorial_toggled)
 	_text_speed_option.item_selected.connect(_on_text_speed_changed)
+	# Skip minigame toggle — search the scene for the node in case tscn hasn't been updated yet.
+	_skip_minigame_toggle = find_child("SkipMinigameToggle", true, false) as CheckButton
+	if _skip_minigame_toggle != null:
+		_skip_minigame_toggle.button_pressed = CrossBreedingScreen.skip_breeding_minigame
+		_skip_minigame_toggle.toggled.connect(_on_skip_minigame_toggled)
+		_skip_minigame_toggle.disabled = not UnlockFlags.has_flag("flag_tutorial_complete")
 	_apply_audio_settings()
 
 
@@ -111,6 +120,11 @@ func _on_text_speed_changed(_index: int) -> void:
 	pass  # TODO (ACCESS-04): Set dialogue system text speed.
 
 
+func _on_skip_minigame_toggled(enabled: bool) -> void:
+	SfxManager.play("ui_button_click")
+	CrossBreedingScreen.skip_breeding_minigame = enabled
+
+
 # --- Persistence ---
 
 func _save_settings() -> void:
@@ -122,6 +136,7 @@ func _save_settings() -> void:
 	config.set_value("accessibility", "colorblind", _colorblind_toggle.button_pressed)
 	config.set_value("accessibility", "tutorial", _tutorial_toggle.button_pressed)
 	config.set_value("accessibility", "text_speed", _text_speed_option.selected)
+	config.set_value("accessibility", "skip_breeding_minigame", CrossBreedingScreen.skip_breeding_minigame)
 	config.save(SETTINGS_PATH)
 	print("[Settings] Settings saved.")
 
@@ -137,6 +152,9 @@ func _load_settings() -> void:
 	_colorblind_toggle.button_pressed = config.get_value("accessibility", "colorblind", false)
 	_tutorial_toggle.button_pressed = config.get_value("accessibility", "tutorial", true)
 	_text_speed_option.selected = config.get_value("accessibility", "text_speed", 1)
+	CrossBreedingScreen.skip_breeding_minigame = config.get_value("accessibility", "skip_breeding_minigame", false)
+	if _skip_minigame_toggle != null:
+		_skip_minigame_toggle.button_pressed = CrossBreedingScreen.skip_breeding_minigame
 	_on_fullscreen_toggled(_fullscreen_toggle.button_pressed)
 	GameManager.set_colorblind_mode(_colorblind_toggle.button_pressed)
 	TutorialManager.set_tutorial_enabled(_tutorial_toggle.button_pressed)

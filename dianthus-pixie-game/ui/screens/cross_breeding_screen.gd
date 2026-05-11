@@ -11,11 +11,11 @@ const PICKER_BTN_BG: Color = Color(0.16, 0.10, 0.05, 1.0)
 const PICKER_BTN_BORDER: Color = Color(0.38, 0.28, 0.12, 1.0)
 const PICKER_BTN_HOVER_BG: Color = Color(0.28, 0.19, 0.09, 1.0)
 const PICKER_BTN_HOVER_BORDER: Color = Color(1.0, 0.80, 0.25, 1.0)
-const BREED_DELAY: float = 1.5  # Reduced: only used when minigame is skipped.
+const BREED_DELAY: float = 1.5
 const MAX_BENCH_DISTANCE: float = 48.0
 const MINIGAME_SCENE: String = "res://minigames/plant_experimentation/plant_experimentation_screen.tscn"
 
-## Persisted across sessions via settings_screen.
+
 static var skip_breeding_minigame: bool = false
 
 @onready var _slot_a_label: Label = %SlotALabel

@@ -98,7 +98,7 @@ func _spawn_wall(toward_enemy: EnemyBase) -> void:
 	_active_wall = wall
 	_wall_life_timer = wall_duration
 	_cooldown_timer = wall_cooldown
-	_wall_current_hp = wall_hp
+	_wall_current_hp = int(wall_hp * quality_multiplier)
 	_wall_dmg_accumulator = 0.0
 	_wall_enemies.clear()
 	SfxManager.play_at("beringin_wall_spawn", wall_pos)

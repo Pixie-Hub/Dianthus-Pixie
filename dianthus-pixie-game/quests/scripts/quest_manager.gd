@@ -444,7 +444,7 @@ func _check_time_limits() -> void:
 			fail_quest(quest_id, "time_limit")
 
 
-func _on_breed_succeeded(combo_id: String, output_seed_id: String) -> void:
+func _on_breed_succeeded(combo_id: String, output_seed_id: String, _quality_tier: int) -> void:
 	report_event(&"plant_bred", 1, {"plant_id": output_seed_id, "combo_id": combo_id})
 
 

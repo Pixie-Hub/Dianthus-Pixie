@@ -169,14 +169,28 @@ func _place_plant() -> void:
 	(_ys if _ys != null else get_tree().current_scene).add_child(plant)
 	_occupied_tiles[_ghost_grid_pos] = plant
 	plant.plant_destroyed.connect(_on_plant_destroyed)
-	InventoryManager.remove_item(selected_seed_id, 1)
+	# Prefer highest-quality slot: Masterwork (2) → Superior (1) → Biasa (0)
+	var best_quality: int = InventoryManager.get_best_quality_slot(selected_seed_id)
+	if best_quality < 0:
+		best_quality = 0
+	
+	# Intercept for Shift+M debug
+	if is_instance_valid(GameManager.player) and GameManager.player.get("_force_next_quality") != null:
+		var forced: int = GameManager.player.get("_force_next_quality") as int
+		if forced >= 0:
+			best_quality = forced
+			GameManager.player.set("_force_next_quality", -1) # Consume the override
+	
+	InventoryManager.remove_item(selected_seed_id, 1, best_quality)
+	if plant.has_method("set_quality"):
+		plant.set_quality(best_quality)
 	var placed_plant_id: String = selected_seed_id.trim_suffix("_seed")
 	CodexManager.discover_plant(placed_plant_id)
 	SfxManager.play("plant_placed")
 	plant_placed.emit(selected_seed_id, _ghost_grid_pos)
 	_try_play_first_plant_monologue()
-	print("[PlantPlacement] Placed %s at grid %s (world %s)" % [
-		selected_seed_id, _ghost_grid_pos, plant.global_position])
+	print("[PlantPlacement] Placed %s (quality=%d) at grid %s (world %s)" % [
+		selected_seed_id, best_quality, _ghost_grid_pos, plant.global_position])
 	if not InventoryManager.has_item(selected_seed_id):
 		selected_seed_id = ""
 	if is_instance_valid(_palette_ui):

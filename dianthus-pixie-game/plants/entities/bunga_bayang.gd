@@ -92,7 +92,7 @@ func _fire_projectile() -> void:
 	proj.add_child(visual)
 	proj.set_meta("target", nearest)
 	proj.set_meta("lifetime", projectile_lifetime)
-	var dmg: int = projectile_damage
+	var dmg: int = int(projectile_damage * quality_multiplier)
 	proj.body_entered.connect(func(body: Node2D) -> void:
 		if body is EnemyBase and not (body as EnemyBase).is_dead:
 			(body as EnemyBase).take_damage(dmg)

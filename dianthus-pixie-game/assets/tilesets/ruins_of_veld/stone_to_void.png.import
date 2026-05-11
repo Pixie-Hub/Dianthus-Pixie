@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bo88vwshr2lj6"
-path="res://.godot/imported/stone_to_void_image.png-ad4cdef1ac69a7c5228b79a38b90caca.ctex"
+uid="uid://cndb4hjyleqm1"
+path="res://.godot/imported/stone_to_void.png-a6a65bf138e79b12bb068d589b4bfbf0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://tmp/stone_to_void_image.png"
-dest_files=["res://.godot/imported/stone_to_void_image.png-ad4cdef1ac69a7c5228b79a38b90caca.ctex"]
+source_file="res://assets/tilesets/ruins_of_veld/stone_to_void.png"
+dest_files=["res://.godot/imported/stone_to_void.png-a6a65bf138e79b12bb068d589b4bfbf0.ctex"]
 
 [params]
 

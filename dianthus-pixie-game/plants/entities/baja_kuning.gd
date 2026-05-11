@@ -25,7 +25,7 @@ func _on_effect_area_body_entered(body: Node2D) -> void:
 			return
 		SfxManager.play_at("baja_kuning_armor_buff", global_position)
 		if body.has_method("heal"):
-			body.set("damage_reduction", damage_reduction_amount)
+			body.set("damage_reduction", damage_reduction_amount * quality_multiplier)
 		_report_ability_triggered(&"armor_buff")
 
 

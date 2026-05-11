@@ -2581,6 +2581,9 @@ sources/2 = SubResource("TileSetAtlasSource_kludg")
 sources/4 = SubResource("TileSetAtlasSource_e37vh")
 sources/6 = SubResource("TileSetAtlasSource_vofgf")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bwh_barrier"]
+size = Vector2(16, 160)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vofgf"]
 size = Vector2(1280, 32)
 
@@ -2594,10 +2597,13 @@ size = Vector2(32, 960)
 size = Vector2(32, 960)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cdcy4"]
-size = Vector2(280, 304)
+size = Vector2(280, 320)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cdcy4_south"]
-size = Vector2(280, 496)
+size = Vector2(280, 512)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bpy2o"]
+size = Vector2(80, 128)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6krur"]
 size = Vector2(320, 960)
@@ -2626,9 +2632,6 @@ size = Vector2(72, 47)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cfwn8"]
 size = Vector2(96, 47)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_bwh_barrier"]
-size = Vector2(16, 160)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bwh_slow_a"]
 size = Vector2(96, 80)
 
@@ -2636,7 +2639,7 @@ size = Vector2(96, 80)
 size = Vector2(96, 80)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bwh_trigger"]
-size = Vector2(64, 32)
+size = Vector2(64, 128)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0e6ua"]
 texture = ExtResource("1_0kbcj")
@@ -4295,7 +4298,7 @@ shape = SubResource("RectangleShape2D_bwh_barrier")
 
 [node name="BarrierVisual" type="Polygon2D" parent="ForestMapVisuals/BlackwaterEntranceBarrier" unique_id=901000006]
 color = Color(0.35, 0.15, 0.08, 1)
-polygon = PackedVector2Array(-8, -80, 8, -80, 8, 80, -8, 80)
+polygon = PackedVector2Array(-8, -80, 8, -80, 8, 80, 0, 80, -8, 80)
 
 [node name="ForestMapCollision" type="Node2D" parent="." unique_id=1914565638]
 
@@ -4337,12 +4340,16 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ForestMapCollision/WestDenseWoodsBlocker" unique_id=524680941]
-position = Vector2(-10, -328)
+position = Vector2(-10, -320)
 shape = SubResource("RectangleShape2D_cdcy4")
 
 [node name="CollisionShape2DSouth" type="CollisionShape2D" parent="ForestMapCollision/WestDenseWoodsBlocker" unique_id=524680942]
-position = Vector2(-10, 232)
+position = Vector2(-10, 224)
 shape = SubResource("RectangleShape2D_cdcy4_south")
+
+[node name="CollisionShape2DWest" type="CollisionShape2D" parent="ForestMapCollision/WestDenseWoodsBlocker" unique_id=217840332]
+position = Vector2(-110, -96)
+shape = SubResource("RectangleShape2D_bpy2o")
 
 [node name="EastDenseWoodsBlocker" type="StaticBody2D" parent="ForestMapCollision" unique_id=1766200970]
 position = Vector2(1110, 480)
@@ -4465,10 +4472,10 @@ shape = SubResource("RectangleShape2D_bwh_slow_b")
 position = Vector2(176, 336)
 collision_layer = 0
 collision_mask = 4
-monitoring = true
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="YSortLayer/BlackwaterEntryTrigger" unique_id=901000015]
+position = Vector2(56, 48)
 shape = SubResource("RectangleShape2D_bwh_trigger")
 
 [node name="BlackwaterHollow" type="Marker2D" parent="YSortLayer" unique_id=901000016]

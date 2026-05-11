@@ -20,6 +20,12 @@ var vitality: float = 100.0
 var is_wilted: bool:
 	get: return vitality <= 0.0
 
+## Quality tier granted by breeding minigame: 0=Biasa, 1=Superior, 2=Masterwork.
+const QUALITY_MULTIPLIERS: Array[float] = [1.0, 1.25, 1.5]
+var quality_tier: int = 0
+var quality_multiplier: float = 1.0
+signal quality_set(tier: int)
+
 var _player_near_plant: bool = false
 var _is_tending: bool = false
 var _tend_tween: Tween = null
@@ -40,6 +46,18 @@ func _ready() -> void:
 	_setup_interaction_area()
 	_setup_tend_ui()
 	DayNightCycle.phase_changed.connect(_on_plant_phase_changed)
+
+
+func set_quality(tier: int) -> void:
+	quality_tier = clampi(tier, 0, 2)
+	quality_multiplier = QUALITY_MULTIPLIERS[quality_tier]
+	quality_set.emit(quality_tier)
+	_on_quality_set(quality_tier)
+	# TODO: VFX-XX — tint plant for Superior/Masterwork
+
+
+func _on_quality_set(_tier: int) -> void:
+	pass
 
 
 func _setup_interaction_area() -> void:

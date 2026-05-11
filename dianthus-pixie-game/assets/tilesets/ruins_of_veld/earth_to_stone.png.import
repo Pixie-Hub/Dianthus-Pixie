@@ -2,12 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bb3b6gmuspuc5"
-valid=false
+uid="uid://dobhqoe37x6cn"
+path="res://.godot/imported/earth_to_stone.png-b1b7e932ee1e8dd3d80fcc2389b8724b.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
-source_file="res://tmp/earth_to_stone_test.png"
+source_file="res://assets/tilesets/ruins_of_veld/earth_to_stone.png"
+dest_files=["res://.godot/imported/earth_to_stone.png-b1b7e932ee1e8dd3d80fcc2389b8724b.ctex"]
 
 [params]
 

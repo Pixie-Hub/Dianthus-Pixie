@@ -51,6 +51,7 @@ directories/dtl_directory={
 "story_01_complete": "res://dialogic/timelines/story_01_complete.dtl",
 "story_02_complete": "res://dialogic/timelines/story_02_complete.dtl",
 "story_02_fail": "res://dialogic/timelines/story_02_fail.dtl",
+"story_02_start": "res://dialogic/timelines/story_02_start.dtl",
 "story_03_complete": "res://dialogic/timelines/story_03_complete.dtl",
 "story_03_fail": "res://dialogic/timelines/story_03_fail.dtl",
 "story_04_complete": "res://dialogic/timelines/story_04_complete.dtl",
@@ -62,10 +63,12 @@ directories/dtl_directory={
 "story_07_fail": "res://dialogic/timelines/story_07_fail.dtl",
 "story_alt_devourer_loss_complete": "res://dialogic/timelines/story_alt_devourer_loss_complete.dtl",
 "story_alt_lost_complete": "res://dialogic/timelines/story_alt_lost_complete.dtl",
-"story_alt_shadow_loss_complete": "res://dialogic/timelines/story_alt_shadow_loss_complete.dtl"
+"story_alt_shadow_loss_complete": "res://dialogic/timelines/story_alt_shadow_loss_complete.dtl",
+"story_interludes": "res://dialogic/timelines/story_interludes.dtl"
 }
 directories/dch_directory={
-"Dianthus Core": "res://dialogic/characters/Dianthus Core.dch"
+"Dianthus Core": "res://dialogic/characters/Dianthus Core.dch",
+"Pixie": "res://dialogic/characters/Pixie.dch"
 }
 layout/style_directory={
 "Cutscene": "res://dialogic/styles/Cutscene.tres",

@@ -2,12 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://wk7bnn80j7wx"
-valid=false
+uid="uid://cfuqkbi557li0"
+path="res://.godot/imported/earth_to_void.png-c7f16b0fd77bd45119c4755058b86ea2.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
-source_file="res://tmp/earth_to_stone_image.png"
+source_file="res://assets/tilesets/ruins_of_veld/earth_to_void.png"
+dest_files=["res://.godot/imported/earth_to_void.png-c7f16b0fd77bd45119c4755058b86ea2.ctex"]
 
 [params]
 

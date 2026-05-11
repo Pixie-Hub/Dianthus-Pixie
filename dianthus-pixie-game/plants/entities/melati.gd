@@ -26,7 +26,7 @@ func _process(delta: float) -> void:
 	if not is_instance_valid(GameManager.player):
 		return
 	var player: Node = GameManager.player
-	_energy_accumulator += energy_regen_per_sec * delta
+	_energy_accumulator += energy_regen_per_sec * quality_multiplier * delta
 	if _energy_accumulator >= 1.0:
 		var amount: int = int(_energy_accumulator)
 		_energy_accumulator -= float(amount)

@@ -38,7 +38,7 @@ func _recalculate_player_attack_speed() -> void:
 	var best: float = 0.0
 	for plant in get_tree().get_nodes_in_group(&"kecombrangs"):
 		if plant is Kecombrang and not plant.is_destroyed and not plant.is_wilted and plant._player_in_range:
-			best = max(best, plant.attack_speed_bonus)
+			best = max(best, plant.attack_speed_bonus * plant.quality_multiplier)
 	GameManager.player.set("attack_speed_bonus", best)
 
 
