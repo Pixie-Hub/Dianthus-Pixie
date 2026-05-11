@@ -320,6 +320,7 @@ theme_override_constants/separation = 3
 
 [node name="ItemPickerMargin" type="MarginContainer" parent="ItemPickerPanel/ItemPickerVBox" unique_id=1977388516]
 layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 10
@@ -347,4 +348,5 @@ size_flags_vertical = 3
 [node name="ItemPickerList" type="VBoxContainer" parent="ItemPickerPanel/ItemPickerVBox/ItemPickerMargin/ItemPickerInner/ItemPickerScroll" unique_id=1215934109]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 2
