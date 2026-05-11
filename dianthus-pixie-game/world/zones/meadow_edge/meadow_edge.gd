@@ -292,11 +292,16 @@ func _on_wave_cleared() -> void:
 func _setup_wave_spawn_points() -> void:
 	if not is_instance_valid(_wave_spawner):
 		return
+	# Spawn markers are placed just inside the boundary walls so enemies are
+	# never overlapping a StaticBody2D (collision_layer=TERRAIN) on the first
+	# frame.  The boundary inner edges sit at x=0, x=MAP_WIDTH, y=0, y=MAP_HEIGHT.
+	# Using +32 inset keeps every enemy clear of the wall even after
+	# spawn_offset_radius (24 px) jitter is applied.
 	var spawn_positions: Dictionary = {
-		"SpawnNorth": Vector2(MAP_WIDTH * 0.5, 48.0),
-		"SpawnSouth": Vector2(MAP_WIDTH * 0.5, MAP_HEIGHT - 48.0),
-		"SpawnEast": Vector2(MAP_WIDTH - 48.0, 832.0),
-		"SpawnWest": Vector2(48.0, 832.0),
+		"SpawnNorth": Vector2(MAP_WIDTH * 0.5, 32.0),
+		"SpawnSouth": Vector2(MAP_WIDTH * 0.5, MAP_HEIGHT - 32.0),
+		"SpawnEast": Vector2(MAP_WIDTH - 32.0, 832.0),
+		"SpawnWest": Vector2(32.0, 832.0),
 	}
 	for marker_name: String in spawn_positions:
 		var marker: Marker2D = _wave_spawner.get_node_or_null(marker_name) as Marker2D
