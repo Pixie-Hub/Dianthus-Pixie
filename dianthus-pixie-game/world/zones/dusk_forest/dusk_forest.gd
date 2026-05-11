@@ -15,6 +15,10 @@ const RARITY_SPAWN_CHANCE: Dictionary = {
 	ItemDatabase.Rarity.UNCOMMON: 0.22,
 	ItemDatabase.Rarity.RARE:     0.25,
 }
+const HOLLOW_SLOW_MULTIPLIER: float = 0.6
+const HOLLOW_AETHER_BLOOM_PREFIX: String = "HollowAetherBloom"
+const HOLLOW_SHADOW_RESIN_PREFIX: String = "HollowShadowResin"
+
 # min_day: the zone unlocks on Day 3; all rules gate on that day.
 # melati_seed and wijaya_kusuma_seed are fixed guaranteed drops per PLANT_CODEX.md.
 # rafflesia_seed and moonspore placed here per WORLD-01 AC.
@@ -105,6 +109,30 @@ const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
 			Vector2(672, 384),
 		],
 	},
+	{
+		"prefix": HOLLOW_AETHER_BLOOM_PREFIX,
+		"item_id": "aether_bloom",
+		"amount": 1,
+		"minimum_count": 1,
+		"min_day": 3,
+		"required_flag": "unlock_blackwater_hollow",
+		"positions": [
+			Vector2(160, 384),
+			Vector2(192, 352),
+		],
+	},
+	{
+		"prefix": HOLLOW_SHADOW_RESIN_PREFIX,
+		"item_id": "shadow_resin",
+		"amount": 1,
+		"minimum_count": 1,
+		"min_day": 3,
+		"required_flag": "unlock_blackwater_hollow",
+		"positions": [
+			Vector2(144, 400),
+			Vector2(208, 368),
+		],
+	},
 ]
 
 @onready var _canvas_modulate: CanvasModulate = $CanvasModulate
@@ -113,6 +141,13 @@ const DAYTIME_RESOURCE_RULES: Array[Dictionary] = [
 @onready var _timer_label: Label = $DebugOverlay/TimerLabel
 @onready var _player: CharacterBody2D = $YSortLayer/Player
 @onready var _pickup_container: Node2D = $YSortLayer/PickupContainer
+@onready var _hollow_barrier: StaticBody2D = $ForestMapVisuals/BlackwaterEntranceBarrier
+@onready var _hollow_barrier_collider: CollisionShape2D = $ForestMapVisuals/BlackwaterEntranceBarrier/CollisionShape2D
+@onready var _hollow_slow_areas: Array[Area2D] = [
+	$YSortLayer/BlackwaterAmbientSlowA,
+	$YSortLayer/BlackwaterAmbientSlowB,
+]
+@onready var _hollow_entry_trigger: Area2D = $YSortLayer/BlackwaterEntryTrigger
 
 var _collected_pickup_names: Array[String] = []
 var _collected_day: int = -1
@@ -130,6 +165,11 @@ func _ready() -> void:
 	_spawn_daytime_resources()
 	ZoneTracker.enter_zone("dusk_forest")
 	_try_play_entry_cutscene()
+	_apply_hollow_unlock_state()
+	_connect_hollow_slow_areas()
+	if UnlockFlags.has_signal("flag_set"):
+		if not UnlockFlags.flag_set.is_connected(_on_unlock_flag_set):
+			UnlockFlags.flag_set.connect(_on_unlock_flag_set)
 
 
 func _process(_delta: float) -> void:
@@ -245,6 +285,9 @@ func _spawn_resource_rule(rule: Dictionary, rng: RandomNumberGenerator) -> void:
 	var min_day: int = int(rule.get("min_day", 1))
 	if day < min_day:
 		return
+	var required_flag: String = str(rule.get("required_flag", ""))
+	if not required_flag.is_empty() and not UnlockFlags.has_flag(required_flag):
+		return
 	var positions: Array[Vector2] = _get_shuffled_positions(rule.get("positions", []), rng)
 	if positions.is_empty():
 		return
@@ -323,6 +366,65 @@ func _get_shuffled_positions(source_positions: Array, rng: RandomNumberGenerator
 		shuffled[i] = shuffled[swap_index]
 		shuffled[swap_index] = current_position
 	return shuffled
+
+
+func _apply_hollow_unlock_state() -> void:
+	var unlocked: bool = UnlockFlags.has_flag(StoryEndingFlags.unlock_blackwater_hollow)
+	if is_instance_valid(_hollow_barrier):
+		_hollow_barrier.visible = not unlocked
+	if is_instance_valid(_hollow_barrier_collider):
+		_hollow_barrier_collider.set_deferred("disabled", unlocked)
+	for area: Area2D in _hollow_slow_areas:
+		if is_instance_valid(area):
+			area.monitoring = unlocked
+
+
+func _on_unlock_flag_set(flag_name: String) -> void:
+	if flag_name != StoryEndingFlags.unlock_blackwater_hollow:
+		return
+	print("[DuskForest] Blackwater Hollow unlocked")
+	_apply_hollow_unlock_state()
+	_spawn_daytime_resources()
+
+
+func _connect_hollow_slow_areas() -> void:
+	for area: Area2D in _hollow_slow_areas:
+		if not is_instance_valid(area):
+			continue
+		if not area.body_entered.is_connected(_on_hollow_slow_entered):
+			area.body_entered.connect(_on_hollow_slow_entered)
+		if not area.body_exited.is_connected(_on_hollow_slow_exited):
+			area.body_exited.connect(_on_hollow_slow_exited)
+	if is_instance_valid(_hollow_entry_trigger):
+		if not _hollow_entry_trigger.body_entered.is_connected(_on_hollow_entry_trigger_body_entered):
+			_hollow_entry_trigger.body_entered.connect(_on_hollow_entry_trigger_body_entered)
+
+
+func _on_hollow_slow_entered(body: Node2D) -> void:
+	if not body.is_in_group("player"):
+		return
+	body.set("environment_speed_modifier", HOLLOW_SLOW_MULTIPLIER)
+
+
+func _on_hollow_slow_exited(body: Node2D) -> void:
+	if not body.is_in_group("player"):
+		return
+	body.set("environment_speed_modifier", 1.0)
+
+
+func _on_hollow_entry_trigger_body_entered(body: Node2D) -> void:
+	if not body.is_in_group("player"):
+		return
+	if not UnlockFlags.has_flag(StoryEndingFlags.unlock_blackwater_hollow):
+		return
+	if UnlockFlags.has_flag(StoryEndingFlags.flag_blackwater_hollow_entry_seen):
+		return
+	UnlockFlags.set_flag(StoryEndingFlags.flag_blackwater_hollow_entry_seen)
+	var dialogic: Node = get_node_or_null("/root/Dialogic")
+	if dialogic == null:
+		return
+	await get_tree().create_timer(0.4).timeout
+	dialogic.start("story_interludes", "blackwater_hollow_entry")
 
 
 func _spawn_resource_pickup(rule: Dictionary, pickup_position: Vector2, spawn_number: int) -> void:

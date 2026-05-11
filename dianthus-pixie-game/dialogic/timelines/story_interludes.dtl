@@ -26,3 +26,11 @@ label dusk_forest_unlocked (Dusk Forest Path Opened)
 "Dianthus Core": The Dusk Forest path has opened. The old road is awake — but the day is still yours. Go when you are ready.
 [signal arg="dusk_forest_unlocked_done"]
 [end_timeline]
+
+label blackwater_hollow_entry (Blackwater Hollow First Entry)
+[style name="Gameplay"]
+"Pixie" (Thought): The water is so still it remembers a sky that is not overhead.
+"Pixie" (Thought): Stars that the garden has forgotten. Or stars the dark hasn't reached yet.
+"Pixie" (Thought): Whatever lives here, it grew without ever needing the sun. That is not the same as being cruel.
+[signal arg="blackwater_hollow_entry_done"]
+[end_timeline]

@@ -2623,6 +2623,18 @@ size = Vector2(72, 47)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cfwn8"]
 size = Vector2(96, 47)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bwh_barrier"]
+size = Vector2(48, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bwh_slow_a"]
+size = Vector2(96, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bwh_slow_b"]
+size = Vector2(96, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bwh_trigger"]
+size = Vector2(64, 32)
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0e6ua"]
 texture = ExtResource("1_0kbcj")
 0:0/0 = 0
@@ -4255,6 +4267,33 @@ region_enabled = true
 region_rect = Rect2(640, 256, 128, 128)
 region_filter_clip_enabled = true
 
+[node name="BlackwaterHollowPool" type="Polygon2D" parent="ForestMapVisuals" unique_id=901000001]
+position = Vector2(176, 384)
+color = Color(0.04, 0.05, 0.1, 1)
+polygon = PackedVector2Array(-80, -64, 80, -64, 96, 0, 80, 64, -80, 64, -96, 0)
+
+[node name="BlackwaterStarReflection" type="Polygon2D" parent="ForestMapVisuals" unique_id=901000002]
+position = Vector2(176, 384)
+color = Color(0.06, 0.07, 0.18, 0.7)
+polygon = PackedVector2Array(-48, -40, 48, -40, 60, 0, 48, 40, -48, 40, -60, 0)
+
+[node name="BlackwaterRim" type="Polygon2D" parent="ForestMapVisuals" unique_id=901000003]
+position = Vector2(176, 384)
+color = Color(0.22, 0.2, 0.18, 1)
+polygon = PackedVector2Array(-88, -68, 88, -68, 104, 0, 88, 68, -88, 68, -104, 0, -96, 0, -80, 64, 80, 64, 96, 0, 80, -64, -80, -64)
+
+[node name="BlackwaterEntranceBarrier" type="StaticBody2D" parent="ForestMapVisuals" unique_id=901000004]
+position = Vector2(272, 384)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ForestMapVisuals/BlackwaterEntranceBarrier" unique_id=901000005]
+shape = SubResource("RectangleShape2D_bwh_barrier")
+
+[node name="BarrierVisual" type="Polygon2D" parent="ForestMapVisuals/BlackwaterEntranceBarrier" unique_id=901000006]
+color = Color(0.35, 0.15, 0.08, 1)
+polygon = PackedVector2Array(-24, -8, 24, -8, 24, 8, -24, 8)
+
 [node name="ForestMapCollision" type="Node2D" parent="." unique_id=1914565638]
 
 [node name="NorthBoundary" type="StaticBody2D" parent="ForestMapCollision" unique_id=1888552924]
@@ -4394,6 +4433,39 @@ y_sort_enabled = true
 position = Vector2(520, 880)
 
 [node name="PickupContainer" type="Node2D" parent="YSortLayer" unique_id=1693244344]
+
+[node name="BlackwaterAmbientSlowA" type="Area2D" parent="YSortLayer" unique_id=901000010]
+position = Vector2(128, 384)
+collision_layer = 0
+collision_mask = 4
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="YSortLayer/BlackwaterAmbientSlowA" unique_id=901000011]
+shape = SubResource("RectangleShape2D_bwh_slow_a")
+
+[node name="BlackwaterAmbientSlowB" type="Area2D" parent="YSortLayer" unique_id=901000012]
+position = Vector2(224, 384)
+collision_layer = 0
+collision_mask = 4
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="YSortLayer/BlackwaterAmbientSlowB" unique_id=901000013]
+shape = SubResource("RectangleShape2D_bwh_slow_b")
+
+[node name="BlackwaterEntryTrigger" type="Area2D" parent="YSortLayer" unique_id=901000014]
+position = Vector2(176, 336)
+collision_layer = 0
+collision_mask = 4
+monitoring = true
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="YSortLayer/BlackwaterEntryTrigger" unique_id=901000015]
+shape = SubResource("RectangleShape2D_bwh_trigger")
+
+[node name="BlackwaterHollow" type="Marker2D" parent="YSortLayer" unique_id=901000016]
+position = Vector2(176, 384)
 
 [node name="MeadowEdgeReturnGate" parent="YSortLayer" unique_id=1005462467 instance=ExtResource("5_5gonc")]
 position = Vector2(520, 926)

@@ -60,6 +60,7 @@ var _core_energy_tick_timer: Timer = null
 var damage_reduction: float = 0.0
 var attack_speed_bonus: float = 0.0
 var bonus_melee_damage: int = 0
+var environment_speed_modifier: float = 1.0
 
 const PETAL_SHIELD_DR: float = 0.8
 const PETAL_SHIELD_PERFECT_WINDOW: float = 0.2
@@ -113,7 +114,7 @@ func _physics_process(delta: float) -> void:
 	if dir != Vector2.ZERO:
 		dir = dir.normalized()
 		last_direction = _dominant_direction(dir)
-		velocity = dir * SPEED
+		velocity = dir * SPEED * environment_speed_modifier
 		_travel("walk")
 	else:
 		velocity = Vector2.ZERO
@@ -407,6 +408,9 @@ func _unhandled_input(event: InputEvent) -> void:
 				InventoryManager.add_item("verdant_sap", 2)
 				InventoryManager.add_item("moonspore", 1)
 				print("DEBUG: Added 5 Petal Shard, 2 Verdant Sap, 1 Moonspore to inventory.")
+		if event.keycode == KEY_B and event.shift_pressed and not event.ctrl_pressed:
+			UnlockFlags.set_flag(StoryEndingFlags.unlock_blackwater_hollow)
+			print("[DEBUG] Shift+B — Blackwater Hollow unlocked")
 		if event.keycode == KEY_A and event.shift_pressed and not event.ctrl_pressed:
 			CraftingManager.owned_abilities["dash"] = true
 			CraftingManager.owned_abilities["heal_pulse"] = true
@@ -656,6 +660,7 @@ func heal(amount: int) -> void:
 	hp_changed.emit(current_hp, MAX_HP)
 
 func _die() -> void:
+	environment_speed_modifier = 1.0
 	if is_harvesting:
 		is_harvesting = false
 	if is_blocking:

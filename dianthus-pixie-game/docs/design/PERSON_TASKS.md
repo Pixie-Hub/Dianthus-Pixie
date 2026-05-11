@@ -363,6 +363,7 @@ FOUND-01..06 (Done)
 | Q | Toggle Quest Log screen (pauses game; Active/Completed/Failed tabs) | UI-03 |
 | F | Activate equipped skill (costs energy per ability) | QUEST-01 |
 | Shift+A | Grant all 3 abilities instantly (dash, heal_pulse, thorn_burst) | Ability System |
+| Shift+B | Force-unlock Blackwater Hollow (`UnlockFlags.set_flag("unlock_blackwater_hollow")`) — enables barrier removal, slow areas, and hollow resource spawn | WORLD-03 |
 | Shift+F | Equip 'dash' skill (then press F to activate, costs 20 energy) | Ability System |
 | Shift+G | Equip 'thorn_burst' skill (then press F to activate, costs 35 energy) | Ability System |
 | Shift+J | Discover all 11 plants in codex instantly | UI-04 |
