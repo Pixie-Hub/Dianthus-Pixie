@@ -32,6 +32,7 @@ var _tend_tween: Tween = null
 var _interaction_area: Area2D = null
 var _prompt_label: Label = null
 var _tend_progress: ProgressBar = null
+var _scene_base_modulate: Color = Color.WHITE
 var _base_modulate: Color = Color.WHITE
 
 @onready var _sprite: Sprite2D = %Sprite2D
@@ -42,7 +43,8 @@ func _ready() -> void:
 	add_to_group(&"plants")
 	collision_layer = CollisionLayers.INTERACTABLE
 	collision_mask = 0
-	_base_modulate = modulate
+	_scene_base_modulate = modulate
+	_base_modulate = _scene_base_modulate
 	_setup_interaction_area()
 	_setup_tend_ui()
 	DayNightCycle.phase_changed.connect(_on_plant_phase_changed)
@@ -53,11 +55,44 @@ func set_quality(tier: int) -> void:
 	quality_multiplier = QUALITY_MULTIPLIERS[quality_tier]
 	quality_set.emit(quality_tier)
 	_on_quality_set(quality_tier)
-	# TODO: VFX-XX — tint plant for Superior/Masterwork
+	_update_quality_visual()
+	_update_vitality_visual()
+	queue_redraw()
 
 
 func _on_quality_set(_tier: int) -> void:
 	pass
+
+
+func _update_quality_visual() -> void:
+	var tint: Color = Color.WHITE
+	match quality_tier:
+		1:
+			tint = Color(1.08, 1.12, 1.02, 1.0)
+		2:
+			tint = Color(1.18, 1.12, 0.86, 1.0)
+	_base_modulate = Color(
+		minf(_scene_base_modulate.r * tint.r, 1.0),
+		minf(_scene_base_modulate.g * tint.g, 1.0),
+		minf(_scene_base_modulate.b * tint.b, 1.0),
+		_scene_base_modulate.a,
+	)
+
+
+func _draw() -> void:
+	if quality_tier <= 0 or is_destroyed:
+		return
+	var quality_color: Color = ItemDatabase.get_quality_color(quality_tier)
+	quality_color.a = 0.24 if quality_tier == 1 else 0.38
+	draw_circle(Vector2.ZERO, 13.0 + float(quality_tier) * 2.0, quality_color)
+	var ring_color: Color = ItemDatabase.get_quality_color(quality_tier)
+	ring_color.a = 0.72
+	draw_arc(Vector2.ZERO, 15.0 + float(quality_tier) * 2.0, 0.0, TAU, 32, ring_color, 1.5, true)
+	if quality_tier >= 2:
+		for i: int in range(6):
+			var angle: float = TAU * float(i) / 6.0
+			var offset: Vector2 = Vector2(cos(angle), sin(angle)) * 19.0
+			draw_circle(offset, 1.4, ring_color)
 
 
 func _setup_interaction_area() -> void:

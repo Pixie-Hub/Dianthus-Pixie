@@ -225,6 +225,13 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.65, 0.55, 1)
 theme_override_font_sizes/font_size = 9
 
+[node name="PlantTierComparisonLabel" type="Label" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/PlantDetailPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 9
+autowrap_mode = 3
+
 [node name="PlantRecipeLabel" type="Label" parent="Panel/MarginContainer/RootVBox/Content/DetailRoot/PlantDetailPanel"]
 unique_name_in_owner = true
 layout_mode = 2

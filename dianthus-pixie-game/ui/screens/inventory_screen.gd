@@ -2,18 +2,21 @@ extends CanvasLayer
 
 const COLUMNS: int = 6
 const SLOT_SIZE: int = 40
+const QUALITY_BORDER_WIDTH: int = 2
 var RARITY_COLORS: Dictionary = {
 	0: Color(0.25, 0.25, 0.25, 1.0),
 	1: Color(0.15, 0.25, 0.50, 1.0),
 	2: Color(0.45, 0.35, 0.05, 1.0),
 }
 const EMPTY_COLOR: Color = Color(0.12, 0.12, 0.12, 1.0)
+const EMPTY_BORDER_COLOR: Color = Color(0.4, 0.4, 0.4, 1.0)
 
 @onready var _grid: GridContainer = %SlotGrid
 @onready var _tooltip: Label = %Tooltip
 
 var _slot_panels: Array[PanelContainer] = []
 var _slot_labels: Array[Label] = []
+var _slot_quality_labels: Array[Label] = []
 var _slot_icons: Array[TextureRect] = []
 var _icon_cache: Dictionary = {}
 
@@ -52,6 +55,7 @@ func _build_grid() -> void:
 		child.queue_free()
 	_slot_panels.clear()
 	_slot_labels.clear()
+	_slot_quality_labels.clear()
 	_slot_icons.clear()
 	for i: int in range(InventoryManager.get_max_slots()):
 		var panel: PanelContainer = PanelContainer.new()
@@ -65,7 +69,7 @@ func _build_grid() -> void:
 		style.border_width_right = 1
 		style.border_width_top = 1
 		style.border_width_bottom = 1
-		style.border_color = Color(0.4, 0.4, 0.4, 1.0)
+		style.border_color = EMPTY_BORDER_COLOR
 		panel.add_theme_stylebox_override("panel", style)
 
 		var icon_rect: TextureRect = TextureRect.new()
@@ -80,11 +84,20 @@ func _build_grid() -> void:
 		count_label.anchors_preset = Control.PRESET_FULL_RECT
 		count_label.visible = false
 
+		var quality_label: Label = Label.new()
+		quality_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		quality_label.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+		quality_label.add_theme_font_size_override("font_size", 7)
+		quality_label.anchors_preset = Control.PRESET_FULL_RECT
+		quality_label.visible = false
+
 		panel.add_child(icon_rect)
+		panel.add_child(quality_label)
 		panel.add_child(count_label)
 		_grid.add_child(panel)
 		_slot_panels.append(panel)
 		_slot_labels.append(count_label)
+		_slot_quality_labels.append(quality_label)
 		_slot_icons.append(icon_rect)
 
 
@@ -103,21 +116,37 @@ func _refresh() -> void:
 		var slot: Dictionary = InventoryManager.get_slot(i)
 		var panel: PanelContainer = _slot_panels[i]
 		var label: Label = _slot_labels[i]
+		var quality_label: Label = _slot_quality_labels[i]
 		var icon_rect: TextureRect = _slot_icons[i]
 		var style: StyleBoxFlat = panel.get_theme_stylebox("panel") as StyleBoxFlat
 
 		if slot.is_empty():
 			style.bg_color = EMPTY_COLOR
+			style.border_width_left = 1
+			style.border_width_right = 1
+			style.border_width_top = 1
+			style.border_width_bottom = 1
+			style.border_color = EMPTY_BORDER_COLOR
 			label.visible = false
+			quality_label.visible = false
 			icon_rect.texture = null
 			icon_rect.visible = false
 		else:
 			var item_id: String = str(slot.get("item_id", ""))
 			var count: int = int(slot.get("count", 0))
+			var quality: int = int(slot.get("quality", 0))
 			var rarity: int = ItemDatabase.get_rarity(item_id)
 			style.bg_color = RARITY_COLORS.get(rarity, EMPTY_COLOR)
+			style.border_width_left = QUALITY_BORDER_WIDTH
+			style.border_width_right = QUALITY_BORDER_WIDTH
+			style.border_width_top = QUALITY_BORDER_WIDTH
+			style.border_width_bottom = QUALITY_BORDER_WIDTH
+			style.border_color = ItemDatabase.get_quality_color(quality) if ItemDatabase.is_plant_seed(item_id) else ItemDatabase.get_rarity_color(item_id)
 			label.text = str(count)
 			label.visible = true
+			quality_label.text = ItemDatabase.get_quality_marker(quality) if ItemDatabase.is_plant_seed(item_id) else ""
+			quality_label.add_theme_color_override("font_color", ItemDatabase.get_quality_color(quality))
+			quality_label.visible = ItemDatabase.is_plant_seed(item_id)
 			var icon_path: String = ItemDatabase.get_icon_path(item_id)
 			var tex: Texture2D = _get_icon(icon_path)
 			icon_rect.texture = tex
@@ -130,9 +159,15 @@ func _on_slot_hover(index: int) -> void:
 		_tooltip.visible = false
 		return
 	var item_id: String = str(slot.get("item_id", ""))
-	var display: String = ItemDatabase.get_display_name(item_id)
+	var quality: int = int(slot.get("quality", 0))
+	var display: String = ItemDatabase.get_display_name_with_quality(item_id, quality)
 	var desc: String = ItemDatabase.get_description(item_id)
-	_tooltip.text = "%s\n%s" % [display, desc]
+	var quality_desc: String = ItemDatabase.get_quality_description(item_id, quality)
+	_tooltip.text = "%s\n%s%s" % [
+		display,
+		desc,
+		"\n%s" % quality_desc if not quality_desc.is_empty() else "",
+	]
 	_tooltip.visible = true
 
 

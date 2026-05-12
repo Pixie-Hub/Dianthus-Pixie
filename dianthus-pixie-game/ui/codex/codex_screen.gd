@@ -20,6 +20,7 @@ const EnemyCatalog = preload("res://ui/codex/enemy_registry.gd")
 @onready var _plant_role_label: Label = %PlantRoleLabel
 @onready var _plant_effect_label: Label = %PlantEffectLabel
 @onready var _plant_radius_label: Label = %PlantRadiusLabel
+@onready var _plant_tier_comparison_label: Label = %PlantTierComparisonLabel
 @onready var _plant_recipe_label: Label = %PlantRecipeLabel
 @onready var _plant_hint_label: Label = %PlantHintLabel
 @onready var _plant_sprite_rect: TextureRect = %PlantSprite
@@ -189,6 +190,7 @@ func _update_plant_detail(plant_id: String) -> void:
 	_plant_role_label.text = str(data.get("role", "Unknown")) if discovered else "Unknown plant"
 	_plant_effect_label.text = str(data.get("effect", "")) if discovered else "Not yet discovered."
 	_plant_radius_label.text = "Effect Radius: %.0fpx" % float(data.get("radius", 0.0)) if discovered else "Effect Radius: ???"
+	_plant_tier_comparison_label.text = PlantRegistry.get_tier_comparison_text(plant_id) if discovered else "Tier scaling: ???"
 	_plant_hint_label.text = "" if discovered else str(data.get("unlock_hint", "Find this plant in the world."))
 	_plant_recipe_label.text = _get_plant_recipe_text(plant_id, data) if discovered else ""
 	_set_texture_rect(_plant_sprite_rect, PlantRegistry.get_sprite_path(plant_id), discovered)
@@ -200,6 +202,7 @@ func _show_plant_placeholder() -> void:
 	_plant_role_label.text = ""
 	_plant_effect_label.text = ""
 	_plant_radius_label.text = ""
+	_plant_tier_comparison_label.text = ""
 	_plant_recipe_label.text = ""
 	_plant_hint_label.text = ""
 	_plant_sprite_rect.texture = null

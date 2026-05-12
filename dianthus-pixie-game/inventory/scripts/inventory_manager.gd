@@ -23,6 +23,7 @@ func _init_slots() -> void:
 # --- Public API ---
 
 func add_item(item_id: String, amount: int = 1, quality: int = 0) -> int:
+	quality = ItemDatabase.normalize_quality(quality) if ItemDatabase.is_plant_seed(item_id) else 0
 	var remaining: int = amount
 	var max_stack: int = ItemDatabase.get_max_stack(item_id)
 
@@ -66,6 +67,8 @@ func add_item(item_id: String, amount: int = 1, quality: int = 0) -> int:
 
 
 func remove_item(item_id: String, amount: int = 1, quality: int = -1) -> bool:
+	if quality >= 0:
+		quality = ItemDatabase.normalize_quality(quality) if ItemDatabase.is_plant_seed(item_id) else 0
 	if get_total_count(item_id, quality) < amount:
 		return false
 	var remaining: int = amount
@@ -92,10 +95,14 @@ func remove_item(item_id: String, amount: int = 1, quality: int = -1) -> bool:
 
 
 func has_item(item_id: String, amount: int = 1, quality: int = -1) -> bool:
+	if quality >= 0:
+		quality = ItemDatabase.normalize_quality(quality) if ItemDatabase.is_plant_seed(item_id) else 0
 	return get_total_count(item_id, quality) >= amount
 
 
 func get_total_count(item_id: String, quality: int = -1) -> int:
+	if quality >= 0:
+		quality = ItemDatabase.normalize_quality(quality) if ItemDatabase.is_plant_seed(item_id) else 0
 	var total: int = 0
 	for slot: Dictionary in slots:
 		if slot.is_empty():
@@ -119,12 +126,13 @@ func get_best_quality_slot(item_id: String) -> int:
 	return best
 
 
-func can_accept_item(item_id: String) -> bool:
+func can_accept_item(item_id: String, quality: int = 0) -> bool:
+	quality = ItemDatabase.normalize_quality(quality) if ItemDatabase.is_plant_seed(item_id) else 0
 	var max_stack: int = ItemDatabase.get_max_stack(item_id)
 	for slot: Dictionary in slots:
 		if slot.is_empty():
 			return true
-		if slot.get("item_id", "") == item_id and int(slot.get("count", 0)) < max_stack:
+		if slot.get("item_id", "") == item_id and int(slot.get("quality", 0)) == quality and int(slot.get("count", 0)) < max_stack:
 			return true
 	return false
 
@@ -178,8 +186,8 @@ func deserialize(data: Array) -> void:
 		var entry: Variant = data[i]
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
 			var slot: Dictionary = (entry as Dictionary).duplicate()
-			if not slot.has("quality"):
-				slot["quality"] = 0
+			var item_id: String = str(slot.get("item_id", ""))
+			slot["quality"] = ItemDatabase.normalize_quality(int(slot.get("quality", 0))) if ItemDatabase.is_plant_seed(item_id) else 0
 			slots[i] = slot
 	var _ok: bool = true
 	inventory_changed.emit()

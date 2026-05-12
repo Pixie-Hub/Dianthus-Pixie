@@ -1,6 +1,16 @@
 class_name ItemDatabase
 
 enum Rarity { COMMON, UNCOMMON, RARE }
+enum Quality { COMMON, SUPERIOR, MASTERWORK }
+
+const QUALITY_NAMES: Array[String] = ["Common", "Superior", "Masterwork"]
+const QUALITY_MULTIPLIERS: Array[float] = [1.0, 1.25, 1.5]
+const QUALITY_MARKERS: Array[String] = ["I", "II", "III"]
+const QUALITY_COLORS: Array[Color] = [
+	Color(0.78, 0.70, 0.56, 1.0),
+	Color(0.42, 0.78, 0.52, 1.0),
+	Color(1.0, 0.78, 0.24, 1.0),
+]
 
 const ITEMS: Dictionary = {
 	"petal_shard":    { "display_name": "Petal Shard",    "rarity": Rarity.COMMON,   "max_stack": 99, "description": "Common flower petal used for basic crafting.", "icon": "res://assets/aseprite/icons/Petal Shard.png" },
@@ -45,6 +55,47 @@ static func get_description(item_id: String) -> String:
 
 static func get_icon_path(item_id: String) -> String:
 	return ITEMS.get(item_id, {}).get("icon", "")
+
+
+static func is_plant_seed(item_id: String) -> bool:
+	return item_id.ends_with("_seed")
+
+
+static func normalize_quality(quality: int) -> int:
+	return clampi(quality, Quality.COMMON, Quality.MASTERWORK)
+
+
+static func get_quality_name(quality: int) -> String:
+	return QUALITY_NAMES[normalize_quality(quality)]
+
+
+static func get_quality_marker(quality: int) -> String:
+	return QUALITY_MARKERS[normalize_quality(quality)]
+
+
+static func get_quality_multiplier(quality: int) -> float:
+	return QUALITY_MULTIPLIERS[normalize_quality(quality)]
+
+
+static func get_quality_color(quality: int) -> Color:
+	return QUALITY_COLORS[normalize_quality(quality)]
+
+
+static func get_display_name_with_quality(item_id: String, quality: int = 0) -> String:
+	var display_name: String = get_display_name(item_id)
+	if not is_plant_seed(item_id):
+		return display_name
+	return "%s (%s)" % [display_name, get_quality_name(quality)]
+
+
+static func get_quality_description(item_id: String, quality: int = 0) -> String:
+	if not is_plant_seed(item_id):
+		return ""
+	var tier: int = normalize_quality(quality)
+	return "Tier: %s | Effect power: %.0f%%" % [
+		get_quality_name(tier),
+		get_quality_multiplier(tier) * 100.0,
+	]
 
 
 static func get_rarity_color(item_id: String) -> Color:

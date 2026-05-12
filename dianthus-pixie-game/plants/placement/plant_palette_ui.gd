@@ -77,55 +77,70 @@ func refresh() -> void:
 		child.queue_free()
 
 	for seed_id: String in _manager.SEED_TO_SCENE.keys():
-		var count: int = InventoryManager.get_total_count(seed_id)
-		if count <= 0:
-			continue
-
-		var slot: PanelContainer = PanelContainer.new()
-		slot.custom_minimum_size = Vector2(32, 32)
-
-		if seed_id == _manager.selected_seed_id:
-			var style: StyleBoxFlat = StyleBoxFlat.new()
-			style.border_width_left = 1
-			style.border_width_right = 1
-			style.border_width_top = 1
-			style.border_width_bottom = 1
-			style.border_color = Color(1.0, 0.85, 0.3)
-			slot.add_theme_stylebox_override("panel", style)
-
-		var vbox: VBoxContainer = VBoxContainer.new()
-		vbox.alignment = BoxContainer.ALIGNMENT_CENTER
-		slot.add_child(vbox)
-
-		var seed_color: Color = _manager.SEED_RADIUS_COLORS.get(seed_id, Color(0.5, 0.5, 1.0, 1.0))
-		seed_color.a = 1.0
-
-		var color_rect: ColorRect = ColorRect.new()
-		color_rect.custom_minimum_size = Vector2(16, 16)
-		color_rect.color = seed_color
-		vbox.add_child(color_rect)
-
-		var count_label: Label = Label.new()
-		count_label.text = str(count)
-		count_label.add_theme_font_size_override("font_size", 6)
-		count_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		vbox.add_child(count_label)
-
-		slot.gui_input.connect(_on_slot_clicked.bind(seed_id))
-		_hbox.add_child(slot)
+		for quality: int in range(ItemDatabase.QUALITY_NAMES.size()):
+			var count: int = InventoryManager.get_total_count(seed_id, quality)
+			if count <= 0:
+				continue
+			_add_seed_slot(seed_id, quality, count)
 
 	var slot_count: int = _hbox.get_child_count()
-	var content_width: float = slot_count * (32 + 4) + 8.0
+	var content_width: float = slot_count * (34 + 4) + 8.0
 	_scroll.custom_minimum_size.x = min(content_width, 320.0)
 
 	await get_tree().process_frame
 	_position_panel()
 
 
-func _on_slot_clicked(event: InputEvent, seed_id: String) -> void:
+func _add_seed_slot(seed_id: String, quality: int, count: int) -> void:
+	var slot: PanelContainer = PanelContainer.new()
+	slot.custom_minimum_size = Vector2(34, 34)
+
+	var style: StyleBoxFlat = StyleBoxFlat.new()
+	style.bg_color = Color(0.14, 0.09, 0.055, 0.95)
+	style.border_width_left = 1
+	style.border_width_right = 1
+	style.border_width_top = 1
+	style.border_width_bottom = 1
+	style.border_color = ItemDatabase.get_quality_color(quality)
+	if seed_id == _manager.selected_seed_id and quality == _manager.selected_seed_quality:
+		style.border_width_left = 2
+		style.border_width_right = 2
+		style.border_width_top = 2
+		style.border_width_bottom = 2
+		style.border_color = Color(1.0, 0.85, 0.3)
+	slot.add_theme_stylebox_override("panel", style)
+
+	var vbox: VBoxContainer = VBoxContainer.new()
+	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	slot.add_child(vbox)
+
+	var seed_color: Color = _manager.SEED_RADIUS_COLORS.get(seed_id, Color(0.5, 0.5, 1.0, 1.0))
+	seed_color.a = 1.0
+
+	var color_rect: ColorRect = ColorRect.new()
+	color_rect.custom_minimum_size = Vector2(16, 12)
+	color_rect.color = seed_color
+	vbox.add_child(color_rect)
+
+	var quality_label: Label = Label.new()
+	quality_label.text = "%s x%d" % [ItemDatabase.get_quality_marker(quality), count]
+	quality_label.add_theme_font_size_override("font_size", 6)
+	quality_label.add_theme_color_override("font_color", ItemDatabase.get_quality_color(quality))
+	quality_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vbox.add_child(quality_label)
+
+	slot.tooltip_text = "%s\n%s" % [
+		ItemDatabase.get_display_name_with_quality(seed_id, quality),
+		ItemDatabase.get_quality_description(seed_id, quality),
+	]
+	slot.gui_input.connect(_on_slot_clicked.bind(seed_id, quality))
+	_hbox.add_child(slot)
+
+
+func _on_slot_clicked(event: InputEvent, seed_id: String, quality: int) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		if is_instance_valid(_manager):
-			_manager.select_seed(seed_id)
+			_manager.select_seed(seed_id, quality)
 			refresh()
 
 

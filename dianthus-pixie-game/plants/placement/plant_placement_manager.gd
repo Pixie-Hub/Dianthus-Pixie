@@ -62,6 +62,7 @@ const LABEL_FIRST_PLANT: String = "first_plant_monologue"
 
 var is_placement_mode: bool = false
 var selected_seed_id: String = ""
+var selected_seed_quality: int = 0
 var _ghost_grid_pos: Vector2i = Vector2i.ZERO
 var _garden_origin: Vector2 = Vector2.ZERO
 var _garden_size: Vector2i = DEFAULT_GARDEN_SIZE
@@ -107,18 +108,26 @@ func toggle_placement_mode() -> void:
 func exit_placement_mode() -> void:
 	is_placement_mode = false
 	selected_seed_id = ""
+	selected_seed_quality = 0
 	if is_instance_valid(_palette_ui):
 		_palette_ui.hide_palette()
 	placement_mode_changed.emit(false)
 	queue_redraw()
 
 
-func select_seed(seed_id: String) -> void:
+func select_seed(seed_id: String, quality: int = -1) -> void:
 	if not SEED_TO_SCENE.has(seed_id):
 		return
-	if not InventoryManager.has_item(seed_id):
+	var resolved_quality: int = quality
+	if resolved_quality < 0:
+		resolved_quality = InventoryManager.get_best_quality_slot(seed_id)
+	if resolved_quality < 0:
+		resolved_quality = 0
+	resolved_quality = ItemDatabase.normalize_quality(resolved_quality)
+	if not InventoryManager.has_item(seed_id, 1, resolved_quality):
 		return
 	selected_seed_id = seed_id
+	selected_seed_quality = resolved_quality
 	queue_redraw()
 
 
@@ -152,7 +161,7 @@ func _can_place() -> bool:
 		_is_within_garden(_ghost_grid_pos) and
 		not _is_tile_occupied(_ghost_grid_pos) and
 		_get_active_plant_count() < get_plant_cap() and
-		InventoryManager.has_item(selected_seed_id)
+		InventoryManager.has_item(selected_seed_id, 1, selected_seed_quality)
 	)
 
 
@@ -169,30 +178,29 @@ func _place_plant() -> void:
 	(_ys if _ys != null else get_tree().current_scene).add_child(plant)
 	_occupied_tiles[_ghost_grid_pos] = plant
 	plant.plant_destroyed.connect(_on_plant_destroyed)
-	# Prefer highest-quality slot: Masterwork (2) → Superior (1) → Biasa (0)
-	var best_quality: int = InventoryManager.get_best_quality_slot(selected_seed_id)
-	if best_quality < 0:
-		best_quality = 0
+	# Use the exact quality selected from the plant palette.
+	var seed_quality: int = selected_seed_quality
 	
 	# Intercept for Shift+M debug
 	if is_instance_valid(GameManager.player) and GameManager.player.get("_force_next_quality") != null:
 		var forced: int = GameManager.player.get("_force_next_quality") as int
 		if forced >= 0:
-			best_quality = forced
+			seed_quality = ItemDatabase.normalize_quality(forced)
 			GameManager.player.set("_force_next_quality", -1) # Consume the override
 	
-	InventoryManager.remove_item(selected_seed_id, 1, best_quality)
+	InventoryManager.remove_item(selected_seed_id, 1, seed_quality)
 	if plant.has_method("set_quality"):
-		plant.set_quality(best_quality)
+		plant.set_quality(seed_quality)
 	var placed_plant_id: String = selected_seed_id.trim_suffix("_seed")
 	CodexManager.discover_plant(placed_plant_id)
 	SfxManager.play("plant_placed")
 	plant_placed.emit(selected_seed_id, _ghost_grid_pos)
 	_try_play_first_plant_monologue()
 	print("[PlantPlacement] Placed %s (quality=%d) at grid %s (world %s)" % [
-		selected_seed_id, best_quality, _ghost_grid_pos, plant.global_position])
-	if not InventoryManager.has_item(selected_seed_id):
+		selected_seed_id, seed_quality, _ghost_grid_pos, plant.global_position])
+	if not InventoryManager.has_item(selected_seed_id, 1, selected_seed_quality):
 		selected_seed_id = ""
+		selected_seed_quality = 0
 	if is_instance_valid(_palette_ui):
 		_palette_ui.refresh()
 	queue_redraw()
@@ -279,6 +287,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			if selected_seed_id != "":
 				selected_seed_id = ""
+				selected_seed_quality = 0
 				queue_redraw()
 			else:
 				exit_placement_mode()
@@ -287,6 +296,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("ui_cancel"):
 		if selected_seed_id != "":
 			selected_seed_id = ""
+			selected_seed_quality = 0
 			queue_redraw()
 		else:
 			exit_placement_mode()
