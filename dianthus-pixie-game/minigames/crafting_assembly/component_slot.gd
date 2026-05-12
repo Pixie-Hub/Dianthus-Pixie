@@ -13,7 +13,10 @@ const BORDER_WRONG: Color = Color(0.90, 0.18, 0.16, 1.0)
 const BORDER_DISABLED: Color = Color(0.35, 0.30, 0.25, 1.0)
 
 @onready var _swatch: ColorRect = %Swatch
+@onready var _icon: TextureRect = %Icon
 @onready var _label: Label = %Label
+
+const FALLBACK_ICON_COLOR: Color = Color(0.45, 0.38, 0.28, 1.0)
 
 var material_id: String = ""
 var role: int = ROLE_COMPONENT
@@ -32,8 +35,9 @@ func configure(slot_role: int, item_id: String, component_label: String, compone
 	_component_color = component_color
 	_ensure_refs()
 	_label.text = component_label
-	_swatch.color = component_color
-	_swatch.visible = role == ROLE_COMPONENT
+	_swatch.color = Color(component_color.r, component_color.g, component_color.b, 0.30)
+	_load_icon(item_id, decoy)
+	_apply_slot_visibility()
 	filled = false
 	locked = false
 	_wrong_flash = false
@@ -44,14 +48,14 @@ func configure(slot_role: int, item_id: String, component_label: String, compone
 func mark_filled() -> void:
 	filled = true
 	locked = true
-	_swatch.visible = true
+	_apply_slot_visibility()
 	_refresh_visual()
 
 
 func mark_removed() -> void:
 	filled = false
 	locked = true
-	_swatch.visible = false
+	_apply_slot_visibility()
 	_refresh_visual()
 
 
@@ -72,8 +76,43 @@ func flash_wrong() -> void:
 func _ensure_refs() -> void:
 	if _swatch == null:
 		_swatch = get_node("MarginContainer/VBoxContainer/Swatch") as ColorRect
+	if _icon == null:
+		_icon = get_node("MarginContainer/VBoxContainer/Icon") as TextureRect
 	if _label == null:
 		_label = get_node("MarginContainer/VBoxContainer/Label") as Label
+
+
+func _load_icon(item_id: String, decoy: bool) -> void:
+	if _icon == null:
+		return
+	if decoy or item_id.is_empty() or item_id == "__decoy__":
+		_icon.texture = null
+		_icon.modulate = Color.WHITE
+		return
+	var icon_path: String = ItemDatabase.get_icon_path(item_id)
+	if icon_path.is_empty():
+		push_warning("[ComponentSlot] No icon path for item '%s' — showing fallback." % item_id)
+		_icon.texture = null
+		_icon.modulate = FALLBACK_ICON_COLOR
+		return
+	var tex: Texture2D = load(icon_path) as Texture2D
+	if tex == null:
+		push_warning("[ComponentSlot] Failed to load icon texture '%s' for item '%s'." % [icon_path, item_id])
+		_icon.texture = null
+		_icon.modulate = FALLBACK_ICON_COLOR
+		return
+	_icon.texture = tex
+	_icon.modulate = Color.WHITE
+
+
+func _apply_slot_visibility() -> void:
+	_ensure_refs()
+	if role == ROLE_COMPONENT:
+		_icon.visible = not locked or not filled
+		_swatch.visible = false
+	else:
+		_swatch.visible = true
+		_icon.visible = filled
 
 
 func _refresh_visual() -> void:

@@ -130,7 +130,7 @@ func _setup_puzzle(recipe_id: String) -> void:
 		target_slot.configure(
 			CraftingAssemblyComponentSlot.ROLE_TARGET,
 			item_id,
-			_abbreviate_item(item_id),
+			_short_name(item_id),
 			_color_for_item(item_id)
 		)
 		target_slot.gui_input.connect(_on_slot_gui_input.bind(target_slot))
@@ -151,7 +151,7 @@ func _setup_puzzle(recipe_id: String) -> void:
 func _add_component_slot(item_id: String, is_decoy: bool) -> void:
 	var slot: CraftingAssemblyComponentSlot = SLOT_SCENE.instantiate() as CraftingAssemblyComponentSlot
 	_component_row.add_child(slot)
-	var label: String = "??" if is_decoy else _abbreviate_item(item_id)
+	var label: String = "??" if is_decoy else _short_name(item_id)
 	var color: Color = Color(0.90, 0.16, 0.18, 1.0) if is_decoy else _color_for_item(item_id)
 	slot.configure(CraftingAssemblyComponentSlot.ROLE_COMPONENT, item_id, label, color, is_decoy)
 	slot.gui_input.connect(_on_slot_gui_input.bind(slot))
@@ -315,13 +315,23 @@ func _color_for_item(item_id: String) -> Color:
 	return COMPONENT_COLORS[idx]
 
 
-func _abbreviate_item(item_id: String) -> String:
-	var parts: PackedStringArray = item_id.split("_")
-	var letters: PackedStringArray = PackedStringArray()
-	for part: String in parts:
-		if not part.is_empty():
-			letters.append(part.substr(0, 1).to_upper())
-	return "".join(letters).substr(0, 3)
+func _short_name(item_id: String) -> String:
+	var display: String = ItemDatabase.get_display_name(item_id)
+	if display.is_empty() or display == item_id:
+		var parts: PackedStringArray = item_id.split("_")
+		var letters: PackedStringArray = PackedStringArray()
+		for part: String in parts:
+			if not part.is_empty():
+				letters.append(part.substr(0, 1).to_upper())
+		return "".join(letters).substr(0, 3)
+	var words: PackedStringArray = display.split(" ")
+	if words.size() == 1:
+		return display.substr(0, 6)
+	var abbrev: PackedStringArray = PackedStringArray()
+	for word: String in words:
+		if not word.is_empty():
+			abbrev.append(word.substr(0, 1))
+	return "".join(abbrev).substr(0, 4)
 
 
 func _exit_tree() -> void:
