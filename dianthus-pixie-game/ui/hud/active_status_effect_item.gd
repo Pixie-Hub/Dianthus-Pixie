@@ -28,8 +28,16 @@ const CATEGORY_STYLES: Dictionary = {
 @onready var _icon_label: Label = %IconLabel
 @onready var _stack_label: Label = %StackLabel
 @onready var _duration_label: Label = %DurationLabel
+@onready var _tooltip_panel: PanelContainer = %TooltipPanel
+@onready var _tooltip_label: Label = %TooltipLabel
 
 var _effect: Dictionary = {}
+
+
+func _ready() -> void:
+	mouse_entered.connect(_on_mouse_entered)
+	mouse_exited.connect(_on_mouse_exited)
+	_tooltip_panel.visible = false
 
 
 func configure(effect: Dictionary) -> void:
@@ -57,7 +65,7 @@ func _refresh() -> void:
 	_accent_bar.color = accent
 	_icon_label.text = str(style.get("symbol", "FX"))
 	_icon_label.add_theme_color_override("font_color", accent)
-	tooltip_text = _build_tooltip_text()
+	_tooltip_label.text = _build_tooltip_text()
 	var stack_count: int = int(_effect.get("stack_count", 1))
 	_stack_label.visible = stack_count > 1
 	_stack_label.text = str(stack_count)
@@ -77,6 +85,14 @@ func _refresh() -> void:
 	var panel_style: StyleBoxFlat = get_theme_stylebox("panel").duplicate() as StyleBoxFlat
 	panel_style.border_color = accent
 	add_theme_stylebox_override("panel", panel_style)
+
+
+func _on_mouse_entered() -> void:
+	_tooltip_panel.visible = true
+
+
+func _on_mouse_exited() -> void:
+	_tooltip_panel.visible = false
 
 
 func _build_detail_text() -> String:
