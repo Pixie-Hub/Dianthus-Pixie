@@ -6,6 +6,14 @@ signal core_damaged(amount: int)
 
 const MAX_HP: int = 500
 const DAYTIME_REGEN_RATE: float = 5.0 / 60.0
+const CORE_ANIMATION_FRAME_COUNT: int = 16
+const IDLE_FRAME_START: int = 0
+const IDLE_FRAME_COUNT: int = 4
+const IDLE_FRAME_DURATION: float = 0.18
+const DAMAGE_FRAME_START: int = 4
+const DAMAGE_FRAME_COUNT: int = 4
+const DAMAGE_FRAME_DURATION: float = 0.08
+const DESTRUCTION_FRAME_START: int = 8
 const DEATH_FRAME_COUNT: int = 8
 const DEATH_FRAME_DURATION: float = 0.08
 
@@ -15,6 +23,7 @@ const POLLEN_ITEM_ID: StringName = &"dianthus_pollen"
 
 var current_hp: int = MAX_HP
 
+@export var core_animation_texture: Texture2D
 @export var death_texture: Texture2D
 
 @onready var _aura_light: PointLight2D = %AuraLight
@@ -27,6 +36,9 @@ var _base_aura_energy: float = 1.5
 var _regen_accumulator: float = 0.0
 var _base_sprite_scale: Vector2
 var _breathe_tween: Tween = null
+var _idle_frame_tween: Tween = null
+var _damage_frame_tween: Tween = null
+var _idle_glow_tween: Tween = null
 var _tutorial_glow_tween: Tween = null
 var _tutorial_glow_active: bool = false
 var _death_tween: Tween = null
@@ -44,11 +56,14 @@ var _bloom_tween: Tween = null
 func _ready() -> void:
 	_base_aura_energy = _aura_light.energy
 	_base_sprite_scale = _sprite.scale
+	_prepare_animation_texture()
 	$DamageArea.body_entered.connect(_on_enemy_entered)
 	DayNightCycle.phase_changed.connect(_on_phase_changed)
 	UnlockFlags.flag_set.connect(_on_flag_set)
 	call_deferred("_emit_initial_hp")
 	call_deferred("_start_breathe_animation")
+	call_deferred("_start_idle_frame_animation")
+	call_deferred("_start_idle_glow_animation")
 	call_deferred("_init_sacred_bloom")
 
 
@@ -84,9 +99,7 @@ func take_damage(amount: int) -> void:
 	_update_aura()
 	if was_above_low and current_hp <= MAX_HP * 0.25 and current_hp > 0:
 		SfxManager.play("core_low_hp")
-	var tween: Tween = create_tween()
-	tween.tween_property(_sprite, "modulate", Color(1, 0.3, 0.3), 0.1)
-	tween.tween_property(_sprite, "modulate", Color(1.0, 0.8, 0.9), 0.2)
+	_play_damage_animation()
 
 
 func heal(amount: int, play_sfx: bool = true) -> void:
@@ -100,10 +113,19 @@ func heal(amount: int, play_sfx: bool = true) -> void:
 
 
 func _update_aura() -> void:
-	var ratio: float = float(current_hp) / float(MAX_HP)
+	if is_instance_valid(_idle_glow_tween):
+		_idle_glow_tween.kill()
+		_idle_glow_tween = null
+	if is_instance_valid(_bloom_tween):
+		_bloom_tween.kill()
+		_bloom_tween = null
 	var tween: Tween = create_tween()
-	tween.tween_property(_aura_light, "energy", _base_aura_energy * ratio, 0.5)
-	tween.parallel().tween_property(_sprite, "modulate:a", lerp(0.5, 1.0, ratio), 0.5)
+	tween.tween_property(_aura_light, "energy", _get_hp_aura_energy(), 0.5)
+	tween.parallel().tween_property(_sprite, "modulate:a", lerp(0.5, 1.0, get_hp_ratio()), 0.5)
+	if not _sacred_bloom_active:
+		tween.tween_callback(_start_idle_glow_animation)
+	else:
+		tween.tween_callback(_start_sacred_bloom_tween)
 
 
 func _destroy_core() -> void:
@@ -126,6 +148,12 @@ func _destroy_core() -> void:
 func _stop_core_animation_tweens() -> void:
 	if is_instance_valid(_breathe_tween):
 		_breathe_tween.kill()
+	if is_instance_valid(_idle_frame_tween):
+		_idle_frame_tween.kill()
+	if is_instance_valid(_damage_frame_tween):
+		_damage_frame_tween.kill()
+	if is_instance_valid(_idle_glow_tween):
+		_idle_glow_tween.kill()
 	if is_instance_valid(_tutorial_glow_tween):
 		_tutorial_glow_tween.kill()
 	if is_instance_valid(_death_tween):
@@ -137,20 +165,29 @@ func _play_death_animation() -> void:
 	_sprite.scale = _base_sprite_scale
 	_sprite.self_modulate = Color.WHITE
 	_sprite.modulate = Color.WHITE
-	if death_texture == null:
+	if core_animation_texture != null:
+		_sprite.texture = core_animation_texture
+		_sprite.hframes = CORE_ANIMATION_FRAME_COUNT
+		_sprite.vframes = 1
+		_sprite.frame = DESTRUCTION_FRAME_START
+	elif death_texture != null:
+		_sprite.texture = death_texture
+		_sprite.hframes = DEATH_FRAME_COUNT
+		_sprite.vframes = 1
+		_sprite.frame = 0
+	else:
 		return
-	_sprite.texture = death_texture
-	_sprite.hframes = DEATH_FRAME_COUNT
-	_sprite.vframes = 1
-	_sprite.frame = 0
 	_death_tween = create_tween()
 	_death_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	for frame_index: int in range(DEATH_FRAME_COUNT):
-		_death_tween.tween_callback(_set_death_frame.bind(frame_index))
+		var sprite_frame: int = frame_index
+		if core_animation_texture != null:
+			sprite_frame += DESTRUCTION_FRAME_START
+		_death_tween.tween_callback(_set_core_frame.bind(sprite_frame))
 		_death_tween.tween_interval(DEATH_FRAME_DURATION)
 
 
-func _set_death_frame(frame_index: int) -> void:
+func _set_core_frame(frame_index: int) -> void:
 	_sprite.frame = frame_index
 
 
@@ -159,7 +196,7 @@ func _on_enemy_entered(body: Node2D) -> void:
 
 
 func get_hp_ratio() -> float:
-	return float(current_hp) / float(MAX_HP)
+	return clampf(float(current_hp) / float(MAX_HP), 0.0, 1.0)
 
 
 func _init_sacred_bloom() -> void:
@@ -178,14 +215,24 @@ func _activate_sacred_bloom() -> void:
 	_sacred_bloom_active = true
 	_harvest_area.set_deferred("monitoring", true)
 	_pollen_particles.emitting = true
+	_start_sacred_bloom_tween()
+	_refresh_prompt()
+
+
+func _start_sacred_bloom_tween() -> void:
+	if not _sacred_bloom_active or _is_destroyed:
+		return
+	if is_instance_valid(_idle_glow_tween):
+		_idle_glow_tween.kill()
+		_idle_glow_tween = null
 	if is_instance_valid(_bloom_tween):
 		_bloom_tween.kill()
 	_bloom_tween = create_tween().set_loops()
-	_bloom_tween.tween_property(_aura_light, "energy", _base_aura_energy * 1.5, 1.2) \
+	var hp_energy: float = _get_hp_aura_energy()
+	_bloom_tween.tween_property(_aura_light, "energy", hp_energy * 1.5, 1.2) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	_bloom_tween.tween_property(_aura_light, "energy", _base_aura_energy * 0.9, 1.2) \
+	_bloom_tween.tween_property(_aura_light, "energy", hp_energy * 0.9, 1.2) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	_refresh_prompt()
 
 
 func _can_harvest() -> bool:
@@ -291,6 +338,73 @@ func _start_breathe_animation() -> void:
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	_breathe_tween.tween_property(_sprite, "scale", _base_sprite_scale, 1.8) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+
+func _prepare_animation_texture() -> void:
+	if core_animation_texture == null:
+		return
+	_sprite.texture = core_animation_texture
+	_sprite.hframes = CORE_ANIMATION_FRAME_COUNT
+	_sprite.vframes = 1
+	_sprite.frame = IDLE_FRAME_START
+
+
+func _start_idle_frame_animation() -> void:
+	if _is_destroyed or core_animation_texture == null:
+		return
+	if is_instance_valid(_damage_frame_tween):
+		return
+	if is_instance_valid(_idle_frame_tween):
+		_idle_frame_tween.kill()
+	_idle_frame_tween = create_tween().set_loops()
+	for frame_offset: int in range(IDLE_FRAME_COUNT):
+		_idle_frame_tween.tween_callback(_set_core_frame.bind(IDLE_FRAME_START + frame_offset))
+		_idle_frame_tween.tween_interval(IDLE_FRAME_DURATION)
+
+
+func _start_idle_glow_animation() -> void:
+	if _is_destroyed or _sacred_bloom_active or _tutorial_glow_active:
+		return
+	if is_instance_valid(_idle_glow_tween):
+		_idle_glow_tween.kill()
+	var hp_energy: float = _get_hp_aura_energy()
+	_idle_glow_tween = create_tween().set_loops()
+	_idle_glow_tween.tween_property(_aura_light, "energy", hp_energy * 1.15, 1.1) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_idle_glow_tween.tween_property(_aura_light, "energy", hp_energy * 0.82, 1.1) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+
+func _play_damage_animation() -> void:
+	if is_instance_valid(_damage_frame_tween):
+		_damage_frame_tween.kill()
+	if core_animation_texture == null:
+		var tween: Tween = create_tween()
+		tween.tween_property(_sprite, "modulate", Color(1, 0.3, 0.3), 0.1)
+		tween.tween_property(_sprite, "modulate", Color(1.0, 0.8, 0.9), 0.2)
+		return
+	if is_instance_valid(_idle_frame_tween):
+		_idle_frame_tween.kill()
+		_idle_frame_tween = null
+	_sprite.texture = core_animation_texture
+	_sprite.hframes = CORE_ANIMATION_FRAME_COUNT
+	_sprite.vframes = 1
+	_damage_frame_tween = create_tween()
+	for frame_offset: int in range(DAMAGE_FRAME_COUNT):
+		_damage_frame_tween.tween_callback(_set_core_frame.bind(DAMAGE_FRAME_START + frame_offset))
+		_damage_frame_tween.tween_interval(DAMAGE_FRAME_DURATION)
+	_damage_frame_tween.tween_callback(_finish_damage_animation)
+
+
+func _finish_damage_animation() -> void:
+	_damage_frame_tween = null
+	_start_idle_frame_animation()
+
+
+func _get_hp_aura_energy() -> float:
+	if current_hp <= 0:
+		return 0.0
+	return _base_aura_energy * lerpf(0.25, 1.0, get_hp_ratio())
 
 
 func _on_phase_changed(phase: String) -> void:
