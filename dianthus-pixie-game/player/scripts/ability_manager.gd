@@ -90,6 +90,8 @@ func _ability_dash(player: CharacterBody2D) -> void:
 		dir = Vector2.DOWN
 	SfxManager.play_at("ability_dash", player.global_position)
 	player.set("is_invincible", true)
+	if player.has_method("play_dash_animation"):
+		player.play_dash_animation()
 	var tween: Tween = player.create_tween()
 	tween.set_ease(Tween.EASE_OUT)
 	tween.tween_property(player, "position", player.position + dir * DASH_DISTANCE, DASH_DURATION)

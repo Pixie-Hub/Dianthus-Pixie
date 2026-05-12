@@ -179,7 +179,7 @@ func _travel(state: String, force: bool = false) -> void:
 	if current == target_state:
 		return
 	if not force:
-		if current == &"hurt" or current == &"death" or current == &"attack" or current == &"thornsword_attack" or current == &"blazeblade_attack" or current == &"vine_whip_attack" or current == &"crystal_lash_attack" or current == &"spore_bomb_attack" or current == &"void_grenade_attack" or current == &"petal_shield_block" or current == &"petal_shield_counter" or current == &"iron_bloom_shield_block" or current == &"iron_bloom_shield_counter":
+		if current == &"hurt" or current == &"death" or current == &"attack" or current == &"thornsword_attack" or current == &"blazeblade_attack" or current == &"vine_whip_attack" or current == &"crystal_lash_attack" or current == &"spore_bomb_attack" or current == &"void_grenade_attack" or current == &"petal_shield_block" or current == &"petal_shield_counter" or current == &"iron_bloom_shield_block" or current == &"iron_bloom_shield_counter" or current == &"dash":
 			return
 	_state_machine.travel(target_state)
 
@@ -269,6 +269,8 @@ func _update_blend_position() -> void:
 		_anim_tree["parameters/iron_bloom_shield_block/blend_position"] = blend
 	if root.has_node(&"iron_bloom_shield_counter"):
 		_anim_tree["parameters/iron_bloom_shield_counter/blend_position"] = blend
+	if root.has_node(&"dash"):
+		_anim_tree["parameters/dash/blend_position"] = blend
 
 func set_camera_limits(left: int, top: int, right: int, bottom: int) -> void:
 	_camera.limit_left = left
@@ -697,6 +699,7 @@ func take_damage(amount: int) -> void:
 	current_hp = max(current_hp - reduced, 0)
 	hp_changed.emit(current_hp, MAX_HP)
 	SfxManager.play("player_take_damage")
+	_state_machine.travel(&"hurt")
 	var tween: Tween = create_tween()
 	tween.tween_property(_sprite, "modulate", Color(1, 0.3, 0.3), 0.05)
 	tween.tween_property(_sprite, "modulate", Color.WHITE, 0.15)
@@ -753,9 +756,10 @@ func _respawn() -> void:
 func _start_invincibility() -> void:
 	is_invincible = true
 	SfxManager.play("player_invincibility")
+	var _inv_tint: Color = Color(0.7, 1.0, 0.75)
 	_blink_tween = create_tween().set_loops()
-	_blink_tween.tween_property(_sprite, "modulate:a", 0.4, 0.15)
-	_blink_tween.tween_property(_sprite, "modulate:a", 1.0, 0.15)
+	_blink_tween.tween_property(_sprite, "modulate", _inv_tint * Color(1, 1, 1, 0.4), 0.15)
+	_blink_tween.tween_property(_sprite, "modulate", _inv_tint, 0.15)
 	await get_tree().create_timer(INVINCIBILITY_DURATION).timeout
 	is_invincible = false
 	if is_instance_valid(_blink_tween):
@@ -782,7 +786,8 @@ func _attack_melee_sword() -> void:
 	is_attacking = true
 	velocity = Vector2.ZERO
 	_hit_bodies.clear()
-	_travel("attack", true)
+	var atk_state: String = "blazeblade_attack" if _current_weapon.weapon_id == "blazeblade" else "thornsword_attack"
+	_travel(atk_state, true)
 	_update_blend_position()
 	var hitbox_offset: Vector2
 	if last_direction == Vector2.DOWN:
@@ -817,7 +822,8 @@ func _attack_vine_whip() -> void:
 	is_attacking = true
 	velocity = Vector2.ZERO
 	_hit_bodies.clear()
-	_travel("attack", true)
+	var atk_state: String = "crystal_lash_attack" if _current_weapon.weapon_id == "crystal_lash" else "vine_whip_attack"
+	_travel(atk_state, true)
 	_update_blend_position()
 	var hitbox_offset: Vector2
 	if last_direction == Vector2.DOWN:
@@ -956,6 +962,12 @@ func _end_attack() -> void:
 	var hitbox_shape: CollisionShape2D = _sword_hitbox.get_child(0)
 	hitbox_shape.disabled = true
 	_travel("idle", true)
+
+
+func play_dash_animation() -> void:
+	_state_machine.travel(&"dash")
+	_update_blend_position()
+
 
 func _on_weapon_crafted(weapon_id: String, _quality_tier: int = 0) -> void:
 	if DayNightCycle.is_night():

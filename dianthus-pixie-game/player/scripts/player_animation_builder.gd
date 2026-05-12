@@ -283,6 +283,15 @@ const ANIM_DEFS: Array[Dictionary] = [
 		"duration": 0.3,
 		"frame_size": WEAPON_FRAME_SIZE,
 	},
+	{
+		"prefix": "dash",
+		"sheet": "res://player/sprites/PNG/Unarmed_Walk/player_walk_full.png",
+		"columns": 6,
+		"frames": [3, 3, 3, 3],
+		"loop": false,
+		"duration": 0.12,
+		"frame_size": UNARMED_FRAME_SIZE,
+	},
 ]
 
 const BLEND_POSITIONS: Dictionary = {
@@ -366,7 +375,6 @@ static func build_tree(anim_tree: AnimationTree) -> void:
 		"petal_shield_idle", "petal_shield_walk",
 		"iron_bloom_shield_idle", "iron_bloom_shield_walk",
 	]
-
 	for def: Dictionary in ANIM_DEFS:
 		var bs: AnimationNodeBlendSpace2D = AnimationNodeBlendSpace2D.new()
 		bs.blend_mode = AnimationNodeBlendSpace2D.BLEND_MODE_DISCRETE
@@ -398,6 +406,13 @@ static func build_tree(anim_tree: AnimationTree) -> void:
 	sm.add_transition("hurt", "death", AnimationNodeStateMachineTransition.new())
 
 	sm.add_transition("death", "idle", AnimationNodeStateMachineTransition.new())
+
+	for src: String in movement_states:
+		sm.add_transition(src, "dash", AnimationNodeStateMachineTransition.new())
+	var dash_to_idle: AnimationNodeStateMachineTransition = AnimationNodeStateMachineTransition.new()
+	dash_to_idle.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
+	dash_to_idle.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
+	sm.add_transition("dash", "idle", dash_to_idle)
 
 	for src: String in movement_states:
 		sm.add_transition(src, "thornsword_attack", AnimationNodeStateMachineTransition.new())
