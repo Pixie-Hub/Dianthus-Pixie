@@ -26,8 +26,8 @@ const CATEGORY_STYLES: Dictionary = {
 @onready var _accent_bar: ColorRect = %AccentBar
 @onready var _icon_texture: TextureRect = %IconTexture
 @onready var _icon_label: Label = %IconLabel
-@onready var _name_label: Label = %EffectNameLabel
-@onready var _detail_label: Label = %EffectDetailLabel
+@onready var _stack_label: Label = %StackLabel
+@onready var _duration_label: Label = %DurationLabel
 
 var _effect: Dictionary = {}
 
@@ -57,9 +57,12 @@ func _refresh() -> void:
 	_accent_bar.color = accent
 	_icon_label.text = str(style.get("symbol", "FX"))
 	_icon_label.add_theme_color_override("font_color", accent)
-	_name_label.text = str(_effect.get("display_name", "Status"))
-	_detail_label.text = _build_detail_text()
 	tooltip_text = _build_tooltip_text()
+	var stack_count: int = int(_effect.get("stack_count", 1))
+	_stack_label.visible = stack_count > 1
+	_stack_label.text = str(stack_count)
+	_duration_label.visible = remaining >= 0.0
+	_duration_label.text = "%d" % int(ceil(remaining)) if remaining >= 0.0 else ""
 
 	var icon_path: String = str(_effect.get("icon", ""))
 	if not icon_path.is_empty():
@@ -78,23 +81,27 @@ func _refresh() -> void:
 
 func _build_detail_text() -> String:
 	var parts: Array[String] = []
-	var description: String = str(_effect.get("description", ""))
-	var strength: String = str(_effect.get("strength_text", ""))
-	if not description.is_empty():
-		parts.append(description)
-	if not strength.is_empty():
-		parts.append(strength)
-	var stack_count: int = int(_effect.get("stack_count", 1))
-	if stack_count > 1:
-		parts.append("x%d" % stack_count)
-	var remaining: float = float(_effect.get("remaining_time", -1.0))
-	if remaining >= 0.0:
-		parts.append("%ds" % int(ceil(remaining)))
+	parts.append(str(_effect.get("description", "")))
+	parts.append(str(_effect.get("strength_text", "")))
 	return " - ".join(parts)
 
 
 func _build_tooltip_text() -> String:
-	var detail: String = _build_detail_text()
-	if detail.is_empty():
-		return str(_effect.get("display_name", "Status"))
-	return "%s\n%s" % [str(_effect.get("display_name", "Status")), detail]
+	var lines: Array[String] = [str(_effect.get("display_name", "Status"))]
+	var description: String = str(_effect.get("description", ""))
+	var strength: String = str(_effect.get("strength_text", ""))
+	if not description.is_empty() or not strength.is_empty():
+		var detail_line: String = "%s %s" % [description, strength]
+		lines.append(detail_line.strip_edges())
+	var category: String = str(_effect.get("category", "utility")).capitalize()
+	if not category.is_empty():
+		lines.append("Category: %s" % category)
+	var stack_count: int = int(_effect.get("stack_count", 1))
+	if stack_count > 1:
+		lines.append("Stacks: %d" % stack_count)
+	var remaining: float = float(_effect.get("remaining_time", -1.0))
+	if remaining >= 0.0:
+		lines.append("%ds remaining" % int(ceil(remaining)))
+	else:
+		lines.append("Duration: Passive")
+	return "\n".join(lines)

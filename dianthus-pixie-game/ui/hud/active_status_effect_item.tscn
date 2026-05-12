@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://ui/hud/active_status_effect_item.gd" id="1_script"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_status_panel"]
-bg_color = Color(0.18, 0.12, 0.07, 0.92)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_status_icon"]
+bg_color = Color(0.18, 0.12, 0.07, 0.9)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
@@ -17,50 +17,32 @@ shadow_color = Color(0, 0, 0, 0.35)
 shadow_size = 2
 
 [node name="ActiveStatusEffectItem" type="PanelContainer"]
-custom_minimum_size = Vector2(162, 28)
-offset_right = 162.0
-offset_bottom = 28.0
-mouse_filter = 1
-theme_override_styles/panel = SubResource("StyleBoxFlat_status_panel")
+custom_minimum_size = Vector2(24, 24)
+offset_right = 24.0
+offset_bottom = 24.0
+mouse_filter = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_status_icon")
 script = ExtResource("1_script")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="AccentBar" type="ColorRect" parent="HBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(3, 0)
-layout_mode = 2
-color = Color(1, 0.8, 0.25, 1)
-
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/margin_top = 3
-theme_override_constants/margin_right = 5
-theme_override_constants/margin_bottom = 3
-
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="IconPanel" type="Control" parent="HBoxContainer/MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(20, 18)
+[node name="IconPanel" type="Control" parent="."]
 layout_mode = 2
 
-[node name="IconTexture" type="TextureRect" parent="HBoxContainer/MarginContainer/HBoxContainer/IconPanel"]
+[node name="IconTexture" type="TextureRect" parent="IconPanel"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = -3.0
+offset_bottom = -3.0
 grow_horizontal = 2
 grow_vertical = 2
 stretch_mode = 5
 
-[node name="IconLabel" type="Label" parent="HBoxContainer/MarginContainer/HBoxContainer/IconPanel"]
+[node name="IconLabel" type="Label" parent="IconPanel"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -74,23 +56,54 @@ text = "FX"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TextVBox" type="VBoxContainer" parent="HBoxContainer/MarginContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 0
-
-[node name="EffectNameLabel" type="Label" parent="HBoxContainer/MarginContainer/HBoxContainer/TextVBox"]
+[node name="AccentBar" type="ColorRect" parent="IconPanel"]
 unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(1, 0.8, 0.25, 1)
+
+[node name="StackLabel" type="Label" parent="IconPanel"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -10.0
+offset_top = -10.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 0.95, 0.72, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
 theme_override_font_sizes/font_size = 7
-text = "Status"
-text_overrun_behavior = 3
+text = "2"
+horizontal_alignment = 2
+vertical_alignment = 2
 
-[node name="EffectDetailLabel" type="Label" parent="HBoxContainer/MarginContainer/HBoxContainer/TextVBox"]
+[node name="DurationLabel" type="Label" parent="IconPanel"]
 unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.72, 0.78, 0.62, 1)
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -14.0
+offset_bottom = 8.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(1, 0.8, 0.25, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
 theme_override_font_sizes/font_size = 6
-text = "Effect"
-text_overrun_behavior = 3
+text = "9"
+horizontal_alignment = 2

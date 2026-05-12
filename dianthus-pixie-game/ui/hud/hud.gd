@@ -35,8 +35,8 @@ const STATUS_EFFECT_ITEM_SCENE: PackedScene = preload("res://ui/hud/active_statu
 @onready var _forecast_threats_label: Label = %ForecastThreatsLabel
 @onready var _forecast_count_label: Label = %ForecastCountLabel
 @onready var _notification_container: VBoxContainer = %NotificationContainer
-@onready var _status_effects_panel: PanelContainer = %ActiveStatusEffectsPanel
-@onready var _status_effects_container: VBoxContainer = %ActiveStatusEffectsContainer
+@onready var _status_effects_panel: Control = %ActiveStatusEffectsBar
+@onready var _status_effects_container: HBoxContainer = %ActiveStatusEffectsContainer
 
 const HOTBAR_SELECTED_COLOR: Color = Color(0.9, 0.75, 0.2, 1)
 const HOTBAR_NORMAL_COLOR: Color = Color(0.3, 0.3, 0.3, 1)
