@@ -1,5 +1,7 @@
 extends CanvasLayer
 
+const NOTIFICATION_ITEM_SCENE: PackedScene = preload("res://ui/hud/hud_notification_item.tscn")
+
 @onready var _player_bar: ProgressBar = %PlayerHPBar
 @onready var _player_label: Label = %PlayerHPLabel
 @onready var _core_bar: ProgressBar = %CoreHPBar
@@ -31,6 +33,7 @@ extends CanvasLayer
 @onready var _forecast_lanes_label: Label = %ForecastLanesLabel
 @onready var _forecast_threats_label: Label = %ForecastThreatsLabel
 @onready var _forecast_count_label: Label = %ForecastCountLabel
+@onready var _notification_container: VBoxContainer = %NotificationContainer
 
 const HOTBAR_SELECTED_COLOR: Color = Color(0.9, 0.75, 0.2, 1)
 const HOTBAR_NORMAL_COLOR: Color = Color(0.3, 0.3, 0.3, 1)
@@ -42,6 +45,12 @@ const WOOD_PANEL_BORDER_DANGER: Color = Color(0.85, 0.20, 0.15, 1.0)
 const LOW_HP_THRESHOLD: float = 0.25
 
 const RETURN_WARNING_THRESHOLD: float = 30.0
+const MAX_VISIBLE_NOTIFICATIONS: int = 4
+const ITEM_NOTIFICATION_DURATION: float = 2.2
+const CODEX_NOTIFICATION_DURATION: float = 3.6
+const QUEST_UPDATE_DURATION: float = 3.0
+const QUEST_COMPLETE_DURATION: float = 4.2
+const UNLOCK_NOTIFICATION_DURATION: float = 3.4
 const FORECAST_ENEMY_LABELS: Dictionary = {
 	"shadowling": "Shadowling",
 	"voidrunner": "Voidrunner",
@@ -60,6 +69,10 @@ var _return_tween: Tween = null
 var _confirm_visible: bool = false
 var _active_boss: Node = null
 var _forecast_spawner: WaveSpawner = null
+var _notification_queue: Array[Dictionary] = []
+var _visible_notifications: Array[Control] = []
+var _item_notification_totals: Dictionary = {}
+var _last_quest_progress_notifications: Dictionary = {}
 
 
 func _ready() -> void:
@@ -72,7 +85,12 @@ func _ready() -> void:
 	_on_colorblind_changed(GameManager.colorblind_mode)
 	GameManager.game_state_changed.connect(_on_game_state_changed)
 	_refresh_endless_label()
+	InventoryManager.item_added.connect(_on_inventory_item_added_hud)
+	CodexManager.plant_discovered.connect(_on_plant_discovered_hud)
+	CodexManager.enemy_discovered.connect(_on_enemy_discovered_hud)
+	QuestManager.quest_progress_updated.connect(_on_quest_progress_updated_hud)
 	QuestManager.quest_completed.connect(_on_quest_completed_hud)
+	UnlockFlags.flag_set.connect(_on_unlock_flag_set_hud)
 	_skip_day_button.pressed.connect(_on_skip_day_pressed)
 	_skip_day_button.visible = not DayNightCycle.is_night()
 	_skip_confirm_panel.visible = false
@@ -325,6 +343,9 @@ func _on_game_state_changed(_state: String) -> void:
 
 
 func _on_quest_completed_hud(quest_id: StringName) -> void:
+	var quest: QuestData = QuestManager.get_quest_data(quest_id)
+	var title: String = quest.display_name if quest != null else _humanize_id(str(quest_id))
+	show_quest_completed(title)
 	if is_instance_valid(_tracked_quest_panel) \
 			and not _tracked_quest_panel.get("_tutorial_mode") \
 			and _tracked_quest_panel.get_tracked_quest_id() == quest_id:
@@ -408,6 +429,209 @@ func _shake(node: Control) -> void:
 	tween.tween_property(node, "position", original_pos + Vector2(0, 2), 0.03)
 	tween.tween_property(node, "position", original_pos + Vector2(-1, -1), 0.03)
 	tween.tween_property(node, "position", original_pos, 0.03)
+
+
+# -- Public: notification API ------------------------------------------------
+
+func show_notification(
+		title: String,
+		message: String = "",
+		notification_type: String = "unlock",
+		icon: Texture2D = null,
+		duration: float = -1.0,
+		key: String = ""
+) -> void:
+	var resolved_duration: float = duration if duration > 0.0 else _get_notification_duration(notification_type)
+	var entry: Dictionary = {
+		"title": title,
+		"message": message,
+		"type": notification_type,
+		"icon": icon,
+		"duration": resolved_duration,
+		"key": key,
+	}
+	if not key.is_empty() and _refresh_visible_notification(entry):
+		return
+	if not key.is_empty() and _refresh_queued_notification(entry):
+		return
+	_notification_queue.append(entry)
+	_pump_notification_queue()
+
+
+func show_item_collected(item_name: String, amount: int, icon: Texture2D = null) -> void:
+	var title: String = "+%d %s" % [amount, item_name]
+	show_notification(title, "Added to inventory", "item", icon, ITEM_NOTIFICATION_DURATION)
+
+
+func show_codex_unlocked(entry_name: String, entry_type: String, icon: Texture2D = null) -> void:
+	var type_key: String = "codex_enemy" if entry_type.to_lower() == "enemy" else "codex_plant"
+	show_notification(
+			"New %s Codex Entry" % entry_type,
+			entry_name,
+			type_key,
+			icon,
+			CODEX_NOTIFICATION_DURATION,
+			"codex:%s:%s" % [entry_type.to_lower(), entry_name])
+
+
+func show_quest_completed(quest_title: String) -> void:
+	show_notification("Quest Completed", quest_title, "quest_complete", null, QUEST_COMPLETE_DURATION)
+
+
+func show_quest_updated(quest_title: String, progress_text: String) -> void:
+	show_notification("Quest Updated", "%s: %s" % [quest_title, progress_text], "quest_update", null, QUEST_UPDATE_DURATION)
+
+
+func show_important_unlock(unlock_name: String) -> void:
+	show_notification("Unlocked", unlock_name, "unlock", null, UNLOCK_NOTIFICATION_DURATION, "unlock:%s" % unlock_name)
+
+
+func _on_inventory_item_added_hud(item_id: String, amount: int) -> void:
+	if amount <= 0:
+		return
+	var key: String = "item:%s" % item_id
+	var total: int = int(_item_notification_totals.get(key, 0)) + amount
+	_item_notification_totals[key] = total
+	var icon: Texture2D = _load_item_icon(item_id)
+	var display_name: String = ItemDatabase.get_display_name(item_id)
+	show_notification(
+			"+%d %s" % [total, display_name],
+			"Added to inventory",
+			"item",
+			icon,
+			ITEM_NOTIFICATION_DURATION,
+			key)
+
+
+func _on_plant_discovered_hud(plant_id: String) -> void:
+	show_codex_unlocked(PlantRegistry.get_display_name(plant_id), "Plant")
+
+
+func _on_enemy_discovered_hud(enemy_id: String) -> void:
+	show_codex_unlocked(EnemyRegistry.get_display_name(enemy_id), "Enemy")
+
+
+func _on_quest_progress_updated_hud(quest_id: StringName, objective_id: StringName, current: int, target: int) -> void:
+	if target <= 0:
+		return
+	var progress_key: String = "%s:%s" % [quest_id, objective_id]
+	var previous: int = int(_last_quest_progress_notifications.get(progress_key, -1))
+	if current <= previous:
+		return
+	if current < target and previous >= 0:
+		var step: int = maxi(1, int(ceil(float(target) * 0.25)))
+		if current - previous < step:
+			return
+	_last_quest_progress_notifications[progress_key] = current
+	var quest: QuestData = QuestManager.get_quest_data(quest_id)
+	var quest_title: String = quest.display_name if quest != null else _humanize_id(str(quest_id))
+	var objective_text: String = _get_objective_description(quest, objective_id)
+	var progress_text: String = "%s (%d/%d)" % [objective_text, current, target]
+	show_notification(
+			"Objective Complete" if current >= target else "Quest Updated",
+			"%s: %s" % [quest_title, progress_text],
+			"quest_update",
+			null,
+			QUEST_UPDATE_DURATION,
+			"quest:%s:%s" % [quest_id, objective_id])
+
+
+func _on_unlock_flag_set_hud(flag_name: String) -> void:
+	if flag_name.begins_with("seen_") or flag_name.begins_with("tutorial_"):
+		return
+	show_important_unlock(_humanize_id(flag_name.trim_prefix("unlock_")))
+
+
+func _refresh_visible_notification(entry: Dictionary) -> bool:
+	var key: String = str(entry.get("key", ""))
+	for notification: Control in _visible_notifications:
+		if is_instance_valid(notification) and str(notification.get("notification_key")) == key:
+			notification.call(
+					"refresh",
+					str(entry.get("title", "")),
+					str(entry.get("message", "")),
+					str(entry.get("type", "unlock")),
+					entry.get("icon", null),
+					float(entry.get("duration", UNLOCK_NOTIFICATION_DURATION)))
+			return true
+	return false
+
+
+func _refresh_queued_notification(entry: Dictionary) -> bool:
+	var key: String = str(entry.get("key", ""))
+	for i: int in range(_notification_queue.size()):
+		if str(_notification_queue[i].get("key", "")) == key:
+			_notification_queue[i] = entry
+			return true
+	return false
+
+
+func _pump_notification_queue() -> void:
+	_prune_invalid_notifications()
+	while _visible_notifications.size() < MAX_VISIBLE_NOTIFICATIONS and not _notification_queue.is_empty():
+		var entry: Dictionary = _notification_queue.pop_front()
+		var notification: Control = NOTIFICATION_ITEM_SCENE.instantiate() as Control
+		notification.set("notification_key", str(entry.get("key", "")))
+		_notification_container.add_child(notification)
+		_visible_notifications.append(notification)
+		notification.call(
+				"configure",
+				str(entry.get("title", "")),
+				str(entry.get("message", "")),
+				str(entry.get("type", "unlock")),
+				entry.get("icon", null))
+		notification.connect("dismissed", _on_notification_dismissed)
+		notification.call("begin", float(entry.get("duration", UNLOCK_NOTIFICATION_DURATION)))
+
+
+func _on_notification_dismissed(notification: Control) -> void:
+	_visible_notifications.erase(notification)
+	var key: String = str(notification.get("notification_key"))
+	if key.begins_with("item:"):
+		_item_notification_totals.erase(key)
+	_pump_notification_queue()
+
+
+func _prune_invalid_notifications() -> void:
+	var valid: Array[Control] = []
+	for notification: Control in _visible_notifications:
+		if is_instance_valid(notification):
+			valid.append(notification)
+	_visible_notifications = valid
+
+
+func _get_notification_duration(notification_type: String) -> float:
+	match notification_type:
+		"item":
+			return ITEM_NOTIFICATION_DURATION
+		"codex_plant", "codex_enemy":
+			return CODEX_NOTIFICATION_DURATION
+		"quest_complete":
+			return QUEST_COMPLETE_DURATION
+		"quest_update":
+			return QUEST_UPDATE_DURATION
+		_:
+			return UNLOCK_NOTIFICATION_DURATION
+
+
+func _load_item_icon(item_id: String) -> Texture2D:
+	var icon_path: String = ItemDatabase.get_icon_path(item_id)
+	if icon_path.is_empty():
+		return null
+	return load(icon_path) as Texture2D
+
+
+func _get_objective_description(quest: QuestData, objective_id: StringName) -> String:
+	if quest == null:
+		return _humanize_id(str(objective_id))
+	for objective: QuestObjective in quest.objectives:
+		if objective.objective_id == objective_id:
+			return objective.description
+	return _humanize_id(str(objective_id))
+
+
+func _humanize_id(id: String) -> String:
+	return id.replace("_", " ").capitalize()
 
 
 # ── Public: tracked quest API ─────────────────────────────────────────────────

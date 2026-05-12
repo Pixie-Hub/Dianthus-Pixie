@@ -1,0 +1,99 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://ui/hud/hud_notification_item.gd" id="1_script"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_notification_panel"]
+bg_color = Color(0.18, 0.12, 0.07, 0.94)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.72, 0.55, 0.22, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color(0, 0, 0, 0.4)
+shadow_size = 4
+
+[node name="HUDNotificationItem" type="PanelContainer"]
+custom_minimum_size = Vector2(164, 38)
+offset_right = 164.0
+offset_bottom = 38.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_notification_panel")
+script = ExtResource("1_script")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="AccentBar" type="ColorRect" parent="HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(3, 0)
+layout_mode = 2
+color = Color(1, 0.8, 0.25, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="IconPanel" type="Control" parent="HBoxContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+
+[node name="IconTexture" type="TextureRect" parent="HBoxContainer/MarginContainer/HBoxContainer/IconPanel"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch_mode = 5
+
+[node name="IconLabel" type="Label" parent="HBoxContainer/MarginContainer/HBoxContainer/IconPanel"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.25, 1)
+theme_override_font_sizes/font_size = 12
+text = "+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextVBox" type="VBoxContainer" parent="HBoxContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="TitleLabel" type="Label" parent="HBoxContainer/MarginContainer/HBoxContainer/TextVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 8
+text = "Notification"
+text_overrun_behavior = 3
+
+[node name="MessageLabel" type="Label" parent="HBoxContainer/MarginContainer/HBoxContainer/TextVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.65, 0.55, 1)
+theme_override_font_sizes/font_size = 7
+text = "Details"
+autowrap_mode = 3
+
+[node name="LifeTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+one_shot = true
