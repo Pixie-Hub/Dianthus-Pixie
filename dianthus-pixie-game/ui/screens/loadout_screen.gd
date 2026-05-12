@@ -126,7 +126,7 @@ func _build_ability_list(equipped_skill: String) -> void:
 		var is_equipped: bool = (aid == equipped_skill)
 
 		var name_label: Label = Label.new()
-		name_label.text = AbilityManager.ABILITIES.get(aid, {}).get("display_name", aid.capitalize())
+		name_label.text = "%s %s" % [AbilityManager.ABILITIES.get(aid, {}).get("display_name", aid.capitalize()), _ability_quality_badge(aid)]
 		name_label.add_theme_font_size_override("font_size", 6)
 		name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		if is_equipped:
@@ -164,7 +164,7 @@ func _equip_ability(ability_id: String) -> void:
 	_refresh()
 
 
-func _on_ability_crafted(_ability_id: String) -> void:
+func _on_ability_crafted(_ability_id: String, _quality_tier: int = 0) -> void:
 	if visible:
 		_refresh()
 
@@ -194,9 +194,18 @@ func _weapon_display(weapon_id: String) -> String:
 	if weapon_id.is_empty():
 		return "[Empty]"
 	var data: WeaponData = CraftingManager.get_weapon_data(weapon_id)
+	var badge: String = _weapon_quality_badge(weapon_id)
 	if data != null and not data.weapon_name.is_empty():
-		return data.weapon_name
-	return weapon_id.capitalize().replace("_", " ")
+		return "%s %s" % [data.weapon_name, badge]
+	return "%s %s" % [weapon_id.capitalize().replace("_", " "), badge]
+
+
+func _weapon_quality_badge(weapon_id: String) -> String:
+	return "[Perfect *]" if CraftingManager.get_weapon_quality(weapon_id) >= 1 else "[Standard]"
+
+
+func _ability_quality_badge(ability_id: String) -> String:
+	return "[Perfect *]" if CraftingManager.get_ability_quality(ability_id) >= 1 else "[Standard]"
 
 
 func _unhandled_input(_event: InputEvent) -> void:

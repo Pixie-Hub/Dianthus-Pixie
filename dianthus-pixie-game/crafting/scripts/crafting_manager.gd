@@ -1,7 +1,7 @@
 extends Node
 
-signal weapon_crafted(weapon_id: String)
-signal ability_crafted(ability_id: String)
+signal weapon_crafted(weapon_id: String, quality_tier: int)
+signal ability_crafted(ability_id: String, quality_tier: int)
 signal craft_failed(reason: String)
 
 const WEAPON_DATA_PATHS: Dictionary = {
@@ -17,6 +17,9 @@ const WEAPON_DATA_PATHS: Dictionary = {
 
 var owned_weapons: Dictionary = {}
 var owned_abilities: Dictionary = {}
+var weapon_quality: Dictionary = {}
+var ability_quality: Dictionary = {}
+var _force_next_quality: int = -1
 
 
 # --- Public API ---
@@ -46,31 +49,46 @@ func can_craft(recipe_id: String) -> bool:
 
 
 
-func craft(recipe_id: String) -> bool:
+func craft(recipe_id: String, quality_tier: int = 0) -> bool:
 	if not can_craft(recipe_id):
 		var reason: String = _craft_fail_reason(recipe_id)
 		SfxManager.play("crafting_fail")
 		craft_failed.emit(reason)
 		return false
 	var recipe: Dictionary = RecipeDatabase.get_recipe(recipe_id)
-	var materials: Dictionary = RecipeDatabase.get_materials(recipe_id)
-	for item_id: String in materials:
-		InventoryManager.remove_item(item_id, int(materials[item_id]))
+	_consume_recipe_materials(recipe_id)
 	var result_type: String = str(recipe.get("result_type", "weapon"))
 	var base: String = RecipeDatabase.get_upgrade_base(recipe_id)
 	if not base.is_empty():
 		owned_weapons.erase(base)
+		weapon_quality.erase(base)
 	var result_id: String = str(recipe.get("result_id", ""))
+	var tier: int = clampi(_force_next_quality if _force_next_quality >= 0 else quality_tier, 0, 1)
+	_force_next_quality = -1
 	if result_type == "ability":
 		owned_abilities[result_id] = true
+		ability_quality[result_id] = tier
 		SfxManager.play("crafting_success")
-		print("[CraftingManager] Crafted ability: %s" % result_id)
-		ability_crafted.emit(result_id)
+		print("[CraftingManager] Crafted ability: %s (quality=%d)" % [result_id, tier])
+		ability_crafted.emit(result_id, tier)
 	else:
 		owned_weapons[result_id] = true
+		weapon_quality[result_id] = tier
 		SfxManager.play("crafting_success")
-		print("[CraftingManager] Crafted: %s" % result_id)
-		weapon_crafted.emit(result_id)
+		print("[CraftingManager] Crafted: %s (quality=%d)" % [result_id, tier])
+		weapon_crafted.emit(result_id, tier)
+	return true
+
+
+func consume_materials_only(recipe_id: String) -> bool:
+	if not can_craft(recipe_id):
+		var reason: String = _craft_fail_reason(recipe_id)
+		SfxManager.play("crafting_fail")
+		craft_failed.emit(reason)
+		return false
+	_consume_recipe_materials(recipe_id)
+	SfxManager.play("crafting_fail")
+	craft_failed.emit("Assembly failed")
 	return true
 
 
@@ -106,29 +124,53 @@ func get_weapon_data(weapon_id: String) -> WeaponData:
 	return load(path) as WeaponData
 
 
+func get_weapon_quality(weapon_id: String) -> int:
+	return int(weapon_quality.get(weapon_id, 0))
+
+
+func get_weapon_damage_multiplier(weapon_id: String) -> float:
+	return 1.10 if get_weapon_quality(weapon_id) >= 1 else 1.0
+
+
+func get_ability_quality(ability_id: String) -> int:
+	return int(ability_quality.get(ability_id, 0))
+
+
+func get_ability_effect_multiplier(ability_id: String) -> float:
+	return 1.10 if get_ability_quality(ability_id) >= 1 else 1.0
+
+
 # --- Serialization ---
 
 func serialize() -> Dictionary:
 	return {
 		"weapons": owned_weapons.duplicate(),
 		"abilities": owned_abilities.duplicate(),
+		"weapon_quality": weapon_quality.duplicate(),
+		"ability_quality": ability_quality.duplicate(),
 	}
 
 
 func deserialize(data: Dictionary) -> void:
 	owned_weapons = {}
 	owned_abilities = {}
+	weapon_quality = {}
+	ability_quality = {}
 	# Support legacy flat format (pre-ability schema) and new nested format.
 	var weapons_data: Variant = data.get("weapons", null)
 	if weapons_data == null:
 		weapons_data = data
+	var weapon_quality_data: Dictionary = data.get("weapon_quality", {}) as Dictionary
 	for wid: String in (weapons_data as Dictionary):
 		if (weapons_data as Dictionary)[wid]:
 			owned_weapons[wid] = true
+			weapon_quality[wid] = clampi(int(weapon_quality_data.get(wid, 0)), 0, 1)
 	var abilities_data: Dictionary = data.get("abilities", {}) as Dictionary
+	var ability_quality_data: Dictionary = data.get("ability_quality", {}) as Dictionary
 	for aid: String in abilities_data:
 		if abilities_data[aid]:
 			owned_abilities[aid] = true
+			ability_quality[aid] = clampi(int(ability_quality_data.get(aid, 0)), 0, 1)
 
 
 # --- Private ---
@@ -156,3 +198,9 @@ func _craft_fail_reason(recipe_id: String) -> String:
 			var have: int = InventoryManager.get_total_count(item_id)
 			return "Need %dx %s (have %d)." % [needed, ItemDatabase.get_display_name(item_id), have]
 	return "Cannot craft."
+
+
+func _consume_recipe_materials(recipe_id: String) -> void:
+	var materials: Dictionary = RecipeDatabase.get_materials(recipe_id)
+	for item_id: String in materials:
+		InventoryManager.remove_item(item_id, int(materials[item_id]))

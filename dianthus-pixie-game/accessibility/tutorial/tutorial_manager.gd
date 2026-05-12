@@ -507,7 +507,7 @@ func _on_item_added(_item_id: String, _amount: int) -> void:
 	_check_phase_1_complete()
 
 
-func _on_weapon_crafted(weapon_id: String) -> void:
+func _on_weapon_crafted(weapon_id: String, _quality_tier: int = 0) -> void:
 	if current_state != TutorialState.DAY_1_CRAFTING:
 		return
 	if weapon_id != TARGET_CRAFTING_WEAPON:

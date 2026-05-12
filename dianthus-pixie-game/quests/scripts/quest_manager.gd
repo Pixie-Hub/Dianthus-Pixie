@@ -452,7 +452,7 @@ func _on_plant_discovered(plant_id: String) -> void:
 	report_event(&"plant_discovered", 1, {"plant_id": plant_id})
 
 
-func _on_weapon_crafted(weapon_id: String) -> void:
+func _on_weapon_crafted(weapon_id: String, _quality_tier: int = 0) -> void:
 	report_event(&"weapon_crafted", 1, {"weapon_id": weapon_id})
 
 

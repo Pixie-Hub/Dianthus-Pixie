@@ -103,16 +103,18 @@ func _ability_dash(player: CharacterBody2D) -> void:
 func _ability_heal_pulse(player: CharacterBody2D) -> void:
 	SfxManager.play_at("ability_heal_pulse", player.global_position)
 	if player.has_method("heal"):
-		player.heal(HEAL_PULSE_AMOUNT)
+		var heal_amount: int = int(roundf(float(HEAL_PULSE_AMOUNT) * CraftingManager.get_ability_effect_multiplier("heal_pulse")))
+		player.heal(heal_amount)
 
 
 func _ability_thorn_burst(player: CharacterBody2D) -> void:
 	SfxManager.play_at("ability_thorn_burst", player.global_position)
 	var hit_count: int = 0
+	var burst_damage: int = int(roundf(float(THORN_BURST_DAMAGE) * CraftingManager.get_ability_effect_multiplier("thorn_burst")))
 	for body in player.get_tree().get_nodes_in_group(&"enemies"):
 		if body is EnemyBase and not body.is_dead:
 			if player.global_position.distance_to(body.global_position) <= THORN_BURST_RADIUS:
-				body.take_damage(THORN_BURST_DAMAGE)
+				body.take_damage(burst_damage)
 				if body.has_method("apply_stun"):
 					body.apply_stun(THORN_BURST_STUN)
 				hit_count += 1

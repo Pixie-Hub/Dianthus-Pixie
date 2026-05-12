@@ -3,7 +3,7 @@
 **Project:** Dianthus Pixie  
 **Engine:** Godot 4.x  
 **Art:** Aseprite (16×16 tiles, 16×24 characters)  
-**Last Updated:** 2026-06-02
+**Last Updated:** 2026-05-12
 **GDD Reference:** `Dianthus Pixie GDD.md` (v1.1)
 
 > **Zone Scope (final):** 3 primary zones — Meadow Edge, Dusk Forest, Ruins of Veld. Obsidian Bog content compressed into Dusk Forest's Blackwater Hollow sub-area (WORLD-03). Core Sanctum replaced by the Dianthus Core Sacred Bloom interactable at Meadow Edge (WORLD-04). Night defense and the Dianthus Core exist only at Meadow Edge.
@@ -123,7 +123,7 @@
 | Task ID | Title | Category | Priority | Status | Dependencies | Assignee | Effort | Acceptance Criteria |
 |---------|-------|----------|----------|--------|--------------|----------|--------|---------------------|
 | MINI-01 | Plant Experimentation | Minigames | High | Done | PLANT-02 | [Unassigned] | L | • Rhythm/puzzle input determines breeding quality (Biasa/Superior/Masterwork) per GDD §17; • score < 30% → resource lost, no output per GDD §7.2; • skippable after tutorial ⚠️ *GDD §17 gives no input scheme, scoring algorithm, or visual layout — prototype two concepts before committing* |
-| MINI-02 | Crafting Assembly Minigame | Minigames | Medium | Not Started | PLANT-06 | [Unassigned] | L | • Drag-and-drop components in correct order per GDD §17; • perfect run awards +10% weapon damage; • playable with both mouse and controller |
+| MINI-02 | Crafting Assembly Minigame | Minigames | Medium | Done | PLANT-06 | [Unassigned] | L | • Drag-and-drop components in correct order per GDD §17; • perfect run awards +10% weapon damage; • playable with both mouse and controller |
 | MINI-03 | Harvest QTE Minigame | Minigames | Medium | Done | CORE-02 | [Unassigned] | M | • QTE fires on rare resource pickup per GDD §17; • failure = 50% yield; • input window scales with current difficulty setting |
 | AUDIO-01 | Exploration Phase Music | Audio/Visual | Medium | Done | FOUND-01 | [Unassigned] | M | • Light acoustic track plays during Morning/Exploration per GDD §12.3; • loops seamlessly; • volume respects audio settings |
 | AUDIO-02 | Preparation Phase Music | Audio/Visual | Medium | Done | FOUND-05 | [Unassigned] | S | • Tense underscore plays during Afternoon per GDD §12.3; • smooth crossfade from Exploration track |

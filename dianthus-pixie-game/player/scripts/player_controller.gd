@@ -369,6 +369,20 @@ func _unhandled_input(event: InputEvent) -> void:
 				if _force_next_quality > 2:
 					_force_next_quality = -1
 				print("DEBUG: Shift+M set forced seed quality to: %s" % ("NONE" if _force_next_quality == -1 else str(_force_next_quality)))
+		elif event.keycode == KEY_N:
+			if event.ctrl_pressed:
+				var craft_mg_scene: PackedScene = load("res://minigames/crafting_assembly/crafting_assembly_screen.tscn")
+				if craft_mg_scene != null:
+					var craft_mg: Node = craft_mg_scene.instantiate()
+					get_tree().root.add_child(craft_mg)
+					if craft_mg.has_method("start_assembly"):
+						craft_mg.call("start_assembly", "thorn_sword")
+					if craft_mg.has_signal("finished"):
+						craft_mg.finished.connect(func(q: int, s: bool) -> void: print("DEBUG Crafting Assembly result: tier=%d success=%s" % [q, s]))
+					print("DEBUG: Ctrl+N forced Crafting Assembly Minigame for thorn_sword.")
+			elif event.shift_pressed:
+				CraftingManager._force_next_quality = 0 if CraftingManager._force_next_quality != 0 else 1
+				print("DEBUG: Shift+N set next crafted weapon quality to: %d" % CraftingManager._force_next_quality)
 		elif event.keycode == KEY_F8:
 			var spawner: Node = get_tree().current_scene.find_child("WaveSpawner", true, false)
 			if spawner != null and spawner.has_method("start_wave"):
@@ -781,7 +795,7 @@ func _attack_melee_sword() -> void:
 		hitbox_offset = Vector2(16, -24)
 	_sword_hitbox.position = hitbox_offset
 	var hitbox_shape: CollisionShape2D = _sword_hitbox.get_child(0)
-	print("DEBUG: Attack! Damage: %d, Direction: %s" % [_current_weapon.damage, last_direction])
+	print("DEBUG: Attack! Damage: %d, Direction: %s" % [_get_weapon_damage(_current_weapon, bonus_melee_damage), last_direction])
 	var _swing_sfx: String = "blazeblade_swing" if _current_weapon.weapon_id == "blazeblade" else "thorn_sword_swing"
 	SfxManager.play(_swing_sfx)
 	var effective_cd: float = _current_weapon.cooldown * (1.0 - attack_speed_bonus)
@@ -817,7 +831,7 @@ func _attack_vine_whip() -> void:
 	_sword_hitbox.position = hitbox_offset
 	var hitbox_shape: CollisionShape2D = _sword_hitbox.get_child(0)
 	print("DEBUG: Vine Whip! Damage: %d, Range: %.0f, Direction: %s" % [
-		_current_weapon.damage + bonus_melee_damage, _current_weapon.attack_range, last_direction])
+		_get_weapon_damage(_current_weapon, bonus_melee_damage), _current_weapon.attack_range, last_direction])
 	var _whip_sfx: String = "crystal_lash_crack" if _current_weapon.weapon_id == "crystal_lash" else "vine_whip_crack"
 	SfxManager.play(_whip_sfx, 0.05)
 	var effective_cd: float = _current_weapon.cooldown * (1.0 - attack_speed_bonus)
@@ -855,7 +869,7 @@ func _attack_spore_bomb() -> void:
 		else SPORE_BOMB_PROJECTILE_SCENE
 	)
 	var proj: SporeBombProjectile = projectile_scene.instantiate()
-	proj.damage = attack_weapon.damage
+	proj.damage = _get_weapon_damage(attack_weapon)
 	proj.aoe_radius = attack_weapon.attack_range * 0.4
 	proj.launch(global_position, target)
 	var proj_parent: Node = get_tree().current_scene.get_node_or_null("YSortLayer")
@@ -863,7 +877,7 @@ func _attack_spore_bomb() -> void:
 		proj_parent = get_tree().current_scene
 	proj_parent.add_child(proj)
 	print("DEBUG: Spore Bomb launched! Damage: %d, AoE: %.0f, Target: %s" % [
-		attack_weapon.damage, attack_weapon.attack_range * 0.4, target])
+		proj.damage, attack_weapon.attack_range * 0.4, target])
 	await get_tree().create_timer(SPORE_BOMB_ATTACK_TIME - SPORE_BOMB_RELEASE_TIME).timeout
 	is_attacking = false
 	if is_dead:
@@ -907,7 +921,7 @@ func _trigger_petal_counter() -> void:
 	_update_blend_position()
 	SfxManager.play("petal_shield_counter")
 	var radius: float = _current_weapon.attack_range
-	var dmg: int = _current_weapon.damage
+	var dmg: int = _get_weapon_damage(_current_weapon)
 	for body in get_tree().get_nodes_in_group(&"enemies"):
 		if body is EnemyBase and not body.is_dead:
 			if global_position.distance_to(body.global_position) <= radius:
@@ -943,7 +957,7 @@ func _end_attack() -> void:
 	hitbox_shape.disabled = true
 	_travel("idle", true)
 
-func _on_weapon_crafted(weapon_id: String) -> void:
+func _on_weapon_crafted(weapon_id: String, _quality_tier: int = 0) -> void:
 	if DayNightCycle.is_night():
 		print("[Player] Loadout locked at night — cannot auto-equip %s." % weapon_id)
 		return
@@ -1258,7 +1272,7 @@ func _on_sword_hitbox_body_entered(body: Node2D) -> void:
 	if body in _hit_bodies:
 		return
 	_hit_bodies.append(body)
-	var total_damage: int = _current_weapon.damage + bonus_melee_damage
+	var total_damage: int = _get_weapon_damage(_current_weapon, bonus_melee_damage)
 	if body.has_method("take_damage"):
 		body.take_damage(total_damage)
 	attack_hit.emit(body, total_damage)
@@ -1272,3 +1286,10 @@ func _on_sword_hitbox_body_entered(body: Node2D) -> void:
 		if body.has_method("apply_pull"):
 			body.apply_pull(global_position, 0.25, 24.0)
 	# TODO (VFX-05): Add impact particles on hit.
+
+
+func _get_weapon_damage(weapon: WeaponData, flat_bonus: int = 0) -> int:
+	if weapon == null:
+		return 0
+	var multiplier: float = CraftingManager.get_weapon_damage_multiplier(weapon.weapon_id)
+	return int(roundf(float(weapon.damage + flat_bonus) * multiplier))

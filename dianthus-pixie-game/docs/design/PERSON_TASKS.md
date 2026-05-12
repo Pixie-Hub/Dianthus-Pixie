@@ -373,12 +373,16 @@ FOUND-01..06 (Done)
 | Shift+L | Grant all 8 weapons to CraftingManager instantly | PLANT-08 |
 | Ctrl+M | Force open Plant Experimentation Minigame (bunga_api combo) | MINI-01 |
 | Shift+M | Cycle forced plant quality (0→1→2→NONE) for next seed placed | MINI-01 |
+| Ctrl+N | Force open Crafting Assembly Minigame (thorn_sword recipe, print-only result) | MINI-02 |
+| Shift+N | Toggle next crafted weapon quality between Standard and Perfect | MINI-02 |
 | Shift+Q | Force-reroll daily quests (`DailyQuestRoller.force_reroll()`) | QUEST-02 |
 | Shift+Alt+K | Force-complete the first active quest (grants rewards) | QUEST-01 |
 | Ctrl+Shift+F | Force-fail the current active story quest with `time_limit` | QUEST-05 |
 | Ctrl+Shift+Q | Print full quest summary (active quests + objectives + unlock flags) to Output | QUEST-02 |
 
 > **Note on Plant Experimentation (MINI-01):** The node-connection puzzle can be skipped after completing the tutorial. A "Skip Plant Experimentation minigame" toggle is available in the Settings menu (press Esc → Settings). When enabled, breeding falls back to a 1.5s automatic progress bar yielding standard (Biasa) quality.
+
+> **Note on Crafting Assembly (MINI-02):** The drag-and-drop assembly puzzle can be skipped after completing the tutorial. A "Skip Crafting Assembly minigame" toggle is available in the Settings menu (press Esc → Settings). When enabled, crafting falls back to a 1.5s automatic progress bar yielding Standard weapon or ability quality.
 
 ### Insert Key
 

@@ -4,7 +4,7 @@ signal save_completed(success: bool, manual: bool)
 signal load_completed(success: bool)
 
 const SAVE_PATH: String = "user://savegame.json"
-const SCHEMA_VERSION: int = 19
+const SCHEMA_VERSION: int = 20
 const GAME_VERSION: String = "0.1.0"
 
 const PLANT_TYPE_TO_SCENE: Dictionary = {
@@ -629,4 +629,33 @@ func _migrate(data: Dictionary) -> Dictionary:
 			br["discovered"] = upgraded
 			data["breeding"] = br
 		data["schema_version"] = 19
+	# v19 -> v20: crafted weapon/ability quality dictionaries added.
+	if version < 20:
+		print("[SaveManager] Migrating save from v%d to v20." % version)
+		var crafting: Variant = data.get("crafting", {})
+		if crafting is Dictionary:
+			var cd: Dictionary = crafting as Dictionary
+			if not cd.has("weapon_quality"):
+				var wq: Dictionary = {}
+				var weapons: Dictionary = cd.get("weapons", {}) as Dictionary
+				for wid: String in weapons:
+					if bool(weapons[wid]):
+						wq[wid] = 0
+				cd["weapon_quality"] = wq
+			if not cd.has("ability_quality"):
+				var aq: Dictionary = {}
+				var abilities: Dictionary = cd.get("abilities", {}) as Dictionary
+				for aid: String in abilities:
+					if bool(abilities[aid]):
+						aq[aid] = 0
+				cd["ability_quality"] = aq
+			data["crafting"] = cd
+		else:
+			data["crafting"] = {
+				"weapons": {},
+				"abilities": {},
+				"weapon_quality": {},
+				"ability_quality": {},
+			}
+		data["schema_version"] = 20
 	return data
