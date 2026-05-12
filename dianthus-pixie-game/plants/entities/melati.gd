@@ -39,13 +39,45 @@ func _on_effect_area_body_entered(body: Node2D) -> void:
 	if body == GameManager.player:
 		_player_in_range = true
 		_energy_accumulator = 0.0
+		_report_player_status_effect()
 
 
 func _on_effect_area_body_exited(body: Node2D) -> void:
 	if body == GameManager.player:
 		_player_in_range = false
+		_clear_player_status_effect()
 
 
 func destroy() -> void:
 	_player_in_range = false
+	_clear_player_status_effect()
 	super.destroy()
+
+
+func _report_player_status_effect() -> void:
+	if not is_instance_valid(GameManager.player):
+		return
+	if not GameManager.player.has_method("report_status_effect_source"):
+		return
+	GameManager.player.report_status_effect_source(
+			"plant_energy_regen",
+			_status_source_id(),
+			{
+				"display_name": "Melati Aura",
+				"description": "Energy Regen",
+				"category": "regeneration",
+				"value": energy_regen_per_sec * quality_multiplier,
+				"value_format": "per_second",
+				"aggregation": "sum",
+				"duration": -1.0,
+				"remaining_time": -1.0,
+			})
+
+
+func _clear_player_status_effect() -> void:
+	if is_instance_valid(GameManager.player) and GameManager.player.has_method("remove_status_effect_source"):
+		GameManager.player.remove_status_effect_source("plant_energy_regen", _status_source_id())
+
+
+func _status_source_id() -> String:
+	return "melati:%d" % get_instance_id()

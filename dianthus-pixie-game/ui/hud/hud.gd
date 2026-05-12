@@ -1,6 +1,7 @@
 extends CanvasLayer
 
 const NOTIFICATION_ITEM_SCENE: PackedScene = preload("res://ui/hud/hud_notification_item.tscn")
+const STATUS_EFFECT_ITEM_SCENE: PackedScene = preload("res://ui/hud/active_status_effect_item.tscn")
 
 @onready var _player_bar: ProgressBar = %PlayerHPBar
 @onready var _player_label: Label = %PlayerHPLabel
@@ -34,6 +35,8 @@ const NOTIFICATION_ITEM_SCENE: PackedScene = preload("res://ui/hud/hud_notificat
 @onready var _forecast_threats_label: Label = %ForecastThreatsLabel
 @onready var _forecast_count_label: Label = %ForecastCountLabel
 @onready var _notification_container: VBoxContainer = %NotificationContainer
+@onready var _status_effects_panel: PanelContainer = %ActiveStatusEffectsPanel
+@onready var _status_effects_container: VBoxContainer = %ActiveStatusEffectsContainer
 
 const HOTBAR_SELECTED_COLOR: Color = Color(0.9, 0.75, 0.2, 1)
 const HOTBAR_NORMAL_COLOR: Color = Color(0.3, 0.3, 0.3, 1)
@@ -46,6 +49,7 @@ const LOW_HP_THRESHOLD: float = 0.25
 
 const RETURN_WARNING_THRESHOLD: float = 30.0
 const MAX_VISIBLE_NOTIFICATIONS: int = 4
+const STATUS_DISPLAY_REFRESH_INTERVAL: float = 0.2
 const ITEM_NOTIFICATION_DURATION: float = 2.2
 const CODEX_NOTIFICATION_DURATION: float = 3.6
 const QUEST_UPDATE_DURATION: float = 3.0
@@ -73,6 +77,9 @@ var _notification_queue: Array[Dictionary] = []
 var _visible_notifications: Array[Control] = []
 var _item_notification_totals: Dictionary = {}
 var _last_quest_progress_notifications: Dictionary = {}
+var _status_player: Node = null
+var _status_effect_items: Dictionary = {}
+var _status_display_refresh_timer: float = 0.0
 
 
 func _ready() -> void:
@@ -81,6 +88,7 @@ func _ready() -> void:
 	GameManager.colorblind_mode_changed.connect(_on_colorblind_changed)
 	GameManager.player_energy_changed.connect(_on_player_energy_changed)
 	GameManager.loadout_changed.connect(_on_loadout_changed)
+	GameManager.player_registered.connect(_on_player_registered_hud)
 	DayNightCycle.phase_changed.connect(_on_phase_changed_hud)
 	_on_colorblind_changed(GameManager.colorblind_mode)
 	GameManager.game_state_changed.connect(_on_game_state_changed)
@@ -99,7 +107,9 @@ func _ready() -> void:
 	GardenStructureManager.watchtower_constructed.connect(_on_watchtower_constructed)
 	SaveManager.load_completed.connect(_on_hud_load_completed)
 	_forecast_panel.visible = false
+	_status_effects_panel.visible = false
 	call_deferred("_connect_wave_spawner")
+	call_deferred("_connect_status_player")
 
 
 func _process(_delta: float) -> void:
@@ -123,6 +133,7 @@ func _process(_delta: float) -> void:
 		_on_skip_day_pressed()
 	if _confirm_visible and Input.is_action_just_pressed("ui_cancel"):
 		_on_skip_confirm_no()
+	_update_status_effect_countdowns(_delta)
 
 
 func _on_player_hp_changed(current_hp: int, max_hp: int) -> void:
@@ -362,6 +373,7 @@ func _on_watchtower_constructed() -> void:
 
 func _on_hud_load_completed(_success: bool) -> void:
 	_refresh_watchtower_forecast()
+	_connect_status_player()
 
 
 func _on_forecast_updated(_forecast: Dictionary) -> void:
@@ -403,6 +415,121 @@ func _format_forecast_lanes(forecast: Dictionary) -> String:
 	if labels.is_empty():
 		return "None"
 	return ", ".join(labels)
+
+
+func _on_player_registered_hud(player: Node) -> void:
+	_connect_status_player(player)
+
+
+func _connect_status_player(player: Node = null) -> void:
+	var next_player: Node = player if player != null else GameManager.player
+	if next_player == _status_player:
+		_refresh_status_effects_from_player()
+		return
+	_disconnect_status_player()
+	_clear_status_effect_items()
+	_status_player = next_player
+	if not is_instance_valid(_status_player):
+		return
+	if _status_player.has_signal("status_effect_added"):
+		_status_player.status_effect_added.connect(_on_status_effect_added)
+	if _status_player.has_signal("status_effect_updated"):
+		_status_player.status_effect_updated.connect(_on_status_effect_updated)
+	if _status_player.has_signal("status_effect_removed"):
+		_status_player.status_effect_removed.connect(_on_status_effect_removed)
+	if _status_player.has_signal("status_effect_expired"):
+		_status_player.status_effect_expired.connect(_on_status_effect_expired)
+	_refresh_status_effects_from_player()
+
+
+func _disconnect_status_player() -> void:
+	if not is_instance_valid(_status_player):
+		_status_player = null
+		return
+	if _status_player.has_signal("status_effect_added") and _status_player.status_effect_added.is_connected(_on_status_effect_added):
+		_status_player.status_effect_added.disconnect(_on_status_effect_added)
+	if _status_player.has_signal("status_effect_updated") and _status_player.status_effect_updated.is_connected(_on_status_effect_updated):
+		_status_player.status_effect_updated.disconnect(_on_status_effect_updated)
+	if _status_player.has_signal("status_effect_removed") and _status_player.status_effect_removed.is_connected(_on_status_effect_removed):
+		_status_player.status_effect_removed.disconnect(_on_status_effect_removed)
+	if _status_player.has_signal("status_effect_expired") and _status_player.status_effect_expired.is_connected(_on_status_effect_expired):
+		_status_player.status_effect_expired.disconnect(_on_status_effect_expired)
+	_status_player = null
+
+
+func _refresh_status_effects_from_player() -> void:
+	if not is_instance_valid(_status_player):
+		_clear_status_effect_items()
+		return
+	if not _status_player.has_method("get_active_status_effects"):
+		_clear_status_effect_items()
+		return
+	for effect: Dictionary in _status_player.get_active_status_effects():
+		_upsert_status_effect_item(effect)
+	_refresh_status_effect_panel_visibility()
+
+
+func _on_status_effect_added(effect: Dictionary) -> void:
+	_upsert_status_effect_item(effect)
+
+
+func _on_status_effect_updated(effect: Dictionary) -> void:
+	_upsert_status_effect_item(effect)
+
+
+func _on_status_effect_removed(effect_id: String) -> void:
+	_remove_status_effect_item(effect_id)
+
+
+func _on_status_effect_expired(effect_id: String) -> void:
+	_remove_status_effect_item(effect_id)
+
+
+func _upsert_status_effect_item(effect: Dictionary) -> void:
+	var effect_id: String = str(effect.get("id", ""))
+	if effect_id.is_empty():
+		return
+	var item: Control = _status_effect_items.get(effect_id, null)
+	if not is_instance_valid(item):
+		item = STATUS_EFFECT_ITEM_SCENE.instantiate() as Control
+		_status_effects_container.add_child(item)
+		_status_effect_items[effect_id] = item
+		item.call("configure", effect)
+	else:
+		item.call("update_effect", effect)
+	_refresh_status_effect_panel_visibility()
+
+
+func _remove_status_effect_item(effect_id: String) -> void:
+	var item: Control = _status_effect_items.get(effect_id, null)
+	_status_effect_items.erase(effect_id)
+	if is_instance_valid(item):
+		item.queue_free()
+	_refresh_status_effect_panel_visibility()
+
+
+func _clear_status_effect_items() -> void:
+	for item: Variant in _status_effect_items.values():
+		if is_instance_valid(item):
+			(item as Node).queue_free()
+	_status_effect_items.clear()
+	_refresh_status_effect_panel_visibility()
+
+
+func _refresh_status_effect_panel_visibility() -> void:
+	_status_effects_panel.visible = not _status_effect_items.is_empty()
+
+
+func _update_status_effect_countdowns(delta: float) -> void:
+	if _status_effect_items.is_empty():
+		return
+	_status_display_refresh_timer -= delta
+	if _status_display_refresh_timer > 0.0:
+		return
+	_status_display_refresh_timer = STATUS_DISPLAY_REFRESH_INTERVAL
+	for item: Variant in _status_effect_items.values():
+		if is_instance_valid(item):
+			(item as Control).call("tick_display", STATUS_DISPLAY_REFRESH_INTERVAL)
 
 
 func _format_forecast_threats(forecast: Dictionary) -> String:

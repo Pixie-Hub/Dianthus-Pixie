@@ -6,6 +6,10 @@ signal player_respawned
 signal attack_hit(target: Node, damage: int)
 signal energy_changed(current_energy: int, max_energy: int)
 signal loadout_changed(weapon_slots: Array, skill_id: String, selected_slot: int)
+signal status_effect_added(effect: Dictionary)
+signal status_effect_updated(effect: Dictionary)
+signal status_effect_removed(effect_id: String)
+signal status_effect_expired(effect_id: String)
 
 const TILE_SIZE: int = 16
 const SPEED: float = TILE_SIZE * 5.0
@@ -62,6 +66,8 @@ var damage_reduction: float = 0.0
 var attack_speed_bonus: float = 0.0
 var bonus_melee_damage: int = 0
 var environment_speed_modifier: float = 1.0
+var _status_effect_sources: Dictionary = {}
+var _status_effect_snapshots: Dictionary = {}
 
 const PETAL_SHIELD_DR: float = 0.8
 const PETAL_SHIELD_PERFECT_WINDOW: float = 0.2
@@ -691,6 +697,10 @@ func heal(amount: int) -> void:
 
 func _die() -> void:
 	environment_speed_modifier = 1.0
+	damage_reduction = 0.0
+	attack_speed_bonus = 0.0
+	bonus_melee_damage = 0
+	clear_status_effects()
 	if is_harvesting:
 		is_harvesting = false
 	if is_blocking:
@@ -1011,6 +1021,118 @@ func add_energy(amount: int) -> void:
 		return
 	current_energy = min(current_energy + amount, max_energy)
 	energy_changed.emit(current_energy, max_energy)
+
+
+func report_status_effect_source(effect_id: String, source_id: String, effect_data: Dictionary) -> void:
+	if effect_id.is_empty() or source_id.is_empty():
+		return
+	var sources: Dictionary = _status_effect_sources.get(effect_id, {})
+	sources[source_id] = effect_data.duplicate(true)
+	_status_effect_sources[effect_id] = sources
+	_emit_status_effect_snapshot(effect_id)
+
+
+func remove_status_effect_source(effect_id: String, source_id: String) -> void:
+	if effect_id.is_empty() or source_id.is_empty():
+		return
+	if not _status_effect_sources.has(effect_id):
+		return
+	var sources: Dictionary = _status_effect_sources[effect_id]
+	sources.erase(source_id)
+	if sources.is_empty():
+		_status_effect_sources.erase(effect_id)
+		_status_effect_snapshots.erase(effect_id)
+		status_effect_removed.emit(effect_id)
+		return
+	_status_effect_sources[effect_id] = sources
+	_emit_status_effect_snapshot(effect_id)
+
+
+func clear_status_effects() -> void:
+	var effect_ids: Array = _status_effect_sources.keys()
+	_status_effect_sources.clear()
+	_status_effect_snapshots.clear()
+	for effect_id: Variant in effect_ids:
+		status_effect_expired.emit(str(effect_id))
+		status_effect_removed.emit(str(effect_id))
+
+
+func get_active_status_effects() -> Array[Dictionary]:
+	var effects: Array[Dictionary] = []
+	for effect_id: String in _status_effect_snapshots:
+		effects.append((_status_effect_snapshots[effect_id] as Dictionary).duplicate(true))
+	return effects
+
+
+func _emit_status_effect_snapshot(effect_id: String) -> void:
+	var effect: Dictionary = _build_status_effect_snapshot(effect_id)
+	if effect.is_empty():
+		return
+	var existed: bool = _status_effect_snapshots.has(effect_id)
+	_status_effect_snapshots[effect_id] = effect
+	if existed:
+		status_effect_updated.emit(effect)
+	else:
+		status_effect_added.emit(effect)
+
+
+func _build_status_effect_snapshot(effect_id: String) -> Dictionary:
+	var sources: Dictionary = _status_effect_sources.get(effect_id, {})
+	if sources.is_empty():
+		return {}
+	var first: Dictionary = {}
+	for source_data: Variant in sources.values():
+		if source_data is Dictionary:
+			first = (source_data as Dictionary)
+			break
+	if first.is_empty():
+		return {}
+
+	var aggregation: String = str(first.get("aggregation", "max"))
+	var value: float = 0.0
+	var initialized: bool = false
+	for source_data: Variant in sources.values():
+		if not source_data is Dictionary:
+			continue
+		var source_value: float = float((source_data as Dictionary).get("value", 0.0))
+		match aggregation:
+			"sum":
+				value += source_value
+				initialized = true
+			_:
+				if not initialized or source_value > value:
+					value = source_value
+					initialized = true
+
+	var effect: Dictionary = first.duplicate(true)
+	effect["id"] = effect_id
+	effect["value"] = value
+	effect["stack_count"] = sources.size()
+	effect["duration"] = float(first.get("duration", -1.0))
+	effect["remaining_time"] = float(first.get("remaining_time", -1.0))
+	effect["strength_text"] = _format_status_effect_strength(effect, value)
+	return effect
+
+
+func _format_status_effect_strength(effect: Dictionary, value: float) -> String:
+	var format: String = str(effect.get("value_format", ""))
+	if format.is_empty():
+		return ""
+	match format:
+		"percent":
+			return "+%d%%" % int(round(value * 100.0))
+		"flat":
+			return "+%d" % int(round(value))
+		"per_second":
+			return "+%s/s" % _format_compact_float(value)
+		_:
+			return str(effect.get("strength_text", ""))
+
+
+func _format_compact_float(value: float) -> String:
+	if is_equal_approx(value, round(value)):
+		return str(int(round(value)))
+	return "%.1f" % value
 
 
 func try_spend_energy(amount: int) -> bool:
