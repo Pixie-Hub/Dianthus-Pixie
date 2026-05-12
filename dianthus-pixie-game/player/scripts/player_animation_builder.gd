@@ -285,8 +285,8 @@ const ANIM_DEFS: Array[Dictionary] = [
 	},
 	{
 		"prefix": "dash",
-		"sheet": "res://player/sprites/PNG/Unarmed_Walk/player_walk_full.png",
-		"columns": 6,
+		"sheet": "res://player/sprites/PNG/Unarmed_Dash/player_dash_full.png",
+		"columns": 3,
 		"frames": [3, 3, 3, 3],
 		"loop": false,
 		"duration": 0.12,
