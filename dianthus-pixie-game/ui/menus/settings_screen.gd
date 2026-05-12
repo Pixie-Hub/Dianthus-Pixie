@@ -1,6 +1,7 @@
 extends Control
 
 const SETTINGS_PATH: String = "user://settings.cfg"
+const TEXT_SPEED_VALUES: Array[float] = [0.5, 1.0, 2.0, 0.0]
 const AUDIO_BUSES: Array[String] = ["Music", "SFX"]
 const CRAFTING_SCREEN_SCRIPT: GDScript = preload("res://ui/screens/crafting_screen.gd")
 
@@ -123,8 +124,9 @@ func _on_tutorial_toggled(enabled: bool) -> void:
 	TutorialManager.set_tutorial_enabled(enabled)
 
 
-func _on_text_speed_changed(_index: int) -> void:
-	pass  # TODO (ACCESS-04): Set dialogue system text speed.
+func _on_text_speed_changed(index: int) -> void:
+	if Engine.has_singleton("Dialogic"):
+		Dialogic.Settings.text_speed = TEXT_SPEED_VALUES[index]
 
 
 func _on_skip_minigame_toggled(enabled: bool) -> void:
@@ -174,4 +176,5 @@ func _load_settings() -> void:
 	_on_fullscreen_toggled(_fullscreen_toggle.button_pressed)
 	GameManager.set_colorblind_mode(_colorblind_toggle.button_pressed)
 	TutorialManager.set_tutorial_enabled(_tutorial_toggle.button_pressed)
+	_on_text_speed_changed(_text_speed_option.selected)
 	print("[Settings] Settings loaded.")
