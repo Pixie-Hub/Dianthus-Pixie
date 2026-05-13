@@ -1,13 +1,64 @@
-[gd_scene format=3 uid="uid://ccd81tsrewjge"]
+[gd_scene load_steps=6 format=3 uid="uid://ccd81tsrewjge"]
 
 [ext_resource type="Script" uid="uid://dqp8xvm0obj3l" path="res://plants/entities/melati.gd" id="1_mel"]
 [ext_resource type="Texture2D" uid="uid://dlvn7dac0aggy" path="res://plants/sprites/Melati.png" id="2_vv8vl"]
+[ext_resource type="Script" path="res://plants/vfx/plant_animation_controller.gd" id="3_vfx"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(16, 16)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_effect"]
 radius = 32.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_melati"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_vv8vl")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_vv8vl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_vv8vl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_vv8vl")
+}],
+"loop": false,
+"name": &"bloom",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_vv8vl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_vv8vl")
+}],
+"loop": false,
+"name": &"active",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_vv8vl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_vv8vl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_vv8vl")
+}],
+"loop": false,
+"name": &"wither",
+"speed": 10.0
+}]
 
 [node name="Melati" type="StaticBody2D" unique_id=1155895858]
 collision_mask = 0
@@ -19,6 +70,19 @@ modulate = Color(0.9, 0.95, 1, 1)
 texture_filter = 1
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_vv8vl")
+
+[node name="PlantAnimator" type="AnimatedSprite2D" parent="." unique_id=1511170880]
+unique_name_in_owner = true
+visible = false
+modulate = Color(0.9, 0.95, 1, 1)
+texture_filter = 1
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_melati")
+animation = &"idle"
+
+[node name="PlantAnimationController" type="Node" parent="." unique_id=2024462883]
+unique_name_in_owner = true
+script = ExtResource("3_vfx")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=358308528]
 shape = SubResource("RectangleShape2D_body")

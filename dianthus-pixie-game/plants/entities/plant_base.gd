@@ -36,6 +36,8 @@ var _scene_base_modulate: Color = Color.WHITE
 var _base_modulate: Color = Color.WHITE
 
 @onready var _sprite: Sprite2D = %Sprite2D
+@onready var _plant_animator: AnimatedSprite2D = get_node_or_null("%PlantAnimator") as AnimatedSprite2D
+@onready var _animation_controller: PlantAnimationController = get_node_or_null("%PlantAnimationController") as PlantAnimationController
 
 
 func _ready() -> void:
@@ -48,6 +50,8 @@ func _ready() -> void:
 	_setup_interaction_area()
 	_setup_tend_ui()
 	DayNightCycle.phase_changed.connect(_on_plant_phase_changed)
+	_setup_animation_controller()
+	call_deferred("_play_bloom_animation")
 
 
 func set_quality(tier: int) -> void:
@@ -272,20 +276,45 @@ func _report_ability_triggered(trigger_id: StringName) -> void:
 	if is_destroyed:
 		return
 	ability_triggered.emit(self, trigger_id)
+	if not is_wilted and is_instance_valid(_animation_controller):
+		_animation_controller.play_active(trigger_id)
 
 
 func _flash_damage() -> void:
-	if not is_instance_valid(_sprite):
+	var visual: CanvasItem = _get_visible_plant_visual()
+	if not is_instance_valid(visual):
 		return
+	var base_modulate: Color = visual.modulate
 	var tween: Tween = create_tween()
-	tween.tween_property(_sprite, "modulate", Color(1.0, 0.3, 0.3), 0.05)
-	tween.tween_property(_sprite, "modulate", _sprite.modulate, 0.15)
+	tween.tween_property(visual, "modulate", Color(1.0, 0.3, 0.3, base_modulate.a), 0.05)
+	tween.tween_property(visual, "modulate", base_modulate, 0.15)
 
 
 func _play_wither_animation() -> void:
+	if is_instance_valid(_animation_controller):
+		var wither_finished: Signal = _animation_controller.play_wither()
+		await wither_finished
+		queue_free()
+		return
 	if not is_instance_valid(_sprite):
 		queue_free()
 		return
 	var tween: Tween = create_tween()
 	tween.tween_property(_sprite, "modulate:a", 0.0, 0.5)
 	tween.tween_callback(queue_free)
+
+
+func _setup_animation_controller() -> void:
+	if is_instance_valid(_animation_controller):
+		_animation_controller.setup(_sprite, _plant_animator)
+
+
+func _play_bloom_animation() -> void:
+	if not is_destroyed and is_instance_valid(_animation_controller):
+		_animation_controller.play_bloom()
+
+
+func _get_visible_plant_visual() -> CanvasItem:
+	if is_instance_valid(_plant_animator) and _plant_animator.visible:
+		return _plant_animator
+	return _sprite
