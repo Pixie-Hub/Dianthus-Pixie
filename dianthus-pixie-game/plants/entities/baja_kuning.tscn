@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://bcohy6eq7tnj6" path="res://plants/entities/baja_kuning.gd" id="1_bkun"]
 [ext_resource type="Texture2D" uid="uid://mfmkxeot6ba6" path="res://plants/sprites/Baja Kuning.png" id="2_6ltol"]
+[ext_resource type="Script" path="res://plants/vfx/plant_animation_controller.gd" id="3_vfx"]
+[ext_resource type="SpriteFrames" path="res://plants/vfx/sprite_frames/baja_kuning_sprite_frames.tres" id="4_frames"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(16, 16)
@@ -18,6 +20,18 @@ unique_name_in_owner = true
 texture_filter = 1
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_6ltol")
+
+[node name="PlantAnimator" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
+visible = false
+texture_filter = 1
+scale = Vector2(0.5, 0.5)
+sprite_frames = ExtResource("4_frames")
+animation = &"idle"
+
+[node name="PlantAnimationController" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("3_vfx")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=35371939]
 shape = SubResource("RectangleShape2D_body")
