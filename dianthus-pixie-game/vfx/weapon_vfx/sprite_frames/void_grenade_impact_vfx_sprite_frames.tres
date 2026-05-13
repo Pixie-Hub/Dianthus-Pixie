@@ -1,6 +1,6 @@
-[gd_resource type="SpriteFrames" load_steps=10 format=3]
+[gd_resource type="SpriteFrames" format=3 uid="uid://dm425bwrhrnld"]
 
-[ext_resource type="Texture2D" path="res://vfx/weapon_vfx/void_grenade_impact_vfx.png" id="1_sheet"]
+[ext_resource type="Texture2D" uid="uid://ub0ndsnvgwk8" path="res://vfx/weapon_vfx/void_grenade_impact_vfx.png" id="1_sheet"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_burst_0"]
 atlas = ExtResource("1_sheet")
@@ -35,4 +35,33 @@ atlas = ExtResource("1_sheet")
 region = Rect2(448, 0, 64, 64)
 
 [resource]
-animations = [{"frames": [{"duration": 1.0, "texture": SubResource("AtlasTexture_burst_0")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_burst_1")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_burst_2")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_burst_3")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_burst_4")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_burst_5")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_burst_6")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_burst_7")}], "loop": false, "name": &"burst", "speed": 24.0}]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_burst_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_burst_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_burst_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_burst_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_burst_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_burst_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_burst_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_burst_7")
+}],
+"loop": false,
+"name": &"burst",
+"speed": 24.0
+}]

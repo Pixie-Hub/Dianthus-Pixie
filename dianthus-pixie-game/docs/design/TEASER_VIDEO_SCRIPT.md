@@ -54,13 +54,6 @@ the garden must survive.
 DIANTHUS PIXIE
 ```
 
-**Voice-over optional:**
-
-```text
-In Dianthus Pixie, every day is a chance to prepare...
-and every night is a test of survival.
-```
-
 ---
 
 ### 0:10-0:20 - Explore And Gather
@@ -100,12 +93,6 @@ Gather what the garden needs.
 Craft living weapons.
 Breed powerful plants.
 Build your defenses.
-```
-
-**Voice-over optional:**
-
-```text
-Resources become weapons. Plants become strategy. The garden becomes your last line of defense.
 ```
 
 **Editing note:** This section should feel like calm preparation before the night cut.
@@ -175,29 +162,6 @@ Built in Godot 4.6
 ```
 
 **Audio:** End on a short musical hit or Core pulse.
-
----
-
-## Full Voice-Over Draft
-
-Use this only if the teaser has narration. If recording voice-over is risky because of time, use title cards instead.
-
-```text
-When night falls, the garden must survive.
-
-In Dianthus Pixie, every day is a chance to explore, gather, and prepare.
-
-Craft living weapons.
-Breed powerful plants.
-Build defenses around the Dianthus Core.
-
-Then, when darkness arrives, protect it from the waves that come for its light.
-
-Survive longer. Grow stronger. Uncover the threat beyond the garden.
-
-Dianthus Pixie.
-A GIGA Laboratory Open Recruitment final project at ITS.
-```
 
 ---
 

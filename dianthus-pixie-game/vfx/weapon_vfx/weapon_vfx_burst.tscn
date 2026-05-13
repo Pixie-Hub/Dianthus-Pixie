@@ -1,11 +1,11 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://cq3v88c11tw3o"]
 
-[ext_resource type="Script" path="res://vfx/weapon_vfx/weapon_vfx_burst.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://d1gxleyx1kofw" path="res://vfx/weapon_vfx/weapon_vfx_burst.gd" id="1_script"]
 
-[node name="WeaponVfxBurst" type="Node2D"]
+[node name="WeaponVfxBurst" type="Node2D" unique_id=1409254770]
 z_index = 20
 script = ExtResource("1_script")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1789295262]
 unique_name_in_owner = true
 texture_filter = 1

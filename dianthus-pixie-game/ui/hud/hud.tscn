@@ -319,7 +319,6 @@ text = "[E]"
 
 [node name="ActiveStatusEffectsBar" type="MarginContainer" parent="." unique_id=700000030]
 unique_name_in_owner = true
-visible = false
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
@@ -341,6 +340,7 @@ theme_override_constants/margin_bottom = 1
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 3
+
 [node name="CoreHPPanel" type="PanelContainer" parent="." unique_id=1564407319]
 unique_name_in_owner = true
 anchors_preset = 5
@@ -673,6 +673,7 @@ text = "Wave 1 / 1   Enemies: 0 / 0"
 
 [node name="MenuHintsContainer" type="MarginContainer" parent="." unique_id=116137408]
 unique_name_in_owner = true
+visible = false
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -836,6 +837,7 @@ vertical_alignment = 1
 
 [node name="SkipDayButton" type="Button" parent="." unique_id=700000003]
 unique_name_in_owner = true
+visible = false
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
