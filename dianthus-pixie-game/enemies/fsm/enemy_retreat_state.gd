@@ -26,7 +26,7 @@ func enter() -> void:
 	if not _use_direct_steering and is_instance_valid(_nav_agent):
 		_nav_agent.target_position = _exit_target
 	_nav_timer = 0.0
-	e.play_animation(&"walk")
+	e.play_animation(&"retreat")
 
 
 func physics_update(delta: float) -> void:

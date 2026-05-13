@@ -294,7 +294,7 @@ func _show_drop_popup(text: String, color: Color) -> void:
 
 func play_animation(anim_name: StringName) -> void:
 	if is_instance_valid(_anim_player) and _anim_player.has_animation(anim_name):
-		if _anim_player.current_animation != anim_name:
+		if _anim_player.current_animation != anim_name or not _anim_player.is_playing():
 			_anim_player.play(anim_name)
 
 
@@ -309,6 +309,12 @@ func _flash_damage() -> void:
 func _play_death_animation() -> void:
 	if not is_instance_valid(_sprite):
 		queue_free()
+		return
+	if is_instance_valid(_anim_player) and _anim_player.has_animation(&"death"):
+		_anim_player.play(&"death")
+		await _anim_player.animation_finished
+		if is_instance_valid(self):
+			queue_free()
 		return
 	var tween: Tween = create_tween()
 	tween.tween_property(_sprite, "modulate:a", 0.0, 0.5)

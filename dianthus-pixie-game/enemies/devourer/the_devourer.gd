@@ -141,6 +141,12 @@ func _play_boss_death_animation() -> void:
 	if not is_instance_valid(_sprite):
 		queue_free()
 		return
+	if is_instance_valid(_anim_player) and _anim_player.has_animation(&"death"):
+		_anim_player.play(&"death")
+		await _anim_player.animation_finished
+		if is_instance_valid(self):
+			queue_free()
+		return
 	var tween: Tween = create_tween()
 	tween.tween_property(_sprite, "modulate", Color(1.2, 0.8, 1.4, 1.0), 0.3)
 	tween.tween_property(_sprite, "modulate:a", 0.0, 1.5)
