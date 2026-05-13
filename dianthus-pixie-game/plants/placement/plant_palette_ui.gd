@@ -3,6 +3,8 @@ extends CanvasLayer
 const PlantPaletteSlotScene: PackedScene = preload("res://plants/placement/plant_palette_slot.tscn")
 
 var _manager: Node = null
+var _texture_cache: Dictionary = {}
+var _refresh_queued: bool = false
 @onready var _panel: PanelContainer = %PalettePanel
 @onready var _scroll: ScrollContainer = %PaletteScroll
 @onready var _hbox: HBoxContainer = %PlantSlotList
@@ -10,7 +12,7 @@ var _manager: Node = null
 
 func setup(manager: Node) -> void:
 	_manager = manager
-	InventoryManager.inventory_changed.connect(refresh)
+	InventoryManager.inventory_changed.connect(queue_refresh)
 
 
 func _ready() -> void:
@@ -30,11 +32,13 @@ func _position_panel() -> void:
 
 
 func refresh() -> void:
+	_refresh_queued = false
 	if not is_instance_valid(_hbox):
 		return
 	if not is_instance_valid(_manager):
 		return
 	for child: Node in _hbox.get_children():
+		_hbox.remove_child(child)
 		child.queue_free()
 
 	for seed_id: String in _manager.SEED_TO_SCENE.keys():
@@ -66,29 +70,43 @@ func _seed_to_plant_id(seed_id: String) -> String:
 
 
 func _get_seed_texture(seed_id: String) -> Texture2D:
+	if _texture_cache.has(seed_id):
+		return _texture_cache[seed_id] as Texture2D
+
 	var plant_id: String = _seed_to_plant_id(seed_id)
 	var sprite_path: String = PlantRegistry.get_sprite_path(plant_id)
 	if not sprite_path.is_empty():
 		var sprite: Texture2D = load(sprite_path) as Texture2D
 		if sprite != null:
+			_texture_cache[seed_id] = sprite
 			return sprite
 
 	var icon_path: String = ItemDatabase.get_icon_path(seed_id)
 	if not icon_path.is_empty():
-		return load(icon_path) as Texture2D
+		var icon: Texture2D = load(icon_path) as Texture2D
+		if icon != null:
+			_texture_cache[seed_id] = icon
+		return icon
 	return null
 
 
 func _on_slot_clicked(seed_id: String, quality: int) -> void:
 	if is_instance_valid(_manager):
 		_manager.select_seed(seed_id, quality)
-		refresh()
+		queue_refresh()
 
 
 func show_palette() -> void:
 	visible = true
-	refresh()
+	queue_refresh()
 
 
 func hide_palette() -> void:
 	visible = false
+
+
+func queue_refresh() -> void:
+	if _refresh_queued:
+		return
+	_refresh_queued = true
+	call_deferred("refresh")

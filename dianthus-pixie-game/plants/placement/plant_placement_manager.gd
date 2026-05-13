@@ -71,6 +71,7 @@ var _core_tile: Vector2i = Vector2i(-1, -1)
 var _palette_ui: Node = null
 var expansion_tier: int = 0
 var _first_plant_monologue_played: bool = false
+var _seed_scene_cache: Dictionary = {}
 
 
 func _ready() -> void:
@@ -87,6 +88,31 @@ func _create_palette_ui() -> void:
 	_palette_ui = palette
 	add_child(palette)
 	palette.setup(self)
+
+
+func _request_seed_scene_load(seed_id: String) -> void:
+	if _seed_scene_cache.has(seed_id) or not SEED_TO_SCENE.has(seed_id):
+		return
+	var scene_path: String = SEED_TO_SCENE[seed_id]
+	if ResourceLoader.load_threaded_get_status(scene_path) == ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
+		ResourceLoader.load_threaded_request(scene_path, "PackedScene")
+
+
+func _get_seed_scene(seed_id: String) -> PackedScene:
+	if _seed_scene_cache.has(seed_id):
+		return _seed_scene_cache[seed_id] as PackedScene
+	if not SEED_TO_SCENE.has(seed_id):
+		return null
+	var scene_path: String = SEED_TO_SCENE[seed_id]
+	var packed: PackedScene = null
+	var status: int = ResourceLoader.load_threaded_get_status(scene_path)
+	if status == ResourceLoader.THREAD_LOAD_LOADED or status == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+		packed = ResourceLoader.load_threaded_get(scene_path) as PackedScene
+	else:
+		packed = load(scene_path) as PackedScene
+	if packed != null:
+		_seed_scene_cache[seed_id] = packed
+	return packed
 
 
 func toggle_placement_mode() -> void:
@@ -127,6 +153,7 @@ func select_seed(seed_id: String, quality: int = -1) -> void:
 		return
 	selected_seed_id = seed_id
 	selected_seed_quality = resolved_quality
+	_request_seed_scene_load(selected_seed_id)
 	queue_redraw()
 
 
@@ -167,7 +194,7 @@ func _can_place() -> bool:
 func _place_plant() -> void:
 	if not _can_place():
 		return
-	var packed: PackedScene = load(SEED_TO_SCENE[selected_seed_id]) as PackedScene
+	var packed: PackedScene = _get_seed_scene(selected_seed_id)
 	if packed == null:
 		push_warning("[PlantPlacement] Could not load scene for %s" % selected_seed_id)
 		return
@@ -201,7 +228,10 @@ func _place_plant() -> void:
 		selected_seed_id = ""
 		selected_seed_quality = 0
 	if is_instance_valid(_palette_ui):
-		_palette_ui.refresh()
+		if _palette_ui.has_method("queue_refresh"):
+			_palette_ui.queue_refresh()
+		else:
+			_palette_ui.refresh()
 	queue_redraw()
 
 
