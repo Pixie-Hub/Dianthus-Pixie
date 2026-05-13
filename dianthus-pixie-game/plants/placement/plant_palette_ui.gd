@@ -8,6 +8,8 @@ var _refresh_queued: bool = false
 @onready var _panel: PanelContainer = %PalettePanel
 @onready var _scroll: ScrollContainer = %PaletteScroll
 @onready var _hbox: HBoxContainer = %PlantSlotList
+@onready var _uproot_button: Button = %UprootButton
+@onready var _hint_label: Label = %HintLabel
 
 
 func setup(manager: Node) -> void:
@@ -17,6 +19,7 @@ func setup(manager: Node) -> void:
 
 func _ready() -> void:
 	visible = false
+	_uproot_button.pressed.connect(_on_uproot_button_pressed)
 
 
 func _position_panel() -> void:
@@ -96,8 +99,21 @@ func _on_slot_clicked(seed_id: String, quality: int) -> void:
 		queue_refresh()
 
 
+func _on_uproot_button_pressed() -> void:
+	if is_instance_valid(_manager) and _manager.has_method("toggle_removal_mode"):
+		_manager.toggle_removal_mode()
+
+
+func set_removal_mode(active: bool) -> void:
+	if is_instance_valid(_uproot_button):
+		_uproot_button.button_pressed = active
+	if is_instance_valid(_hint_label):
+		_hint_label.text = "[LMB] Uproot  [RMB/Esc] Cancel" if active else "[P] Close  [RMB] Cancel  Uproot clears plants"
+
+
 func show_palette() -> void:
 	visible = true
+	set_removal_mode(false)
 	queue_refresh()
 
 

@@ -3,6 +3,8 @@ extends Node2D
 signal placement_mode_changed(active: bool)
 signal plant_placed(seed_id: String, grid_pos: Vector2i)
 signal placement_failed(reason: String)
+signal removal_mode_changed(active: bool)
+signal plant_uprooted(plant: PlantBase, grid_pos: Vector2i)
 
 const GRID_SIZE: int = 16
 const DEFAULT_GARDEN_SIZE: Vector2i = Vector2i(12, 10)
@@ -61,6 +63,7 @@ const STORY_INTERLUDES: String = "story_interludes"
 const LABEL_FIRST_PLANT: String = "first_plant_monologue"
 
 var is_placement_mode: bool = false
+var is_removal_mode: bool = false
 var selected_seed_id: String = ""
 var selected_seed_quality: int = 0
 var _ghost_grid_pos: Vector2i = Vector2i.ZERO
@@ -132,6 +135,7 @@ func toggle_placement_mode() -> void:
 
 func exit_placement_mode() -> void:
 	is_placement_mode = false
+	set_removal_mode(false)
 	selected_seed_id = ""
 	selected_seed_quality = 0
 	if is_instance_valid(_palette_ui):
@@ -143,6 +147,7 @@ func exit_placement_mode() -> void:
 func select_seed(seed_id: String, quality: int = -1) -> void:
 	if not SEED_TO_SCENE.has(seed_id):
 		return
+	set_removal_mode(false)
 	var resolved_quality: int = quality
 	if resolved_quality < 0:
 		resolved_quality = InventoryManager.get_best_quality_slot(seed_id)
@@ -154,6 +159,25 @@ func select_seed(seed_id: String, quality: int = -1) -> void:
 	selected_seed_id = seed_id
 	selected_seed_quality = resolved_quality
 	_request_seed_scene_load(selected_seed_id)
+	queue_redraw()
+
+
+func toggle_removal_mode() -> void:
+	set_removal_mode(not is_removal_mode)
+
+
+func set_removal_mode(active: bool) -> void:
+	if active and not is_placement_mode:
+		return
+	if is_removal_mode == active:
+		return
+	is_removal_mode = active
+	if is_removal_mode:
+		selected_seed_id = ""
+		selected_seed_quality = 0
+	removal_mode_changed.emit(is_removal_mode)
+	if is_instance_valid(_palette_ui) and _palette_ui.has_method("set_removal_mode"):
+		_palette_ui.set_removal_mode(is_removal_mode)
 	queue_redraw()
 
 
@@ -172,6 +196,17 @@ func _is_within_garden(grid_pos: Vector2i) -> bool:
 
 func _is_tile_occupied(grid_pos: Vector2i) -> bool:
 	return _occupied_tiles.has(grid_pos) or grid_pos == _core_tile
+
+
+func _get_plant_at_grid(grid_pos: Vector2i) -> PlantBase:
+	var plant: Variant = _occupied_tiles.get(grid_pos)
+	if plant is PlantBase and is_instance_valid(plant) and not (plant as PlantBase).is_destroyed:
+		return plant as PlantBase
+	return null
+
+
+func _can_uproot_at(grid_pos: Vector2i) -> bool:
+	return is_removal_mode and DayNightCycle.is_day() and _get_plant_at_grid(grid_pos) != null
 
 
 func _get_active_plant_count() -> int:
@@ -227,6 +262,22 @@ func _place_plant() -> void:
 	if not InventoryManager.has_item(selected_seed_id, 1, selected_seed_quality):
 		selected_seed_id = ""
 		selected_seed_quality = 0
+	if is_instance_valid(_palette_ui):
+		if _palette_ui.has_method("queue_refresh"):
+			_palette_ui.queue_refresh()
+		else:
+			_palette_ui.refresh()
+	queue_redraw()
+
+
+func _uproot_plant_at(grid_pos: Vector2i) -> void:
+	if not _can_uproot_at(grid_pos):
+		return
+	var plant: PlantBase = _get_plant_at_grid(grid_pos)
+	if plant == null:
+		return
+	plant_uprooted.emit(plant, grid_pos)
+	plant.destroy()
 	if is_instance_valid(_palette_ui):
 		if _palette_ui.has_method("queue_refresh"):
 			_palette_ui.queue_refresh()
@@ -309,6 +360,15 @@ func _unhandled_input(event: InputEvent) -> void:
 		queue_redraw()
 
 	elif event is InputEventMouseButton and event.pressed:
+		if is_removal_mode:
+			if event.button_index == MOUSE_BUTTON_LEFT:
+				_uproot_plant_at(_ghost_grid_pos)
+				get_viewport().set_input_as_handled()
+			elif event.button_index == MOUSE_BUTTON_RIGHT:
+				set_removal_mode(false)
+				get_viewport().set_input_as_handled()
+			return
+
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if selected_seed_id != "" and _can_place():
 				_place_plant()
@@ -323,6 +383,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 	elif event.is_action_pressed("ui_cancel"):
+		if is_removal_mode:
+			set_removal_mode(false)
+			get_viewport().set_input_as_handled()
+			return
 		if selected_seed_id != "":
 			selected_seed_id = ""
 			selected_seed_quality = 0
@@ -377,7 +441,23 @@ func _draw() -> void:
 			draw_circle(center, plant.effect_radius, Color(0.6, 0.8, 1.0, 0.1))
 			draw_arc(center, plant.effect_radius, 0, TAU, 64, Color(0.6, 0.8, 1.0, 0.2), 1.0)
 
-	# 6. Ghost preview + radius (only if seed selected).
+	# 6. Removal target highlight.
+	if is_removal_mode:
+		if _can_uproot_at(_ghost_grid_pos):
+			var target_world: Vector2 = _grid_to_world(_ghost_grid_pos) - global_position
+			var target_rect: Rect2 = Rect2(
+				target_world - Vector2(GRID_SIZE * 0.5, GRID_SIZE * 0.5),
+				Vector2(GRID_SIZE, GRID_SIZE)
+			)
+			draw_rect(target_rect, Color(0.9, 0.15, 0.08, 0.35), true)
+			draw_rect(target_rect, Color(1.0, 0.75, 0.25, 0.9), false, 2.0)
+			var target_plant: PlantBase = _get_plant_at_grid(_ghost_grid_pos)
+			if target_plant != null:
+				var target_center: Vector2 = target_plant.global_position - global_position
+				draw_arc(target_center, target_plant.effect_radius, 0, TAU, 64, Color(1.0, 0.25, 0.15, 0.65), 1.5)
+		return
+
+	# 7. Ghost preview + radius (only if seed selected).
 	if selected_seed_id == "":
 		return
 
@@ -398,7 +478,6 @@ func _draw() -> void:
 		radius_color = Color(1.0, 0.2, 0.2, 0.15)
 	draw_circle(ghost_world, radius, radius_color)
 	draw_arc(ghost_world, radius, 0, TAU, 64, Color(radius_color, 0.6), 1.0)
-	# TODO: UI-09 — plant removal/uprooting mechanic
 
 
 func get_active_plants() -> Array[Node2D]:
