@@ -1,9 +1,11 @@
 extends CanvasLayer
 
+const PlantPaletteSlotScene: PackedScene = preload("res://plants/placement/plant_palette_slot.tscn")
+
 var _manager: Node = null
-var _panel: PanelContainer = null
-var _scroll: ScrollContainer = null
-var _hbox: HBoxContainer = null
+@onready var _panel: PanelContainer = %PalettePanel
+@onready var _scroll: ScrollContainer = %PaletteScroll
+@onready var _hbox: HBoxContainer = %PlantSlotList
 
 
 func setup(manager: Node) -> void:
@@ -12,48 +14,7 @@ func setup(manager: Node) -> void:
 
 
 func _ready() -> void:
-	layer = 80
-	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = false
-	_build_layout()
-
-
-func _build_layout() -> void:
-	_panel = PanelContainer.new()
-	add_child(_panel)
-
-	var margin: MarginContainer = MarginContainer.new()
-	margin.add_theme_constant_override("margin_left", 4)
-	margin.add_theme_constant_override("margin_right", 4)
-	margin.add_theme_constant_override("margin_top", 4)
-	margin.add_theme_constant_override("margin_bottom", 4)
-	_panel.add_child(margin)
-
-	var vbox: VBoxContainer = VBoxContainer.new()
-	margin.add_child(vbox)
-
-	var title: Label = Label.new()
-	title.text = "PLANT"
-	title.add_theme_font_size_override("font_size", 6)
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vbox.add_child(title)
-
-	_scroll = ScrollContainer.new()
-	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
-	_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	_scroll.custom_minimum_size = Vector2(0, 40)
-	vbox.add_child(_scroll)
-
-	_hbox = HBoxContainer.new()
-	_hbox.add_theme_constant_override("separation", 4)
-	_scroll.add_child(_hbox)
-
-	var hint: Label = Label.new()
-	hint.text = "[P] Close  [RMB] Cancel"
-	hint.add_theme_font_size_override("font_size", 6)
-	hint.modulate = Color(0.7, 0.7, 0.7, 1.0)
-	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vbox.add_child(hint)
 
 
 func _position_panel() -> void:
@@ -84,7 +45,7 @@ func refresh() -> void:
 			_add_seed_slot(seed_id, quality, count)
 
 	var slot_count: int = _hbox.get_child_count()
-	var content_width: float = slot_count * (34 + 4) + 8.0
+	var content_width: float = slot_count * (40 + 4) + 8.0
 	_scroll.custom_minimum_size.x = min(content_width, 320.0)
 
 	await get_tree().process_frame
@@ -92,56 +53,36 @@ func refresh() -> void:
 
 
 func _add_seed_slot(seed_id: String, quality: int, count: int) -> void:
-	var slot: PanelContainer = PanelContainer.new()
-	slot.custom_minimum_size = Vector2(34, 34)
-
-	var style: StyleBoxFlat = StyleBoxFlat.new()
-	style.bg_color = Color(0.14, 0.09, 0.055, 0.95)
-	style.border_width_left = 1
-	style.border_width_right = 1
-	style.border_width_top = 1
-	style.border_width_bottom = 1
-	style.border_color = ItemDatabase.get_quality_color(quality)
-	if seed_id == _manager.selected_seed_id and quality == _manager.selected_seed_quality:
-		style.border_width_left = 2
-		style.border_width_right = 2
-		style.border_width_top = 2
-		style.border_width_bottom = 2
-		style.border_color = Color(1.0, 0.85, 0.3)
-	slot.add_theme_stylebox_override("panel", style)
-
-	var vbox: VBoxContainer = VBoxContainer.new()
-	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
-	slot.add_child(vbox)
-
-	var seed_color: Color = _manager.SEED_RADIUS_COLORS.get(seed_id, Color(0.5, 0.5, 1.0, 1.0))
-	seed_color.a = 1.0
-
-	var color_rect: ColorRect = ColorRect.new()
-	color_rect.custom_minimum_size = Vector2(16, 12)
-	color_rect.color = seed_color
-	vbox.add_child(color_rect)
-
-	var quality_label: Label = Label.new()
-	quality_label.text = "%s x%d" % [ItemDatabase.get_quality_marker(quality), count]
-	quality_label.add_theme_font_size_override("font_size", 6)
-	quality_label.add_theme_color_override("font_color", ItemDatabase.get_quality_color(quality))
-	quality_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vbox.add_child(quality_label)
-
-	slot.tooltip_text = "%s\n%s" % [
-		ItemDatabase.get_display_name_with_quality(seed_id, quality),
-		ItemDatabase.get_quality_description(seed_id, quality),
-	]
-	slot.gui_input.connect(_on_slot_clicked.bind(seed_id, quality))
+	var slot: PlantPaletteSlot = PlantPaletteSlotScene.instantiate() as PlantPaletteSlot
+	var texture: Texture2D = _get_seed_texture(seed_id)
+	var selected: bool = seed_id == _manager.selected_seed_id and quality == _manager.selected_seed_quality
+	slot.bind_slot(seed_id, quality, count, texture, selected)
+	slot.slot_clicked.connect(_on_slot_clicked)
 	_hbox.add_child(slot)
 
 
-func _on_slot_clicked(event: InputEvent, seed_id: String, quality: int) -> void:
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		if is_instance_valid(_manager):
-			_manager.select_seed(seed_id, quality)
-			refresh()
+func _seed_to_plant_id(seed_id: String) -> String:
+	return seed_id.trim_suffix("_seed")
+
+
+func _get_seed_texture(seed_id: String) -> Texture2D:
+	var plant_id: String = _seed_to_plant_id(seed_id)
+	var sprite_path: String = PlantRegistry.get_sprite_path(plant_id)
+	if not sprite_path.is_empty():
+		var sprite: Texture2D = load(sprite_path) as Texture2D
+		if sprite != null:
+			return sprite
+
+	var icon_path: String = ItemDatabase.get_icon_path(seed_id)
+	if not icon_path.is_empty():
+		return load(icon_path) as Texture2D
+	return null
+
+
+func _on_slot_clicked(seed_id: String, quality: int) -> void:
+	if is_instance_valid(_manager):
+		_manager.select_seed(seed_id, quality)
+		refresh()
 
 
 func show_palette() -> void:

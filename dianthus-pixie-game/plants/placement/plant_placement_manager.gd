@@ -80,11 +80,10 @@ func _ready() -> void:
 	SaveManager.load_completed.connect(_on_load_completed)
 	_create_palette_ui()
 	set_process(false)
-	# TODO: CORE-09 — restrict placement to Afternoon sub-phase when sub-phases are added
 
 
 func _create_palette_ui() -> void:
-	var palette: Node = preload("res://plants/placement/plant_palette_ui.gd").new()
+	var palette: Node = preload("res://plants/placement/plant_palette_ui.tscn").instantiate()
 	_palette_ui = palette
 	add_child(palette)
 	palette.setup(self)

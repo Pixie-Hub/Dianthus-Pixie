@@ -1,0 +1,63 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://plants/placement/plant_palette_ui.gd" id="1_script"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_palette_panel"]
+bg_color = Color(0.18, 0.12, 0.07, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.72, 0.55, 0.22, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color(0, 0, 0, 0.4)
+shadow_size = 4
+
+[node name="PlantPaletteUI" type="CanvasLayer"]
+process_mode = 3
+visible = false
+layer = 80
+script = ExtResource("1_script")
+
+[node name="PalettePanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+theme_override_styles/panel = SubResource("StyleBoxFlat_palette_panel")
+
+[node name="MarginContainer" type="MarginContainer" parent="PalettePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PalettePanel/MarginContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="PalettePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.25, 1)
+theme_override_font_sizes/font_size = 6
+text = "PLANT"
+horizontal_alignment = 1
+
+[node name="PaletteScroll" type="ScrollContainer" parent="PalettePanel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+horizontal_scroll_mode = 1
+vertical_scroll_mode = 0
+
+[node name="PlantSlotList" type="HBoxContainer" parent="PalettePanel/MarginContainer/VBoxContainer/PaletteScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="HintLabel" type="Label" parent="PalettePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.65, 0.55, 1)
+theme_override_font_sizes/font_size = 6
+text = "[P] Close  [RMB] Cancel"
+horizontal_alignment = 1
