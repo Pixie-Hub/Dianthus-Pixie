@@ -23,6 +23,7 @@
 [ext_resource type="Texture2D" uid="uid://dxp88w4y7ndqk" path="res://assets/tilesets/ruins_of_veld/objects/irrigation_channel.png" id="20_irrig"]
 [ext_resource type="Texture2D" uid="uid://ijv1da2u4f83" path="res://assets/tilesets/ruins_of_veld/objects/ruined_planter_box.png" id="21_planter"]
 [ext_resource type="Texture2D" uid="uid://dtv4it4j2wkt" path="res://assets/tilesets/ruins_of_veld/objects/void_rubble_pile.png" id="22_rubble"]
+[ext_resource type="Texture2D" path="res://assets/tilesets/ruins_of_veld/objects/devourer_omen_landmark.png" id="23_omen"]
 [ext_resource type="Texture2D" uid="uid://b1t4nrewa0bpw" path="res://world/tilesets/ruins_of_veld_new/decor_tile_0.png" id="23_dc0"]
 [ext_resource type="Texture2D" uid="uid://difyogchedw5v" path="res://world/tilesets/ruins_of_veld_new/decor_tile_3.png" id="24_dc3"]
 [ext_resource type="Texture2D" uid="uid://1mv60cx6j8ct" path="res://world/tilesets/ruins_of_veld_new/decor_tile_5.png" id="25_dc5"]
@@ -3349,10 +3350,8 @@ shape = SubResource("CircleShape2D_rbkqx")
 [node name="OmenStoneGlyph" type="Sprite2D" parent="YSortLayer/AncientOmenLandmark" unique_id=113498426]
 z_index = 1
 texture_filter = 1
-scale = Vector2(1.7, 1.7)
-texture = ExtResource("1_esuuf")
-region_enabled = true
-region_rect = Rect2(256, 320, 64, 64)
+scale = Vector2(0.85, 0.85)
+texture = ExtResource("23_omen")
 
 [node name="OmenBreachGlow" type="Polygon2D" parent="YSortLayer/AncientOmenLandmark" unique_id=726086628]
 z_index = -1
