@@ -56,9 +56,9 @@ func _add_seed_slot(seed_id: String, quality: int, count: int) -> void:
 	var slot: PlantPaletteSlot = PlantPaletteSlotScene.instantiate() as PlantPaletteSlot
 	var texture: Texture2D = _get_seed_texture(seed_id)
 	var selected: bool = seed_id == _manager.selected_seed_id and quality == _manager.selected_seed_quality
+	_hbox.add_child(slot)
 	slot.bind_slot(seed_id, quality, count, texture, selected)
 	slot.slot_clicked.connect(_on_slot_clicked)
-	_hbox.add_child(slot)
 
 
 func _seed_to_plant_id(seed_id: String) -> String:
