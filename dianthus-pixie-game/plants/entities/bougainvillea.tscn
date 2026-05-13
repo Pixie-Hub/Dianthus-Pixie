@@ -3,62 +3,13 @@
 [ext_resource type="Script" uid="uid://clqja6duco0s7" path="res://plants/entities/bougainvillea.gd" id="1_tv"]
 [ext_resource type="Texture2D" uid="uid://cgqft4qcvbbri" path="res://plants/sprites/Bougainvillea.png" id="2_lgkg6"]
 [ext_resource type="Script" path="res://plants/vfx/plant_animation_controller.gd" id="3_vfx"]
+[ext_resource type="SpriteFrames" path="res://plants/vfx/sprite_frames/bougainvillea_sprite_frames.tres" id="4_frames"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(16, 16)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_effect"]
 radius = 24.0
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_bougainvillea"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("2_lgkg6")
-}],
-"loop": true,
-"name": &"idle",
-"speed": 1.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("2_lgkg6")
-}, {
-"duration": 1.0,
-"texture": ExtResource("2_lgkg6")
-}, {
-"duration": 1.0,
-"texture": ExtResource("2_lgkg6")
-}],
-"loop": false,
-"name": &"bloom",
-"speed": 10.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("2_lgkg6")
-}, {
-"duration": 1.0,
-"texture": ExtResource("2_lgkg6")
-}],
-"loop": false,
-"name": &"active",
-"speed": 10.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("2_lgkg6")
-}, {
-"duration": 1.0,
-"texture": ExtResource("2_lgkg6")
-}, {
-"duration": 1.0,
-"texture": ExtResource("2_lgkg6")
-}],
-"loop": false,
-"name": &"wither",
-"speed": 10.0
-}]
 
 [node name="Bougainvillea" type="StaticBody2D" unique_id=941408837]
 collision_mask = 0
@@ -75,7 +26,7 @@ unique_name_in_owner = true
 visible = false
 texture_filter = 1
 scale = Vector2(0.5, 0.5)
-sprite_frames = SubResource("SpriteFrames_bougainvillea")
+sprite_frames = ExtResource("4_frames")
 animation = &"idle"
 
 [node name="PlantAnimationController" type="Node" parent="." unique_id=1931427663]

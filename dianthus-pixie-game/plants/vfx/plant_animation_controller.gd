@@ -8,9 +8,9 @@ signal wither_animation_finished
 @export var active_animation: StringName = &"active"
 @export var wither_animation: StringName = &"wither"
 @export var active_animation_min_interval: float = 0.35
-@export var bloom_duration: float = 0.45
-@export var active_duration: float = 0.3
-@export var wither_duration: float = 0.5
+@export var bloom_duration: float = 0.6
+@export var active_duration: float = 0.4
+@export var wither_duration: float = 0.6
 
 var _static_sprite: Sprite2D = null
 var _animated_sprite: AnimatedSprite2D = null

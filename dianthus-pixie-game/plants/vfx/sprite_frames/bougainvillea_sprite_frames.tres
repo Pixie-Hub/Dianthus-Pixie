@@ -1,0 +1,144 @@
+[gd_resource type="SpriteFrames" load_steps=21 format=3]
+
+[ext_resource type="Texture2D" path="res://plants/sprites/Bougainvillea.png" id="1_static"]
+[ext_resource type="Texture2D" path="res://plants/sprites/animations/bougainvillea_bloom.png" id="2_bloom"]
+[ext_resource type="Texture2D" path="res://plants/sprites/animations/bougainvillea_active.png" id="3_active"]
+[ext_resource type="Texture2D" path="res://plants/sprites/animations/bougainvillea_wither.png" id="4_wither"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bloom_0"]
+atlas = ExtResource("2_bloom")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bloom_1"]
+atlas = ExtResource("2_bloom")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bloom_2"]
+atlas = ExtResource("2_bloom")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bloom_3"]
+atlas = ExtResource("2_bloom")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bloom_4"]
+atlas = ExtResource("2_bloom")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bloom_5"]
+atlas = ExtResource("2_bloom")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_active_0"]
+atlas = ExtResource("3_active")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_active_1"]
+atlas = ExtResource("3_active")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_active_2"]
+atlas = ExtResource("3_active")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_active_3"]
+atlas = ExtResource("3_active")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wither_0"]
+atlas = ExtResource("4_wither")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wither_1"]
+atlas = ExtResource("4_wither")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wither_2"]
+atlas = ExtResource("4_wither")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wither_3"]
+atlas = ExtResource("4_wither")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wither_4"]
+atlas = ExtResource("4_wither")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wither_5"]
+atlas = ExtResource("4_wither")
+region = Rect2(320, 0, 64, 64)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_static")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bloom_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bloom_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bloom_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bloom_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bloom_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bloom_5")
+}],
+"loop": false,
+"name": &"bloom",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_active_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_active_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_active_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_active_3")
+}],
+"loop": false,
+"name": &"active",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wither_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wither_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wither_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wither_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wither_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wither_5")
+}],
+"loop": false,
+"name": &"wither",
+"speed": 10.0
+}]
