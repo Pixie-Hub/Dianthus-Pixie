@@ -1,9 +1,25 @@
-[gd_resource type="SpriteFrames" load_steps=21 format=3]
+[gd_resource type="SpriteFrames" format=3 uid="uid://csb2so0yphc5d"]
 
-[ext_resource type="Texture2D" path="res://plants/sprites/Bougainvillea.png" id="1_static"]
-[ext_resource type="Texture2D" path="res://plants/sprites/animations/bougainvillea_bloom.png" id="2_bloom"]
-[ext_resource type="Texture2D" path="res://plants/sprites/animations/bougainvillea_active.png" id="3_active"]
-[ext_resource type="Texture2D" path="res://plants/sprites/animations/bougainvillea_wither.png" id="4_wither"]
+[ext_resource type="Texture2D" uid="uid://cgqft4qcvbbri" path="res://plants/sprites/Bougainvillea.png" id="1_static"]
+[ext_resource type="Texture2D" uid="uid://c7mk8gclp1yfd" path="res://plants/sprites/animations/bougainvillea_bloom.png" id="2_bloom"]
+[ext_resource type="Texture2D" uid="uid://j5l8db8uv2t4" path="res://plants/sprites/animations/bougainvillea_active.png" id="3_active"]
+[ext_resource type="Texture2D" uid="uid://dwpwi7n4t6b1l" path="res://plants/sprites/animations/bougainvillea_wither.png" id="4_wither"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_active_0"]
+atlas = ExtResource("3_active")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_active_1"]
+atlas = ExtResource("3_active")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_active_2"]
+atlas = ExtResource("3_active")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_active_3"]
+atlas = ExtResource("3_active")
+region = Rect2(192, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bloom_0"]
 atlas = ExtResource("2_bloom")
@@ -28,22 +44,6 @@ region = Rect2(256, 0, 64, 64)
 [sub_resource type="AtlasTexture" id="AtlasTexture_bloom_5"]
 atlas = ExtResource("2_bloom")
 region = Rect2(320, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_active_0"]
-atlas = ExtResource("3_active")
-region = Rect2(0, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_active_1"]
-atlas = ExtResource("3_active")
-region = Rect2(64, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_active_2"]
-atlas = ExtResource("3_active")
-region = Rect2(128, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_active_3"]
-atlas = ExtResource("3_active")
-region = Rect2(192, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wither_0"]
 atlas = ExtResource("4_wither")
@@ -73,11 +73,20 @@ region = Rect2(320, 0, 64, 64)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_static")
+"texture": SubResource("AtlasTexture_active_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_active_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_active_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_active_3")
 }],
-"loop": true,
-"name": &"idle",
-"speed": 1.0
+"loop": false,
+"name": &"active",
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -104,20 +113,11 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_active_0")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_active_1")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_active_2")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_active_3")
+"texture": ExtResource("1_static")
 }],
-"loop": false,
-"name": &"active",
-"speed": 10.0
+"loop": true,
+"name": &"idle",
+"speed": 1.0
 }, {
 "frames": [{
 "duration": 1.0,

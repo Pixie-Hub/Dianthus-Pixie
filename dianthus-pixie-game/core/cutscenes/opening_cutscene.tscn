@@ -3,6 +3,17 @@
 [ext_resource type="Script" uid="uid://bac1i3fqmeeaf" path="res://core/cutscenes/opening_cutscene.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://lshj2x1akr8o" path="res://plants/sprites/Dianthus Core/Dianthus Core.png" id="2_core"]
 
+[sub_resource type="Gradient" id="Gradient_ground_glow"]
+offsets = PackedFloat32Array(0, 0.45, 1)
+colors = PackedColorArray(1, 0.64, 0.86, 0.34, 0.72, 0.24, 0.5, 0.14, 0.06, 0.01, 0.04, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ground_glow"]
+gradient = SubResource("Gradient_ground_glow")
+width = 256
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
 [sub_resource type="Gradient" id="Gradient_reveal_outer"]
 offsets = PackedFloat32Array(0, 0.22, 0.58, 1)
 colors = PackedColorArray(1, 0.86, 0.94, 0.58, 1, 0.42, 0.68, 0.28, 0.62, 0.18, 0.42, 0.1, 0.08, 0.02, 0.12, 0)
@@ -23,18 +34,6 @@ colors = PackedColorArray(1, 0.98, 0.88, 0.8, 1, 0.72, 0.88, 0.52, 1, 0.38, 0.66
 gradient = SubResource("Gradient_reveal_inner")
 width = 128
 height = 128
-fill = 1
-fill_from = Vector2(0.5, 0.5)
-fill_to = Vector2(1, 0.5)
-
-[sub_resource type="Gradient" id="Gradient_ground_glow"]
-offsets = PackedFloat32Array(0, 0.45, 1)
-colors = PackedColorArray(1, 0.64, 0.86, 0.34, 0.72, 0.24, 0.5, 0.14, 0.06, 0.01, 0.04, 0)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_ground_glow"]
-gradient = SubResource("Gradient_ground_glow")
-width = 256
-height = 64
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 0.5)
@@ -80,7 +79,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="CoreReveal" type="Control" parent="."]
+[node name="CoreReveal" type="Control" parent="." unique_id=1084699265]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 8
@@ -96,7 +95,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="GroundGlow" type="TextureRect" parent="CoreReveal"]
+[node name="GroundGlow" type="TextureRect" parent="CoreReveal" unique_id=1958310265]
 unique_name_in_owner = true
 self_modulate = Color(1, 0.66, 0.86, 0.72)
 layout_mode = 1
@@ -113,10 +112,10 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("GradientTexture2D_ground_glow")
 expand_mode = 1
-stretch_mode = 0
 
-[node name="RootVeins" type="Control" parent="CoreReveal"]
+[node name="RootVeins" type="Control" parent="CoreReveal" unique_id=373654935]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -131,7 +130,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="VeinLeft" type="ColorRect" parent="CoreReveal/RootVeins"]
+[node name="VeinLeft" type="ColorRect" parent="CoreReveal/RootVeins" unique_id=784203817]
 layout_mode = 0
 offset_left = 34.0
 offset_top = 35.0
@@ -140,7 +139,7 @@ offset_bottom = 37.0
 rotation = -0.279253
 color = Color(1, 0.54, 0.78, 0.42)
 
-[node name="VeinRight" type="ColorRect" parent="CoreReveal/RootVeins"]
+[node name="VeinRight" type="ColorRect" parent="CoreReveal/RootVeins" unique_id=1824644227]
 layout_mode = 0
 offset_left = 122.0
 offset_top = 35.0
@@ -149,7 +148,7 @@ offset_bottom = 37.0
 rotation = 0.261799
 color = Color(1, 0.54, 0.78, 0.42)
 
-[node name="VeinLowLeft" type="ColorRect" parent="CoreReveal/RootVeins"]
+[node name="VeinLowLeft" type="ColorRect" parent="CoreReveal/RootVeins" unique_id=408967553]
 layout_mode = 0
 offset_left = 54.0
 offset_top = 54.0
@@ -158,7 +157,7 @@ offset_bottom = 56.0
 rotation = 0.436332
 color = Color(1, 0.76, 0.48, 0.32)
 
-[node name="VeinLowRight" type="ColorRect" parent="CoreReveal/RootVeins"]
+[node name="VeinLowRight" type="ColorRect" parent="CoreReveal/RootVeins" unique_id=808539149]
 layout_mode = 0
 offset_left = 128.0
 offset_top = 54.0
@@ -167,7 +166,7 @@ offset_bottom = 56.0
 rotation = -0.418879
 color = Color(1, 0.76, 0.48, 0.32)
 
-[node name="OuterHalo" type="TextureRect" parent="CoreReveal"]
+[node name="OuterHalo" type="TextureRect" parent="CoreReveal" unique_id=1580349334]
 unique_name_in_owner = true
 self_modulate = Color(1, 0.58, 0.84, 0.7)
 layout_mode = 1
@@ -184,9 +183,8 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("GradientTexture2D_reveal_outer")
 expand_mode = 1
-stretch_mode = 0
 
-[node name="InnerHalo" type="TextureRect" parent="CoreReveal"]
+[node name="InnerHalo" type="TextureRect" parent="CoreReveal" unique_id=586303401]
 unique_name_in_owner = true
 self_modulate = Color(1, 0.86, 0.95, 0.76)
 layout_mode = 1
@@ -203,9 +201,8 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("GradientTexture2D_reveal_inner")
 expand_mode = 1
-stretch_mode = 0
 
-[node name="CoreSprite" type="TextureRect" parent="CoreReveal"]
+[node name="CoreSprite" type="TextureRect" parent="CoreReveal" unique_id=835954633]
 unique_name_in_owner = true
 self_modulate = Color(1, 0.82, 0.92, 1)
 texture_filter = 1
@@ -224,7 +221,7 @@ grow_vertical = 2
 texture = ExtResource("2_core")
 stretch_mode = 5
 
-[node name="LifeSpark" type="ColorRect" parent="CoreReveal"]
+[node name="LifeSpark" type="ColorRect" parent="CoreReveal" unique_id=1116370850]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 8
@@ -240,7 +237,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 0.96, 0.72, 0.86)
 
-[node name="PollenContainer" type="Control" parent="CoreReveal"]
+[node name="PollenContainer" type="Control" parent="CoreReveal" unique_id=1201089481]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -266,7 +263,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.78, 0.12, 0.42, 1)
 
-[node name="DarkVignette" type="TextureRect" parent="."]
+[node name="DarkVignette" type="TextureRect" parent="." unique_id=2145895680]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -277,7 +274,6 @@ grow_vertical = 2
 mouse_filter = 2
 texture = SubResource("GradientTexture2D_dark_vignette")
 expand_mode = 1
-stretch_mode = 0
 
 [node name="ShadowLeft" type="ColorRect" parent="." unique_id=1808646836]
 unique_name_in_owner = true

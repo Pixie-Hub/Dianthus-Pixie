@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://b26asmcdajpdl" path="res://enemies/devourer/the_devourer.gd" id="1_dev"]
 [ext_resource type="Script" uid="uid://bp6rkgxl62npj" path="res://enemies/fsm/state_machine.gd" id="2_fsm"]
-[ext_resource type="Texture2D" path="res://enemies/devourer/the_devourer_animations.png" id="3_devpng"]
+[ext_resource type="Texture2D" uid="uid://b0uovq8glujtd" path="res://enemies/devourer/the_devourer_animations.png" id="3_devpng"]
 [ext_resource type="Script" uid="uid://dys1mdfjif14b" path="res://enemies/devourer/states/devourer_idle.gd" id="4_idle"]
 [ext_resource type="Script" uid="uid://0i3aflqa6afx" path="res://enemies/devourer/states/devourer_phase1.gd" id="5_phase1"]
 [ext_resource type="Script" uid="uid://otwegbm76rb" path="res://enemies/devourer/states/devourer_phase2.gd" id="6_phase2"]
@@ -196,11 +196,10 @@ attack_cooldown = 2.5
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=-394967295]
 unique_name_in_owner = true
 texture_filter = 1
+texture = ExtResource("3_devpng")
+offset = Vector2(0, -8)
 hframes = 8
 vframes = 4
-frame = 0
-offset = Vector2(0, -8)
-texture = ExtResource("3_devpng")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=596775231]
 shape = SubResource("CapsuleShape2D_body")

@@ -1,6 +1,6 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene format=3 uid="uid://5wvje0lilyg0"]
 
-[ext_resource type="Script" path="res://minigames/crafting_assembly/crafting_assembly_screen.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://bvfsfob0q3ovc" path="res://minigames/crafting_assembly/crafting_assembly_screen.gd" id="1_script"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 bg_color = Color(0.18, 0.12, 0.07, 1)
@@ -40,19 +40,19 @@ corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
-[node name="CraftingAssemblyScreen" type="CanvasLayer"]
+[node name="CraftingAssemblyScreen" type="CanvasLayer" unique_id=1885462129]
 process_mode = 3
 layer = 97
 script = ExtResource("1_script")
 
-[node name="Overlay" type="ColorRect" parent="."]
+[node name="Overlay" type="ColorRect" parent="." unique_id=1032178592]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 1
 color = Color(0, 0, 0, 0.65)
 
-[node name="Panel" type="PanelContainer" parent="."]
+[node name="Panel" type="PanelContainer" parent="." unique_id=586369167]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -64,53 +64,53 @@ offset_right = 240.0
 offset_bottom = 160.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=672961369]
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=726034874]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=752173133]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.8, 0.25, 1)
 theme_override_font_sizes/font_size = 16
 text = "Crafting Assembly"
 
-[node name="RecipeHintLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="RecipeHintLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=608141614]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.65, 0.55, 1)
 theme_override_font_sizes/font_size = 10
 text = "Select components in order."
 
-[node name="HSeparator" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer" unique_id=1932776038]
 modulate = Color(0.72, 0.55, 0.22, 1)
 layout_mode = 2
 
-[node name="TargetRow" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="TargetRow" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=1023139653]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(400, 58)
 layout_mode = 2
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="HSeparator2" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer" unique_id=1243770022]
 modulate = Color(0.72, 0.55, 0.22, 1)
 layout_mode = 2
 
-[node name="ComponentRow" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="ComponentRow" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=73662017]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(400, 58)
 layout_mode = 2
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="TimerBar" type="ProgressBar" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="TimerBar" type="ProgressBar" parent="Panel/MarginContainer/VBoxContainer" unique_id=406834579]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(400, 8)
 layout_mode = 2
@@ -120,25 +120,24 @@ max_value = 9.0
 value = 9.0
 show_percentage = false
 
-[node name="ScoreLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="ScoreLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=34901527]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
 theme_override_font_sizes/font_size = 11
 text = "Score: 0"
 
-[node name="ControlHintLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="ControlHintLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=70045765]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.65, 0.55, 1)
 theme_override_font_sizes/font_size = 8
 text = "Mouse: drag component to slot. Gamepad: arrows select, A pick/drop, B cancel. Walking away from bench cancels."
 autowrap_mode = 3
 
-[node name="ResultLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="ResultLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=1893093807]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
 theme_override_font_sizes/font_size = 12
-text = ""
 autowrap_mode = 3

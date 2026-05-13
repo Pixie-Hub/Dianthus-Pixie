@@ -1,8 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://bthorntscn1"]
+[gd_scene format=3 uid="uid://bthorntscn1"]
 
 [ext_resource type="Script" uid="uid://clqja6duco0s7" path="res://plants/entities/bougainvillea.gd" id="1_tv"]
 [ext_resource type="Texture2D" uid="uid://cgqft4qcvbbri" path="res://plants/sprites/Bougainvillea.png" id="2_lgkg6"]
-[ext_resource type="Script" path="res://plants/vfx/plant_animation_controller.gd" id="3_vfx"]
+[ext_resource type="Script" uid="uid://bkofvgxma2ayy" path="res://plants/vfx/plant_animation_controller.gd" id="3_vfx"]
 [ext_resource type="SpriteFrames" path="res://plants/vfx/sprite_frames/bougainvillea_sprite_frames.tres" id="4_frames"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
@@ -27,7 +27,7 @@ visible = false
 texture_filter = 1
 scale = Vector2(0.5, 0.5)
 sprite_frames = ExtResource("4_frames")
-animation = &"idle"
+animation = &"active"
 
 [node name="PlantAnimationController" type="Node" parent="." unique_id=1931427663]
 unique_name_in_owner = true
