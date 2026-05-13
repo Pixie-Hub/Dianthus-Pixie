@@ -7,6 +7,7 @@ extends Area2D
 @export var slow_multiplier: float = 0.6
 @export var slow_duration: float = 2.0
 @export var arc_height: float = 24.0
+@export var weapon_id: String = "spore_bomb"
 
 const PROJECTILE_FRAME_SIZE: Vector2i = Vector2i(16, 16)
 const PROJECTILE_FRAMES: int = 8
@@ -14,6 +15,8 @@ const PROJECTILE_FRAME_TIME: float = 0.08
 const DETONATION_FRAME_SIZE: Vector2i = Vector2i(64, 64)
 const DETONATION_FRAMES: int = 8
 const DETONATION_FRAME_TIME: float = 0.06
+const WEAPON_VFX_BURST_SCENE: PackedScene = preload("res://vfx/weapon_vfx/weapon_vfx_burst.tscn")
+const WEAPON_VFX_LIBRARY = preload("res://vfx/weapon_vfx/weapon_vfx_library.gd")
 
 var _start_pos: Vector2
 var _target_pos: Vector2
@@ -49,8 +52,9 @@ func _physics_process(delta: float) -> void:
 func _explode() -> void:
 	_exploded = true
 	set_physics_process(false)
-	var _det_sfx: String = "void_grenade_detonate" if damage >= 30 else "spore_bomb_detonate"
+	var _det_sfx: String = "void_grenade_detonate" if weapon_id == "void_grenade" else "spore_bomb_detonate"
 	SfxManager.play_at(_det_sfx, global_position)
+	_spawn_impact_vfx()
 	for body in get_tree().get_nodes_in_group(&"enemies"):
 		if body is EnemyBase and not body.is_dead:
 			if global_position.distance_to(body.global_position) <= aoe_radius:
@@ -61,6 +65,19 @@ func _explode() -> void:
 	await _play_detonation_vfx()
 	print("[SporeBomb] Exploded at %s — radius %.0f, dmg %d" % [global_position, aoe_radius, damage])
 	queue_free()
+
+
+func _spawn_impact_vfx() -> void:
+	var frames: SpriteFrames = WEAPON_VFX_LIBRARY.get_impact_frames(weapon_id)
+	if frames == null:
+		return
+	var parent: Node = get_tree().current_scene
+	if parent == null:
+		parent = self
+	var burst = WEAPON_VFX_BURST_SCENE.instantiate()
+	parent.add_child(burst)
+	burst.global_position = global_position
+	burst.play(frames, &"burst")
 
 
 func _set_projectile_frame(frame: int) -> void:

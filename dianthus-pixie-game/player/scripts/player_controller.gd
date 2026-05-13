@@ -30,6 +30,7 @@ const SKILL_ENERGY_COST: int = 30
 @onready var _anim_tree: AnimationTree = %AnimationTree
 @onready var _camera: Camera2D = %Camera2D
 @onready var _sword_hitbox: Area2D = %SwordHitbox
+@onready var _weapon_vfx_anchor: Node2D = %WeaponVfxAnchor
 
 var _state_machine: AnimationNodeStateMachinePlayback
 
@@ -76,6 +77,11 @@ const SPORE_BOMB_RELEASE_TIME: float = 0.08
 const SPORE_BOMB_ATTACK_TIME: float = 0.2
 const SPORE_BOMB_PROJECTILE_SCENE: PackedScene = preload("res://combat/projectiles/spore_bomb_projectile.tscn")
 const VOID_GRENADE_PROJECTILE_SCENE: PackedScene = preload("res://combat/projectiles/void_grenade_projectile.tscn")
+const WEAPON_VFX_BURST_SCENE: PackedScene = preload("res://vfx/weapon_vfx/weapon_vfx_burst.tscn")
+const WEAPON_VFX_LIBRARY = preload("res://vfx/weapon_vfx/weapon_vfx_library.gd")
+const WEAPON_VFX_VISUAL_OFFSET: Vector2 = Vector2(0, -28)
+const WEAPON_VFX_VISUAL_SCALE: Vector2 = Vector2(0.5, 0.5)
+const IMPACT_VFX_VISUAL_SCALE: Vector2 = Vector2(0.75, 0.75)
 
 var is_blocking: bool = false
 var _block_raised_time: float = -1.0
@@ -782,6 +788,39 @@ func _start_attack() -> void:
 			push_warning("[Player] Unknown weapon_id: %s" % _current_weapon.weapon_id)
 
 
+func _play_weapon_attack_vfx(weapon_id: String, direction: Vector2) -> void:
+	var frames: SpriteFrames = WEAPON_VFX_LIBRARY.get_attack_frames(weapon_id)
+	var animation_name: StringName = WEAPON_VFX_LIBRARY.direction_animation(direction)
+	_spawn_local_weapon_vfx(frames, animation_name)
+
+
+func _play_weapon_shield_vfx(weapon_id: String, direction: Vector2, phase: String) -> void:
+	var frames: SpriteFrames = WEAPON_VFX_LIBRARY.get_shield_frames(weapon_id)
+	var animation_name: StringName = WEAPON_VFX_LIBRARY.shield_animation(phase, direction)
+	_spawn_local_weapon_vfx(frames, animation_name)
+
+
+func _spawn_local_weapon_vfx(frames: SpriteFrames, animation_name: StringName) -> void:
+	if frames == null or _weapon_vfx_anchor == null:
+		return
+	var burst = WEAPON_VFX_BURST_SCENE.instantiate()
+	_weapon_vfx_anchor.add_child(burst)
+	burst.play(frames, animation_name, WEAPON_VFX_VISUAL_OFFSET, WEAPON_VFX_VISUAL_SCALE)
+
+
+func _spawn_weapon_impact_vfx(weapon_id: String, world_position: Vector2) -> void:
+	var frames: SpriteFrames = WEAPON_VFX_LIBRARY.get_impact_frames(weapon_id)
+	if frames == null:
+		return
+	var parent: Node = get_tree().current_scene
+	if parent == null:
+		parent = self
+	var burst = WEAPON_VFX_BURST_SCENE.instantiate()
+	parent.add_child(burst)
+	burst.global_position = world_position
+	burst.play(frames, &"burst", Vector2.ZERO, IMPACT_VFX_VISUAL_SCALE)
+
+
 func _attack_melee_sword() -> void:
 	is_attacking = true
 	velocity = Vector2.ZERO
@@ -789,6 +828,7 @@ func _attack_melee_sword() -> void:
 	var atk_state: String = "blazeblade_attack" if _current_weapon.weapon_id == "blazeblade" else "thornsword_attack"
 	_travel(atk_state, true)
 	_update_blend_position()
+	_play_weapon_attack_vfx(_current_weapon.weapon_id, last_direction)
 	var hitbox_offset: Vector2
 	if last_direction == Vector2.DOWN:
 		hitbox_offset = Vector2(0, -4)
@@ -825,6 +865,7 @@ func _attack_vine_whip() -> void:
 	var atk_state: String = "crystal_lash_attack" if _current_weapon.weapon_id == "crystal_lash" else "vine_whip_attack"
 	_travel(atk_state, true)
 	_update_blend_position()
+	_play_weapon_attack_vfx(_current_weapon.weapon_id, last_direction)
 	var hitbox_offset: Vector2
 	if last_direction == Vector2.DOWN:
 		hitbox_offset = Vector2(0, -4)
@@ -860,6 +901,7 @@ func _attack_spore_bomb() -> void:
 	var attack_weapon: WeaponData = _current_weapon
 	_travel("attack", true)
 	_update_blend_position()
+	_play_weapon_attack_vfx(attack_weapon.weapon_id, last_direction)
 	await get_tree().create_timer(SPORE_BOMB_RELEASE_TIME).timeout
 	if is_dead or attack_weapon == null:
 		is_attacking = false
@@ -875,6 +917,7 @@ func _attack_spore_bomb() -> void:
 		else SPORE_BOMB_PROJECTILE_SCENE
 	)
 	var proj: SporeBombProjectile = projectile_scene.instantiate()
+	proj.weapon_id = attack_weapon.weapon_id
 	proj.damage = _get_weapon_damage(attack_weapon)
 	proj.aoe_radius = attack_weapon.attack_range * 0.4
 	proj.launch(global_position, target)
@@ -907,6 +950,7 @@ func _raise_block() -> void:
 	damage_reduction = max(damage_reduction, PETAL_SHIELD_DR)
 	_travel(_shield_animation_state("block"), true)
 	_update_blend_position()
+	_play_weapon_shield_vfx(_current_weapon.weapon_id, last_direction, "block")
 	_sprite.modulate = Color(0.8, 0.9, 1.0)
 	var _raise_sfx: String = "iron_bloom_shield_raise" if _current_weapon.weapon_id == "iron_bloom_shield" else "petal_shield_raise"
 	SfxManager.play(_raise_sfx)
@@ -939,17 +983,10 @@ func _trigger_petal_counter() -> void:
 	print("[Player] Petal Shield counter! Radius: %.0f, Dmg: %d" % [radius, dmg])
 
 
-func _spawn_counter_vfx(radius: float) -> void:
-	# TODO (VFX-05): Replace with real counter-attack particle ring.
-	var ring: ColorRect = ColorRect.new()
-	ring.color = Color(0.8, 0.9, 1.0, 0.6)
-	var size: float = radius * 2.0
-	ring.size = Vector2(size, size)
-	ring.position = -Vector2(size * 0.5, size * 0.5)
-	add_child(ring)
-	var tween: Tween = create_tween()
-	tween.tween_property(ring, "modulate:a", 0.0, 0.3)
-	tween.tween_callback(ring.queue_free)
+func _spawn_counter_vfx(_radius: float) -> void:
+	if _current_weapon == null:
+		return
+	_play_weapon_shield_vfx(_current_weapon.weapon_id, last_direction, "counter")
 
 
 func _end_attack() -> void:
@@ -1297,7 +1334,8 @@ func _on_sword_hitbox_body_entered(body: Node2D) -> void:
 		SfxManager.play_at("vine_whip_pull", body.global_position)
 		if body.has_method("apply_pull"):
 			body.apply_pull(global_position, 0.25, 24.0)
-	# TODO (VFX-05): Add impact particles on hit.
+	if _current_weapon != null:
+		_spawn_weapon_impact_vfx(_current_weapon.weapon_id, body.global_position)
 
 
 func _get_weapon_damage(weapon: WeaponData, flat_bonus: int = 0) -> int:
