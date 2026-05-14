@@ -23,6 +23,46 @@
 [ext_resource type="Shader" path="res://world/zones/dusk_forest/shaders/moonbeam_ground_glow.gdshader" id="18_mbglow"]
 [ext_resource type="Shader" path="res://world/zones/dusk_forest/shaders/moonbeam_mist_band.gdshader" id="19_mbmist"]
 [ext_resource type="Shader" path="res://world/zones/dusk_forest/shaders/moonbeam_shadow_mask.gdshader" id="20_mbshadow"]
+[ext_resource type="Shader" path="res://world/zones/shaders/zone_soft_area_fill.gdshader" id="21_zone_soft"]
+[ext_resource type="Shader" path="res://world/zones/shaders/zone_glow_pool.gdshader" id="22_zone_glow"]
+[ext_resource type="Shader" path="res://world/zones/shaders/zone_liquid_ripple.gdshader" id="23_zone_liquid"]
+[ext_resource type="Shader" path="res://world/zones/shaders/zone_void_fissure.gdshader" id="24_zone_fissure"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dusk_soft_area"]
+shader = ExtResource("21_zone_soft")
+shader_parameter/alpha_boost = 1.0
+shader_parameter/noise_scale = 9.0
+shader_parameter/noise_strength = 0.28
+shader_parameter/shimmer_strength = 0.026
+shader_parameter/dither_strength = 0.035
+shader_parameter/drift = Vector2(0.006, -0.013)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dusk_biolume_glow"]
+shader = ExtResource("22_zone_glow")
+shader_parameter/alpha_boost = 0.82
+shader_parameter/pulse_strength = 0.09
+shader_parameter/pulse_speed = 0.95
+shader_parameter/noise_scale = 13.0
+shader_parameter/mote_strength = 0.1
+shader_parameter/drift = Vector2(0.006, 0.014)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dusk_blackwater"]
+shader = ExtResource("23_zone_liquid")
+shader_parameter/alpha_boost = 1.0
+shader_parameter/ripple_strength = 0.14
+shader_parameter/ripple_frequency = 25.0
+shader_parameter/ripple_speed = 1.1
+shader_parameter/noise_scale = 12.0
+shader_parameter/flow = Vector2(0.008, 0.012)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dusk_barrier"]
+shader = ExtResource("24_zone_fissure")
+shader_parameter/alpha_boost = 0.72
+shader_parameter/vein_strength = 0.3
+shader_parameter/pulse_strength = 0.07
+shader_parameter/noise_scale = 20.0
+shader_parameter/vein_color = Vector3(0.22, 0.48, 0.55)
+shader_parameter/drift = Vector2(-0.006, 0.014)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_l61tn"]
 texture = ExtResource("1_0kbcj")
@@ -4158,30 +4198,37 @@ tile_set = SubResource("TileSet_kljrq")
 modulate = Color(0.78, 0.84, 0.74, 1)
 
 [node name="EntranceClearing" type="Polygon2D" parent="ForestMapVisuals" unique_id=728874127]
+material = SubResource("ShaderMaterial_dusk_soft_area")
 color = Color(0.34, 0.43, 0.26, 0.64)
 polygon = PackedVector2Array(686, 858, 680.3437, 880.2584, 663.76025, 901, 637.3797, 918.81116, 603, 932.4782, 562.964, 941.06964, 520, 944, 477.03604, 941.06964, 437, 932.4782, 402.62027, 918.81116, 376.23978, 901, 359.6563, 880.2584, 354, 858, 359.6563, 835.7416, 376.23978, 815, 402.62027, 797.18884, 437, 783.5218, 477.03604, 774.93036, 520, 772, 562.964, 774.93036, 603, 783.5218, 637.3797, 797.18884, 663.76025, 815, 680.3437, 835.7416)
 
 [node name="DeepForestLandmarkGlow" type="Polygon2D" parent="ForestMapVisuals" unique_id=1986525024]
+material = SubResource("ShaderMaterial_dusk_biolume_glow")
 color = Color(0.66, 0.72, 0.82, 0.42)
 polygon = PackedVector2Array(752, 254, 748.1837, 273.67026, 736.9949, 292, 719.196, 307.7401, 696, 319.81793, 668.98773, 327.41037, 640, 330, 611.01227, 327.41037, 584, 319.81793, 560.804, 307.7401, 543.0051, 292, 531.8163, 273.67026, 528, 254, 531.8163, 234.32976, 543.0051, 216, 560.804, 200.25989, 584, 188.18207, 611.01227, 180.58963, 640, 178, 668.98773, 180.58963, 696, 188.18207, 719.196, 200.25989, 736.9949, 216, 748.1837, 234.32976)
 
 [node name="WijayaKusumaMoonBloom" type="Polygon2D" parent="ForestMapVisuals" unique_id=1052250219]
+material = SubResource("ShaderMaterial_dusk_biolume_glow")
 color = Color(0.92, 0.91, 1, 0.72)
 polygon = PackedVector2Array(666, 256, 663.4252, 263.8099, 656.21075, 270.07297, 645.7855, 273.5487, 634.2145, 273.5487, 623.78925, 270.07297, 616.5748, 263.8099, 614, 256, 616.5748, 248.1901, 623.78925, 241.92703, 634.2145, 238.4513, 645.7855, 238.4513, 656.21075, 241.92703, 663.4252, 248.1901)
 
 [node name="RafflesiaSidePocket" type="Polygon2D" parent="ForestMapVisuals" unique_id=50397032]
+material = SubResource("ShaderMaterial_dusk_soft_area")
 color = Color(0.48, 0.18, 0.24, 0.48)
 polygon = PackedVector2Array(474, 690, 469.4972, 709.15906, 456.42957, 726.4427, 436.07623, 740.15906, 410.42957, 748.9655, 382, 752, 353.57043, 748.9655, 327.92377, 740.15906, 307.57043, 726.4427, 294.5028, 709.15906, 290, 690, 294.5028, 670.84094, 307.57043, 653.5573, 327.92377, 639.84094, 353.57043, 631.0345, 382, 628, 410.42957, 631.0345, 436.07623, 639.84094, 456.42957, 653.5573, 469.4972, 670.84094)
 
 [node name="MoonsporeWestPocket" type="Polygon2D" parent="ForestMapVisuals" unique_id=1704943019]
+material = SubResource("ShaderMaterial_dusk_soft_area")
 color = Color(0.38, 0.5, 0.62, 0.38)
 polygon = PackedVector2Array(538, 612, 533.693, 629.30493, 521.1935, 644.91595, 501.7251, 657.30493, 477.19348, 665.25916, 450, 668, 422.80652, 665.25916, 398.2749, 657.30493, 378.80652, 644.91595, 366.30704, 629.30493, 362, 612, 366.30704, 594.69507, 378.80652, 579.08405, 398.2749, 566.69507, 422.80652, 558.74084, 450, 556, 477.19348, 558.74084, 501.7251, 566.69507, 521.1935, 579.08405, 533.693, 594.69507)
 
 [node name="MoonsporeEastPocket" type="Polygon2D" parent="ForestMapVisuals" unique_id=1177252225]
+material = SubResource("ShaderMaterial_dusk_soft_area")
 color = Color(0.36, 0.48, 0.62, 0.38)
 polygon = PackedVector2Array(804, 472, 799.4972, 491.15906, 786.42957, 508.4427, 766.07623, 522.15906, 740.42957, 530.9655, 712, 534, 683.57043, 530.9655, 657.92377, 522.15906, 637.57043, 508.4427, 624.5028, 491.15906, 620, 472, 624.5028, 452.84094, 637.57043, 435.5573, 657.92377, 421.84094, 683.57043, 413.0345, 712, 410, 740.42957, 413.0345, 766.07623, 421.84094, 786.42957, 435.5573, 799.4972, 452.84094)
 
 [node name="KecombrangDeepPocket" type="Polygon2D" parent="ForestMapVisuals" unique_id=1840140334]
+material = SubResource("ShaderMaterial_dusk_soft_area")
 color = Color(0.72, 0.36, 0.24, 0.35)
 polygon = PackedVector2Array(764, 232, 759.8991, 244.99677, 748.091, 256.42593, 730, 264.90897, 707.8081, 269.4227, 684.1919, 269.4227, 662, 264.90897, 643.909, 256.42593, 632.1009, 244.99677, 628, 232, 632.1009, 219.00323, 643.909, 207.57407, 662, 199.09103, 684.1919, 194.5773, 707.8081, 194.5773, 730, 199.09103, 748.091, 207.57407, 759.8991, 219.00323)
 
@@ -4556,16 +4603,19 @@ region_rect = Rect2(640, 256, 128, 128)
 region_filter_clip_enabled = true
 
 [node name="BlackwaterHollowPool" type="Polygon2D" parent="ForestMapVisuals" unique_id=901000001]
+material = SubResource("ShaderMaterial_dusk_blackwater")
 position = Vector2(176, 384)
 color = Color(0.04, 0.05, 0.1, 1)
 polygon = PackedVector2Array(-80, -64, 80, -64, 96, 0, 80, 64, -80, 64, -96, 0)
 
 [node name="BlackwaterStarReflection" type="Polygon2D" parent="ForestMapVisuals" unique_id=901000002]
+material = SubResource("ShaderMaterial_dusk_biolume_glow")
 position = Vector2(176, 384)
 color = Color(0.06, 0.07, 0.18, 0.7)
 polygon = PackedVector2Array(-48, -40, 48, -40, 60, 0, 48, 40, -48, 40, -60, 0)
 
 [node name="BlackwaterRim" type="Polygon2D" parent="ForestMapVisuals" unique_id=901000003]
+material = SubResource("ShaderMaterial_dusk_soft_area")
 position = Vector2(176, 384)
 color = Color(0.22, 0.2, 0.18, 1)
 polygon = PackedVector2Array(-88, -68, 88, -68, 104, 0, 88, 68, -88, 68, -104, 0, -96, 0, -80, 64, 80, 64, 96, 0, 80, -64, -80, -64)
@@ -4579,6 +4629,7 @@ collision_mask = 0
 shape = SubResource("RectangleShape2D_bwh_barrier")
 
 [node name="BarrierVisual" type="Polygon2D" parent="ForestMapVisuals/BlackwaterEntranceBarrier" unique_id=901000006]
+material = SubResource("ShaderMaterial_dusk_barrier")
 color = Color(0.35, 0.15, 0.08, 1)
 polygon = PackedVector2Array(-8, -80, 8, -80, 8, 80, 0, 80, -8, 80)
 

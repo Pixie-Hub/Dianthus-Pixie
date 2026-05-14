@@ -30,6 +30,44 @@
 [ext_resource type="PackedScene" uid="uid://bus7tpqc35dit" path="res://world/garden/garden_structure_spot.tscn" id="24_structure"]
 [ext_resource type="Texture2D" uid="uid://jnshnvts5ei2" path="res://world/obstacles/meadow_dusk_blocker_atlas.png" id="25_blockers"]
 [ext_resource type="PackedScene" path="res://world/transitions/zone_transition_gate.tscn" id="26_zonegate"]
+[ext_resource type="Shader" path="res://world/zones/shaders/zone_soft_area_fill.gdshader" id="27_zone_soft"]
+[ext_resource type="Shader" path="res://world/zones/shaders/zone_glow_pool.gdshader" id="28_zone_glow"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_meadow_soft_area"]
+shader = ExtResource("27_zone_soft")
+shader_parameter/alpha_boost = 1.15
+shader_parameter/noise_scale = 10.0
+shader_parameter/noise_strength = 0.22
+shader_parameter/shimmer_strength = 0.025
+shader_parameter/dither_strength = 0.05
+shader_parameter/drift = Vector2(0.012, -0.008)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_meadow_canopy_area"]
+shader = ExtResource("27_zone_soft")
+shader_parameter/alpha_boost = 0.95
+shader_parameter/noise_scale = 7.0
+shader_parameter/noise_strength = 0.32
+shader_parameter/shimmer_strength = 0.012
+shader_parameter/dither_strength = 0.035
+shader_parameter/drift = Vector2(0.006, -0.004)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_meadow_petal_glow"]
+shader = ExtResource("28_zone_glow")
+shader_parameter/alpha_boost = 0.82
+shader_parameter/pulse_strength = 0.075
+shader_parameter/pulse_speed = 1.45
+shader_parameter/noise_scale = 16.0
+shader_parameter/mote_strength = 0.08
+shader_parameter/drift = Vector2(0.018, -0.006)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_meadow_warm_glow"]
+shader = ExtResource("28_zone_glow")
+shader_parameter/alpha_boost = 0.7
+shader_parameter/pulse_strength = 0.05
+shader_parameter/pulse_speed = 0.85
+shader_parameter/noise_scale = 9.0
+shader_parameter/mote_strength = 0.06
+shader_parameter/drift = Vector2(0.01, 0.012)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cjr1j"]
 texture = ExtResource("2_quyxi")
@@ -1311,26 +1349,32 @@ tile_set = SubResource("TileSet_65yg1")
 z_index = -9
 
 [node name="GardenGateClearing" type="Polygon2D" parent="ExpeditionMapVisuals" unique_id=2086745489]
+material = SubResource("ShaderMaterial_meadow_soft_area")
 color = Color(0.32156864, 0.5019608, 0.23921569, 0.14901961)
 polygon = PackedVector2Array(998, 842, 994.5058, 869.7837, 984.1293, 896.7232, 967.18585, 922, 944.1902, 944.846, 915.8412, 964.56714, 883, 980.5641, 846.6646, 992.3508, 807.9391, 999.5692, 768, 1002, 728.0609, 999.5692, 689.3354, 992.3508, 653, 980.5641, 620.1588, 964.56714, 591.8098, 944.846, 568.81415, 922, 551.8707, 896.7232, 541.4942, 869.7837, 538, 842, 541.4942, 814.2163, 551.8707, 787.2768, 568.81415, 762, 591.8098, 739.154, 620.1588, 719.43286, 653, 703.4359, 689.3354, 691.6492, 728.0609, 684.4308, 768, 682, 807.9391, 684.4308, 846.6646, 691.6492, 883, 703.4359, 915.8412, 719.43286, 944.1902, 739.154, 967.18585, 762, 984.1293, 787.2768, 994.5058, 814.2163)
 
 [node name="PetalFieldMeadow" type="Polygon2D" parent="ExpeditionMapVisuals" unique_id=1195385229]
+material = SubResource("ShaderMaterial_meadow_soft_area")
 color = Color(0.5803922, 0.7019608, 0.36078432, 0.14901961)
 polygon = PackedVector2Array(700, 640, 695.7462, 676.4661, 683.1139, 711.8242, 662.4871, 745, 634.49243, 774.9854, 599.9805, 800.8693, 560, 821.86536, 515.7656, 837.33545, 468.6215, 846.80963, 420, 850, 371.3785, 846.80963, 324.23438, 837.33545, 280, 821.86536, 240.01947, 800.8693, 205.50755, 774.9854, 177.5129, 745, 156.88608, 711.8242, 144.25381, 676.4661, 140, 640, 144.25381, 603.5339, 156.88608, 568.1758, 177.5129, 535, 205.50755, 505.0146, 240.01947, 479.13068, 280, 458.13464, 324.23438, 442.66455, 371.3785, 433.19037, 420, 430, 468.6215, 433.19037, 515.7656, 442.66455, 560, 458.13464, 599.9805, 479.13068, 634.49243, 505.0146, 662.4871, 535, 683.1139, 568.1758, 695.7462, 603.5339)
 
 [node name="SapGroveCanopy" type="Polygon2D" parent="ExpeditionMapVisuals" unique_id=1859701107]
+material = SubResource("ShaderMaterial_meadow_canopy_area")
 color = Color(0.22, 0.43, 0.26, 0.42)
 polygon = PackedVector2Array(1460, 570, 1455.4424, 609.9391, 1441.9077, 648.6646, 1419.8076, 685, 1389.8134, 717.8412, 1352.8363, 746.1902, 1310, 769.18585, 1262.6061, 786.1293, 1212.0945, 796.5058, 1160, 800, 1107.9055, 796.5058, 1057.3939, 786.1293, 1010, 769.18585, 967.1637, 746.1902, 930.18665, 717.8412, 900.1924, 685, 878.0922, 648.6646, 864.5577, 609.9391, 860, 570, 864.5577, 530.0609, 878.0922, 491.33536, 900.1924, 455, 930.18665, 422.15884, 967.1637, 393.80978, 1010, 370.81415, 1057.3939, 353.8707, 1107.9055, 343.4942, 1160, 340, 1212.0945, 343.4942, 1262.6061, 353.8707, 1310, 370.81415, 1352.8363, 393.80978, 1389.8134, 422.15884, 1419.8076, 455, 1441.9077, 491.33536, 1455.4424, 530.0609)
 
 [node name="OldRootHollowFloor" type="Polygon2D" parent="ExpeditionMapVisuals" unique_id=1899340248]
+material = SubResource("ShaderMaterial_meadow_soft_area")
 color = Color(0.4, 0.30980393, 0.21960784, 0.14901961)
 polygon = PackedVector2Array(970, 340, 966.2019, 366.04724, 954.92316, 391.303, 936.50635, 415, 911.5111, 436.41815, 880.6969, 454.90668, 845, 469.9038, 805.505, 480.9539, 763.41205, 487.72116, 720, 490, 676.58795, 487.72116, 634.495, 480.9539, 595, 469.9038, 559.3031, 454.90668, 528.4889, 436.41815, 503.49365, 415, 485.07684, 391.303, 473.79807, 366.04724, 470, 340, 473.79807, 313.95276, 485.07684, 288.697, 503.49365, 265, 528.4889, 243.58185, 559.3031, 225.09332, 595, 210.09619, 634.495, 199.04611, 676.58795, 192.27884, 720, 190, 763.41205, 192.27884, 805.505, 199.04611, 845, 210.09619, 880.6969, 225.09332, 911.5111, 243.58185, 936.50635, 265, 954.92316, 288.697, 966.2019, 313.95276)
 
 [node name="RuinGlimmerFloor" type="Polygon2D" parent="ExpeditionMapVisuals" unique_id=1281182008]
+material = SubResource("ShaderMaterial_meadow_soft_area")
 color = Color(0.38039216, 0.3882353, 0.34117648, 0.14901961)
 polygon = PackedVector2Array(970, 210, 966.80963, 230.83778, 957.33545, 251.04242, 941.86536, 270, 920.8693, 287.13452, 894.9854, 301.92532, 865, 313.92303, 831.8242, 322.76312, 796.4661, 328.17694, 760, 330, 723.5339, 328.17694, 688.1758, 322.76312, 655, 313.92303, 625.0146, 301.92532, 599.1307, 287.13452, 578.13464, 270, 562.66455, 251.04242, 553.19037, 230.83778, 550, 210, 553.19037, 189.16222, 562.66455, 168.95758, 578.13464, 150, 599.1307, 132.86548, 625.0146, 118.07467, 655, 106.07695, 688.1758, 97.236885, 723.5339, 91.82307, 760, 90, 796.4661, 91.82307, 831.8242, 97.236885, 865, 106.07695, 894.9854, 118.07467, 920.8693, 132.86548, 941.86536, 150, 957.33545, 168.95758, 966.80963, 189.16222)
 
 [node name="SouthReturnPocket" type="Polygon2D" parent="ExpeditionMapVisuals" unique_id=1844924907]
+material = SubResource("ShaderMaterial_meadow_soft_area")
 color = Color(0.32156864, 0.5019608, 0.23921569, 0.14901961)
 polygon = PackedVector2Array(1210, 800, 1207.2654, 816.4966, 1199.1447, 832.49194, 1185.8845, 847.5, 1167.888, 861.0648, 1145.7018, 872.77423, 1120, 882.2724, 1091.5636, 889.2708, 1061.2567, 893.55676, 1030, 895, 998.74335, 893.55676, 968.4364, 889.2708, 940, 882.2724, 914.2982, 872.77423, 892.112, 861.0648, 874.1154, 847.5, 860.85535, 832.49194, 852.7346, 816.4966, 850, 800, 852.7346, 783.5034, 860.85535, 767.50806, 874.1154, 752.5, 892.112, 738.9352, 914.2982, 727.22577, 940, 717.7276, 968.4364, 710.7292, 998.74335, 706.44324, 1030, 705, 1061.2567, 706.44324, 1091.5636, 710.7292, 1120, 717.7276, 1145.7018, 727.22577, 1167.888, 738.9352, 1185.8845, 752.5, 1199.1447, 767.50806, 1207.2654, 783.5034)
 
@@ -1373,54 +1417,67 @@ end_cap_mode = 2
 [node name="PetalFieldFlowerRing" type="Node2D" parent="ExpeditionMapVisuals" unique_id=1569580434]
 
 [node name="PetalCluster0" type="Polygon2D" parent="ExpeditionMapVisuals/PetalFieldFlowerRing" unique_id=1290609268]
+material = SubResource("ShaderMaterial_meadow_petal_glow")
 color = Color(0.96, 0.48, 0.72, 0.86)
 polygon = PackedVector2Array(442, 596, 440.8116, 599.47107, 437.48187, 602.25464, 432.67026, 603.79944, 427.32974, 603.79944, 422.51813, 602.25464, 419.1884, 599.47107, 418, 596, 419.1884, 592.52893, 422.51813, 589.74536, 427.32974, 588.20056, 432.67026, 588.20056, 437.48187, 589.74536, 440.8116, 592.52893)
 
 [node name="PetalCluster1" type="Polygon2D" parent="ExpeditionMapVisuals/PetalFieldFlowerRing" unique_id=1158197297]
+material = SubResource("ShaderMaterial_meadow_petal_glow")
 color = Color(0.96, 0.48, 0.72, 0.86)
 polygon = PackedVector2Array(432.08588, 633, 430.8975, 636.47107, 427.56775, 639.25464, 422.75613, 640.79944, 417.41562, 640.79944, 412.604, 639.25464, 409.27426, 636.47107, 408.08588, 633, 409.27426, 629.52893, 412.604, 626.74536, 417.41562, 625.20056, 422.75613, 625.20056, 427.56775, 626.74536, 430.8975, 629.52893)
 
 [node name="PetalCluster2" type="Polygon2D" parent="ExpeditionMapVisuals/PetalFieldFlowerRing" unique_id=692874811]
+material = SubResource("ShaderMaterial_meadow_petal_glow")
 color = Color(0.96, 0.48, 0.72, 0.86)
 polygon = PackedVector2Array(405, 660.0859, 403.8116, 663.55695, 400.48187, 666.3405, 395.67026, 667.8853, 390.32974, 667.8853, 385.51813, 666.3405, 382.1884, 663.55695, 381, 660.0859, 382.1884, 656.6148, 385.51813, 653.83124, 390.32974, 652.28644, 395.67026, 652.28644, 400.48187, 653.83124, 403.8116, 656.6148)
 
 [node name="PetalCluster3" type="Polygon2D" parent="ExpeditionMapVisuals/PetalFieldFlowerRing" unique_id=1834573090]
+material = SubResource("ShaderMaterial_meadow_petal_glow")
 color = Color(0.96, 0.48, 0.72, 0.86)
 polygon = PackedVector2Array(368, 670, 366.8116, 673.47107, 363.48187, 676.25464, 358.67026, 677.79944, 353.32974, 677.79944, 348.51813, 676.25464, 345.1884, 673.47107, 344, 670, 345.1884, 666.52893, 348.51813, 663.74536, 353.32974, 662.20056, 358.67026, 662.20056, 363.48187, 663.74536, 366.8116, 666.52893)
 
 [node name="PetalCluster4" type="Polygon2D" parent="ExpeditionMapVisuals/PetalFieldFlowerRing" unique_id=1128079015]
+material = SubResource("ShaderMaterial_meadow_petal_glow")
 color = Color(0.96, 0.48, 0.72, 0.86)
 polygon = PackedVector2Array(331, 660.0859, 329.8116, 663.55695, 326.48187, 666.3405, 321.67026, 667.8853, 316.32974, 667.8853, 311.51813, 666.3405, 308.1884, 663.55695, 307, 660.0859, 308.1884, 656.6148, 311.51813, 653.83124, 316.32974, 652.28644, 321.67026, 652.28644, 326.48187, 653.83124, 329.8116, 656.6148)
 
 [node name="PetalCluster5" type="Polygon2D" parent="ExpeditionMapVisuals/PetalFieldFlowerRing" unique_id=1632388478]
+material = SubResource("ShaderMaterial_meadow_petal_glow")
 color = Color(0.96, 0.48, 0.72, 0.86)
 polygon = PackedVector2Array(303.91412, 633, 302.72574, 636.47107, 299.396, 639.25464, 294.58438, 640.79944, 289.24387, 640.79944, 284.43225, 639.25464, 281.1025, 636.47107, 279.91412, 633, 281.1025, 629.52893, 284.43225, 626.74536, 289.24387, 625.20056, 294.58438, 625.20056, 299.396, 626.74536, 302.72574, 629.52893)
 
 [node name="PetalCluster6" type="Polygon2D" parent="ExpeditionMapVisuals/PetalFieldFlowerRing" unique_id=1064176960]
+material = SubResource("ShaderMaterial_meadow_petal_glow")
 color = Color(0.96, 0.48, 0.72, 0.86)
 polygon = PackedVector2Array(294, 596, 292.8116, 599.47107, 289.48187, 602.25464, 284.67026, 603.79944, 279.32974, 603.79944, 274.51813, 602.25464, 271.1884, 599.47107, 270, 596, 271.1884, 592.52893, 274.51813, 589.74536, 279.32974, 588.20056, 284.67026, 588.20056, 289.48187, 589.74536, 292.8116, 592.52893)
 
 [node name="PetalCluster7" type="Polygon2D" parent="ExpeditionMapVisuals/PetalFieldFlowerRing" unique_id=1570640179]
+material = SubResource("ShaderMaterial_meadow_petal_glow")
 color = Color(0.96, 0.48, 0.72, 0.86)
 polygon = PackedVector2Array(303.91412, 559, 302.72574, 562.47107, 299.396, 565.25464, 294.58438, 566.79944, 289.24387, 566.79944, 284.43225, 565.25464, 281.1025, 562.47107, 279.91412, 559, 281.1025, 555.52893, 284.43225, 552.74536, 289.24387, 551.20056, 294.58438, 551.20056, 299.396, 552.74536, 302.72574, 555.52893)
 
 [node name="PetalCluster8" type="Polygon2D" parent="ExpeditionMapVisuals/PetalFieldFlowerRing" unique_id=1283458206]
+material = SubResource("ShaderMaterial_meadow_petal_glow")
 color = Color(0.96, 0.48, 0.72, 0.86)
 polygon = PackedVector2Array(331, 531.9141, 329.8116, 535.3852, 326.48187, 538.16876, 321.67026, 539.71356, 316.32974, 539.71356, 311.51813, 538.16876, 308.1884, 535.3852, 307, 531.9141, 308.1884, 528.44305, 311.51813, 525.6595, 316.32974, 524.1147, 321.67026, 524.1147, 326.48187, 525.6595, 329.8116, 528.44305)
 
 [node name="PetalCluster9" type="Polygon2D" parent="ExpeditionMapVisuals/PetalFieldFlowerRing" unique_id=1803401586]
+material = SubResource("ShaderMaterial_meadow_petal_glow")
 color = Color(0.96, 0.48, 0.72, 0.86)
 polygon = PackedVector2Array(368, 522, 366.8116, 525.47107, 363.48187, 528.25464, 358.67026, 529.79944, 353.32974, 529.79944, 348.51813, 528.25464, 345.1884, 525.47107, 344, 522, 345.1884, 518.52893, 348.51813, 515.74536, 353.32974, 514.20056, 358.67026, 514.20056, 363.48187, 515.74536, 366.8116, 518.52893)
 
 [node name="PetalCluster10" type="Polygon2D" parent="ExpeditionMapVisuals/PetalFieldFlowerRing" unique_id=1993551961]
+material = SubResource("ShaderMaterial_meadow_petal_glow")
 color = Color(0.96, 0.48, 0.72, 0.86)
 polygon = PackedVector2Array(405, 531.9141, 403.8116, 535.3852, 400.48187, 538.16876, 395.67026, 539.71356, 390.32974, 539.71356, 385.51813, 538.16876, 382.1884, 535.3852, 381, 531.9141, 382.1884, 528.44305, 385.51813, 525.6595, 390.32974, 524.1147, 395.67026, 524.1147, 400.48187, 525.6595, 403.8116, 528.44305)
 
 [node name="PetalCluster11" type="Polygon2D" parent="ExpeditionMapVisuals/PetalFieldFlowerRing" unique_id=493029149]
+material = SubResource("ShaderMaterial_meadow_petal_glow")
 color = Color(0.96, 0.48, 0.72, 0.86)
 polygon = PackedVector2Array(432.08588, 559, 430.8975, 562.47107, 427.56775, 565.25464, 422.75613, 566.79944, 417.41562, 566.79944, 412.604, 565.25464, 409.27426, 562.47107, 408.08588, 559, 409.27426, 555.52893, 412.604, 552.74536, 417.41562, 551.20056, 422.75613, 551.20056, 427.56775, 552.74536, 430.8975, 555.52893)
 
 [node name="FlowerRingCenter" type="Polygon2D" parent="ExpeditionMapVisuals/PetalFieldFlowerRing" unique_id=2046138965]
+material = SubResource("ShaderMaterial_meadow_petal_glow")
 color = Color(1, 0.86, 0.35, 0.9)
 polygon = PackedVector2Array(380, 596, 378.82535, 601.5623, 375.4164, 606.58014, 370.10684, 610.5623, 363.4164, 613.119, 356, 614, 348.5836, 613.119, 341.89316, 610.5623, 336.5836, 606.58014, 333.17465, 601.5623, 332, 596, 333.17465, 590.4377, 336.5836, 585.41986, 341.89316, 581.4377, 348.5836, 578.881, 356, 578, 363.4164, 578.881, 370.10684, 581.4377, 375.4164, 585.41986, 378.82535, 590.4377)
 
@@ -1444,6 +1501,7 @@ region_rect = Rect2(128, 0, 128, 128)
 region_filter_clip_enabled = true
 
 [node name="OldRootGlow" type="Polygon2D" parent="ExpeditionMapVisuals" unique_id=784831496]
+material = SubResource("ShaderMaterial_meadow_warm_glow")
 color = Color(0.78, 0.62, 0.28, 0.35)
 polygon = PackedVector2Array(808, 342, 806.6631, 348.59863, 802.69293, 354.99677, 796.2102, 361, 787.4119, 366.42593, 776.5653, 371.10968, 764, 374.90897, 750.0978, 377.7083, 735.28107, 379.4227, 720, 380, 704.71893, 379.4227, 689.9022, 377.7083, 676, 374.90897, 663.4347, 371.10968, 652.5881, 366.42593, 643.7898, 361, 637.30707, 354.99677, 633.3369, 348.59863, 632, 342, 633.3369, 335.40137, 637.30707, 329.00323, 643.7898, 323, 652.5881, 317.57407, 663.4347, 312.89032, 676, 309.09103, 689.9022, 306.2917, 704.71893, 304.5773, 720, 304, 735.28107, 304.5773, 750.0978, 306.2917, 764, 309.09103, 776.5653, 312.89032, 787.4119, 317.57407, 796.2102, 323, 802.69293, 329.00323, 806.6631, 335.40137)
 
@@ -1494,6 +1552,7 @@ region_rect = Rect2(256, 128, 128, 128)
 region_filter_clip_enabled = true
 
 [node name="RuinGlimmerLight" type="Polygon2D" parent="ExpeditionMapVisuals" unique_id=1436757400]
+material = SubResource("ShaderMaterial_meadow_warm_glow")
 color = Color(0.85, 0.78, 0.42, 0.35)
 polygon = PackedVector2Array(802, 226, 801.36194, 229.82027, 799.4671, 233.52444, 796.37305, 237, 792.1739, 240.14133, 786.9971, 242.85298, 781, 245.05255, 774.36487, 246.67323, 767.2932, 247.66577, 760, 248, 752.7068, 247.66577, 745.63513, 246.67323, 739, 245.05255, 733.0029, 242.85298, 727.8261, 240.14133, 723.62695, 237, 720.5329, 233.52444, 718.63806, 229.82027, 718, 226, 718.63806, 222.17973, 720.5329, 218.47556, 723.62695, 215, 727.8261, 211.85867, 733.0029, 209.14702, 739, 206.94745, 745.63513, 205.32677, 752.7068, 204.33423, 760, 204, 767.2932, 204.33423, 774.36487, 205.32677, 781, 206.94745, 786.9971, 209.14702, 792.1739, 211.85867, 796.37305, 215, 799.4671, 218.47556, 801.36194, 222.17973)
 
