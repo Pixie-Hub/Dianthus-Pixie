@@ -32,6 +32,12 @@
 [ext_resource type="Texture2D" uid="uid://dp2e0lhklkhuy" path="res://assets/tilesets/ruins_of_veld/objects/decor/decor_tile_14.png" id="28_dc14"]
 [ext_resource type="Texture2D" uid="uid://dxr6youptn41o" path="res://world/tilesets/Sprout Lands - Sprites - Basic pack/Tilled_Dirt.png" id="dirtsmall_rt"]
 [ext_resource type="Texture2D" uid="uid://cqmamvoj22kto" path="res://world/tilesets/Sprout Lands - Sprites - Basic pack/Grass.png" id="grass_rt"]
+[ext_resource type="Script" uid="uid://eq2kmr2v2jl3" path="res://world/zones/ruins_of_veld/ruins_of_veld_atmosphere_vfx.gd" id="rov_atmo"]
+[ext_resource type="Shader" uid="uid://c724yv5y4yrov" path="res://world/zones/dusk_forest/shaders/moonbeam_soft_cone.gdshader" id="rov_mbcone"]
+[ext_resource type="Shader" uid="uid://dgu5kg3dg51lu" path="res://world/zones/dusk_forest/shaders/moonbeam_streaks.gdshader" id="rov_mbstreaks"]
+[ext_resource type="Shader" uid="uid://dyymmtluxuqub" path="res://world/zones/dusk_forest/shaders/moonbeam_ground_glow.gdshader" id="rov_mbglow"]
+[ext_resource type="Shader" uid="uid://cwe5mpdbsq3lp" path="res://world/zones/dusk_forest/shaders/moonbeam_mist_band.gdshader" id="rov_mbmist"]
+[ext_resource type="Shader" uid="uid://flktyyto26v4" path="res://world/zones/dusk_forest/shaders/moonbeam_shadow_mask.gdshader" id="rov_mbshadow"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cjr1j"]
 texture = ExtResource("grass_rt")
@@ -2948,6 +2954,329 @@ corner_radius_bottom_left = 6
 shadow_color = Color(0, 0, 0, 0.45)
 shadow_size = 5
 shadow_offset = Vector2(0, 2)
+
+[sub_resource type="Gradient" id="Gradient_rov_glow"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.82, 0.78, 0.68, 0.35, 0.82, 0.78, 0.68, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_rov_glow"]
+gradient = SubResource("Gradient_rov_glow")
+width = 128
+height = 128
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_ambient_wash"]
+shader = ExtResource("rov_mbglow")
+shader_parameter/glow_color = Color(0.62, 0.50, 0.34, 1)
+shader_parameter/alpha_strength = 0.10
+shader_parameter/ellipse_width = 1.55
+shader_parameter/ellipse_height = 1.15
+shader_parameter/edge_feather = 0.85
+shader_parameter/pulse_strength = 0.008
+shader_parameter/pulse_phase = 0.4
+shader_parameter/runtime_alpha_scale = 1.0
+shader_parameter/mist_time = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_sr_beam_wide"]
+shader = ExtResource("rov_mbcone")
+shader_parameter/beam_color = Color(0.84, 0.68, 0.44, 1)
+shader_parameter/alpha_strength = 0.15
+shader_parameter/source_width = 0.10
+shader_parameter/bottom_width = 0.78
+shader_parameter/edge_feather = 0.26
+shader_parameter/mist_strength = 0.28
+shader_parameter/noise_scale = 5.5
+shader_parameter/time_scale = 0.10
+shader_parameter/flicker_strength = 0.020
+shader_parameter/flicker_phase = 0.3
+shader_parameter/runtime_alpha_scale = 1.0
+shader_parameter/mist_time = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_sr_beam_core"]
+shader = ExtResource("rov_mbcone")
+shader_parameter/beam_color = Color(0.92, 0.78, 0.52, 1)
+shader_parameter/alpha_strength = 0.09
+shader_parameter/source_width = 0.04
+shader_parameter/bottom_width = 0.32
+shader_parameter/edge_feather = 0.15
+shader_parameter/mist_strength = 0.18
+shader_parameter/noise_scale = 4.5
+shader_parameter/time_scale = 0.09
+shader_parameter/flicker_strength = 0.028
+shader_parameter/flicker_phase = 1.2
+shader_parameter/runtime_alpha_scale = 1.0
+shader_parameter/mist_time = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_sr_streaks"]
+shader = ExtResource("rov_mbstreaks")
+shader_parameter/streak_color = Color(0.96, 0.86, 0.62, 1)
+shader_parameter/streak_density = 30.0
+shader_parameter/streak_softness = 0.13
+shader_parameter/streak_angle = -0.22
+shader_parameter/streak_alpha = 0.065
+shader_parameter/drift_speed = 0.055
+shader_parameter/source_width = 0.08
+shader_parameter/bottom_width = 0.70
+shader_parameter/edge_feather = 0.21
+shader_parameter/flicker_phase = 2.4
+shader_parameter/runtime_alpha_scale = 1.0
+shader_parameter/mist_time = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_sr_ground_glow"]
+shader = ExtResource("rov_mbglow")
+shader_parameter/glow_color = Color(0.78, 0.62, 0.38, 1)
+shader_parameter/alpha_strength = 0.12
+shader_parameter/ellipse_width = 1.25
+shader_parameter/ellipse_height = 0.36
+shader_parameter/edge_feather = 0.75
+shader_parameter/pulse_strength = 0.020
+shader_parameter/pulse_phase = 0.9
+shader_parameter/runtime_alpha_scale = 1.0
+shader_parameter/mist_time = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_pc_beam_wide"]
+shader = ExtResource("rov_mbcone")
+shader_parameter/beam_color = Color(0.82, 0.66, 0.42, 1)
+shader_parameter/alpha_strength = 0.13
+shader_parameter/source_width = 0.09
+shader_parameter/bottom_width = 0.70
+shader_parameter/edge_feather = 0.25
+shader_parameter/mist_strength = 0.24
+shader_parameter/noise_scale = 5.8
+shader_parameter/time_scale = 0.11
+shader_parameter/flicker_strength = 0.022
+shader_parameter/flicker_phase = 1.8
+shader_parameter/runtime_alpha_scale = 1.0
+shader_parameter/mist_time = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_pc_beam_core"]
+shader = ExtResource("rov_mbcone")
+shader_parameter/beam_color = Color(0.90, 0.76, 0.50, 1)
+shader_parameter/alpha_strength = 0.075
+shader_parameter/source_width = 0.035
+shader_parameter/bottom_width = 0.27
+shader_parameter/edge_feather = 0.13
+shader_parameter/mist_strength = 0.18
+shader_parameter/noise_scale = 5.0
+shader_parameter/time_scale = 0.09
+shader_parameter/flicker_strength = 0.030
+shader_parameter/flicker_phase = 2.7
+shader_parameter/runtime_alpha_scale = 1.0
+shader_parameter/mist_time = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_pc_streaks"]
+shader = ExtResource("rov_mbstreaks")
+shader_parameter/streak_color = Color(0.94, 0.84, 0.60, 1)
+shader_parameter/streak_density = 26.0
+shader_parameter/streak_softness = 0.14
+shader_parameter/streak_angle = -0.16
+shader_parameter/streak_alpha = 0.055
+shader_parameter/drift_speed = 0.060
+shader_parameter/source_width = 0.07
+shader_parameter/bottom_width = 0.62
+shader_parameter/edge_feather = 0.19
+shader_parameter/flicker_phase = 3.5
+shader_parameter/runtime_alpha_scale = 1.0
+shader_parameter/mist_time = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_pc_ground_glow"]
+shader = ExtResource("rov_mbglow")
+shader_parameter/glow_color = Color(0.74, 0.58, 0.34, 1)
+shader_parameter/alpha_strength = 0.09
+shader_parameter/ellipse_width = 1.05
+shader_parameter/ellipse_height = 0.32
+shader_parameter/edge_feather = 0.78
+shader_parameter/pulse_strength = 0.018
+shader_parameter/pulse_phase = 2.1
+shader_parameter/runtime_alpha_scale = 1.0
+shader_parameter/mist_time = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_br_beam_wide"]
+shader = ExtResource("rov_mbcone")
+shader_parameter/beam_color = Color(0.56, 0.42, 0.78, 1)
+shader_parameter/alpha_strength = 0.13
+shader_parameter/source_width = 0.08
+shader_parameter/bottom_width = 0.56
+shader_parameter/edge_feather = 0.24
+shader_parameter/mist_strength = 0.32
+shader_parameter/noise_scale = 6.2
+shader_parameter/time_scale = 0.11
+shader_parameter/flicker_strength = 0.025
+shader_parameter/flicker_phase = 1.0
+shader_parameter/runtime_alpha_scale = 1.0
+shader_parameter/mist_time = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_br_beam_core"]
+shader = ExtResource("rov_mbcone")
+shader_parameter/beam_color = Color(0.70, 0.56, 0.92, 1)
+shader_parameter/alpha_strength = 0.08
+shader_parameter/source_width = 0.03
+shader_parameter/bottom_width = 0.22
+shader_parameter/edge_feather = 0.13
+shader_parameter/mist_strength = 0.24
+shader_parameter/noise_scale = 5.2
+shader_parameter/time_scale = 0.09
+shader_parameter/flicker_strength = 0.038
+shader_parameter/flicker_phase = 3.1
+shader_parameter/runtime_alpha_scale = 1.0
+shader_parameter/mist_time = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_br_streaks"]
+shader = ExtResource("rov_mbstreaks")
+shader_parameter/streak_color = Color(0.72, 0.58, 0.96, 1)
+shader_parameter/streak_density = 22.0
+shader_parameter/streak_softness = 0.16
+shader_parameter/streak_angle = 0.08
+shader_parameter/streak_alpha = 0.050
+shader_parameter/drift_speed = 0.058
+shader_parameter/source_width = 0.05
+shader_parameter/bottom_width = 0.48
+shader_parameter/edge_feather = 0.18
+shader_parameter/flicker_phase = 4.3
+shader_parameter/runtime_alpha_scale = 1.0
+shader_parameter/mist_time = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_br_ground_glow"]
+shader = ExtResource("rov_mbglow")
+shader_parameter/glow_color = Color(0.42, 0.28, 0.68, 1)
+shader_parameter/alpha_strength = 0.16
+shader_parameter/ellipse_width = 1.15
+shader_parameter/ellipse_height = 0.44
+shader_parameter/edge_feather = 0.78
+shader_parameter/pulse_strength = 0.030
+shader_parameter/pulse_phase = 2.9
+shader_parameter/runtime_alpha_scale = 1.0
+shader_parameter/mist_time = 0.0
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_rov_dust_motes"]
+emission_shape = 3
+emission_box_extents = Vector3(420, 170, 1)
+direction = Vector3(0, -1, 0)
+spread = 180.0
+initial_velocity_min = 0.6
+initial_velocity_max = 2.8
+gravity = Vector3(0, -0.8, 0)
+scale_min = 1.0
+scale_max = 2.6
+color = Color(0.95, 0.84, 0.58, 0.32)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_rov_ash_fall"]
+emission_shape = 3
+emission_box_extents = Vector3(380, 160, 1)
+direction = Vector3(0, 1, 0)
+spread = 180.0
+initial_velocity_min = 0.5
+initial_velocity_max = 2.2
+gravity = Vector3(0, 2.5, 0)
+scale_min = 0.6
+scale_max = 1.8
+color = Color(0.72, 0.66, 0.58, 0.34)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_mist_south"]
+shader = ExtResource("rov_mbmist")
+shader_parameter/mist_color = Color(0.64, 0.56, 0.44, 1)
+shader_parameter/alpha_strength = 0.14
+shader_parameter/band_thickness = 0.55
+shader_parameter/edge_feather = 0.23
+shader_parameter/noise_scale = 9.0
+shader_parameter/drift_speed = 0.060
+shader_parameter/runtime_alpha_scale = 1.0
+shader_parameter/mist_time = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_mist_plaza_west"]
+shader = ExtResource("rov_mbmist")
+shader_parameter/mist_color = Color(0.58, 0.50, 0.38, 1)
+shader_parameter/alpha_strength = 0.12
+shader_parameter/band_thickness = 0.50
+shader_parameter/edge_feather = 0.20
+shader_parameter/noise_scale = 8.0
+shader_parameter/drift_speed = 0.070
+shader_parameter/runtime_alpha_scale = 1.0
+shader_parameter/mist_time = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_mist_plaza_east"]
+shader = ExtResource("rov_mbmist")
+shader_parameter/mist_color = Color(0.58, 0.50, 0.38, 1)
+shader_parameter/alpha_strength = 0.12
+shader_parameter/band_thickness = 0.50
+shader_parameter/edge_feather = 0.20
+shader_parameter/noise_scale = 8.5
+shader_parameter/drift_speed = 0.065
+shader_parameter/runtime_alpha_scale = 1.0
+shader_parameter/mist_time = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_mist_breach"]
+shader = ExtResource("rov_mbmist")
+shader_parameter/mist_color = Color(0.46, 0.36, 0.62, 1)
+shader_parameter/alpha_strength = 0.14
+shader_parameter/band_thickness = 0.52
+shader_parameter/edge_feather = 0.22
+shader_parameter/noise_scale = 10.0
+shader_parameter/drift_speed = 0.075
+shader_parameter/runtime_alpha_scale = 1.0
+shader_parameter/mist_time = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_breach_rim_glow"]
+shader = ExtResource("rov_mbglow")
+shader_parameter/glow_color = Color(0.38, 0.24, 0.62, 1)
+shader_parameter/alpha_strength = 0.20
+shader_parameter/ellipse_width = 1.30
+shader_parameter/ellipse_height = 0.90
+shader_parameter/edge_feather = 0.80
+shader_parameter/pulse_strength = 0.040
+shader_parameter/pulse_phase = 1.5
+shader_parameter/runtime_alpha_scale = 1.0
+shader_parameter/mist_time = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_breach_mote_a"]
+shader = ExtResource("rov_mbglow")
+shader_parameter/glow_color = Color(0.60, 0.44, 0.90, 1)
+shader_parameter/alpha_strength = 0.55
+shader_parameter/ellipse_width = 1.0
+shader_parameter/ellipse_height = 1.0
+shader_parameter/edge_feather = 0.70
+shader_parameter/pulse_strength = 0.10
+shader_parameter/pulse_phase = 0.8
+shader_parameter/runtime_alpha_scale = 1.0
+shader_parameter/mist_time = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_breach_mote_b"]
+shader = ExtResource("rov_mbglow")
+shader_parameter/glow_color = Color(0.52, 0.38, 0.80, 1)
+shader_parameter/alpha_strength = 0.50
+shader_parameter/ellipse_width = 1.0
+shader_parameter/ellipse_height = 1.0
+shader_parameter/edge_feather = 0.72
+shader_parameter/pulse_strength = 0.12
+shader_parameter/pulse_phase = 2.4
+shader_parameter/runtime_alpha_scale = 1.0
+shader_parameter/mist_time = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_shadow_top"]
+shader = ExtResource("rov_mbshadow")
+shader_parameter/shadow_color = Color(0.04, 0.03, 0.02, 1)
+shader_parameter/alpha_strength = 0.72
+shader_parameter/edge_feather = 0.40
+shader_parameter/runtime_alpha_scale = 1.0
+shader_parameter/mist_time = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_shadow_west"]
+shader = ExtResource("rov_mbshadow")
+shader_parameter/shadow_color = Color(0.04, 0.03, 0.02, 1)
+shader_parameter/alpha_strength = 0.65
+shader_parameter/edge_feather = 0.42
+shader_parameter/runtime_alpha_scale = 1.0
+shader_parameter/mist_time = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_shadow_east"]
+shader = ExtResource("rov_mbshadow")
+shader_parameter/shadow_color = Color(0.04, 0.03, 0.02, 1)
+shader_parameter/alpha_strength = 0.65
+shader_parameter/edge_feather = 0.42
+shader_parameter/runtime_alpha_scale = 1.0
+shader_parameter/mist_time = 0.0
 
 [node name="RuinsOfVeld" type="Node2D" unique_id=581206276]
 script = ExtResource("13_zone")
