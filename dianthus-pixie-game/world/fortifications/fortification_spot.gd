@@ -186,12 +186,19 @@ func _spawn_structure(type: StructureType) -> Node2D:
 	structure.global_position = global_position
 	if barricade_sideways and type == StructureType.BARRICADE:
 		structure.rotation = PI / 2.0
-	var ysort: Node = get_tree().current_scene.get_node_or_null("YSortLayer")
+	_add_structure_to_world.call_deferred(structure)
+	return structure
+
+
+func _add_structure_to_world(structure: Node2D) -> void:
+	if not is_instance_valid(structure):
+		return
+	var scene_root: Node = get_tree().current_scene if get_tree().current_scene != null else get_tree().root
+	var ysort: Node = scene_root.get_node_or_null("YSortLayer")
 	if ysort != null:
 		ysort.add_child(structure)
 	else:
-		get_tree().current_scene.add_child(structure)
-	return structure
+		scene_root.add_child(structure)
 
 
 func serialize_build_state() -> Dictionary:
