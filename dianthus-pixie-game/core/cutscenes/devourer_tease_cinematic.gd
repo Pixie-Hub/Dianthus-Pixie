@@ -21,7 +21,7 @@ var _camera_base_zoom: Vector2 = Vector2.ONE
 @onready var _camera: Camera2D = %Camera2D
 @onready var _vfx_root: Node2D = %DevourerTeaseCinematicVFX
 @onready var _devourer_silhouette: Sprite2D = %DevourerSilhouette
-@onready var _fade_to_black: ColorRect = %FadeToBlackRect
+@onready var _fade_to_black: Sprite2D = %FadeToBlack
 @onready var _eye_glint: Sprite2D = %EyeGlint
 
 
@@ -54,7 +54,7 @@ func _exit_tree() -> void:
 func _prepare_initial_state() -> void:
 	_camera.position = Vector2(320, 196)
 	_camera.zoom = _camera_base_zoom
-	_fade_to_black.color.a = 1.0
+	_fade_to_black.modulate.a = 1.0
 	_devourer_silhouette.frame = 1
 	_devourer_silhouette.modulate = Color(0.055, 0.035, 0.08, 0.92)
 	_eye_glint.modulate.a = 0.0
@@ -69,12 +69,12 @@ func _play_camera_sequence() -> void:
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	_sequence_tween.tween_property(_camera, "zoom", _camera_base_zoom * 1.22, 6.8) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	_sequence_tween.tween_property(_fade_to_black, "color:a", 0.0, 1.0)
+	_sequence_tween.tween_property(_fade_to_black, "modulate:a", 0.0, 1.0)
 	_sequence_tween.set_parallel(false)
 	_sequence_tween.tween_interval(5.5)
 	_sequence_tween.tween_callback(_pulse_eye_glint)
 	_sequence_tween.tween_interval(0.8)
-	_sequence_tween.tween_property(_fade_to_black, "color:a", 1.0, 0.7) \
+	_sequence_tween.tween_property(_fade_to_black, "modulate:a", 1.0, 0.7) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 
 
@@ -134,6 +134,7 @@ func _animate_fog_bands() -> void:
 		var index: int = node.get_index()
 		var drift_x: float = sin(_time * (0.16 + float(index) * 0.025) + float(index)) * 14.0
 		node.position = base_position + Vector2(drift_x, 0.0)
+		_update_shader_time(node as CanvasItem, 1.0)
 
 
 func _animate_glow_accents() -> void:
@@ -150,6 +151,7 @@ func _animate_glow_accents() -> void:
 		var base_color: Color = _base_modulates[item]
 		var alpha_scale: float = 0.82 + sin(_time * 0.9 + float(item.get_index())) * 0.1
 		item.modulate = Color(base_color.r, base_color.g, base_color.b, base_color.a * alpha_scale)
+		_update_shader_time(item, alpha_scale)
 
 
 func _animate_shadow_motes() -> void:
@@ -160,3 +162,12 @@ func _animate_shadow_motes() -> void:
 		var base_color: Color = _base_modulates[item]
 		var alpha_scale: float = 0.74 + sin(_time * 0.55 + float(item.get_index())) * 0.16
 		item.modulate = Color(base_color.r, base_color.g, base_color.b, base_color.a * alpha_scale)
+		_update_shader_time(item, alpha_scale)
+
+
+func _update_shader_time(item: CanvasItem, alpha_scale: float) -> void:
+	var shader_material: ShaderMaterial = item.material as ShaderMaterial
+	if shader_material == null:
+		return
+	shader_material.set_shader_parameter("mist_time", _time)
+	shader_material.set_shader_parameter("runtime_alpha_scale", alpha_scale)
