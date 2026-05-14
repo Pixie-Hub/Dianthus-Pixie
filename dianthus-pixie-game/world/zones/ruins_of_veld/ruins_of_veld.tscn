@@ -1,6 +1,6 @@
 [gd_scene format=4 uid="uid://1x103vo3txb1"]
 
-[ext_resource type="Texture2D" uid="uid://xo6pyrvefeaw" path="res://world/tilesets/ruins_of_veld_spritesheet.png" id="1_esuuf"]
+[ext_resource type="Texture2D" uid="uid://xo6pyrvefeaw" path="res://assets/tilesets/ruins_of_veld/ruins_of_veld_spritesheet.png" id="1_esuuf"]
 [ext_resource type="PackedScene" uid="uid://daygkeb0nibev" path="res://player/scenes/player.tscn" id="2_dxi6x"]
 [ext_resource type="PackedScene" path="res://world/transitions/zone_transition_gate.tscn" id="3_m2nw3"]
 [ext_resource type="PackedScene" uid="uid://dgjlo3k80moau" path="res://ui/components/interaction_prompt.tscn" id="4_hmpof"]
