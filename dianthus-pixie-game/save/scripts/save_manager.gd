@@ -4,7 +4,7 @@ signal save_completed(success: bool, manual: bool)
 signal load_completed(success: bool)
 
 const SAVE_PATH: String = "user://savegame.json"
-const SCHEMA_VERSION: int = 20
+const SCHEMA_VERSION: int = 21
 const GAME_VERSION: String = "0.1.0"
 
 const PLANT_TYPE_TO_SCENE: Dictionary = {
@@ -23,6 +23,8 @@ const PLANT_TYPE_TO_SCENE: Dictionary = {
 
 var _pending_load_state: Dictionary = {}
 var _is_saving: bool = false
+var _runtime_garden_expansion: Dictionary = {"tier": 0}
+var _runtime_fortification_spots: Dictionary = {}
 
 
 
@@ -86,11 +88,46 @@ func load_from_slot() -> bool:
 
 
 func delete_save() -> void:
+	reset_runtime_build_state()
+	if GardenStructureManager.has_method("reset_state"):
+		GardenStructureManager.reset_state()
 	if has_save():
 		var dir: DirAccess = DirAccess.open("user://")
 		if dir != null:
 			dir.remove("savegame.json")
 			print("[SaveManager] Save file deleted.")
+
+
+func reset_runtime_build_state() -> void:
+	_runtime_garden_expansion = {"tier": 0}
+	_runtime_fortification_spots = {}
+
+
+func set_runtime_garden_expansion_tier(tier: int) -> void:
+	_runtime_garden_expansion = {"tier": max(0, tier)}
+
+
+func get_runtime_garden_expansion_tier() -> int:
+	return int(_runtime_garden_expansion.get("tier", 0))
+
+
+func register_fortification_spot_state(state: Dictionary) -> void:
+	var spot_id: String = str(state.get("spot_id", ""))
+	if spot_id.is_empty():
+		return
+	_runtime_fortification_spots[spot_id] = state.duplicate(true)
+
+
+func get_fortification_spot_state(spot_id: String) -> Dictionary:
+	if _runtime_fortification_spots.has(spot_id):
+		return (_runtime_fortification_spots[spot_id] as Dictionary).duplicate(true)
+	return {
+		"spot_id": spot_id,
+		"spot_type": "fortification",
+		"is_built": false,
+		"built_item_id": "",
+		"current_hp": 0,
+	}
 
 
 func get_save_metadata() -> Dictionary:
@@ -206,16 +243,22 @@ func _gather_state(manual: bool) -> Dictionary:
 	var ppm: Node = null
 	if is_instance_valid(get_tree().current_scene):
 		ppm = get_tree().current_scene.find_child("PlantPlacementManager", true, false)
-	state["garden_expansion"] = {"tier": ppm.get("expansion_tier") if ppm != null else 0}
+	if ppm != null:
+		set_runtime_garden_expansion_tier(int(ppm.get("expansion_tier")))
+	state["garden_expansion"] = _runtime_garden_expansion.duplicate(true)
 
 	# Garden structures
-	var struct_mgr: Node = null
-	if is_instance_valid(get_tree().current_scene):
-		struct_mgr = get_tree().current_scene.find_child("GardenStructureManager", true, false)
-	if struct_mgr != null and struct_mgr.has_method("serialize"):
-		state["garden_structures"] = struct_mgr.call("serialize")
+	if GardenStructureManager.has_method("serialize"):
+		state["garden_structures"] = GardenStructureManager.serialize()
 	else:
 		state["garden_structures"] = {"storage_tier": 0, "watchtower_built": false}
+
+	# Fortification spots
+	if is_instance_valid(get_tree().current_scene):
+		for spot: Node in get_tree().get_nodes_in_group(&"fortification_spots"):
+			if spot.has_method("serialize_build_state"):
+				register_fortification_spot_state(spot.call("serialize_build_state"))
+	state["fortification_spots"] = _serialize_fortification_spots()
 
 	# Garden
 	var plants_arr: Array = []
@@ -292,6 +335,10 @@ func _apply_state(state: Dictionary) -> void:
 		GameManager.set_state(GameManager.GameState.EXPLORATION)
 	else:
 		GameManager.set_state(GameManager.GameState.DEFENSE)
+
+	# Build-state caches must match the loaded file before scene spots refresh.
+	set_runtime_garden_expansion_tier(int(state.get("garden_expansion", {}).get("tier", 0)))
+	_deserialize_fortification_spots(state.get("fortification_spots", []))
 
 	# 2. Clear live runtime entities before restoring saved layout.
 	for enemy: Node in get_tree().get_nodes_in_group("enemies"):
@@ -405,7 +452,7 @@ func _apply_state(state: Dictionary) -> void:
 	if is_instance_valid(get_tree().current_scene):
 		ppm_restore = get_tree().current_scene.find_child("PlantPlacementManager", true, false)
 	if ppm_restore != null:
-		var saved_tier: int = int(state.get("garden_expansion", {}).get("tier", 0))
+		var saved_tier: int = get_runtime_garden_expansion_tier()
 		ppm_restore.set("expansion_tier", saved_tier)
 		if ppm_restore.has_method("_update_garden_origin"):
 			ppm_restore.call("_update_garden_origin")
@@ -413,11 +460,16 @@ func _apply_state(state: Dictionary) -> void:
 			ppm_restore.call("_rebuild_occupied_tiles")
 
 	# 5.15 Garden structures.
-	var struct_mgr_restore: Node = null
-	if is_instance_valid(get_tree().current_scene):
-		struct_mgr_restore = get_tree().current_scene.find_child("GardenStructureManager", true, false)
-	if struct_mgr_restore != null and struct_mgr_restore.has_method("deserialize"):
-		struct_mgr_restore.call("deserialize", state.get("garden_structures", {}))
+	GardenStructureManager.deserialize(state.get("garden_structures", {}))
+
+	# 5.16 Fortification spots.
+	for spot: Node in get_tree().get_nodes_in_group(&"fortification_spots"):
+		if not spot.has_method("apply_build_state"):
+			continue
+		var spot_id: String = spot.name
+		if spot.has_method("_get_spot_id"):
+			spot_id = str(spot.call("_get_spot_id"))
+		spot.call("apply_build_state", get_fortification_spot_state(spot_id))
 
 	# 6. Garden plants — instantiate each saved entry into the current scene.
 	var scene_root: Node = get_tree().current_scene
@@ -658,4 +710,42 @@ func _migrate(data: Dictionary) -> Dictionary:
 				"ability_quality": {},
 			}
 		data["schema_version"] = 20
+	# v20 -> v21: fortification build spot state added.
+	if version < 21:
+		print("[SaveManager] Migrating save from v%d to v21." % version)
+		if not data.has("fortification_spots"):
+			data["fortification_spots"] = []
+		data["schema_version"] = 21
 	return data
+
+
+func _serialize_fortification_spots() -> Array:
+	var result: Array = []
+	var spot_ids: Array = _runtime_fortification_spots.keys()
+	spot_ids.sort()
+	for spot_id: String in spot_ids:
+		var state: Dictionary = (_runtime_fortification_spots[spot_id] as Dictionary).duplicate(true)
+		if not state.has("spot_type"):
+			state["spot_type"] = "fortification"
+		result.append(state)
+	return result
+
+
+func _deserialize_fortification_spots(data: Variant) -> void:
+	_runtime_fortification_spots = {}
+	if not data is Array:
+		return
+	for entry: Variant in data as Array:
+		if not entry is Dictionary:
+			continue
+		var state: Dictionary = (entry as Dictionary).duplicate(true)
+		var spot_id: String = str(state.get("spot_id", ""))
+		if spot_id.is_empty():
+			continue
+		if not state.has("spot_type"):
+			state["spot_type"] = "fortification"
+		if not state.has("is_built"):
+			state["is_built"] = not str(state.get("built_item_id", "")).is_empty()
+		if not state.has("current_hp"):
+			state["current_hp"] = 0
+		_runtime_fortification_spots[spot_id] = state

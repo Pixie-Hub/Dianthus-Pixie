@@ -91,6 +91,14 @@ func _notify_map_view_watchtower() -> void:
 	get_tree().call_group("minimap", "set_watchtower_active", true)
 
 
+func reset_state() -> void:
+	storage_tier = 0
+	watchtower_built = false
+	_apply_inventory_slots()
+	storage_upgraded.emit(storage_tier)
+	get_tree().call_group("minimap", "set_watchtower_active", false)
+
+
 func get_storage_next_tier_data() -> Dictionary:
 	if storage_tier >= STORAGE_TIERS.size():
 		return {}
@@ -105,8 +113,13 @@ func serialize() -> Dictionary:
 
 
 func deserialize(data: Dictionary) -> void:
-	storage_tier = int(data.get("storage_tier", 0))
+	storage_tier = clampi(int(data.get("storage_tier", 0)), 0, STORAGE_TIERS.size())
 	watchtower_built = bool(data.get("watchtower_built", false))
 	_apply_inventory_slots()
 	if watchtower_built:
 		call_deferred("_notify_map_view_watchtower")
+	else:
+		get_tree().call_group("minimap", "set_watchtower_active", false)
+	storage_upgraded.emit(storage_tier)
+	if watchtower_built:
+		watchtower_constructed.emit()

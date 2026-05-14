@@ -1765,19 +1765,23 @@ bramble_id = &"south_return_shortcut"
 
 [node name="FortSpotNorth" parent="YSortLayer" unique_id=1940100001 instance=ExtResource("22_fortspot")]
 position = Vector2(768, 736)
+spot_id = &"fortification_north"
 spot_label = "North Gate"
 
 [node name="FortSpotSouth" parent="YSortLayer" unique_id=1940100002 instance=ExtResource("22_fortspot")]
 position = Vector2(768, 928)
+spot_id = &"fortification_south"
 spot_label = "South Gate"
 
 [node name="FortSpotWest" parent="YSortLayer" unique_id=1940100003 instance=ExtResource("22_fortspot")]
 position = Vector2(656, 832)
+spot_id = &"fortification_west"
 spot_label = "West Gate"
 barricade_sideways = true
 
 [node name="FortSpotEast" parent="YSortLayer" unique_id=1940100004 instance=ExtResource("22_fortspot")]
 position = Vector2(880, 832)
+spot_id = &"fortification_east"
 spot_label = "East Gate"
 barricade_sideways = true
 

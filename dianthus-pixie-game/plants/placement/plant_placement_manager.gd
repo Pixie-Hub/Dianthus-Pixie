@@ -78,6 +78,7 @@ var _seed_scene_cache: Dictionary = {}
 
 
 func _ready() -> void:
+	expansion_tier = SaveManager.get_runtime_garden_expansion_tier()
 	_update_garden_origin()
 	_rebuild_occupied_tiles()
 	DayNightCycle.phase_changed.connect(_on_phase_changed)
@@ -312,6 +313,7 @@ func _on_phase_changed(_phase: String) -> void:
 
 
 func _on_load_completed(_success: bool) -> void:
+	expansion_tier = SaveManager.get_runtime_garden_expansion_tier()
 	_update_garden_origin()
 	_rebuild_occupied_tiles()
 	if is_placement_mode:
@@ -531,6 +533,7 @@ func expand_garden() -> bool:
 	InventoryManager.remove_item("verdant_sap", int(tier["cost_verdant_sap"]))
 	InventoryManager.remove_item("stone", int(tier["cost_stone"]))
 	expansion_tier += 1
+	SaveManager.set_runtime_garden_expansion_tier(expansion_tier)
 	_update_garden_origin()
 	_rebuild_occupied_tiles()
 	queue_redraw()
