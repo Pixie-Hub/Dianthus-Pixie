@@ -17,6 +17,12 @@
 [ext_resource type="PackedScene" uid="uid://ckly87alm222s" path="res://ui/screens/full_map_screen.tscn" id="12_l368x"]
 [ext_resource type="Script" uid="uid://b523pk78qj4qj" path="res://world/zones/dusk_forest/dusk_forest.gd" id="13_dskfst"]
 [ext_resource type="Texture2D" uid="uid://jnshnvts5ei2" path="res://world/obstacles/meadow_dusk_blocker_atlas.png" id="14_blockers"]
+[ext_resource type="Script" uid="uid://bicw1jnltyuqp" path="res://world/zones/dusk_forest/dusk_forest_atmosphere_vfx.gd" id="15_atmo"]
+[ext_resource type="Shader" path="res://world/zones/dusk_forest/shaders/moonbeam_soft_cone.gdshader" id="16_mbcone"]
+[ext_resource type="Shader" path="res://world/zones/dusk_forest/shaders/moonbeam_streaks.gdshader" id="17_mbstreaks"]
+[ext_resource type="Shader" path="res://world/zones/dusk_forest/shaders/moonbeam_ground_glow.gdshader" id="18_mbglow"]
+[ext_resource type="Shader" path="res://world/zones/dusk_forest/shaders/moonbeam_mist_band.gdshader" id="19_mbmist"]
+[ext_resource type="Shader" path="res://world/zones/dusk_forest/shaders/moonbeam_shadow_mask.gdshader" id="20_mbshadow"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_l61tn"]
 texture = ExtResource("1_0kbcj")
@@ -2584,6 +2590,282 @@ sources/6 = SubResource("TileSetAtlasSource_vofgf")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bwh_barrier"]
 size = Vector2(16, 160)
 
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_fireflies"]
+emission_shape = 3
+emission_box_extents = Vector3(420, 170, 1)
+direction = Vector3(0, -1, 0)
+spread = 180.0
+initial_velocity_min = 1.0
+initial_velocity_max = 4.0
+gravity = Vector3(0, -1, 0)
+scale_max = 2.8
+color = Color(1, 0.86, 0.36, 0.46)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_pollen"]
+emission_shape = 3
+emission_box_extents = Vector3(260, 180, 1)
+direction = Vector3(0, -1, 0)
+spread = 180.0
+initial_velocity_min = 0.8
+initial_velocity_max = 2.6
+gravity = Vector3(0, -0.6, 0)
+scale_min = 0.7
+scale_max = 2.1
+color = Color(0.72, 0.98, 1, 0.38)
+
+[sub_resource type="Gradient" id="Gradient_bwh_glow"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.7, 0.95, 1, 0.35, 0.7, 0.95, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_bwh_glow"]
+gradient = SubResource("Gradient_bwh_glow")
+width = 128
+height = 128
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_moonlight_wash"]
+shader = ExtResource("18_mbglow")
+shader_parameter/glow_color = Color(0.19, 0.22, 0.48, 1)
+shader_parameter/alpha_strength = 0.13
+shader_parameter/ellipse_width = 1.55
+shader_parameter/ellipse_height = 1.15
+shader_parameter/edge_feather = 0.85
+shader_parameter/pulse_strength = 0.01
+shader_parameter/pulse_phase = 0.4
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nw_beam_wide"]
+shader = ExtResource("16_mbcone")
+shader_parameter/beam_color = Color(0.62, 0.72, 1, 1)
+shader_parameter/alpha_strength = 0.17
+shader_parameter/source_width = 0.1
+shader_parameter/bottom_width = 0.82
+shader_parameter/edge_feather = 0.24
+shader_parameter/mist_strength = 0.34
+shader_parameter/noise_scale = 5.5
+shader_parameter/time_scale = 0.12
+shader_parameter/flicker_strength = 0.025
+shader_parameter/flicker_phase = 0.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nw_beam_core"]
+shader = ExtResource("16_mbcone")
+shader_parameter/beam_color = Color(0.74, 0.82, 1, 1)
+shader_parameter/alpha_strength = 0.1
+shader_parameter/source_width = 0.04
+shader_parameter/bottom_width = 0.34
+shader_parameter/edge_feather = 0.14
+shader_parameter/mist_strength = 0.22
+shader_parameter/noise_scale = 4.5
+shader_parameter/time_scale = 0.1
+shader_parameter/flicker_strength = 0.035
+shader_parameter/flicker_phase = 1.1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nw_streaks"]
+shader = ExtResource("17_mbstreaks")
+shader_parameter/streak_color = Color(0.86, 0.9, 1, 1)
+shader_parameter/streak_density = 34.0
+shader_parameter/streak_softness = 0.12
+shader_parameter/streak_angle = -0.32
+shader_parameter/streak_alpha = 0.07
+shader_parameter/drift_speed = 0.07
+shader_parameter/source_width = 0.08
+shader_parameter/bottom_width = 0.74
+shader_parameter/edge_feather = 0.2
+shader_parameter/flicker_phase = 2.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nw_ground_glow"]
+shader = ExtResource("18_mbglow")
+shader_parameter/glow_color = Color(0.58, 0.72, 1, 1)
+shader_parameter/alpha_strength = 0.13
+shader_parameter/ellipse_width = 1.25
+shader_parameter/ellipse_height = 0.38
+shader_parameter/edge_feather = 0.75
+shader_parameter/pulse_strength = 0.025
+shader_parameter/pulse_phase = 0.8
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_center_beam_wide"]
+shader = ExtResource("16_mbcone")
+shader_parameter/beam_color = Color(0.54, 0.7, 1, 1)
+shader_parameter/alpha_strength = 0.14
+shader_parameter/source_width = 0.09
+shader_parameter/bottom_width = 0.72
+shader_parameter/edge_feather = 0.24
+shader_parameter/mist_strength = 0.28
+shader_parameter/noise_scale = 6.0
+shader_parameter/time_scale = 0.13
+shader_parameter/flicker_strength = 0.03
+shader_parameter/flicker_phase = 1.7
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_center_beam_core"]
+shader = ExtResource("16_mbcone")
+shader_parameter/beam_color = Color(0.72, 0.84, 1, 1)
+shader_parameter/alpha_strength = 0.08
+shader_parameter/source_width = 0.035
+shader_parameter/bottom_width = 0.28
+shader_parameter/edge_feather = 0.13
+shader_parameter/mist_strength = 0.2
+shader_parameter/noise_scale = 5.0
+shader_parameter/time_scale = 0.1
+shader_parameter/flicker_strength = 0.035
+shader_parameter/flicker_phase = 2.6
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_center_streaks"]
+shader = ExtResource("17_mbstreaks")
+shader_parameter/streak_color = Color(0.82, 0.9, 1, 1)
+shader_parameter/streak_density = 29.0
+shader_parameter/streak_softness = 0.13
+shader_parameter/streak_angle = -0.18
+shader_parameter/streak_alpha = 0.06
+shader_parameter/drift_speed = 0.065
+shader_parameter/source_width = 0.07
+shader_parameter/bottom_width = 0.65
+shader_parameter/edge_feather = 0.18
+shader_parameter/flicker_phase = 3.4
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_center_ground_glow"]
+shader = ExtResource("18_mbglow")
+shader_parameter/glow_color = Color(0.52, 0.68, 1, 1)
+shader_parameter/alpha_strength = 0.1
+shader_parameter/ellipse_width = 1.05
+shader_parameter/ellipse_height = 0.34
+shader_parameter/edge_feather = 0.78
+shader_parameter/pulse_strength = 0.02
+shader_parameter/pulse_phase = 2.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_blackwater_beam_wide"]
+shader = ExtResource("16_mbcone")
+shader_parameter/beam_color = Color(0.44, 0.82, 1, 1)
+shader_parameter/alpha_strength = 0.13
+shader_parameter/source_width = 0.08
+shader_parameter/bottom_width = 0.58
+shader_parameter/edge_feather = 0.23
+shader_parameter/mist_strength = 0.36
+shader_parameter/noise_scale = 6.5
+shader_parameter/time_scale = 0.12
+shader_parameter/flicker_strength = 0.028
+shader_parameter/flicker_phase = 0.95
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_blackwater_beam_core"]
+shader = ExtResource("16_mbcone")
+shader_parameter/beam_color = Color(0.64, 0.9, 1, 1)
+shader_parameter/alpha_strength = 0.075
+shader_parameter/source_width = 0.03
+shader_parameter/bottom_width = 0.23
+shader_parameter/edge_feather = 0.12
+shader_parameter/mist_strength = 0.28
+shader_parameter/noise_scale = 5.0
+shader_parameter/time_scale = 0.09
+shader_parameter/flicker_strength = 0.04
+shader_parameter/flicker_phase = 3.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_blackwater_streaks"]
+shader = ExtResource("17_mbstreaks")
+shader_parameter/streak_color = Color(0.66, 0.96, 1, 1)
+shader_parameter/streak_density = 24.0
+shader_parameter/streak_softness = 0.16
+shader_parameter/streak_angle = 0.1
+shader_parameter/streak_alpha = 0.055
+shader_parameter/drift_speed = 0.06
+shader_parameter/source_width = 0.05
+shader_parameter/bottom_width = 0.5
+shader_parameter/edge_feather = 0.17
+shader_parameter/flicker_phase = 4.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_blackwater_ground_glow"]
+shader = ExtResource("18_mbglow")
+shader_parameter/glow_color = Color(0.25, 0.86, 1, 1)
+shader_parameter/alpha_strength = 0.15
+shader_parameter/ellipse_width = 1.15
+shader_parameter/ellipse_height = 0.45
+shader_parameter/edge_feather = 0.78
+shader_parameter/pulse_strength = 0.025
+shader_parameter/pulse_phase = 2.8
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mist_south"]
+shader = ExtResource("19_mbmist")
+shader_parameter/mist_color = Color(0.55, 0.66, 0.8, 1)
+shader_parameter/alpha_strength = 0.15
+shader_parameter/band_thickness = 0.58
+shader_parameter/edge_feather = 0.24
+shader_parameter/noise_scale = 9.0
+shader_parameter/drift_speed = 0.065
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mist_west"]
+shader = ExtResource("19_mbmist")
+shader_parameter/mist_color = Color(0.48, 0.64, 0.76, 1)
+shader_parameter/alpha_strength = 0.13
+shader_parameter/band_thickness = 0.52
+shader_parameter/edge_feather = 0.2
+shader_parameter/noise_scale = 8.0
+shader_parameter/drift_speed = 0.075
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mist_moonspore"]
+shader = ExtResource("19_mbmist")
+shader_parameter/mist_color = Color(0.62, 0.78, 0.88, 1)
+shader_parameter/alpha_strength = 0.14
+shader_parameter/band_thickness = 0.54
+shader_parameter/edge_feather = 0.22
+shader_parameter/noise_scale = 10.0
+shader_parameter/drift_speed = 0.08
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mist_north"]
+shader = ExtResource("19_mbmist")
+shader_parameter/mist_color = Color(0.52, 0.64, 0.84, 1)
+shader_parameter/alpha_strength = 0.11
+shader_parameter/band_thickness = 0.48
+shader_parameter/edge_feather = 0.22
+shader_parameter/noise_scale = 8.5
+shader_parameter/drift_speed = 0.06
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_blackwater_rim_glow"]
+shader = ExtResource("18_mbglow")
+shader_parameter/glow_color = Color(0.16, 0.76, 0.92, 1)
+shader_parameter/alpha_strength = 0.18
+shader_parameter/ellipse_width = 1.35
+shader_parameter/ellipse_height = 0.8
+shader_parameter/edge_feather = 0.58
+shader_parameter/pulse_strength = 0.03
+shader_parameter/pulse_phase = 1.4
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_blackwater_mote_a"]
+shader = ExtResource("18_mbglow")
+shader_parameter/glow_color = Color(0.75, 0.96, 1, 1)
+shader_parameter/alpha_strength = 0.45
+shader_parameter/ellipse_width = 0.7
+shader_parameter/ellipse_height = 0.7
+shader_parameter/edge_feather = 0.72
+shader_parameter/pulse_strength = 0.04
+shader_parameter/pulse_phase = 0.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_blackwater_mote_b"]
+shader = ExtResource("18_mbglow")
+shader_parameter/glow_color = Color(0.62, 0.9, 1, 1)
+shader_parameter/alpha_strength = 0.38
+shader_parameter/ellipse_width = 0.7
+shader_parameter/ellipse_height = 0.7
+shader_parameter/edge_feather = 0.72
+shader_parameter/pulse_strength = 0.05
+shader_parameter/pulse_phase = 2.1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_shadow_top"]
+shader = ExtResource("20_mbshadow")
+shader_parameter/shadow_color = Color(0.018, 0.026, 0.04, 1)
+shader_parameter/alpha_strength = 0.36
+shader_parameter/edge_feather = 0.22
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_shadow_west"]
+shader = ExtResource("20_mbshadow")
+shader_parameter/shadow_color = Color(0.018, 0.028, 0.035, 1)
+shader_parameter/alpha_strength = 0.28
+shader_parameter/edge_feather = 0.24
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_shadow_east"]
+shader = ExtResource("20_mbshadow")
+shader_parameter/shadow_color = Color(0.018, 0.028, 0.035, 1)
+shader_parameter/alpha_strength = 0.25
+shader_parameter/edge_feather = 0.24
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vofgf"]
 size = Vector2(1280, 32)
 
@@ -4299,6 +4581,223 @@ shape = SubResource("RectangleShape2D_bwh_barrier")
 [node name="BarrierVisual" type="Polygon2D" parent="ForestMapVisuals/BlackwaterEntranceBarrier" unique_id=901000006]
 color = Color(0.35, 0.15, 0.08, 1)
 polygon = PackedVector2Array(-8, -80, 8, -80, 8, 80, 0, 80, -8, 80)
+
+[node name="DuskForestAtmosphereVFX" type="Node2D" parent="." unique_id=969693290]
+z_index = 4
+script = ExtResource("15_atmo")
+teaser_intensity = 1.55
+
+[node name="MoonlightWash" type="Sprite2D" parent="DuskForestAtmosphereVFX" unique_id=497936779]
+z_index = -2
+position = Vector2(640, 480)
+scale = Vector2(10, 7.5)
+texture = SubResource("GradientTexture2D_bwh_glow")
+material = SubResource("ShaderMaterial_moonlight_wash")
+
+[node name="MoonbeamHints" type="Node2D" parent="DuskForestAtmosphereVFX" unique_id=1211607686]
+
+[node name="MoonbeamNorthWest" type="Node2D" parent="DuskForestAtmosphereVFX/MoonbeamHints" unique_id=1603594513]
+
+[node name="BeamWide" type="Sprite2D" parent="DuskForestAtmosphereVFX/MoonbeamHints/MoonbeamNorthWest"]
+z_index = 1
+position = Vector2(528, 263)
+rotation = -0.376
+scale = Vector2(1.72, 4.23)
+texture = SubResource("GradientTexture2D_bwh_glow")
+material = SubResource("ShaderMaterial_nw_beam_wide")
+
+[node name="BeamCore" type="Sprite2D" parent="DuskForestAtmosphereVFX/MoonbeamHints/MoonbeamNorthWest"]
+z_index = 2
+position = Vector2(528, 263)
+rotation = -0.376
+scale = Vector2(1.05, 4.18)
+texture = SubResource("GradientTexture2D_bwh_glow")
+material = SubResource("ShaderMaterial_nw_beam_core")
+
+[node name="BeamStreaks" type="Sprite2D" parent="DuskForestAtmosphereVFX/MoonbeamHints/MoonbeamNorthWest"]
+z_index = 3
+position = Vector2(528, 263)
+rotation = -0.376
+scale = Vector2(1.62, 4.18)
+texture = SubResource("GradientTexture2D_bwh_glow")
+material = SubResource("ShaderMaterial_nw_streaks")
+
+[node name="GroundGlow" type="Sprite2D" parent="DuskForestAtmosphereVFX/MoonbeamHints/MoonbeamNorthWest"]
+z_index = 1
+position = Vector2(625, 510)
+rotation = -0.08
+scale = Vector2(1.55, 0.7)
+texture = SubResource("GradientTexture2D_bwh_glow")
+material = SubResource("ShaderMaterial_nw_ground_glow")
+
+[node name="MoonbeamCenter" type="Node2D" parent="DuskForestAtmosphereVFX/MoonbeamHints" unique_id=1723797175]
+
+[node name="BeamWide" type="Sprite2D" parent="DuskForestAtmosphereVFX/MoonbeamHints/MoonbeamCenter"]
+z_index = 1
+position = Vector2(686, 186)
+rotation = -0.163
+scale = Vector2(1.32, 3.02)
+texture = SubResource("GradientTexture2D_bwh_glow")
+material = SubResource("ShaderMaterial_center_beam_wide")
+
+[node name="BeamCore" type="Sprite2D" parent="DuskForestAtmosphereVFX/MoonbeamHints/MoonbeamCenter"]
+z_index = 2
+position = Vector2(686, 186)
+rotation = -0.163
+scale = Vector2(0.86, 2.96)
+texture = SubResource("GradientTexture2D_bwh_glow")
+material = SubResource("ShaderMaterial_center_beam_core")
+
+[node name="BeamStreaks" type="Sprite2D" parent="DuskForestAtmosphereVFX/MoonbeamHints/MoonbeamCenter"]
+z_index = 3
+position = Vector2(686, 186)
+rotation = -0.163
+scale = Vector2(1.22, 2.98)
+texture = SubResource("GradientTexture2D_bwh_glow")
+material = SubResource("ShaderMaterial_center_streaks")
+
+[node name="GroundGlow" type="Sprite2D" parent="DuskForestAtmosphereVFX/MoonbeamHints/MoonbeamCenter"]
+z_index = 1
+position = Vector2(716, 372)
+rotation = -0.04
+scale = Vector2(1.25, 0.58)
+texture = SubResource("GradientTexture2D_bwh_glow")
+material = SubResource("ShaderMaterial_center_ground_glow")
+
+[node name="MoonbeamBlackwater" type="Node2D" parent="DuskForestAtmosphereVFX/MoonbeamHints" unique_id=2071593554]
+
+[node name="BeamWide" type="Sprite2D" parent="DuskForestAtmosphereVFX/MoonbeamHints/MoonbeamBlackwater"]
+z_index = 1
+position = Vector2(216, 238)
+rotation = 0.101
+scale = Vector2(1.05, 3.18)
+texture = SubResource("GradientTexture2D_bwh_glow")
+material = SubResource("ShaderMaterial_blackwater_beam_wide")
+
+[node name="BeamCore" type="Sprite2D" parent="DuskForestAtmosphereVFX/MoonbeamHints/MoonbeamBlackwater"]
+z_index = 2
+position = Vector2(216, 238)
+rotation = 0.101
+scale = Vector2(0.68, 3.12)
+texture = SubResource("GradientTexture2D_bwh_glow")
+material = SubResource("ShaderMaterial_blackwater_beam_core")
+
+[node name="BeamStreaks" type="Sprite2D" parent="DuskForestAtmosphereVFX/MoonbeamHints/MoonbeamBlackwater"]
+z_index = 3
+position = Vector2(216, 238)
+rotation = 0.101
+scale = Vector2(0.96, 3.12)
+texture = SubResource("GradientTexture2D_bwh_glow")
+material = SubResource("ShaderMaterial_blackwater_streaks")
+
+[node name="GroundGlow" type="Sprite2D" parent="DuskForestAtmosphereVFX/MoonbeamHints/MoonbeamBlackwater"]
+z_index = 1
+position = Vector2(196, 435)
+rotation = 0.02
+scale = Vector2(1.22, 0.62)
+texture = SubResource("GradientTexture2D_bwh_glow")
+material = SubResource("ShaderMaterial_blackwater_ground_glow")
+
+[node name="FireflyParticles" type="GPUParticles2D" parent="DuskForestAtmosphereVFX" unique_id=606778478]
+position = Vector2(616, 776)
+amount = 48
+lifetime = 7.0
+preprocess = 6.0
+speed_scale = 0.55
+randomness = 0.55
+visibility_rect = Rect2(-460, -220, 920, 360)
+process_material = SubResource("ParticleProcessMaterial_fireflies")
+
+[node name="PollenParticles" type="GPUParticles2D" parent="DuskForestAtmosphereVFX" unique_id=886086126]
+position = Vector2(594, 430)
+amount = 36
+lifetime = 8.0
+preprocess = 7.0
+speed_scale = 0.45
+randomness = 0.6
+visibility_rect = Rect2(-320, -230, 640, 420)
+process_material = SubResource("ParticleProcessMaterial_pollen")
+
+[node name="MistBands" type="Node2D" parent="DuskForestAtmosphereVFX" unique_id=2011600093]
+z_index = 1
+
+[node name="MistBandSouth" type="Sprite2D" parent="DuskForestAtmosphereVFX/MistBands" unique_id=523956445]
+position = Vector2(648, 872)
+rotation = -0.015
+scale = Vector2(7.7, 0.65)
+texture = SubResource("GradientTexture2D_bwh_glow")
+material = SubResource("ShaderMaterial_mist_south")
+
+[node name="MistBandWest" type="Sprite2D" parent="DuskForestAtmosphereVFX/MistBands" unique_id=1375270493]
+position = Vector2(210, 536)
+rotation = 0.04
+scale = Vector2(2.35, 0.52)
+texture = SubResource("GradientTexture2D_bwh_glow")
+material = SubResource("ShaderMaterial_mist_west")
+
+[node name="MistBandMoonspore" type="Sprite2D" parent="DuskForestAtmosphereVFX/MistBands" unique_id=1501245370]
+position = Vector2(650, 610)
+rotation = -0.035
+scale = Vector2(4.8, 0.58)
+texture = SubResource("GradientTexture2D_bwh_glow")
+material = SubResource("ShaderMaterial_mist_moonspore")
+
+[node name="MistBandNorth" type="Sprite2D" parent="DuskForestAtmosphereVFX/MistBands" unique_id=1204889832]
+position = Vector2(716, 254)
+rotation = -0.045
+scale = Vector2(5.1, 0.54)
+texture = SubResource("GradientTexture2D_bwh_glow")
+material = SubResource("ShaderMaterial_mist_north")
+
+[node name="BlackwaterGlowAccents" type="Node2D" parent="DuskForestAtmosphereVFX" unique_id=1936624410]
+
+[node name="BlackwaterPoolGlow" type="PointLight2D" parent="DuskForestAtmosphereVFX/BlackwaterGlowAccents" unique_id=1190135755]
+position = Vector2(176, 384)
+color = Color(0.28, 0.72, 1, 1)
+energy = 0.34
+texture = SubResource("GradientTexture2D_bwh_glow")
+texture_scale = 3.0
+
+[node name="BlackwaterRimGlow" type="Sprite2D" parent="DuskForestAtmosphereVFX/BlackwaterGlowAccents" unique_id=797923110]
+position = Vector2(176, 384)
+scale = Vector2(1.9, 1.08)
+texture = SubResource("GradientTexture2D_bwh_glow")
+material = SubResource("ShaderMaterial_blackwater_rim_glow")
+
+[node name="BlackwaterStarMoteA" type="Sprite2D" parent="DuskForestAtmosphereVFX/BlackwaterGlowAccents" unique_id=738248045]
+position = Vector2(148, 356)
+scale = Vector2(0.08, 0.08)
+texture = SubResource("GradientTexture2D_bwh_glow")
+material = SubResource("ShaderMaterial_blackwater_mote_a")
+
+[node name="BlackwaterStarMoteB" type="Sprite2D" parent="DuskForestAtmosphereVFX/BlackwaterGlowAccents" unique_id=42867984]
+position = Vector2(198, 392)
+scale = Vector2(0.065, 0.065)
+texture = SubResource("GradientTexture2D_bwh_glow")
+material = SubResource("ShaderMaterial_blackwater_mote_b")
+
+[node name="CanopyEdgeShadows" type="Node2D" parent="DuskForestAtmosphereVFX" unique_id=1228524557]
+
+[node name="TopCanopyShadow" type="Sprite2D" parent="DuskForestAtmosphereVFX/CanopyEdgeShadows" unique_id=1321423884]
+z_index = 5
+position = Vector2(640, 58)
+scale = Vector2(10, 1.05)
+texture = SubResource("GradientTexture2D_bwh_glow")
+material = SubResource("ShaderMaterial_shadow_top")
+
+[node name="WestCanopyShadow" type="Sprite2D" parent="DuskForestAtmosphereVFX/CanopyEdgeShadows" unique_id=1220890086]
+z_index = 5
+position = Vector2(44, 512)
+scale = Vector2(1.0, 6.35)
+texture = SubResource("GradientTexture2D_bwh_glow")
+material = SubResource("ShaderMaterial_shadow_west")
+
+[node name="EastCanopyShadow" type="Sprite2D" parent="DuskForestAtmosphereVFX/CanopyEdgeShadows" unique_id=1567337807]
+z_index = 5
+position = Vector2(1236, 506)
+scale = Vector2(1.0, 6.25)
+texture = SubResource("GradientTexture2D_bwh_glow")
+material = SubResource("ShaderMaterial_shadow_east")
 
 [node name="ForestMapCollision" type="Node2D" parent="." unique_id=1914565638]
 
