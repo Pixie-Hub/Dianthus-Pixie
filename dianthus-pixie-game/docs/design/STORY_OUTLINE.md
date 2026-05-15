@@ -152,8 +152,8 @@ Avoid separating "story time" from "game time" too strongly. A good lore drop sh
 | Story 01: Whispers of the Void | Survive 3 nights | The shadows have learned the garden's shape, but the garden has learned the Pixie's hands. | Core dialogue after survival milestone. |
 | Story 02: An Ill Omen | Defeat 10 enemies | Void creatures carry traces of night-blooming life, proving the Void feeds by corrupting living patterns. | Enemy drop lore, Moonspore discovery, combat Codex notes. |
 | Dusk Forest Unlock | Melati, Wijaya Kusuma, Moonspore, deeper night plants | The Pixie learns darkness can shelter life as well as danger. | Night-bloom environmental details, root dreams near dim landmarks. |
-| Story 03: The Long Road | Reach Ruins of Veld | The wider world was once connected to the Core through the Living Root. Veld is a broken memory node. | Stone tablets, ruined garden markers, map inscriptions. |
-| Story 04: Echoes Beneath the Stones | Gather Shadow Resin, defeat Phantom Weavers | The Void has been weaving a door beneath the ruins. Shadow Resin is condensed life pressed too long under darkness. | Ruin tablets, resin item lore, Phantom Weaver death echoes. |
+| Story 03: The Living Night | Enter Dusk Forest | Dusk Forest proves darkness can shelter life as well as danger, and its night-blooming roots still remember the Living Root road. | Night-bloom environmental details, root dreams near dim landmarks. |
+| Story 04: Roots Beneath Blackwater | Gather Aether Bloom from Blackwater Hollow | Dusk Forest resolves by revealing the old road beneath Blackwater, earning the route to Veld. | Blackwater reflections, Aether Bloom lore, Core dialogue after the forest opens. |
 | Garden Expansion | Larger placement grid, more defenses, stronger nightly pressure | The Pixie is not decorating a base; they are reclaiming severed root territory. | Soil changes, Core pulse lines, new root patterns at plot edges. |
 | Rare Events | Corrupted Root, Wild Seedling, Void Fissure, Resonance Bloom | Daytime is no longer fully safe. The conflict leaks into exploration, but the garden also sends help outward. | Event-specific micro-lore and environmental aftermath. |
 | Devourer Omen | Night 21 pressure spike, no named precursor | The Void no longer needs a herald. Veld reveals that the Devourer has been directing the hunger all along. | Core tremor, ruined tablet final warning, black root map burning into soil. |
@@ -283,7 +283,7 @@ The buildup begins with small nighttime attacks. At first, the Void sends creatu
 
 There are no precursor bosses in this story path. The Devourer is the only named boss escalation. Story 05 should therefore function as a breach-revelation and preparation gate: the Pixie learns what is coming, the Core understands why Dianthus Pollen must be risked, and the next objective turns toward crafting a weapon for the Final Bloom.
 
-WORLD-02 implementation note: the Ruins of Veld now contain an Ancient Omen landmark. Interacting with it using **E** emits `devourer_omen_deciphered` for `story_05_devourer_omens` and starts the final preparation step.
+WORLD-02 implementation note: the Ruins of Veld now unlock after the Dusk Forest/Blackwater resolution grants `unlock_zone_ruins`. The zone contains an Ancient Omen landmark. Interacting with it using **E** emits `devourer_omen_deciphered` for `story_05_devourer_omens` and starts the final preparation step.
 
 ### Why The Devourer Appears
 

@@ -5,22 +5,22 @@
 
 [sub_resource type="Resource" id="Resource_obj1"]
 script = ExtResource("2_qobj")
-objective_id = &"travel_to_ruins"
-description = "Travel to the Ruins of Veld"
+objective_id = &"enter_dusk_forest"
+description = "Enter Dusk Forest"
 event_id = &"zone_entered"
 target_count = 1
-filter = {"zone_id": "ruins_of_veld"}
+filter = {"zone_id": "dusk_forest"}
 
 [resource]
 script = ExtResource("1_qdata")
 quest_id = &"story_03_journey"
-display_name = "The Long Road"
-description = "Whispers speak of ancient ruins beyond the meadow — the Ruins of Veld. Find them before the darkness solidifies its foothold."
+display_name = "The Living Night"
+description = "The Moonspore traces lead into Dusk Forest. Enter the dim forest and learn why its darkness still shelters living roots."
 quest_type = 3
 objectives = Array[ExtResource("2_qobj")]([SubResource("Resource_obj1")])
 reward_items = {}
 reward_weapons = []
-reward_unlock_flags = ["unlock_zone_ruins"]
+reward_unlock_flags = ["unlock_blackwater_hollow"]
 time_limit_days = 4
 dialogic_timeline_on_complete = "res://dialogic/timelines/story_03_complete.dtl"
 dialogic_timeline_on_fail = "res://dialogic/timelines/story_03_fail.dtl"

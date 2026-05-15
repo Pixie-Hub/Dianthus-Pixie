@@ -2,7 +2,7 @@ label story_06_complete (Petals of Power Complete)
 [style name="Gameplay"]
 "Dianthus Core" (Default): You gathered my pollen — the part of me I kept closest — and shaped it into purpose. I felt every grain leave my roots. It did not hurt. It felt like trust.
 "Dianthus Core": The Blazeblade carries sunlight folded into thorn and metal. Against the Devourer, ordinary steel would only remember fear. This blade remembers dawn.
-"Dianthus Core": The garden's sanctum was never a place. It was me. And now — for you — I open.
-"Dianthus Core": When the final night calls, answer with everything this garden has become. Every shard, every root, every bloom you planted in the dark. Answer with all of it.
+"Dianthus Core": The meadow endured. The forest sheltered us. Veld gave the hunger a name. Now the garden's sanctum opens where it always lived: here, in my roots.
+"Dianthus Core": When the final night calls, answer with everything this garden has become. Every shard, every road remembered, every bloom you planted in the dark. Answer with all of it.
 [signal arg="quest_start:story_07_devourer"]
 [end_timeline]

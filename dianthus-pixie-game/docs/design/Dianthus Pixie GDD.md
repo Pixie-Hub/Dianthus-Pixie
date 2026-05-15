@@ -216,7 +216,7 @@ Tidak ada skill tree. Progression bersifat item-driven:
 | --- | --- | --- | --- |
 | Meadow Edge | Padang rumput — zona awal, home base, dan arena final | Petal Shard, Bougainvillea extract, Verdant Sap, Stone | Tersedia dari awal |
 | Dusk Forest | Hutan gelap — cahaya redup, "kegelapan bisa menampung kehidupan" | Moonspore, Shadow Resin (sebagian), Rafflesia extract, Beringin root, Melati seed, Wijaya Kusuma seed | Hari 3, setelah Story 02 (`unlock_zone_dusk_forest`) |
-| Ruins of Veld | Reruntuhan kota kuno — jalur pra-klimaks | Shadow Resin (utama), Kunyit seed, Kecombrang seed/extract, Aether Bloom (langka), Stone | Hari 7, setelah Story 03 (`unlock_zone_ruins`) |
+| Ruins of Veld | Reruntuhan kota kuno — jalur pra-klimaks | Shadow Resin (utama), Kunyit seed, Kecombrang seed/extract, Aether Bloom (langka), Stone | Hari 7, setelah Story 04 menyelesaikan arc Dusk Forest/Blackwater dan memberi `unlock_zone_ruins` |
 
 > **Catatan:** Dianthus Core dan semua pertahanan malam (night defense) hanya ada di Meadow Edge. Dusk Forest dan Ruins of Veld adalah zona eksplorasi siang hari — tidak ada Core dan tidak ada wave spawn di sana.
 >

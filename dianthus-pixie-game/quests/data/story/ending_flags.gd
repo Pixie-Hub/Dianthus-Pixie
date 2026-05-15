@@ -28,7 +28,7 @@ const unlock_endless_mode: String = "unlock_endless_mode"
 # Discovery quest completion flag (already used by discovery_all_hybrids.tres)
 const flag_discovery_complete: String = "discovery_complete"
 
-# Blackwater Hollow sub-area unlock (granted by story_04_ruins reward_unlock_flags)
+# Blackwater Hollow sub-area unlock (granted by story_03_journey reward_unlock_flags)
 const unlock_blackwater_hollow: String = "unlock_blackwater_hollow"
 # Entry-seen one-shot flag (mirrors flag_dusk_forest_entry_seen pattern).
 const flag_blackwater_hollow_entry_seen: String = "flag_blackwater_hollow_entry_seen"

@@ -5039,10 +5039,9 @@ target_scene = "res://world/zones/ruins_of_veld/ruins_of_veld.tscn"
 target_entry_marker = &"FromDuskForest"
 required_day = 7
 required_unlock_flag = &"unlock_zone_ruins"
-required_active_quest = &"story_03_journey"
 display_name = "Ruins of Veld"
-prompt_body = "Follow the old road into Veld."
-disabled_prompt = "Requires Day 7 and story progress."
+prompt_body = "Follow the remembered road into Veld."
+disabled_prompt = "The Dusk Forest has not revealed the old road yet."
 
 [node name="DecorLayer" type="TileMapLayer" parent="YSortLayer" unique_id=1130609805]
 modulate = Color(0.32, 0.41, 0.29, 1)

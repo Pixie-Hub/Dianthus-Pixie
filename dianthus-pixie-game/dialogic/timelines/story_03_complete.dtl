@@ -1,8 +1,8 @@
-label story_03_complete (The Long Road Complete)
+label story_03_complete (The Living Night Complete)
 [style name="Gameplay"]
-"Dianthus Core" (Default): You reached the Ruins of Veld. I can feel their stones through your breath — cold, broken, and older than anything in this meadow.
-"Dianthus Core": Once, living roots crossed there without fear. Now the cracks drink shadow and give back only hunger. The stone remembers gardens, but the gardens do not remember the stone.
-"Dianthus Core": Tread carefully among the broken walls. Shadow Resin gathers in the places where old life was pressed too long beneath the dark. It is not poison — but it is not kind.
-"Dianthus Core": Bring back proof of what you find. I will teach the garden how to answer ruin with craft. That is what roots do — they grow through what tried to bury them.
+"Dianthus Core" (Default): You found Dusk Forest. I can feel it breathing through you, dim and damp and alive.
+"Dianthus Core": Darkness is not the Void, little alchemist. Night can shelter seeds. It can cool wounded roots. It can teach flowers to open without applause.
+"Dianthus Core": But the forest is guarding something under its black water. Old roots bend there as if remembering a road they were told to forget.
+"Dianthus Core": Go deeper into Blackwater Hollow. Bring back what blooms there, and I will listen through it for the path beneath Dusk.
 [signal arg="quest_start:story_04_ruins"]
 [end_timeline]

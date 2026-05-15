@@ -330,7 +330,7 @@ FOUND-01..06 (Done)
 | Shift+2 | Equip Vine Whip to slot 1 (night-locked) | PLANT-10 |
 | Shift+3 | Equip Petal Shield to slot 1 (night-locked) | PLANT-11 |
 | Shift+4 | Add fortification materials: 12 Petal Shard + 8 Verdant Sap + 4 Moonspore | WORLD |
-| Shift+5 | Emit `zone_entered{zone_id=ruins_of_veld}` — advances story_03_journey objective | QUEST-05 |
+| Shift+5 | Emit `zone_entered{zone_id=dusk_forest}` — advances the revised story_03_journey Dusk Forest objective | QUEST-05 |
 | Shift+6 | Emit `devourer_omen_deciphered` — satisfies story_05_devourer_omens objective | QUEST-05 |
 | Shift+7 | Emit `devourer_defeated` — satisfies story_07_devourer objective; prints flag confirmation | QUEST-05 |
 | Shift+9 | Set DAY phase timer to 35 s remaining — triggers return pressure cues immediately | DAY-06 |

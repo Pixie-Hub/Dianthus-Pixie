@@ -6,7 +6,7 @@
 [sub_resource type="Resource" id="Resource_obj1"]
 script = ExtResource("2_qobj")
 objective_id = &"decipher_devourer_omen"
-description = "Decipher the Devourer omen beneath Veld"
+description = "Decipher the Devourer omen in the Ruins of Veld"
 event_id = &"devourer_omen_deciphered"
 target_count = 1
 filter = {}
@@ -15,12 +15,12 @@ filter = {}
 script = ExtResource("1_qdata")
 quest_id = &"story_05_devourer_omens"
 display_name = "The Door Beneath Veld"
-description = "The Ruins of Veld have revealed a door the Void has been feeding. Decipher the omen before the Devourer finds a path through."
+description = "The road from Dusk Forest has opened into Veld. Decipher the Ancient Omen and learn what waits behind the breach-door."
 quest_type = 3
 objectives = Array[ExtResource("2_qobj")]([SubResource("Resource_obj1")])
 reward_items = {}
 reward_weapons = []
-reward_unlock_flags = ["flag_story_devourer_revealed"]
+reward_unlock_flags = ["flag_story_devourer_revealed", "unlock_recipe_void_grenade"]
 time_limit_days = 3
 dialogic_timeline_on_complete = "res://dialogic/timelines/story_05_complete.dtl"
 dialogic_timeline_on_fail = "res://dialogic/timelines/story_05_fail.dtl"

@@ -1,8 +1,8 @@
 label story_02_complete (An Ill Omen Complete)
 [style name="Gameplay"]
-"Dianthus Core" (Default): Ten shadows have fallen into the soil. Their silence is not peace — it is patience. The dark is counting what it lost.
-"Dianthus Core": Moonspore clings to their remains. Even void-born things carry traces of night-blooming life… as if hunger alone cannot erase what once grew.
-"Dianthus Core": I feel something stirring beyond the meadow's edge. An old road, waking. The Dusk Forest shelters it — and the Ruins of Veld wait at its end, remembering what the darkness took.
-"Dianthus Core": Follow that memory while the day still belongs to us. The road will not stay open if we hesitate.
+"Dianthus Core" (Default): Ten shadows have fallen into the soil. Their silence is not peace. It is patience. The dark is counting what it lost.
+"Dianthus Core": Moonspore clings to their remains. Even void-born things carry traces of night-blooming life, as if hunger alone cannot erase what once grew.
+"Dianthus Core": Follow those traces to Dusk Forest. Do not fear its darkness just because the Void wears a darker face.
+"Dianthus Core": The forest may remember what the meadow cannot. Go carefully, little alchemist. Learn what still blooms when the sun looks away.
 [signal arg="quest_start:story_03_journey"]
 [end_timeline]

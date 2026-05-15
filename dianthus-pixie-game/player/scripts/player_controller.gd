@@ -502,8 +502,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			InventoryManager.add_item("moonspore", 4)
 			print("DEBUG: Shift+4 — Added fortification materials (12 Petal Shard, 8 Verdant Sap, 4 Moonspore).")
 		elif event.keycode == KEY_5 and event.shift_pressed and not event.ctrl_pressed:
-			ZoneTracker.enter_zone("ruins_of_veld")
-			print("DEBUG: Shift+5 — Emitted zone_entered{zone_id=ruins_of_veld}.")
+			ZoneTracker.enter_zone("dusk_forest")
+			print("DEBUG: Shift+5 — Emitted zone_entered{zone_id=dusk_forest}.")
 		elif event.keycode == KEY_6 and event.shift_pressed:
 			QuestManager._on_devourer_omen_deciphered()
 			print("DEBUG: Shift+6 — Emitted devourer_omen_deciphered.")

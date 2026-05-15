@@ -143,7 +143,6 @@ two parent extracts.
 - **Old Root Hollow (Meadow Edge):** 1 seed as the pocket's primary reward, reinforcing the Beringin's "ancient tree" identity.
 - **Wild Seedling Event:** High-priority reward in tree-heavy areas.
 - **Stonehusk Drop:** 15 % chance on death (Day 4+). Thematically, the armoured enemy carries the resilient tree seed.
-- **Quest Reward:** Completing the "Echoes Beneath the Stones" story quest (story_04_ruins) grants 1 Beringin Seed as a side reward.
 
 > **Design Note:** Beringin rewards careful garden layout. Placed at chokepoints it can intercept multiple enemies. Placing it with a Rafflesia behind it creates a classic slow-and-stop combo. The 25 s cooldown prevents spam.
 

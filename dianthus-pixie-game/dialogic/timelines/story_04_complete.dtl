@@ -1,8 +1,8 @@
-label story_04_complete (Echoes Beneath the Stones Complete)
+label story_04_complete (Roots Beneath Blackwater Complete)
 [style name="Gameplay"]
-"Dianthus Core" (Default): Shadow Resin stains your hands. But your hands still know how to shape, how to mend, how to make something useful from what the dark discards.
-"Dianthus Core": The Phantom Weavers were guarding more than rubble. Beneath Veld, the Void was weaving a door — thread by thread, night by night, while we fought its lesser mouths above.
-"Dianthus Core": A recipe is stirring in my oldest roots. It is dangerous. But danger guided by careful hands can defend life as fiercely as any wall.
-"Dianthus Core": Craft for what comes next, little alchemist. Something with a greater will moves behind the lesser shadows. I can feel it pressing its weight against the seal.
+"Dianthus Core" (Default): The Aether Bloom remembers the road. I can taste old rain in it, old root-speech, old fear folded carefully beneath the forest floor.
+"Dianthus Core": Dusk Forest was not hiding Veld from us. It was hiding us from Veld until we could understand what darkness is, and what the Void only pretends to be.
+"Dianthus Core": The forest has remembered where the road goes. Follow it into the Ruins of Veld, and do not mistake the stones for silence.
+"Dianthus Core": Something beneath them has been answering the night. Bring back its name before it learns ours.
 [signal arg="quest_start:story_05_devourer_omens"]
 [end_timeline]
