@@ -35,36 +35,6 @@
 [ext_resource type="Script" uid="uid://eq2kmr2v2jl3" path="res://world/zones/ruins_of_veld/ruins_of_veld_atmosphere_vfx.gd" id="rov_atmo"]
 [ext_resource type="Shader" uid="uid://c724yv5y4yrov" path="res://world/zones/dusk_forest/shaders/moonbeam_soft_cone.gdshader" id="rov_mbcone"]
 [ext_resource type="Shader" uid="uid://dgu5kg3dg51lu" path="res://world/zones/dusk_forest/shaders/moonbeam_streaks.gdshader" id="rov_mbstreaks"]
-[ext_resource type="Shader" path="res://world/zones/shaders/zone_soft_area_fill.gdshader" id="rov_zone_soft"]
-[ext_resource type="Shader" path="res://world/zones/shaders/zone_glow_pool.gdshader" id="rov_zone_glow"]
-[ext_resource type="Shader" path="res://world/zones/shaders/zone_void_fissure.gdshader" id="rov_zone_fissure"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_dust_area"]
-shader = ExtResource("rov_zone_soft")
-shader_parameter/alpha_boost = 1.05
-shader_parameter/noise_scale = 11.0
-shader_parameter/noise_strength = 0.3
-shader_parameter/shimmer_strength = 0.015
-shader_parameter/dither_strength = 0.06
-shader_parameter/drift = Vector2(0.004, -0.006)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_omen_glow_poly"]
-shader = ExtResource("rov_zone_glow")
-shader_parameter/alpha_boost = 0.76
-shader_parameter/pulse_strength = 0.085
-shader_parameter/pulse_speed = 0.9
-shader_parameter/noise_scale = 12.0
-shader_parameter/mote_strength = 0.08
-shader_parameter/drift = Vector2(-0.007, 0.011)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_rov_void_fissure_poly"]
-shader = ExtResource("rov_zone_fissure")
-shader_parameter/alpha_boost = 0.9
-shader_parameter/vein_strength = 0.26
-shader_parameter/pulse_strength = 0.08
-shader_parameter/noise_scale = 21.0
-shader_parameter/vein_color = Vector3(0.28, 0.2, 0.45)
-shader_parameter/drift = Vector2(-0.012, 0.007)
 [ext_resource type="Shader" uid="uid://dyymmtluxuqub" path="res://world/zones/dusk_forest/shaders/moonbeam_ground_glow.gdshader" id="rov_mbglow"]
 [ext_resource type="Shader" uid="uid://cwe5mpdbsq3lp" path="res://world/zones/dusk_forest/shaders/moonbeam_mist_band.gdshader" id="rov_mbmist"]
 [ext_resource type="Shader" uid="uid://flktyyto26v4" path="res://world/zones/dusk_forest/shaders/moonbeam_shadow_mask.gdshader" id="rov_mbshadow"]
@@ -3547,56 +3517,48 @@ tile_set = SubResource("TileSet_vmjov")
 position = Vector2(0, 8)
 
 [node name="SouthernBrokenRoad" type="Polygon2D" parent="RuinsMapVisuals" unique_id=362511870]
-material = SubResource("ShaderMaterial_rov_dust_area")
 visible = false
 z_index = -27
 color = Color(0.39, 0.33, 0.27, 0.46)
 polygon = PackedVector2Array(536, 944, 744, 944, 734, 760, 690, 680, 614, 680, 552, 766)
 
 [node name="CentralSunkenPlaza" type="Polygon2D" parent="RuinsMapVisuals" unique_id=203404189]
-material = SubResource("ShaderMaterial_rov_dust_area")
 visible = false
 z_index = -26
 color = Color(0.35, 0.31, 0.28, 0.58)
 polygon = PackedVector2Array(456, 600, 622, 518, 812, 528, 934, 630, 878, 756, 620, 764, 438, 704)
 
 [node name="DeepBreachOmenGlow" type="Polygon2D" parent="RuinsMapVisuals" unique_id=112273819]
-material = SubResource("ShaderMaterial_rov_omen_glow_poly")
 visible = false
 z_index = -25
 color = Color(0.2, 0.1, 0.28, 0.62)
 polygon = PackedVector2Array(830, 236, 818, 282, 778, 326, 714, 338, 642, 314, 616, 260, 642, 202, 708, 178, 786, 190)
 
 [node name="BreachBlackCore" type="Polygon2D" parent="RuinsMapVisuals" unique_id=1694618177]
-material = SubResource("ShaderMaterial_rov_void_fissure_poly")
 visible = false
 z_index = -24
 color = Color(0.04, 0.025, 0.055, 0.86)
 polygon = PackedVector2Array(774, 220, 790, 258, 760, 300, 716, 306, 688, 274, 700, 228, 738, 204)
 
 [node name="CrackedIrrigationChannelWest" type="Polygon2D" parent="RuinsMapVisuals" unique_id=1720469837]
-material = SubResource("ShaderMaterial_rov_dust_area")
 visible = false
 z_index = -23
 color = Color(0.12, 0.12, 0.13, 0.64)
 polygon = PackedVector2Array(310, 610, 578, 568, 586, 588, 318, 630)
 
 [node name="CrackedIrrigationChannelEast" type="Polygon2D" parent="RuinsMapVisuals" unique_id=225788068]
-material = SubResource("ShaderMaterial_rov_dust_area")
 visible = false
 z_index = -23
 color = Color(0.12, 0.12, 0.13, 0.64)
 polygon = PackedVector2Array(742, 506, 1040, 458, 1048, 480, 750, 528)
 
 [node name="ResinBlackFissureSouth" type="Polygon2D" parent="RuinsMapVisuals" unique_id=1124608076]
-material = SubResource("ShaderMaterial_rov_void_fissure_poly")
 visible = false
 z_index = -22
 color = Color(0.02, 0.015, 0.025, 0.88)
 polygon = PackedVector2Array(498, 656, 528, 610, 566, 560, 578, 574, 548, 632, 524, 690)
 
 [node name="ResinBlackFissureNorth" type="Polygon2D" parent="RuinsMapVisuals" unique_id=1221678262]
-material = SubResource("ShaderMaterial_rov_void_fissure_poly")
 visible = false
 z_index = -22
 color = Color(0.02, 0.015, 0.025, 0.88)
@@ -3935,7 +3897,6 @@ scale = Vector2(0.85, 0.85)
 texture = ExtResource("29_omen")
 
 [node name="OmenBreachGlow" type="Polygon2D" parent="YSortLayer/AncientOmenLandmark" unique_id=726086628]
-material = SubResource("ShaderMaterial_rov_omen_glow_poly")
 z_index = -1
 color = Color(0.5, 0.12, 0.74, 0.32)
 polygon = PackedVector2Array(0, -54, 42, -28, 50, 22, 12, 58, -42, 42, -54, -8, -26, -46)
