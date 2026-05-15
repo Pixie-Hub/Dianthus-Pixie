@@ -35,11 +35,11 @@ const RECIPES: Dictionary = {
 	},
 	"blazeblade": {
 		"display_name": "Blazeblade",
-		"materials": {"kecombrang_extract": 1},
+		"materials": {"dianthus_pollen": 1, "kecombrang_extract": 1},
 		"result_type": "weapon",
 		"result_id": "blazeblade",
 		"upgrade_of": "thorn_sword",
-		"description": "Thorn Sword infused with fiery Kecombrang essence. Higher damage.",
+		"description": "Thorn Sword infused with sacred Dianthus Pollen and fiery Kecombrang essence. Higher damage.",
 	},
 	"void_grenade": {
 		"display_name": "Void Grenade",

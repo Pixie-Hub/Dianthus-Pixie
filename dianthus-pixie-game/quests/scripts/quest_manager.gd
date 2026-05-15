@@ -39,6 +39,10 @@ func start_quest(id: StringName, play_sfx: bool = true) -> bool:
 	for obj: QuestObjective in q.objectives:
 		prog[obj.objective_id] = 0
 	_active[id] = {"progress": prog, "started_day": DayNightCycle.day_count}
+	_apply_story_start_unlocks(id)
+	_sync_existing_story_progress(id)
+	if not _active.has(id):
+		return true
 	quest_started.emit(id)
 	if play_sfx:
 		SfxManager.play("quest_accepted")
@@ -297,6 +301,9 @@ func deserialize(data: Dictionary) -> void:
 			_failed[StringName(id_str)] = str((failed_raw as Dictionary)[id_str])
 	print("[QuestManager] Deserialized: %d active, %d completed, %d failed" % [
 		_active.size(), _completed.size(), _failed.size()])
+	for active_id: StringName in _active.keys():
+		_apply_story_start_unlocks(active_id)
+		_sync_existing_story_progress(active_id)
 	# Restore tracked quest
 	var tracked_raw: Variant = data.get("tracked", "")
 	if tracked_raw is String and not (tracked_raw as String).is_empty():
@@ -408,6 +415,42 @@ func _grant_rewards(q: QuestData) -> void:
 	quest_rewards_granted.emit(q.quest_id, q.reward_items, q.reward_weapons)
 	print("[QuestManager] Rewards granted for %s — items=%s  weapons=%s  flags=%s" % [
 		q.quest_id, q.reward_items, q.reward_weapons, q.reward_unlock_flags])
+
+
+func _apply_story_start_unlocks(id: StringName) -> void:
+	if id == &"story_06_pollen":
+		UnlockFlags.set_flag(StoryEndingFlags.unlock_core_sacred_bloom)
+
+
+func _sync_existing_story_progress(id: StringName) -> void:
+	if id != &"story_06_pollen" or not _active.has(id):
+		return
+	var q: QuestData = _registry.get(id)
+	if q == null:
+		return
+	var prog: Dictionary = _active[id].get("progress", {})
+	var changed: bool = false
+	for obj: QuestObjective in q.objectives:
+		if prog.get(obj.objective_id, 0) >= obj.target_count:
+			continue
+		if obj.event_id == &"item_collected" and str(obj.filter.get("item_id", "")) == "dianthus_pollen":
+			if InventoryManager.get_total_count("dianthus_pollen") > 0:
+				prog[obj.objective_id] = obj.target_count
+				changed = true
+		elif obj.event_id == &"weapon_crafted" and str(obj.filter.get("weapon_id", "")) == "blazeblade":
+			if CraftingManager.owns_weapon("blazeblade"):
+				prog[obj.objective_id] = obj.target_count
+				changed = true
+	if not changed:
+		return
+	var all_done: bool = true
+	for obj: QuestObjective in q.objectives:
+		var current: int = int(prog.get(obj.objective_id, 0))
+		quest_progress_updated.emit(id, obj.objective_id, current, obj.target_count)
+		if current < obj.target_count:
+			all_done = false
+	if all_done:
+		complete_quest(id)
 
 
 func _matches_filter(filter: Dictionary, context: Dictionary) -> bool:
