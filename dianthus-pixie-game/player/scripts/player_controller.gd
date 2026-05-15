@@ -335,7 +335,16 @@ func _unhandled_input(event: InputEvent) -> void:
 				return
 			_start_attack()
 			return
-	if event is InputEventKey and event.pressed:
+	if Input.is_action_just_pressed("codex_toggle"):
+		var cscreen: Node = get_tree().current_scene.find_child("CodexScreen", true, false)
+		if cscreen != null:
+			if cscreen.visible:
+				cscreen.close()
+			else:
+				cscreen.open()
+		get_viewport().set_input_as_handled()
+		return
+	if OS.has_feature("debug") and event is InputEventKey and event.pressed:
 		if event.keycode == KEY_F3:
 			if event.shift_pressed:
 				current_energy = 50
@@ -655,30 +664,6 @@ func _unhandled_input(event: InputEvent) -> void:
 			for pid: String in PlantRegistry.get_all_plant_ids():
 				CodexManager.discover_plant(pid)
 			print("DEBUG: Shift+J — discovered all %d plants in codex." % PlantRegistry.get_all_plant_ids().size())
-		if Input.is_action_just_pressed("codex_toggle"):
-			var cscreen: Node = get_tree().current_scene.find_child("CodexScreen", true, false)
-			if cscreen != null:
-				if cscreen.visible:
-					cscreen.close()
-				else:
-					cscreen.open()
-			get_viewport().set_input_as_handled()
-		# if Input.is_action_just_pressed("breeding_toggle"):
-		# 	var bscreen: Node = get_tree().current_scene.find_child("CrossBreedingScreen", true, false)
-		# 	if bscreen != null:
-		# 		if bscreen.visible:
-		# 			bscreen.close()
-		# 		else:
-		# 			bscreen.open()
-		# 	get_viewport().set_input_as_handled()
-		# if Input.is_action_just_pressed("crafting_toggle"):
-		# 	var screen: Node = get_tree().current_scene.find_child("CraftingScreen", true, false)
-		# 	if screen != null:
-		# 		if screen.visible:
-		# 			screen.close()
-		# 		else:
-		# 			screen.open()
-		# 	get_viewport().set_input_as_handled()
 
 func set_harvesting(value: bool) -> void:
 	is_harvesting = value
