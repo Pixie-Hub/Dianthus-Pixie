@@ -13,10 +13,14 @@ func _ready() -> void:
 	add_child(_overlay)
 	_fade_in()
 
-func transition_to(target_scene: String, target_entry_marker: StringName = &"") -> void:
+func transition_to(
+	target_scene: String,
+	target_entry_marker: StringName = &"",
+	allow_during_defense: bool = false
+) -> void:
 	if _busy:
 		return
-	if GameManager.current_state == GameManager.GameState.DEFENSE:
+	if GameManager.current_state == GameManager.GameState.DEFENSE and not allow_during_defense:
 		return
 	_busy = true
 	await _fade_out()

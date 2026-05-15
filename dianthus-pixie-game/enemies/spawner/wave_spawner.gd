@@ -41,6 +41,7 @@ const SWARM_BATCH_MIN: int = 5
 const SWARM_BATCH_MAX: int = 10
 const FORECAST_SEED_BASE: int = 73031
 const FORECAST_SEED_DAY_STEP: int = 9973
+const NIGHT_START_READY_RETRIES: int = 4
 
 const ENEMY_DISPLAY_NAMES: Dictionary = {
 	"shadowling": "Shadowling",
@@ -94,6 +95,22 @@ func _ready() -> void:
 		QuestManager.quest_failed.connect(_on_forecast_relevant_quest_changed)
 	call_deferred("_regenerate_next_wave_forecast")
 	if DayNightCycle.is_night():
+		call_deferred("_start_wave_after_scene_ready")
+
+
+func _start_wave_after_scene_ready(retries_remaining: int = NIGHT_START_READY_RETRIES) -> void:
+	if not DayNightCycle.is_night() or _wave_active:
+		return
+	if not is_instance_valid(GameManager.dianthus_core):
+		if retries_remaining > 0:
+			call_deferred("_start_wave_after_scene_ready", retries_remaining - 1)
+		else:
+			push_warning("[WaveSpawner] Cannot start night wave because the Dianthus Core is not registered.")
+		return
+	_ensure_forecast_for_current_day()
+	if bool(_next_wave_forecast.get("is_boss", false)):
+		_start_devourer_fight()
+	else:
 		start_wave()
 
 

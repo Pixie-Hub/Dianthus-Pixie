@@ -14,6 +14,10 @@ const DISABLED_ACCENT: Color = Color(0.62, 0.62, 0.62, 1.0)
 @export var display_name: String = "Zone"
 @export var prompt_body: String = "Travel to this zone."
 @export var disabled_prompt: String = ""
+@export var allow_night_return_to_defense: bool = false
+@export_file("*.tscn") var night_return_target_scene: String = ""
+@export var night_return_entry_marker: StringName = &""
+@export var night_return_prompt: String = "Return to defend the Dianthus Core."
 
 @onready var _interaction_prompt: InteractionPrompt = $InteractionPrompt
 
@@ -39,7 +43,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		_refresh_prompt()
 		return
 	_hide_prompt()
-	SceneTransition.transition_to(target_scene, target_entry_marker)
+	SceneTransition.transition_to(
+		_get_effective_target_scene(),
+		_get_effective_entry_marker(),
+		_is_defense_return_available()
+	)
 
 
 func _on_body_entered(body: Node2D) -> void:
@@ -60,15 +68,35 @@ func _on_phase_changed(_phase: String) -> void:
 
 
 func _can_transition() -> bool:
-	if target_scene.is_empty():
+	if _get_effective_target_scene().is_empty():
 		return false
 	if DayNightCycle.day_count < required_day:
 		return false
-	if DayNightCycle.is_night() or GameManager.current_state == GameManager.GameState.DEFENSE:
-		return false
 	if not _has_story_access():
 		return false
+	if DayNightCycle.is_night() or GameManager.current_state == GameManager.GameState.DEFENSE:
+		return _is_defense_return_available()
 	return true
+
+
+func _is_defense_return_available() -> bool:
+	return allow_night_return_to_defense \
+		and (DayNightCycle.is_night() or GameManager.current_state == GameManager.GameState.DEFENSE) \
+		and _get_effective_target_scene() == "res://world/zones/meadow_edge/meadow_edge.tscn"
+
+
+func _get_effective_target_scene() -> String:
+	if DayNightCycle.is_night() or GameManager.current_state == GameManager.GameState.DEFENSE:
+		if allow_night_return_to_defense and not night_return_target_scene.is_empty():
+			return night_return_target_scene
+	return target_scene
+
+
+func _get_effective_entry_marker() -> StringName:
+	if DayNightCycle.is_night() or GameManager.current_state == GameManager.GameState.DEFENSE:
+		if allow_night_return_to_defense and night_return_entry_marker != &"":
+			return night_return_entry_marker
+	return target_entry_marker
 
 
 func _has_story_access() -> bool:
@@ -83,11 +111,13 @@ func _refresh_prompt() -> void:
 	if not _player_in_range or not is_instance_valid(_interaction_prompt):
 		return
 	if _can_transition():
+		var body: String = night_return_prompt if _is_defense_return_available() else prompt_body
+		var action: String = "Press E to return" if _is_defense_return_available() else "Press E to travel"
 		_interaction_prompt.show_interaction(
 			display_name,
-			prompt_body,
+			body,
 			"E",
-			"Press E to travel",
+			action,
 			AVAILABLE_ACCENT,
 			PROMPT_STATUS_NORMAL
 		)

@@ -5030,6 +5030,8 @@ target_scene = "res://world/zones/meadow_edge/meadow_edge.tscn"
 target_entry_marker = &"FromDuskForest"
 display_name = "Meadow Edge"
 prompt_body = "Return to Meadow Edge."
+allow_night_return_to_defense = true
+night_return_prompt = "Return to defend the Dianthus Core."
 
 [node name="RuinsOfVeldGate" parent="YSortLayer" unique_id=100176740 instance=ExtResource("5_5gonc")]
 position = Vector2(760, 228)
