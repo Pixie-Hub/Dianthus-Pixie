@@ -5,6 +5,7 @@ const PROMPT_STATUS_NORMAL: int = 0
 const PROMPT_STATUS_DISABLED: int = 2
 const AVAILABLE_ACCENT: Color = Color(0.58, 0.86, 0.62, 1.0)
 const DISABLED_ACCENT: Color = Color(0.62, 0.62, 0.62, 1.0)
+const MEADOW_EDGE_SCENE: String = "res://world/zones/meadow_edge/meadow_edge.tscn"
 
 @export_file("*.tscn") var target_scene: String = ""
 @export var target_entry_marker: StringName = &""
@@ -82,7 +83,7 @@ func _can_transition() -> bool:
 func _is_defense_return_available() -> bool:
 	return allow_night_return_to_defense \
 		and (DayNightCycle.is_night() or GameManager.current_state == GameManager.GameState.DEFENSE) \
-		and _get_effective_target_scene() == "res://world/zones/meadow_edge/meadow_edge.tscn"
+		and _is_meadow_edge_target(_get_effective_target_scene())
 
 
 func _get_effective_target_scene() -> String:
@@ -97,6 +98,16 @@ func _get_effective_entry_marker() -> StringName:
 		if allow_night_return_to_defense and night_return_entry_marker != &"":
 			return night_return_entry_marker
 	return target_entry_marker
+
+
+func _is_meadow_edge_target(scene_path: String) -> bool:
+	if scene_path == MEADOW_EDGE_SCENE:
+		return true
+	if scene_path.begins_with("uid://"):
+		var uid: int = ResourceUID.text_to_id(scene_path)
+		if uid >= 0:
+			return ResourceUID.get_id_path(uid) == MEADOW_EDGE_SCENE
+	return false
 
 
 func _has_story_access() -> bool:

@@ -94,8 +94,14 @@ func _ready() -> void:
 	if QuestManager.has_signal(&"quest_failed"):
 		QuestManager.quest_failed.connect(_on_forecast_relevant_quest_changed)
 	call_deferred("_regenerate_next_wave_forecast")
+	NightDefenseManager.register_wave_spawner(self)
 	if DayNightCycle.is_night():
 		call_deferred("_start_wave_after_scene_ready")
+
+
+func _exit_tree() -> void:
+	if has_node("/root/NightDefenseManager"):
+		NightDefenseManager.unregister_wave_spawner(self)
 
 
 func _start_wave_after_scene_ready(retries_remaining: int = NIGHT_START_READY_RETRIES) -> void:
@@ -107,6 +113,9 @@ func _start_wave_after_scene_ready(retries_remaining: int = NIGHT_START_READY_RE
 		else:
 			push_warning("[WaveSpawner] Cannot start night wave because the Dianthus Core is not registered.")
 		return
+	if NightDefenseManager.active:
+		NightDefenseManager.resume_wave_spawner(self)
+		return
 	_ensure_forecast_for_current_day()
 	if bool(_next_wave_forecast.get("is_boss", false)):
 		_start_devourer_fight()
@@ -116,6 +125,9 @@ func _start_wave_after_scene_ready(retries_remaining: int = NIGHT_START_READY_RE
 
 func _on_phase_changed(phase: String) -> void:
 	if phase == "NIGHT":
+		if NightDefenseManager.active:
+			NightDefenseManager.resume_wave_spawner(self)
+			return
 		_ensure_forecast_for_current_day()
 		if bool(_next_wave_forecast.get("is_boss", false)):
 			_start_devourer_fight()
@@ -162,6 +174,17 @@ func start_wave() -> void:
 		% [day, DifficultyManager.get_tier_label(), str(GameManager.endless_mode), _active_spawn_points.size(), _current_wave_total, _current_hp_multiplier, _next_wave_forecast.get("enemy_totals", {})])
 
 
+func start_or_resume_night_defense(night_elapsed_time: float) -> void:
+	if _wave_active:
+		return
+	_ensure_forecast_for_current_day()
+	if bool(_next_wave_forecast.get("is_boss", false)):
+		_start_devourer_fight()
+		return
+	start_wave()
+	_spawn_elapsed_wave_groups(night_elapsed_time)
+
+
 func _process(delta: float) -> void:
 	if not _wave_active or _enemies_spawned >= _current_wave_total:
 		return
@@ -185,7 +208,7 @@ func _spawn_enemy() -> void:
 		_spawn_single_enemy(ENEMY_SCENES[picked_type], base_pos)
 
 
-func _spawn_next_group() -> void:
+func _spawn_next_group(time_since_group_spawn: float = 0.0) -> void:
 	if _next_spawn_group_index >= _pending_spawn_groups.size():
 		push_warning("[WaveSpawner] Forecast spawn plan ran out before wave total was reached.")
 		return
@@ -197,17 +220,20 @@ func _spawn_next_group() -> void:
 		scene = enemy_scene
 	var base_pos: Vector2 = group.get("position", Vector2.ZERO)
 	var count: int = max(1, int(group.get("count", 1)))
+	var travel_progress: float = _get_resume_travel_progress(time_since_group_spawn)
 	for _b: int in range(count):
 		if _enemies_spawned >= _current_wave_total:
 			break
-		_spawn_single_enemy(scene, base_pos)
+		_spawn_single_enemy(scene, base_pos, travel_progress)
 
 
-func _spawn_single_enemy(scene: PackedScene, base_pos: Vector2) -> void:
+func _spawn_single_enemy(scene: PackedScene, base_pos: Vector2, travel_progress: float = 0.0) -> void:
 	var rand_dir: Vector2 = Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0))
 	if rand_dir != Vector2.ZERO:
 		rand_dir = rand_dir.normalized()
 	var spawn_pos: Vector2 = base_pos + rand_dir * randf_range(0.0, spawn_offset_radius)
+	if travel_progress > 0.0 and is_instance_valid(GameManager.dianthus_core):
+		spawn_pos = spawn_pos.lerp(GameManager.dianthus_core.global_position, travel_progress)
 	var enemy: EnemyBase = scene.instantiate() as EnemyBase
 	if enemy == null:
 		push_warning("[WaveSpawner] Failed to instantiate enemy scene as EnemyBase.")
@@ -246,6 +272,29 @@ func _spawn_single_enemy(scene: PackedScene, base_pos: Vector2) -> void:
 	_counted_dead[enemy] = false
 	enemy_spawned.emit(enemy)
 	print("[WaveSpawner] Spawned enemy %d/%d at %s" % [_enemies_spawned, _current_wave_total, spawn_pos])
+
+
+func _spawn_elapsed_wave_groups(night_elapsed_time: float) -> void:
+	if night_elapsed_time <= 0.0 or _pending_spawn_groups.is_empty():
+		return
+	var groups_to_spawn: int = clampi(
+			int(floor(night_elapsed_time / maxf(spawn_interval, 0.1))) + 1,
+			0,
+			_pending_spawn_groups.size()
+	)
+	for group_index: int in range(groups_to_spawn):
+		if _enemies_spawned >= _current_wave_total:
+			break
+		var group_elapsed: float = maxf(0.0, night_elapsed_time - (float(group_index) * spawn_interval))
+		_spawn_next_group(group_elapsed)
+	_spawn_timer = spawn_interval
+
+
+func _get_resume_travel_progress(time_since_group_spawn: float) -> float:
+	if time_since_group_spawn <= 0.0:
+		return 0.0
+	var estimated_travel_time: float = 24.0
+	return clampf(time_since_group_spawn / estimated_travel_time, 0.0, 0.85)
 
 
 func _get_batch_size(enemy_type: String) -> int:

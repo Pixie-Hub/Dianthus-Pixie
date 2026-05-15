@@ -4,7 +4,7 @@ signal save_completed(success: bool, manual: bool)
 signal load_completed(success: bool)
 
 const SAVE_PATH: String = "user://savegame.json"
-const SCHEMA_VERSION: int = 21
+const SCHEMA_VERSION: int = 22
 const GAME_VERSION: String = "0.1.0"
 
 const PLANT_TYPE_TO_SCENE: Dictionary = {
@@ -224,7 +224,7 @@ func _gather_state(manual: bool) -> Dictionary:
 	state["player"]["active_skill_id"] = active_skill
 
 	# Core
-	var core_hp: int = 200
+	var core_hp: int = GameManager.core_current_hp if GameManager.core_current_hp >= 0 else GameManager.core_max_hp
 	var core_harvested_today: bool = false
 	var core_last_harvest_day: int = -1
 	if is_instance_valid(GameManager.dianthus_core):
@@ -238,6 +238,9 @@ func _gather_state(manual: bool) -> Dictionary:
 			"last_harvest_day": core_last_harvest_day,
 		},
 	}
+
+	if has_node("/root/NightDefenseManager"):
+		state["night_defense"] = NightDefenseManager.serialize()
 
 	# Garden expansion tier
 	var ppm: Node = null
@@ -335,6 +338,8 @@ func _apply_state(state: Dictionary) -> void:
 		GameManager.set_state(GameManager.GameState.EXPLORATION)
 	else:
 		GameManager.set_state(GameManager.GameState.DEFENSE)
+	if has_node("/root/NightDefenseManager"):
+		NightDefenseManager.deserialize(state.get("night_defense", {}))
 
 	# Build-state caches must match the loaded file before scene spots refresh.
 	set_runtime_garden_expansion_tier(int(state.get("garden_expansion", {}).get("tier", 0)))
@@ -347,9 +352,9 @@ func _apply_state(state: Dictionary) -> void:
 		plant.queue_free()
 
 	# 3. Dianthus Core HP.
+	var core_data: Dictionary = state.get("core", {})
 	if is_instance_valid(GameManager.dianthus_core):
-		var core_data: Dictionary = state.get("core", {})
-		GameManager.dianthus_core.current_hp = int(core_data.get("current_hp", 200))
+		GameManager.set_core_hp_from_save(int(core_data.get("current_hp", GameManager.core_max_hp)), GameManager.dianthus_core.MAX_HP)
 		GameManager.dianthus_core._update_aura()
 		GameManager.dianthus_core.hp_changed.emit(
 			GameManager.dianthus_core.current_hp,
@@ -359,6 +364,8 @@ func _apply_state(state: Dictionary) -> void:
 		GameManager.dianthus_core._harvested_today = bool(bloom_data.get("harvested_today", false))
 		GameManager.dianthus_core._last_harvest_day = int(bloom_data.get("last_harvest_day", -1))
 		GameManager.dianthus_core.call_deferred("_refresh_prompt")
+	elif state.has("core"):
+		GameManager.set_core_hp_from_save(int(core_data.get("current_hp", GameManager.core_max_hp)), GameManager.core_max_hp)
 
 	# 4. Player position and HP.
 	if is_instance_valid(GameManager.player):
@@ -716,6 +723,12 @@ func _migrate(data: Dictionary) -> Dictionary:
 		if not data.has("fortification_spots"):
 			data["fortification_spots"] = []
 		data["schema_version"] = 21
+	# v21 -> v22: active night defense state added.
+	if version < 22:
+		print("[SaveManager] Migrating save from v%d to v22." % version)
+		if not data.has("night_defense"):
+			data["night_defense"] = {"active": false}
+		data["schema_version"] = 22
 	return data
 
 

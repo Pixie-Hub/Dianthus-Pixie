@@ -27,6 +27,10 @@ const TYPE_STYLES: Dictionary = {
 		"accent": Color(0.9, 0.65, 1.0, 1.0),
 		"symbol": "*",
 	},
+	"danger": {
+		"accent": Color(1.0, 0.25, 0.18, 1.0),
+		"symbol": "!",
+	},
 }
 
 @onready var _accent_bar: ColorRect = %AccentBar

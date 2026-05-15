@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://dcea8ljris45v" path="res://ui/hud/wave_counter.gd" id="4_wavecounter_script"]
 [ext_resource type="Texture2D" uid="uid://bnpfpreensksj" path="res://ui/hud/sun.png" id="5_sun"]
 [ext_resource type="Script" uid="uid://v8sgrsegq6p2" path="res://ui/hud/tracked_quest_hud.gd" id="6_trackedquest_script"]
+[ext_resource type="PackedScene" uid="uid://dqumyb2g7vdb" path="res://ui/screens/game_over_screen.tscn" id="7_gameover"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wood"]
 bg_color = Color(0.3, 0.22, 0.15, 0.85)
@@ -989,3 +990,5 @@ theme_override_colors/font_color = Color(0.75, 0.55, 0.9, 1)
 theme_override_font_sizes/font_size = 6
 text = "1200 / 1200"
 horizontal_alignment = 1
+
+[node name="GameOverScreen" parent="." instance=ExtResource("7_gameover")]

@@ -90,6 +90,7 @@ func _ready() -> void:
 	GameManager.loadout_changed.connect(_on_loadout_changed)
 	GameManager.player_registered.connect(_on_player_registered_hud)
 	DayNightCycle.phase_changed.connect(_on_phase_changed_hud)
+	NightDefenseManager.notification_requested.connect(_on_night_defense_notification_requested)
 	_on_colorblind_changed(GameManager.colorblind_mode)
 	GameManager.game_state_changed.connect(_on_game_state_changed)
 	_refresh_endless_label()
@@ -110,6 +111,7 @@ func _ready() -> void:
 	_status_effects_panel.visible = false
 	call_deferred("_connect_wave_spawner")
 	call_deferred("_connect_status_player")
+	call_deferred("_show_active_night_defense_notice")
 
 
 func _process(_delta: float) -> void:
@@ -236,6 +238,27 @@ func _on_phase_changed_hud(phase: String) -> void:
 		_boss_panel.visible = false
 		_active_boss = null
 	_refresh_watchtower_forecast()
+
+
+func _on_night_defense_notification_requested(
+		title: String,
+		message: String,
+		notification_type: String,
+		key: String
+) -> void:
+	show_notification(title, message, notification_type, null, 5.0, key)
+
+
+func _show_active_night_defense_notice() -> void:
+	if not NightDefenseManager.active or NightDefenseManager.is_meadow_edge_loaded():
+		return
+	show_notification(
+			"Night has fallen",
+			"The Dianthus Core is under attack. Return before it is too late.",
+			"danger",
+			null,
+			5.0,
+			"night_defense:active:%d" % NightDefenseManager.night_day)
 
 
 func _on_skip_day_pressed() -> void:

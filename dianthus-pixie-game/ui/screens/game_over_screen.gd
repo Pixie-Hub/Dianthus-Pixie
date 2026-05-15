@@ -6,6 +6,11 @@ var _leaderboard_container: VBoxContainer = null
 
 
 func _ready() -> void:
+	for screen: Node in get_tree().get_nodes_in_group(&"game_over_screens"):
+		if screen != self:
+			queue_free()
+			return
+	add_to_group(&"game_over_screens")
 	visible = false
 	GameManager.game_over_triggered.connect(_on_game_over)
 	_leaderboard_container = VBoxContainer.new()
@@ -64,8 +69,10 @@ func _on_restart() -> void:
 	PauseManager.clear_all()
 	visible = false
 	GameManager.endless_mode = false
+	GameManager.reset_core_runtime_state()
 	DayNightCycle.day_count = 1
 	DayNightCycle.current_phase = DayNightCycle.Phase.DAY
+	NightDefenseManager.sync_to_day_night_state()
 	GameManager.current_state = GameManager.GameState.EXPLORATION
 	get_tree().reload_current_scene()
 

@@ -54,10 +54,12 @@ func _start_new_game() -> void:
 	print("[MainMenu] Starting new game.")
 	GameManager.current_state = GameManager.GameState.EXPLORATION
 	GameManager.endless_mode = false
+	GameManager.reset_core_runtime_state()
 	GameManager.player_data = {"position": Vector2.ZERO, "last_zone": ""}
 	DayNightCycle.day_count = 1
 	DayNightCycle.current_phase = DayNightCycle.Phase.DAY
 	DayNightCycle._phase_timer = DayNightCycle.PHASE_DURATIONS[DayNightCycle.Phase.DAY]
+	NightDefenseManager.sync_to_day_night_state()
 	TutorialManager.reset_progress_for_new_game()
 	InventoryManager.clear_all()
 	CraftingManager.deserialize({})
