@@ -1,10 +1,10 @@
 # Dianthus Pixie — Task Breakdown
 
-**Project:** Dianthus Pixie  
-**Engine:** Godot 4.x  
-**Art:** Aseprite (16×16 tiles, 16×24 characters)  
-**Last Updated:** 2026-05-12
-**GDD Reference:** `Dianthus Pixie GDD.md` (v1.1)
+- **Project:** Dianthus Pixie
+- **Engine:** Godot 4.6
+- **Art:** Aseprite (16×16 tiles, 16×24 characters)
+- **Last Updated:** 2026-05-15
+- **GDD Reference:** `Dianthus Pixie GDD.md` (v1.2)
 
 > **Zone Scope (final):** 3 primary zones — Meadow Edge, Dusk Forest, Ruins of Veld. Obsidian Bog content compressed into Dusk Forest's Blackwater Hollow sub-area (WORLD-03). Core Sanctum replaced by the Dianthus Core Sacred Bloom interactable at Meadow Edge (WORLD-04). Night defense and the Dianthus Core exist only at Meadow Edge.
 

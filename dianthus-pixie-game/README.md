@@ -1,107 +1,71 @@
 # Dianthus Pixie
 
-A 2D Survival Crafting Action Game built with Godot 4.x
+Dianthus Pixie is a 2D survival-crafting action game built in Godot 4.6. The player explores for resources during the day, prepares the garden with crafting, breeding, plants, and fortifications, then defends the Dianthus Core from night waves in Meadow Edge.
+
+## Current Scope
+
+The implemented game is scoped to three final zones:
+
+- **Meadow Edge** - home base, garden, Dianthus Core, crafting/breeding bench, fortifications, night defense, and the final Devourer fight.
+- **Dusk Forest** - exploration zone unlocked through the story path; includes Blackwater Hollow content and resources, but no Core and no night defense.
+- **Ruins of Veld** - exploration zone with the Ancient Omen landmark used by the Devourer story chain, but no Core and no night defense.
+
+Obsidian Bog and Core Sanctum are no longer required future zones. Their design roles are folded into Blackwater Hollow and the Sacred Bloom state of the Meadow Edge Dianthus Core.
+
+## Implemented Gameplay
+
+- Day/night loop with daytime exploration and Meadow Edge night defense.
+- Dianthus Core health, Core game over, player death/respawn, and night-survived rewards.
+- Resource pickup, 30-slot inventory, stack limits, rarity colors, save/load, and storage upgrades.
+- Plant placement with 11 implemented plants: Bougainvillea, Rafflesia, Melati, Wijaya Kusuma, Beringin, Kecombrang, Kunyit, Bunga Api, Bunga Bayang, Melati Emas, and Baja Kuning.
+- Crafting for four weapons, four weapon upgrades, and three active abilities.
+- Breeding bench and four implemented hybrid combinations. The remaining 20 planned combinations are still deferred under `PLANT-12`.
+- Enemy FSMs for Shadowling, Voidrunner, Stonehusk, Phantom Weaver, Swarm Larva, and the three-phase Devourer boss.
+- Quest, daily quest, progress quest, discovery quest, story quest, Dialogic timeline, ending, Codex, tutorial infrastructure, audio, VFX, HUD, map, and pause/menu systems.
+
+## Controls
+
+- Move: `WASD` or arrow keys
+- Interact: `E`
+- Attack: left mouse or `Space`
+- Dodge: configured as the `dodge` input action in `project.godot`
+- Inventory: `I`
+- Crafting screen: `C`
+- Breeding screen: `B`
+- Plant Codex: `J`
+- Plant placement: `P`
+- Quest log: `Q`
+- Loadout: `L`
+- Map: `M`
+- Active skill: `F`
+- Weapon slots: `1`, `2`
+- Skip daytime: `N`
+
+Several debug shortcuts exist for testing and are documented in `docs/design/PERSON_TASKS.md`.
 
 ## Project Structure
 
-Organized by **feature** — every folder owns all the scenes, scripts, sprites, and resources that belong to it.
+- `accessibility/` - difficulty, settings, and tutorial systems
+- `audio/` - SFX and music managers plus runtime audio resources
+- `combat/` - weapons, projectiles, and combat data
+- `core/` - day/night flow, Dianthus Core, endings, cutscenes, transitions, and night defense
+- `crafting/` - crafting recipes, bench logic, breeding data, and breeding UI
+- `dialogic/` - project-owned Dialogic timelines, characters, and styles
+- `enemies/` - enemy scenes, FSM states, spawner, and Devourer boss
+- `inventory/` - inventory manager, item database, pickups, and item UI
+- `minigames/` - plant experimentation, crafting assembly, and harvest QTE
+- `plants/` - plant entities, placement systems, sprites, and plant VFX
+- `player/` - player scene, controller, animation, and sprite assets
+- `quests/` - quest resources, quest manager, daily roller, story flags
+- `save/` - save/load and leaderboard persistence
+- `shared/` - autoloads, components, constants, fonts, and utilities
+- `ui/` - HUD, menus, screens, Codex, quest UI, and reusable components
+- `vfx/` - shared effects, particles, shaders, and animation helpers
+- `world/` - garden structures, zone scenes, transitions, and tilesets
 
-```
-dianthus-pixie-game/
-├── assets/                          # Raw source assets (not Godot-imported)
-│   ├── aseprite/                    # Aseprite source files
-│   ├── music/                       # Music source files
-│   └── sfx/                         # SFX source files
-├── docs/                            # Documentation (ignored by Godot)
-│   ├── design/                      # Design docs & task breakdown
-│   └── references/                  # Reference materials
-├── shared/                          # Cross-feature code and resources
-│   ├── autoloads/                   # Godot singletons (GameManager, AudioManager, SaveService, QuestService)
-│   ├── components/                  # Reusable scene components (HealthComponent, HitboxComponent)
-│   ├── constants/                   # Game-wide constants
-│   ├── fonts/                       # Custom fonts
-│   └── utils/                       # Utility scripts & helpers
-├── core/                            # Game foundation: flow, phases, and the Dianthus Core entity
-│   ├── day_night/                   # Day-night cycle timer & phase signals
-│   ├── dianthus_core/               # Core plant entity (HP, aura, destruction)
-│   ├── endings/                     # Win/lose conditions & ending sequences
-│   └── transitions/                 # Scene transitions (fade in/out)
-├── player/                          # Player entity and all player mechanics
-│   ├── scenes/                      # player.tscn
-│   ├── scripts/                     # player_controller.gd, player_state.gd
-│   ├── sprites/                     # Player sprite sheets
-│   └── animations/                  # Player animation resources
-├── combat/                          # Combat mechanics, weapons, and projectiles
-│   ├── weapons/
-│   │   ├── thorn_sword/             # Thorn Sword + Blazeblade upgrade
-│   │   ├── spore_bomb/              # Spore Bomb + Void Grenade upgrade
-│   │   ├── vine_whip/               # Vine Whip + Crystal Lash upgrade
-│   │   └── petal_shield/            # Petal Shield + Iron Bloom Shield upgrade
-│   └── projectiles/                 # Shared projectile scenes
-├── enemies/                         # All enemy entities and AI systems
-│   ├── shadowling/                  # Shadowling: 40 HP, 8 DMG
-│   ├── voidrunner/                  # Voidrunner: 25 HP, 5 DMG
-│   ├── stonehusk/                   # Stonehusk: 120 HP, 20 DMG
-│   ├── phantom_weaver/              # Phantom Weaver: 60 HP, 12 DMG
-│   ├── swarm_larva/                 # Swarm Larva: 15 HP, 3 DMG
-│   ├── devourer/                    # The Devourer boss: 1200 HP
-│   ├── fsm/                         # Base FSM classes for enemy AI
-│   └── spawner/                     # Wave spawner
-├── plants/                          # Placeable plant entities and placement system
-│   ├── entities/                    # One sub-folder per plant type
-│   ├── placement/                   # Grid placement logic & effect radius visualization
-│   └── sprites/                     # Plant sprite sheets
-├── crafting/                        # Crafting system and cross-breeding
-│   ├── bench/                       # Breeding bench entity
-│   ├── breeding/                    # Cross-breeding UI & algorithm
-│   └── data/                        # Recipe & combo .tres resource files
-├── inventory/                       # Inventory system and item data
-│   ├── scripts/                     # Inventory manager, pickup logic
-│   └── data/                        # Item definitions (.tres resource files)
-├── world/                           # World zones, garden, and map structures
-│   ├── garden/                      # Garden base scenes & expansion
-│   ├── zones/
-│   │   ├── meadow_edge/             # Warm/vibrant daytime zone (Day 1) — home base, night defense
-│   │   ├── dusk_forest/             # Dim-light biome (unlocks Day 3) — includes Blackwater Hollow sub-area
-│   │   └── ruins_of_veld/           # Ruined-city biome (unlocks Day 7) — no Core, no night defense
-│   └── tilesets/                    # TileSet resources
-├── quests/                          # Quest system architecture and quest data
-│   ├── scripts/                     # QuestManager, quest logic
-│   └── data/                        # Quest .tres resource files
-├── save/                            # Save/load system
-│   └── scripts/                     # SaveService, schema migration
-├── minigames/                       # Standalone minigame scenes and scripts
-│   ├── plant_experimentation/       # Rhythm/puzzle breeding minigame
-│   ├── crafting_assembly/           # Drag-and-drop crafting minigame
-│   └── harvest_qte/                 # Harvest QTE
-├── ui/                              # All UI scenes and scripts
-│   ├── hud/                         # HP bars, energy meter, hotbar, minimap, wave counter
-│   ├── menus/                       # Main menu, pause menu, settings
-│   ├── screens/                     # Inventory screen, Quest log, Plant codex
-│   └── components/                  # Reusable UI components
-├── audio/                           # Audio resources and management
-│   ├── music/                       # Music stream resources
-│   └── sfx/                         # SFX stream resources
-├── vfx/                             # Visual effects, shaders, and animations
-│   ├── animations/                  # Shared AnimationLibrary resources
-│   ├── particles/                   # Particle effect scenes
-│   └── shaders/                     # Shader materials & GLSL files
-├── accessibility/                   # Difficulty scaling, colorblind mode, tutorial
-│   ├── difficulty/                  # Difficulty system (Normal / Easy / Hard)
-│   └── tutorial/                    # Interactive tutorial (Days 1–3)
-└── tests/                           # Automated tests
-    ├── unit/                        # Unit tests
-    └── integration/                 # Integration tests
-```
+## References
 
-## Core Systems
-
-- **Day-Night Cycle**: 3-phase system (Exploration → Preparation → Defense)
-- **Plant Breeding**: Cross-breeding system for creating hybrid plants
-- **Combat**: Real-time action combat with plant-based weapons
-- **FSM AI**: Enemy behavior using Finite State Machine
-- **Defense Phase**: Tower defense-style garden protection
-
-## GDD Reference
-
-See `../Dianthus Pixie GDD.md` for full game design document.
+- Current task status: `docs/design/TASK_BREAKDOWN.md`
+- Detailed design reference: `docs/design/Dianthus Pixie GDD.md`
+- Story reference: `docs/design/STORY_OUTLINE.md`
+- Main scene: `res://ui/menus/main_menu.tscn`

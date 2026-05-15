@@ -1,101 +1,59 @@
-# Dianthus Pixie — Giga Lab Admin Consultation Brief
+# Dianthus Pixie - Current Presentation Brief
 
 ## Project Overview
-- **Engine:** Godot 4.x | **Style:** 2D Pixel Art | **Genre:** Survival Crafting Action
-- **State:** Core systems are largely complete (save v10, 11 plants, 4 weapons, 5 enemy types, quest/ending systems, HUD, SFX wiring). Major content layers and polish are still open.
 
----
+- Engine: Godot 4.6, Forward Plus
+- Genre: 2D survival-crafting action
+- Current scope: three final zones only
+- Main loop: daytime exploration/preparation, Meadow Edge night defense, story progression toward the Devourer
+- Current source of task truth: `docs/design/TASK_BREAKDOWN.md`
 
-## 1. Highest-Risk Design Gaps (Need Admin Input)
+## Final Zone Scope
 
-### A. The Devourer Boss — `ENEMY-05` (Blocker for True Ending)
-**This is the #1 unresolved design problem.** The GDD names a 3-phase boss with minion summoning but defines **zero** of the following:
-- HP phase thresholds (e.g., Phase 1 → 2 at 70%, Phase 2 → 3 at 30%)
-- Each phase's unique attack pattern or movement behavior
-- Minion types summoned (existing enemies? new type?)
-- Trigger condition for the final story night
+| Zone | Current role | Defense/Core status |
+| --- | --- | --- |
+| Meadow Edge | Home base, garden, crafting/breeding, fortifications, wave defense, final Devourer fight | Contains Dianthus Core and night defense |
+| Dusk Forest | Exploration zone, ambience, resources, Blackwater Hollow path | No Core, no local night defense |
+| Ruins of Veld | Exploration zone, Ancient Omen landmark, Devourer story reveal | No Core, no local night defense |
 
-> **Consult on:** Can we get a Devourer sub-document or a whiteboard session before any code is written? Without it, `ENEMY-05` is unimplementable and `END-01` (True Ending) can't fully fire.
+Obsidian Bog and Core Sanctum are no longer required zones. Obsidian Bog's role is folded into Blackwater Hollow. Core Sanctum's role is folded into Sacred Bloom at the Meadow Edge Dianthus Core.
 
----
+## Implemented Systems To Present
 
-### B. All 24 Cross-Breed Combinations — `PLANT-12`
-Only **4 of 24** combos are defined in the GDD. The remaining 20 have no names, no effect descriptions, and no balance data. This blocks:
-- `MINI-01` (Plant Experimentation minigame integration)
-- `QUEST-04` (Discovery Quest rewards)
-- Codex completion (UI-04)
+- Day/night loop and return pressure.
+- Meadow Edge night defense with WaveSpawner, enemy forecasts, and night-survived rewards.
+- Dianthus Core HP, game over, Sacred Bloom pollen harvest, and Core animation states.
+- Dusk Forest and Ruins of Veld exploration flow with marker-aware transitions.
+- Story quest chain from Core whispers through the Devourer omen and final Devourer fight.
+- Inventory, crafting, breeding, plant placement, plant vitality/tending, fortifications, garden structures, save/load, difficulty, Codex, quest log, HUD, and map systems.
+- Six enemy types including The Devourer.
+- Three ending paths plus Endless leaderboard support.
 
-> **Consult on:** Can the team author a combo spreadsheet? What plant pairs should produce what hybrid, and what failure state looks like (Wilted Plant at <30% score)?
+## Known Limits / Do Not Overpromise
 
----
+| Area | Current state |
+| --- | --- |
+| Surge Night | `DIFF-02` is Not Started |
+| Night 21 escalation | `DIFF-03` is Not Started and has no Voidlord |
+| Cross-breeding | Four hybrid combos implemented; remaining 20 deferred under `PLANT-12` |
+| Weapon VFX | `VFX-05` is Not Started |
+| Interactive tutorial | `ACCESS-03` is In Progress |
+| Full QA | `QA-01` is Not Started |
 
-### C. Plant Experimentation Minigame — `MINI-01` (High Priority, 0 files exist)
-GDD §17 only says *"ritme sederhana / puzzle singkat"* — no input scheme, no scoring formula, no visual mockup. The [minigames/plant_experimentation/](cci:9://file:///c:/Users/Indra/Programming/GIGA/Dianthus%20Pixie/dianthus-pixie-game/minigames/plant_experimentation:0:0-0:0) folder is **empty**.
+## Devourer Path
 
-> **Consult on:** Two candidates to prototype — (1) rhythm-tap (press button on beat), (2) node-connection puzzle (drag roots to slots). Which fits the plant-alchemy theme better? What's the minimum viable scoring function?
+The current story does not use a Voidlord. The Ruins of Veld Ancient Omen reveals the Devourer as the final threat. Story 06 prepares Dianthus Pollen power from Sacred Bloom. Story 07 turns a Meadow Edge night defense into the final Devourer fight.
 
----
+The final confrontation is part of the garden defense loop, not a separate Core Sanctum zone.
 
-## 2. Content Gaps That Block Zone Progression
+## Recommended Presentation Framing
 
-Final zone scope is **3 primary zones** (Meadow Edge, Dusk Forest, Ruins of Veld). Obsidian Bog is compressed into Dusk Forest's Blackwater Hollow sub-area; Core Sanctum is replaced by the Core Sacred Bloom interactable at Meadow Edge (see TASK_BREAKDOWN.md WORLD-03 and WORLD-04).
+Present Dianthus Pixie as a scoped vertical-slice game with a complete three-zone adventure path:
 
-| Zone | Task | Blocker |
-|---|---|---|
-| [dusk_forest/](cci:9://file:///c:/Users/Indra/Programming/GIGA/Dianthus%20Pixie/dianthus-pixie-game/world/zones/dusk_forest:0:0-0:0) | WORLD-01 | Tilemap and resource pickups in place; Blackwater Hollow entrance pending WORLD-03 |
-| [ruins_of_veld/](cci:9://file:///c:/Users/Indra/Programming/GIGA/Dianthus%20Pixie/dianthus-pixie-game/world/zones/ruins_of_veld:0:0-0:0) | WORLD-02 | Tilemap in place; story-required landmark content pending |
+1. Explore and gather in Meadow Edge, Dusk Forest, and Ruins of Veld.
+2. Build up the garden and plant arsenal in Meadow Edge.
+3. Defend the Dianthus Core at night.
+4. Follow the omen story to identify the Devourer.
+5. Return to Meadow Edge for the final defense.
 
-Also: `WORLD-05` (garden expansion 12×10 → 20×16) and `WORLD-06` (Storage/Watchtower structures) are not started — these directly affect late-game strategy depth.
-
-> **Consult on:** Is zone art/tilemap creation in scope for the Giga Lab sprint? If so, the Sprout Lands tileset is already in the project (`world/tilesets/`) and can be reused.
-
----
-
-## 3. Open Audio Tasks (Music System is Fully Missing)
-
-All music tracks are **Not Started** (`AUDIO-01` through `AUDIO-03`). The SFX system (83 sounds) is wired, but:
-- No exploration music
-- No preparation phase underscore
-- No dynamic night combat layer (which requires a `MusicManager` autoload with bus routing)
-
-> **Consult on:** Does Giga Lab have access to royalty-free music assets, or should these be sourced externally? The dynamic layer system (`AUDIO-03`) needs early Godot bus-routing prototyping — can a programmer sprint on it in parallel?
-
----
-
-## 4. Open Animation / VFX (All Placeholders)
-
-All combat VFX (`VFX-01` through `VFX-05`) use `ColorRect` tween placeholders with `TODO: VFX-05` stubs in code. Specifically missing:
-- Player attack/dodge/respawn animations
-- Dianthus Core idle glow + destruction animation
-- Enemy walk/attack/death animations for all 6 types
-- Plant bloom/wither animations
-- Weapon swing arc particles
-
-> **Consult on:** Is Aseprite sprite work planned for this sprint? The character size is 16×24px. Coordinate art priority: player and Shadowling animations are the most visible.
-
----
-
-## 5. Remaining "Not Started" Tasks Summary
-
-| Category | Open Tasks | Notes |
-|---|---|---|
-| Enemies | ENEMY-04 (Swarm Larva), ENEMY-05 (Devourer) | ENEMY-04 FSM unclear (shared vs. independent) |
-| Worlds | WORLD-01 through WORLD-06 | All zones are empty |
-| Difficulty | DIFF-02 (Surge Night), DIFF-03 (Night 21 Surge Escalation) | DIFF-02 affects spawn logic; DIFF-03 no longer adds a named boss |
-| Minigames | MINI-01, MINI-02, MINI-03 | All folders empty |
-| Audio | AUDIO-01, 02, 03 | No music system exists yet |
-| VFX | VFX-01 through VFX-05 | All placeholders |
-| Tutorial | ACCESS-03 (Interactive Tutorial Days 1–3) | Dialogic is installed but only In Progress |
-| Content | PLANT-12 (20 undefined combos), RES-01 (resource scarcity) | Design debt |
-| QA | QA-01 | Gated on everything above |
-
----
-
-## Suggested Consultation Priorities (Ranked)
-
-1. **Devourer boss design doc** — unblocks True Ending and the final content milestone
-2. **Full 24-combo cross-breed table** — unblocks minigame + Discovery quests
-3. **MINI-01 mechanic decision** — rhythm vs. puzzle; needs a prototype call
-4. **Zone content plan** — which zones are in scope for this sprint, who makes the tilemaps
-5. **Music asset sourcing** — royalty-free tracks or original composition?
-6. **Animation/art sprint scope** — Aseprite sprite priority order
+Avoid describing Obsidian Bog, Core Sanctum, Voidlord, all 24 breeding combos, Surge Night, or final QA as shipped content.
