@@ -226,8 +226,6 @@ Save/load persists day count, inventory, garden state, quest state, difficulty, 
 | Interact | E |
 | Attack | Left mouse / Space |
 | Inventory | I |
-| Crafting | C |
-| Breeding | B |
 | Plant Codex | J |
 | Plant placement | P |
 | Quest log | Q |
