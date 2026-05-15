@@ -5,6 +5,7 @@ const ENEMIES: Dictionary = {
 		"display_name": "Shadowling",
 		"role": "Core harrier",
 		"scene_path": "res://enemies/shadowling/shadowling.tscn",
+		"codex_icon": "res://enemies/shadowling/shadowling.png",
 		"unlock_hint": "Encounter a Shadowling during the first night wave.",
 		"lore": "A thin void-touched scout that probes the garden before turning its claws toward the Dianthus Core.",
 	},
@@ -12,6 +13,7 @@ const ENEMIES: Dictionary = {
 		"display_name": "Voidrunner",
 		"role": "Rushing striker",
 		"scene_path": "res://enemies/voidrunner/voidrunner.tscn",
+		"codex_icon": "res://enemies/voidrunner/voidrunner.png",
 		"unlock_hint": "Encounter a Voidrunner from Day 2 onward.",
 		"lore": "A fragile but blindingly fast attacker that ignores hesitation and races straight for the Core.",
 	},
@@ -19,6 +21,7 @@ const ENEMIES: Dictionary = {
 		"display_name": "Stonehusk",
 		"role": "Siege brute",
 		"scene_path": "res://enemies/stonehusk/stonehusk.tscn",
+		"codex_icon": "res://enemies/stonehusk/stonehusk.png",
 		"unlock_hint": "Encounter a Stonehusk from Day 4 onward.",
 		"lore": "A slow armored mass that refuses to retreat, grinding through defenses until it reaches striking range.",
 	},
@@ -26,6 +29,7 @@ const ENEMIES: Dictionary = {
 		"display_name": "Phantom Weaver",
 		"role": "Teleporting hunter",
 		"scene_path": "res://enemies/phantom_weaver/phantom_weaver.tscn",
+		"codex_icon": "res://enemies/phantom_weaver/phantom_weaver.png",
 		"unlock_hint": "Encounter a Phantom Weaver from Day 6 onward.",
 		"lore": "A shadow-threaded predator that slips out of lethal pressure and reappears where the garden line is weakest.",
 	},
@@ -33,6 +37,7 @@ const ENEMIES: Dictionary = {
 		"display_name": "Swarm Larva",
 		"role": "Flocking swarm",
 		"scene_path": "res://enemies/swarm_larva/swarm_larva.tscn",
+		"codex_icon": "res://enemies/swarm_larva/swarm_larva.png",
 		"unlock_hint": "Encounter Swarm Larvae from Day 8 onward.",
 		"lore": "Small void larvae that are weak alone but dangerous in groups, flooding lanes with skittering pressure.",
 	},
@@ -40,10 +45,20 @@ const ENEMIES: Dictionary = {
 		"display_name": "The Devourer",
 		"role": "Final boss",
 		"scene_path": "res://enemies/devourer/the_devourer.tscn",
+		"codex_icon": "res://enemies/devourer/the_devourer.png",
 		"unlock_hint": "Stand against the Devourer during the final story night.",
 		"lore": "The great void hunger given shape, drawn to the Dianthus Core for the bloom it could never grow itself.",
 	},
 }
+
+const ANIMATION_TEXTURE_SUFFIXES: Array[String] = [
+	"_animations.png",
+	"_walk.png",
+	"_attack.png",
+	"_death.png",
+]
+
+static var _placeholder_icon: Texture2D = null
 
 
 static func has_enemy(enemy_id: String) -> bool:
@@ -67,6 +82,18 @@ static func get_display_name(enemy_id: String) -> String:
 
 static func get_scene_path(enemy_id: String) -> String:
 	return str(get_enemy(enemy_id).get("scene_path", ""))
+
+
+static func get_codex_icon_texture(enemy_id: String) -> Texture2D:
+	var icon_path: String = _get_codex_icon_path(enemy_id)
+	if icon_path.is_empty():
+		push_warning("Missing codex icon for %s" % enemy_id)
+		return _get_placeholder_icon()
+	var texture: Texture2D = load(icon_path) as Texture2D
+	if texture == null:
+		push_warning("Missing codex icon for %s at %s" % [enemy_id, icon_path])
+		return _get_placeholder_icon()
+	return texture
 
 
 static func get_stats(enemy_id: String) -> Dictionary:
@@ -136,3 +163,43 @@ static func _instantiate_enemy(enemy_id: String) -> Node:
 	if scene == null:
 		return null
 	return scene.instantiate()
+
+
+static func _get_codex_icon_path(enemy_id: String) -> String:
+	var enemy: Dictionary = get_enemy(enemy_id)
+	var icon_path: String = str(enemy.get("codex_icon", ""))
+	if _is_clean_icon_path(icon_path):
+		return icon_path
+	var scene_path: String = get_scene_path(enemy_id)
+	if scene_path.is_empty():
+		return ""
+	var base_icon_path: String = "%s/%s.png" % [
+		scene_path.get_base_dir(),
+		scene_path.get_file().get_basename(),
+	]
+	if ResourceLoader.exists(base_icon_path, "Texture2D"):
+		return base_icon_path
+	return ""
+
+
+static func _is_clean_icon_path(texture_path: String) -> bool:
+	if texture_path.is_empty():
+		return false
+	var lower_path: String = texture_path.to_lower()
+	for suffix: String in ANIMATION_TEXTURE_SUFFIXES:
+		if lower_path.ends_with(suffix):
+			return false
+	return lower_path.ends_with(".png") and ResourceLoader.exists(texture_path, "Texture2D")
+
+
+static func _get_placeholder_icon() -> Texture2D:
+	if _placeholder_icon != null:
+		return _placeholder_icon
+	var image: Image = Image.create(32, 32, false, Image.FORMAT_RGBA8)
+	image.fill(Color(0.12, 0.1, 0.09, 1.0))
+	for y: int in range(32):
+		for x: int in range(32):
+			if x == y or x == 31 - y or x == 0 or y == 0 or x == 31 or y == 31:
+				image.set_pixel(x, y, Color(0.72, 0.55, 0.22, 1.0))
+	_placeholder_icon = ImageTexture.create_from_image(image)
+	return _placeholder_icon

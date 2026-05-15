@@ -240,7 +240,7 @@ func _update_enemy_detail(enemy_id: String) -> void:
 	_enemy_drops_label.text = "Drops: %s" % EnemyCatalog.get_drop_summary(enemy_id) if discovered else "Drops: Unknown"
 	_enemy_lore_label.text = str(data.get("lore", "")) if discovered else "Encounter this enemy type to reveal its records."
 	_enemy_hint_label.text = "" if discovered else str(data.get("unlock_hint", "Meet this enemy in combat."))
-	_enemy_sprite_rect.texture = EnemyCatalog.get_sprite_texture(enemy_id)
+	_enemy_sprite_rect.texture = EnemyCatalog.get_codex_icon_texture(enemy_id)
 	_enemy_sprite_rect.modulate = Color.WHITE if discovered else Color.BLACK
 
 
