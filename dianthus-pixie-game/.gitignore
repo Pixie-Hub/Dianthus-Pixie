@@ -5,3 +5,11 @@
 # Ignore PROMPT_ and GEMINI_ markdown files in docs/design
 docs/design/PROMPT_*.md
 docs/design/GEMINI_*.md
+
+# AI assistant / agent workspace files
+.agents/
+.windsurf/
+**/.agents/
+**/.windsurf/
+CLAUDE.md
+**/CLAUDE.md
