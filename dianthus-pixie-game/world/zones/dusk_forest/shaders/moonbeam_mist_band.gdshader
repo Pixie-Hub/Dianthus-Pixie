@@ -29,10 +29,11 @@ float value_noise(vec2 p) {
 
 void fragment() {
 	vec2 uv = UV;
+	vec4 tex = texture(TEXTURE, uv);
 	float y_dist = abs(uv.y - 0.5);
 	float band = 1.0 - smoothstep(max(band_thickness * 0.5 - edge_feather, 0.0), band_thickness * 0.5, y_dist);
 	float end_fade = smoothstep(0.0, 0.12, uv.x) * (1.0 - smoothstep(0.88, 1.0, uv.x));
 	float noise = value_noise(vec2(uv.x * noise_scale + mist_time * drift_speed, uv.y * 3.0));
-	float alpha = alpha_strength * runtime_alpha_scale * band * end_fade * (0.72 + noise * 0.42);
-	COLOR = vec4(mist_color.rgb, mist_color.a * alpha);
+	float alpha = alpha_strength * runtime_alpha_scale * tex.a * band * end_fade * (0.72 + noise * 0.42);
+	COLOR = vec4(mist_color.rgb * tex.rgb, mist_color.a * alpha);
 }

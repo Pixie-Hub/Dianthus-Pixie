@@ -33,6 +33,7 @@ float value_noise(vec2 p) {
 
 void fragment() {
 	vec2 uv = UV;
+	vec4 tex = texture(TEXTURE, uv);
 	float half_width = mix(source_width, bottom_width, uv.y) * 0.5;
 	float edge_start = max(half_width - edge_feather, 0.0);
 	float cone = 1.0 - smoothstep(edge_start, half_width, abs(uv.x - 0.5));
@@ -42,6 +43,6 @@ void fragment() {
 	float mist = value_noise(uv * noise_scale + vec2(mist_time * time_scale, -mist_time * time_scale * 0.25));
 	float mist_mix = mix(1.0, 0.72 + mist * 0.56, mist_strength);
 	float flicker = 1.0 + sin(TIME * time_scale + flicker_phase) * flicker_strength;
-	float alpha = alpha_strength * runtime_alpha_scale * cone * vertical_fade * mist_mix * flicker;
-	COLOR = vec4(beam_color.rgb, beam_color.a * alpha);
+	float alpha = alpha_strength * runtime_alpha_scale * tex.a * cone * vertical_fade * mist_mix * flicker;
+	COLOR = vec4(beam_color.rgb * tex.rgb, beam_color.a * alpha);
 }

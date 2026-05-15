@@ -33,6 +33,7 @@ float value_noise(vec2 p) {
 
 void fragment() {
 	vec2 uv = UV;
+	vec4 tex = texture(TEXTURE, uv);
 	float half_width = mix(source_width, bottom_width, uv.y) * 0.5;
 	float cone = 1.0 - smoothstep(max(half_width - edge_feather, 0.0), half_width, abs(uv.x - 0.5));
 	float vertical_fade = smoothstep(0.04, 0.22, uv.y) * (1.0 - smoothstep(0.78, 1.0, uv.y));
@@ -42,6 +43,6 @@ void fragment() {
 	float stripe = sin((streak_uv.x + noise * 0.06) * streak_density + mist_time * drift_speed);
 	float streak = smoothstep(1.0 - streak_softness, 1.0, stripe * 0.5 + 0.5);
 	float flicker = 0.94 + sin(TIME * 0.55 + flicker_phase) * 0.06;
-	float alpha = streak_alpha * runtime_alpha_scale * cone * vertical_fade * streak * flicker;
-	COLOR = vec4(streak_color.rgb, streak_color.a * alpha);
+	float alpha = streak_alpha * runtime_alpha_scale * tex.a * cone * vertical_fade * streak * flicker;
+	COLOR = vec4(streak_color.rgb * tex.rgb, streak_color.a * alpha);
 }

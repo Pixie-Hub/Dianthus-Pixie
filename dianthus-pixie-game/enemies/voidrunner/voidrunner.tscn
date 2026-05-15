@@ -1,12 +1,12 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://b147dj082uvm2"]
 
-[ext_resource type="Script" path="res://enemies/voidrunner/voidrunner.gd" id="1_vr"]
-[ext_resource type="Script" path="res://enemies/fsm/state_machine.gd" id="2_fsm"]
-[ext_resource type="Texture2D" path="res://enemies/voidrunner/voidrunner_animations.png" id="3_vrpng"]
-[ext_resource type="Script" path="res://enemies/voidrunner/states/voidrunner_idle.gd" id="4_idle"]
-[ext_resource type="Script" path="res://enemies/voidrunner/states/voidrunner_rush.gd" id="5_rush"]
-[ext_resource type="Script" path="res://enemies/voidrunner/states/voidrunner_siege.gd" id="6_siege"]
-[ext_resource type="Script" path="res://enemies/voidrunner/states/voidrunner_attack.gd" id="7_atk"]
+[ext_resource type="Script" uid="uid://cn7kgj4guxjo8" path="res://enemies/voidrunner/voidrunner.gd" id="1_vr"]
+[ext_resource type="Script" uid="uid://bp6rkgxl62npj" path="res://enemies/fsm/state_machine.gd" id="2_fsm"]
+[ext_resource type="Texture2D" uid="uid://b64d3odyllh47" path="res://enemies/voidrunner/voidrunner_animations.png" id="3_vrpng"]
+[ext_resource type="Script" uid="uid://cgw5pi57o5t8g" path="res://enemies/voidrunner/states/voidrunner_idle.gd" id="4_idle"]
+[ext_resource type="Script" uid="uid://qo0mqfgwsah4" path="res://enemies/voidrunner/states/voidrunner_rush.gd" id="5_rush"]
+[ext_resource type="Script" uid="uid://c63jkskoee0pk" path="res://enemies/voidrunner/states/voidrunner_siege.gd" id="6_siege"]
+[ext_resource type="Script" uid="uid://dgv2y51bw1ot5" path="res://enemies/voidrunner/states/voidrunner_attack.gd" id="7_atk"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
 radius = 2.0
@@ -150,7 +150,7 @@ radius = 48.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_atk"]
 radius = 16.0
 
-[node name="Voidrunner" type="CharacterBody2D"]
+[node name="Voidrunner" type="CharacterBody2D" unique_id=1062876831]
 collision_layer = 8
 collision_mask = 0
 script = ExtResource("1_vr")
@@ -164,55 +164,55 @@ attack_cooldown = 0.6
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1415891624]
 unique_name_in_owner = true
 texture_filter = 1
-hframes = 8
-vframes = 4
-frame = 0
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("3_vrpng")
+hframes = 8
+vframes = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=928331981]
+rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_body")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1082306107]
 unique_name_in_owner = true
 libraries/ = SubResource("AnimationLibrary_vr")
 
-[node name="StateMachine" type="Node" parent="."]
+[node name="StateMachine" type="Node" parent="." unique_id=871156280]
 script = ExtResource("2_fsm")
 
-[node name="Idle" type="Node" parent="StateMachine"]
+[node name="Idle" type="Node" parent="StateMachine" unique_id=1731336209]
 script = ExtResource("4_idle")
 
-[node name="Rush" type="Node" parent="StateMachine"]
+[node name="Rush" type="Node" parent="StateMachine" unique_id=280133992]
 script = ExtResource("5_rush")
 
-[node name="Siege" type="Node" parent="StateMachine"]
+[node name="Siege" type="Node" parent="StateMachine" unique_id=249884172]
 script = ExtResource("6_siege")
 
-[node name="Attack" type="Node" parent="StateMachine"]
+[node name="Attack" type="Node" parent="StateMachine" unique_id=885077308]
 script = ExtResource("7_atk")
 
-[node name="DetectionArea" type="Area2D" parent="."]
+[node name="DetectionArea" type="Area2D" parent="." unique_id=62605331]
 collision_layer = 0
 collision_mask = 0
 monitoring = false
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" unique_id=1292779854]
 shape = SubResource("CircleShape2D_detect")
 
-[node name="AttackArea" type="Area2D" parent="."]
+[node name="AttackArea" type="Area2D" parent="." unique_id=1087481057]
 collision_layer = 0
 collision_mask = 0
 monitoring = false
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea" unique_id=1429059752]
 shape = SubResource("CircleShape2D_atk")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1450290045]
 unique_name_in_owner = true
 
-[node name="HitFlashTimer" type="Timer" parent="."]
+[node name="HitFlashTimer" type="Timer" parent="." unique_id=1524729040]
 wait_time = 0.2
 one_shot = true

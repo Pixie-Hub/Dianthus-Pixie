@@ -82,3 +82,7 @@ func _on_difficulty_selected(_tier_id: int) -> void:
 func _on_quit_pressed() -> void:
 	SfxManager.play("ui_button_click")
 	get_tree().quit()
+
+
+func _on_devourer_button_pressed() -> void:
+	get_tree().change_scene_to_file("res://core/cutscenes/devourer_tease_cinematic.tscn")

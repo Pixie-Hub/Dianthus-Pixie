@@ -12,6 +12,7 @@ uniform float runtime_alpha_scale : hint_range(0.0, 3.0) = 1.0;
 uniform float mist_time = 0.0;
 
 void fragment() {
+	vec4 tex = texture(TEXTURE, UV);
 	vec2 p = (UV - vec2(0.5)) * 2.0;
 	p.x /= max(ellipse_width, 0.01);
 	p.y /= max(ellipse_height, 0.01);
@@ -19,6 +20,6 @@ void fragment() {
 	float edge = 1.0 - smoothstep(max(1.0 - edge_feather, 0.0), 1.0, d);
 	float center_soften = 0.72 + smoothstep(0.0, 0.55, d) * 0.28;
 	float pulse = 1.0 + sin(TIME * 0.55 + pulse_phase) * pulse_strength;
-	float alpha = alpha_strength * runtime_alpha_scale * edge * center_soften * pulse;
-	COLOR = vec4(glow_color.rgb, glow_color.a * alpha);
+	float alpha = alpha_strength * runtime_alpha_scale * tex.a * edge * center_soften * pulse;
+	COLOR = vec4(glow_color.rgb * tex.rgb, glow_color.a * alpha);
 }

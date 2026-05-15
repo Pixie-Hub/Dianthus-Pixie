@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://brr317ialpoft"
+path="res://.godot/imported/Codex Entry Unlocked.wav-ffe22dbdab149f3cb2281b814e61d502.sample"
+
+[deps]
+
+source_file="res://audio/sfx/crafting_ui/Codex Entry Unlocked.wav"
+dest_files=["res://.godot/imported/Codex Entry Unlocked.wav-ffe22dbdab149f3cb2281b814e61d502.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

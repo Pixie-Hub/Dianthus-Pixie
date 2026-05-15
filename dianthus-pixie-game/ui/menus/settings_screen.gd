@@ -11,6 +11,7 @@ const CRAFTING_SCREEN_SCRIPT: GDScript = preload("res://ui/screens/crafting_scre
 @onready var _fullscreen_toggle: CheckButton = %FullscreenToggle
 @onready var _colorblind_toggle: CheckButton = %ColorblindToggle
 @onready var _tutorial_toggle: CheckButton = %TutorialToggle
+@onready var _atmospheric_vfx_toggle: CheckButton = %AtmosphericVfxToggle
 @onready var _text_speed_option: OptionButton = %TextSpeedOption
 # TODO: MINI-01-SETTINGS — wire up SkipMinigameToggle node in settings_screen.tscn
 # When the node is added to the scene, remove the null guard below.
@@ -34,6 +35,7 @@ func _ready() -> void:
 	_fullscreen_toggle.toggled.connect(_on_fullscreen_toggled)
 	_colorblind_toggle.toggled.connect(_on_colorblind_toggled)
 	_tutorial_toggle.toggled.connect(_on_tutorial_toggled)
+	_atmospheric_vfx_toggle.toggled.connect(_on_atmospheric_vfx_toggled)
 	_text_speed_option.item_selected.connect(_on_text_speed_changed)
 	# Skip minigame toggle — search the scene for the node in case tscn hasn't been updated yet.
 	_skip_minigame_toggle = find_child("SkipMinigameToggle", true, false) as CheckButton
@@ -124,6 +126,10 @@ func _on_tutorial_toggled(enabled: bool) -> void:
 	TutorialManager.set_tutorial_enabled(enabled)
 
 
+func _on_atmospheric_vfx_toggled(_enabled: bool) -> void:
+	SfxManager.play("ui_button_click")
+
+
 func _on_text_speed_changed(index: int) -> void:
 	if Engine.has_singleton("Dialogic"):
 		Dialogic.Settings.text_speed = TEXT_SPEED_VALUES[index]
@@ -147,6 +153,7 @@ func _save_settings() -> void:
 	config.set_value("audio", "music", _music_slider.value)
 	config.set_value("audio", "sfx", _sfx_slider.value)
 	config.set_value("display", "fullscreen", _fullscreen_toggle.button_pressed)
+	config.set_value("graphics", "atmospheric_vfx", _atmospheric_vfx_toggle.button_pressed)
 	config.set_value("accessibility", "colorblind", _colorblind_toggle.button_pressed)
 	config.set_value("accessibility", "tutorial", _tutorial_toggle.button_pressed)
 	config.set_value("accessibility", "text_speed", _text_speed_option.selected)
@@ -164,6 +171,7 @@ func _load_settings() -> void:
 	_music_slider.value = config.get_value("audio", "music", 100.0)
 	_sfx_slider.value = config.get_value("audio", "sfx", 100.0)
 	_fullscreen_toggle.button_pressed = config.get_value("display", "fullscreen", false)
+	_atmospheric_vfx_toggle.button_pressed = config.get_value("graphics", "atmospheric_vfx", true)
 	_colorblind_toggle.button_pressed = config.get_value("accessibility", "colorblind", false)
 	_tutorial_toggle.button_pressed = config.get_value("accessibility", "tutorial", true)
 	_text_speed_option.selected = config.get_value("accessibility", "text_speed", 1)

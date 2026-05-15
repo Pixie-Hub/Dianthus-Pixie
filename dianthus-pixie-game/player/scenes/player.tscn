@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://j7klkuqnhq8m" path="res://player/sprites/PNG/Unarmed_Hurt/Unarmed_Hurt_full.png" id="4_4qt65"]
 [ext_resource type="Script" uid="uid://rvutvdjb0moo" path="res://player/scripts/smooth_camera.gd" id="4_cam"]
 [ext_resource type="Texture2D" uid="uid://bhbl6u0jh6uqp" path="res://player/sprites/PNG/Unarmed_Walk/player_walk_full.png" id="6_6g3n5"]
-[ext_resource type="Texture2D" uid="uid://c870m25gvj2y8" path="res://player/sprites/PNG/ThornSword_Attack/thornsword_attack_full.png" id="7_sword"]
+[ext_resource type="Texture2D" uid="uid://c870m25gvj2y8" path="res://player/sprites/PNG/ThornSword_Attack/Sword_attack_full.png" id="7_sword"]
 
 [sub_resource type="Animation" id="Animation_mgvvd"]
 length = 0.001
@@ -1215,7 +1215,7 @@ scale = Vector2(0.5, 0.5)
 offset = Vector2(0, -28)
 region_rect = Rect2(0, 0, 64, 64)
 
-[node name="WeaponVfxAnchor" type="Node2D" parent="."]
+[node name="WeaponVfxAnchor" type="Node2D" parent="." unique_id=1910975963]
 unique_name_in_owner = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=234567891]

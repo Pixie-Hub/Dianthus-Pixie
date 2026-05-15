@@ -837,7 +837,6 @@ vertical_alignment = 1
 
 [node name="SkipDayButton" type="Button" parent="." unique_id=700000003]
 unique_name_in_owner = true
-visible = false
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
