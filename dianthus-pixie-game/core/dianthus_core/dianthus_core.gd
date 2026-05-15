@@ -4,7 +4,7 @@ signal hp_changed(current_hp: int, max_hp: int)
 signal core_destroyed
 signal core_damaged(amount: int)
 
-const MAX_HP: int = 500
+const DEFAULT_MAX_HP: int = 350
 const DAYTIME_REGEN_RATE: float = 5.0 / 60.0
 const CORE_ANIMATION_FRAME_COUNT: int = 16
 const IDLE_FRAME_START: int = 0
@@ -21,7 +21,8 @@ const HARVEST_HOLD_TIME: float = 2.0
 const POLLEN_PER_HARVEST: int = 1
 const POLLEN_ITEM_ID: StringName = &"dianthus_pollen"
 
-var current_hp: int = MAX_HP
+var max_hp: int = DEFAULT_MAX_HP
+var current_hp: int = DEFAULT_MAX_HP
 
 @export var core_animation_texture: Texture2D
 @export var death_texture: Texture2D
@@ -88,16 +89,16 @@ func _process(delta: float) -> void:
 func take_damage(amount: int) -> void:
 	if _is_destroyed or amount <= 0:
 		return
-	var was_above_low: bool = current_hp > MAX_HP * 0.25
+	var was_above_low: bool = current_hp > max_hp * 0.25
 	current_hp = max(current_hp - amount, 0)
-	hp_changed.emit(current_hp, MAX_HP)
+	hp_changed.emit(current_hp, max_hp)
 	core_damaged.emit(amount)
 	SfxManager.play("core_take_damage")
 	if current_hp <= 0:
 		_destroy_core()
 		return
 	_update_aura()
-	if was_above_low and current_hp <= MAX_HP * 0.25 and current_hp > 0:
+	if was_above_low and current_hp <= max_hp * 0.25 and current_hp > 0:
 		SfxManager.play("core_low_hp")
 	_play_damage_animation()
 
@@ -105,11 +106,18 @@ func take_damage(amount: int) -> void:
 func heal(amount: int, play_sfx: bool = true) -> void:
 	if _is_destroyed or amount <= 0:
 		return
-	current_hp = min(current_hp + amount, MAX_HP)
-	hp_changed.emit(current_hp, MAX_HP)
+	current_hp = min(current_hp + amount, max_hp)
+	hp_changed.emit(current_hp, max_hp)
 	_update_aura()
 	if play_sfx:
 		SfxManager.play("core_heal")
+
+
+func apply_hp_state(hp: int, new_max_hp: int) -> void:
+	max_hp = max(1, new_max_hp)
+	current_hp = clampi(hp, 0, max_hp)
+	_is_destroyed = current_hp <= 0
+	hp_changed.emit(current_hp, max_hp)
 
 
 func _update_aura() -> void:
@@ -196,7 +204,7 @@ func _on_enemy_entered(body: Node2D) -> void:
 
 
 func get_hp_ratio() -> float:
-	return clampf(float(current_hp) / float(MAX_HP), 0.0, 1.0)
+	return clampf(float(current_hp) / float(max(max_hp, 1)), 0.0, 1.0)
 
 
 func _init_sacred_bloom() -> void:
@@ -326,7 +334,7 @@ func set_tutorial_glow_active(active: bool) -> void:
 
 
 func _emit_initial_hp() -> void:
-	hp_changed.emit(current_hp, MAX_HP)
+	hp_changed.emit(current_hp, max_hp)
 
 
 func _start_breathe_animation() -> void:
@@ -419,10 +427,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed:
 		if event.keycode == KEY_F1:
 			take_damage(20)
-			print("DEBUG: Core took 20 damage. HP: %d/%d" % [current_hp, MAX_HP])
+			print("DEBUG: Core took 20 damage. HP: %d/%d" % [current_hp, max_hp])
 		elif event.keycode == KEY_F2:
 			heal(20)
-			print("DEBUG: Core healed 20. HP: %d/%d" % [current_hp, MAX_HP])
+			print("DEBUG: Core healed 20. HP: %d/%d" % [current_hp, max_hp])
 	if not _player_in_range:
 		return
 	if event.is_action_pressed("interact"):

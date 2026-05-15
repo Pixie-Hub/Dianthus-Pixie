@@ -9,6 +9,11 @@ const TIER_DATA: Dictionary = {
 	Tier.NORMAL: { "label": "Normal", "hp_mult": 1.00, "dmg_mult": 1.00, "speed_mult": 1.00 },
 	Tier.HARD:   { "label": "Hard",   "hp_mult": 1.30, "dmg_mult": 1.30, "speed_mult": 1.30 },
 }
+const CORE_MAX_HP_BY_TIER: Dictionary = {
+	Tier.EASY: 500,
+	Tier.NORMAL: 350,
+	Tier.HARD: 200,
+}
 
 var current_tier: Tier = Tier.NORMAL
 
@@ -40,3 +45,8 @@ func get_speed_multiplier() -> float:
 
 func get_tier_id() -> int:
 	return int(current_tier)
+
+
+func get_core_max_hp(tier_id: int = -1) -> int:
+	var resolved_tier: int = int(current_tier) if tier_id < 0 else tier_id
+	return int(CORE_MAX_HP_BY_TIER.get(resolved_tier, CORE_MAX_HP_BY_TIER[Tier.NORMAL]))

@@ -368,7 +368,7 @@ theme_override_constants/separation = 2
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 6
-text = "CORE  200 / 200"
+text = "CORE  350 / 350"
 horizontal_alignment = 1
 
 [node name="CoreHPBar" type="ProgressBar" parent="CoreHPPanel/MarginContainer/VBoxContainer" unique_id=66112670]
@@ -377,8 +377,8 @@ custom_minimum_size = Vector2(160, 8)
 layout_mode = 2
 theme_override_styles/background = SubResource("StyleBoxFlat_core_bg")
 theme_override_styles/fill = SubResource("StyleBoxFlat_core_fill")
-max_value = 200.0
-value = 200.0
+max_value = 350.0
+value = 350.0
 show_percentage = false
 
 [node name="CoreHPIcon" type="Label" parent="CoreHPPanel/MarginContainer/VBoxContainer" unique_id=1252299202]

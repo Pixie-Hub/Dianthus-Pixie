@@ -109,6 +109,8 @@ func _ready() -> void:
 	SaveManager.load_completed.connect(_on_hud_load_completed)
 	_forecast_panel.visible = false
 	_status_effects_panel.visible = false
+	if GameManager.core_current_hp >= 0:
+		_on_core_hp_changed(GameManager.core_current_hp, GameManager.core_max_hp)
 	call_deferred("_connect_wave_spawner")
 	call_deferred("_connect_status_player")
 	call_deferred("_show_active_night_defense_notice")

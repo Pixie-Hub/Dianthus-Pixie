@@ -55,6 +55,7 @@ func _start_new_game() -> void:
 	GameManager.current_state = GameManager.GameState.EXPLORATION
 	GameManager.endless_mode = false
 	GameManager.reset_core_runtime_state()
+	GameManager.initialize_core_for_new_game()
 	GameManager.player_data = {"position": Vector2.ZERO, "last_zone": ""}
 	DayNightCycle.day_count = 1
 	DayNightCycle.current_phase = DayNightCycle.Phase.DAY

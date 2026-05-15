@@ -27,7 +27,7 @@ var player: Node = null
 var colorblind_mode: bool = false
 var endless_mode: bool = false
 var core_current_hp: int = -1
-var core_max_hp: int = 500
+var core_max_hp: int = 350
 
 var player_data: Dictionary = {
 	"position": Vector2.ZERO,
@@ -52,21 +52,27 @@ func set_colorblind_mode(enabled: bool) -> void:
 func reset_core_runtime_state() -> void:
 	dianthus_core = null
 	core_current_hp = -1
-	core_max_hp = 500
+	core_max_hp = DifficultyManager.get_core_max_hp()
+
+
+func initialize_core_for_new_game() -> void:
+	core_max_hp = DifficultyManager.get_core_max_hp()
+	core_current_hp = core_max_hp
+	core_hp_changed.emit(core_current_hp, core_max_hp)
 
 
 func register_core(core: Node) -> void:
 	dianthus_core = core
-	if core_current_hp >= 0 and core.has_method("set"):
-		core.set("current_hp", clampi(core_current_hp, 0, core_max_hp))
-	elif core.get("current_hp") != null:
-		core_current_hp = int(core.get("current_hp"))
-	if core.get("MAX_HP") != null:
-		core_max_hp = int(core.get("MAX_HP"))
 	if core.has_signal("hp_changed") and not core.hp_changed.is_connected(_on_core_hp_changed):
 		core.hp_changed.connect(_on_core_hp_changed)
 	if core.has_signal("core_destroyed") and not core.core_destroyed.is_connected(_on_core_destroyed):
 		core.core_destroyed.connect(_on_core_destroyed)
+	if core_current_hp < 0:
+		initialize_core_for_new_game()
+	if core.has_method("apply_hp_state"):
+		core.call("apply_hp_state", core_current_hp, core_max_hp)
+	elif core.has_method("set"):
+		core.set("current_hp", clampi(core_current_hp, 0, core_max_hp))
 	if core.has_method("_update_aura"):
 		core.call("_update_aura")
 	core_hp_changed.emit(core_current_hp, core_max_hp)
@@ -78,11 +84,14 @@ func _on_core_hp_changed(hp: int, max_hp: int) -> void:
 	core_hp_changed.emit(hp, max_hp)
 
 
-func set_core_hp_from_save(hp: int, max_hp: int = 500) -> void:
+func set_core_hp_from_save(hp: int, max_hp: int = 350) -> void:
 	core_max_hp = max(1, max_hp)
 	core_current_hp = clampi(hp, 0, core_max_hp)
-	if is_instance_valid(dianthus_core) and dianthus_core.get("current_hp") != null:
-		dianthus_core.set("current_hp", core_current_hp)
+	if is_instance_valid(dianthus_core):
+		if dianthus_core.has_method("apply_hp_state"):
+			dianthus_core.call("apply_hp_state", core_current_hp, core_max_hp)
+		elif dianthus_core.get("current_hp") != null:
+			dianthus_core.set("current_hp", core_current_hp)
 		if dianthus_core.has_method("_update_aura"):
 			dianthus_core.call("_update_aura")
 	core_hp_changed.emit(core_current_hp, core_max_hp)

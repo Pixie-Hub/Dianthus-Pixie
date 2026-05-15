@@ -4,7 +4,7 @@ signal save_completed(success: bool, manual: bool)
 signal load_completed(success: bool)
 
 const SAVE_PATH: String = "user://savegame.json"
-const SCHEMA_VERSION: int = 22
+const SCHEMA_VERSION: int = 23
 const GAME_VERSION: String = "0.1.0"
 
 const PLANT_TYPE_TO_SCENE: Dictionary = {
@@ -225,14 +225,17 @@ func _gather_state(manual: bool) -> Dictionary:
 
 	# Core
 	var core_hp: int = GameManager.core_current_hp if GameManager.core_current_hp >= 0 else GameManager.core_max_hp
+	var core_max_hp: int = GameManager.core_max_hp
 	var core_harvested_today: bool = false
 	var core_last_harvest_day: int = -1
 	if is_instance_valid(GameManager.dianthus_core):
 		core_hp = GameManager.dianthus_core.current_hp
+		core_max_hp = int(GameManager.dianthus_core.max_hp)
 		core_harvested_today = GameManager.dianthus_core._harvested_today
 		core_last_harvest_day = GameManager.dianthus_core._last_harvest_day
 	state["core"] = {
 		"current_hp": core_hp,
+		"max_hp": core_max_hp,
 		"sacred_bloom": {
 			"harvested_today": core_harvested_today,
 			"last_harvest_day": core_last_harvest_day,
@@ -353,19 +356,21 @@ func _apply_state(state: Dictionary) -> void:
 
 	# 3. Dianthus Core HP.
 	var core_data: Dictionary = state.get("core", {})
+	var saved_core_hp: int = int(core_data.get("current_hp", GameManager.core_max_hp))
+	var saved_core_max_hp: int = int(core_data.get("max_hp", max(saved_core_hp, GameManager.core_max_hp)))
 	if is_instance_valid(GameManager.dianthus_core):
-		GameManager.set_core_hp_from_save(int(core_data.get("current_hp", GameManager.core_max_hp)), GameManager.dianthus_core.MAX_HP)
+		GameManager.set_core_hp_from_save(saved_core_hp, saved_core_max_hp)
 		GameManager.dianthus_core._update_aura()
 		GameManager.dianthus_core.hp_changed.emit(
 			GameManager.dianthus_core.current_hp,
-			GameManager.dianthus_core.MAX_HP
+			GameManager.dianthus_core.max_hp
 		)
 		var bloom_data: Dictionary = core_data.get("sacred_bloom", {})
 		GameManager.dianthus_core._harvested_today = bool(bloom_data.get("harvested_today", false))
 		GameManager.dianthus_core._last_harvest_day = int(bloom_data.get("last_harvest_day", -1))
 		GameManager.dianthus_core.call_deferred("_refresh_prompt")
 	elif state.has("core"):
-		GameManager.set_core_hp_from_save(int(core_data.get("current_hp", GameManager.core_max_hp)), GameManager.core_max_hp)
+		GameManager.set_core_hp_from_save(saved_core_hp, saved_core_max_hp)
 
 	# 4. Player position and HP.
 	if is_instance_valid(GameManager.player):
@@ -729,6 +734,23 @@ func _migrate(data: Dictionary) -> Dictionary:
 		if not data.has("night_defense"):
 			data["night_defense"] = {"active": false}
 		data["schema_version"] = 22
+	# v22 -> v23: Dianthus Core max HP is persisted separately from scene defaults.
+	if version < 23:
+		print("[SaveManager] Migrating save from v%d to v23." % version)
+		var core_data: Dictionary = data.get("core", {}) if data.get("core", {}) is Dictionary else {}
+		var saved_core_hp: int = int(core_data.get("current_hp", 0))
+		var diff_tier: String = str(data.get("difficulty", {}).get("tier", "normal"))
+		var default_core_max_hp: int = 350
+		match diff_tier:
+			"easy":
+				default_core_max_hp = DifficultyManager.get_core_max_hp(DifficultyManager.Tier.EASY)
+			"hard":
+				default_core_max_hp = DifficultyManager.get_core_max_hp(DifficultyManager.Tier.HARD)
+			_:
+				default_core_max_hp = DifficultyManager.get_core_max_hp(DifficultyManager.Tier.NORMAL)
+		core_data["max_hp"] = max(saved_core_hp, default_core_max_hp)
+		data["core"] = core_data
+		data["schema_version"] = 23
 	return data
 
 
