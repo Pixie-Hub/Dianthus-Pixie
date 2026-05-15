@@ -30,8 +30,6 @@ Obsidian Bog and Core Sanctum are no longer required future zones. Their design 
 - Attack: left mouse or `Space`
 - Dodge: configured as the `dodge` input action in `project.godot`
 - Inventory: `I`
-- Crafting screen: `C`
-- Breeding screen: `B`
 - Plant Codex: `J`
 - Plant placement: `P`
 - Quest log: `Q`
