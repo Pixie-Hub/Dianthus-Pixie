@@ -24,7 +24,6 @@ buses/default_bus_layout="uid://gk7earhx6ian"
 GameManager="*res://shared/autoloads/game_manager.gd"
 PauseManager="*res://shared/autoloads/pause_manager.gd"
 DayNightCycle="*res://core/day_night/day_night_cycle.gd"
-NightDefenseManager="*res://core/night_defense/night_defense_manager.gd"
 SceneTransition="*res://core/transitions/scene_transition.gd"
 SaveManager="*res://save/scripts/save_manager.gd"
 DifficultyManager="*res://accessibility/difficulty/difficulty_manager.gd"
@@ -43,6 +42,7 @@ MusicManager="*res://audio/music_manager.tscn"
 Dialogic="*uid://ds2q0uclmolvu"
 TutorialManager="*res://accessibility/tutorial/tutorial_manager.gd"
 GardenStructureManager="*res://world/garden/garden_structure_manager.gd"
+NightDefenseManager="*res://core/night_defense/night_defense_manager.gd"
 
 [dialogic]
 

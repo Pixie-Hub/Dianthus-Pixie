@@ -3800,7 +3800,7 @@ target_entry_marker = &"FromRuinsOfVeld"
 display_name = "Dusk Forest"
 prompt_body = "Return to the dim forest."
 allow_night_return_to_defense = true
-night_return_target_scene = "res://world/zones/meadow_edge/meadow_edge.tscn"
+night_return_target_scene = "uid://crc386oiryp8q"
 night_return_entry_marker = &"FromDuskForest"
 night_return_prompt = "Return directly to Meadow Edge for night defense."
 
